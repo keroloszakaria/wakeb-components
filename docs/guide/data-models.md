@@ -3,7 +3,7 @@
 Public descriptor types are exported from the package root. These are presentational records; the host formats dates and supplies translations. Repeat, grid and fallback rules are documented on each component page.
 
 ```ts
-import type { AvatarStackProps, SkeletonItem, SkeletonRow, PageSkeletonProps, VerticalStep, VerticalStepsProps } from 'wakeb-components'
+import type { ButtonProps, BadgeProps, AccordionProps, IconSlotProps, AvatarStackProps, SkeletonRow, VerticalStep } from 'wakeb-components'
 ```
 
 ```ts
@@ -58,5 +58,61 @@ export interface SkeletonRow {
 export interface PageSkeletonProps { config: readonly SkeletonRow[]; direction?: "row" | "column"; label?: string; }
 export interface VerticalStep { title?: string; time?: string; date?: string; is_active?: boolean; }
 export interface VerticalStepsProps { steps?: readonly VerticalStep[]; label?: string; }
+
+export type ComponentClass = string | Record<string, boolean> | ComponentClass[];
+export type SharedIcon = string | (string | [path: string, opacity: number])[] | import("vuetify").JSXComponent;
+export interface IconSlotProps { icon: SharedIcon; size: string | number; color: string; maxWidth: string | number; }
+export interface ButtonProps {
+  isTooltip?: boolean;
+  location?: "top" | "bottom" | "start" | "end";
+  title?: string;
+  classList?: ComponentClass;
+  iconPosition?: "start" | "end";
+  type?: string;
+  size?: string;
+  isLoading?: boolean;
+  isDropdown?: boolean;
+  action?: "button" | "submit" | "reset";
+  disabled?: boolean;
+  icon?: SharedIcon;
+  iconSize?: string | number;
+  maxIconWidth?: string | number;
+  iconColorType?: "danger" | "primary" | "success" | "warning" | "currentColor";
+  customIconColor?: string;
+  wrapperAttrs?: Record<string, unknown>;
+}
+export interface BadgeProps {
+  label?: string;
+  classList?: ComponentClass;
+  type?: string;
+  icon?: SharedIcon;
+  isDot?: boolean;
+  borderRadius?: string;
+  customBorderRadius?: string;
+  customPadding?: string;
+  dotColor?: string;
+  variant?: "default" | "flat" | "text" | "elevated" | "tonal" | "outlined" | "plain";
+  iconSize?: string | number;
+  iconPosition?: "before" | "after";
+  chipAttrs?: Record<string, unknown>;
+}
+export interface AccordionProps {
+  title?: string;
+  modelValue?: boolean;
+  classList?: ComponentClass;
+  icon?: SharedIcon;
+  noBorder?: boolean;
+  beforeIcon?: boolean;
+  afterIcon?: boolean;
+  iconColor?: string;
+  iconSize?: string | number;
+  maxIconWidth?: string | number;
+  headerTitleClassList?: ComponentClass;
+  headerClassList?: ComponentClass;
+  bodyClassList?: ComponentClass;
+  transparent?: boolean;
+  toggleLabel?: string;
+  contentId?: string;
+}
 
 ```

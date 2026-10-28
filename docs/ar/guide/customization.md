@@ -31,3 +31,10 @@
 متغير CSS على activator لا يصل تلقائيًا إلى العنصر المنقول. استخدم refs
 وcomputed في التطبيق للحفاظ على التفاعل. يُورث RTL من dir، بينما Tooltip
 يتبع اتجاه locale في Vuetify؛ احتفظ بإعداد اللغة الموجود في تطبيقك.
+
+
+## أيقونات وحالات الأساس
+
+WButton وWBadge يستخدمان VIcon كافتراضي؛ استخدم إعداد أيقونات Vuetify في المشروع أو مرر SVG عبر slots. WAccordion يستخدم WButton لمؤشراته. لا تحتاج الحزمة إلى SvgIcon عالمي أو صلاحيات أو i18n. لاسم زر أيقونة مرر aria-label، ومرر toggleLabel مترجمًا للـAccordion.
+
+متغيرات --wakeb-button-fallback و--wakeb-badge-fallback و--wakeb-accordion-fallback محجوزة لطبقات التوافق؛ اتركها غير معرفة في الاستخدام العادي. تستخدم طبقة Aware sentinel غير صالح كقيمة CSS حتى تحتفظ القيم القديمة المفقودة بسلوك CSS الأصلي. خصص المظهر العادي بمتغيرات الألوان والمقاسات الموثقة.

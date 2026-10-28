@@ -43,7 +43,7 @@ import { ${entry.name} } from 'wakeb-components'
 | --- | --- | --- | --- |
 ${rows}
 
-## ${title[2]}
+${entry.events ? `## ${lang ? "الأحداث" : "Events"}\n\n${entry.events[lang]}\n\n` : ""}## ${title[2]}
 
 ${entry.slots[lang]}
 
@@ -59,7 +59,7 @@ ${entry.limits[lang]}
 
 ## ${title[5]}
 
-<ComponentPlayground initial="${entry.slug}" />
+<${entry.playground ?? "ComponentPlayground"} initial="${entry.slug}" />
 `;
     const folder=join(root,"docs",prefix,"components"); mkdirSync(folder,{recursive:true}); writeFileSync(join(folder,entry.slug+".md"),page);
   }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0
+
+- Extract WButton, WBadge and WAccordion with typed props, events and icon slots.
+- Preserve Aware layout, icon rendering, loading attributes, click propagation and persistent form content through adapters.
+- Add standalone semantic styles, accessible default title triggers and bilingual interactive documentation.
+
 ## 0.2.0
 
 - Add typed avatar stacks, loading indicators, responsive page skeletons and vertical steps.

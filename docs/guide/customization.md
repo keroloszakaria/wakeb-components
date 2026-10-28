@@ -32,3 +32,10 @@ A CSS variable on the activator alone does not automatically reach a teleported
 overlay. Keep Vue reactivity in the application using refs and computed values.
 RTL is inherited from the surrounding `dir` attribute; the tooltip uses Vuetify's
 locale direction. Register Vuetify with your application's locale configuration.
+
+
+## Foundation icons and states
+
+WButton and WBadge default to VIcon. Use your host Vuetify icon configuration or supply SVG through slots. WAccordion uses WButton for indicators. The package needs no global SvgIcon, permission service or i18n instance. Name icon-only buttons with aria-label and pass localized toggleLabel text.
+
+--wakeb-button-fallback, --wakeb-badge-fallback and --wakeb-accordion-fallback are reserved for compatibility adapters; leave them undefined in normal use. Aware supplies an invalid CSS-value sentinel so missing legacy tokens retain their original CSS behavior. Use the documented color/size variables for ordinary customization.

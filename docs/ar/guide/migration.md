@@ -25,3 +25,14 @@ Vuetify للوصول بالكيبورد. هذه تحسينات دفاعية مو
 
 
 دفعة 0.2 تضيف تحسينات دفاعية: max والتكرار لا يقبلان السالب أو القيم غير المحدودة، وأسماء المستخدمين غير الصالحة تستخدم نصًا بديلًا. أيقونات الخطوات في Aware تبقى SvgIcon عبر slots. ألوان قائمة الصور تُمرر عبر menuStyle لأن Vuetify ينقلها خارج حاوية المكون. لا توجد ترجمة أو store داخل الحزمة.
+
+
+## 0.3.0
+
+Button وBadge وAccordion أصبحوا adapters أيضًا. SvgIcon يظل في Aware عبر slots، وCSS صغير يربط tokens المشروع بمتغيرات الحزمة مرة واحدة، ويحتفظ بسلوك CSS الأصلي عندما يكون token مفقودًا. مسارات الاستيراد وprops القديمة ثابتة، بما فيها loading وisLoading وform/action وclassList وترتيب الأيقونات. header الافتراضي في adapter يحتفظ بـspan القديم؛ زر العنوان القابل للكيبورد هو افتراضي WAccordion للمشاريع الجديدة. أزرار المؤشر تحصل على أسماء ARIA وحالة الفتح دون تغيير النقر أو المظهر. actions توقف تصاعد النقر، والمحتوى يستخدم v-show.
+
+| المسار | المكون |
+| --- | --- |
+| components/common/Button.vue | WButton |
+| components/common/Badge.vue | WBadge |
+| components/common/Accordion.vue | WAccordion |

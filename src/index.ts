@@ -7,3 +7,8 @@ export { default as WLoading } from "./components/WLoading.vue";
 export { default as WPageSkeleton } from "./components/WPageSkeleton.vue";
 export { default as WVerticalSteps } from "./components/WVerticalSteps.vue";
 export type { AvatarStackProps, LoadingProps, SkeletonItem, SkeletonRow, PageSkeletonProps, VerticalStep, VerticalStepsProps } from "./types";
+
+export { default as WButton } from "./components/WButton.vue";
+export { default as WBadge } from "./components/WBadge.vue";
+export { default as WAccordion } from "./components/WAccordion.vue";
+export type { ComponentClass, SharedIcon, IconSlotProps, ButtonProps, BadgeProps, AccordionProps } from "./types";

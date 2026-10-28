@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+
+Added WButton, WBadge and WAccordion with Aware compatibility adapters, native attributes, icon slots, button loading aliases, persistent disclosure content and keyboard-ready default headers.
+
 ## 0.2.0
 
 Added WAvatarStack, WLoading, WPageSkeleton and WVerticalSteps. Typed data models, local overlay styles and icon slots keep applications independent. Existing 0.1 APIs are preserved.

@@ -1,5 +1,9 @@
 # سجل التغييرات
 
+## 0.3.0
+
+إضافة WButton وWBadge ثم WAccordion، مع الحفاظ على عقود Aware والأيقونات وloading وisLoading. اختبارات الأحداث والفورم والـslots والكيبورد وSSR وتوثيق CSS وtyped APIs.
+
 ## 0.2.0
 
 إضافة WAvatarStack وWLoading وWPageSkeleton وWVerticalSteps، مع نماذج بيانات typed وstyles للـoverlay وslots للأيقونات. واجهات 0.1 مستمرة كما هي.

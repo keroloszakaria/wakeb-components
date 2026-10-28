@@ -1,5 +1,11 @@
 # سجل التغييرات
 
+## 0.6.0
+
+- إضافة WCarousel وWExportDropdown وWBaseSidebar بخصائص typed وتحكم في الشرائح وصيغ تصدير وslots مستقلة عن الفورم.
+- إبقاء صلاحيات Aware وGenericForm والترجمة وSvgIcon وtokens التدرج ومعنى المؤشرات القديم في adapters.
+- اختبارات فعلية للتشغيل التلقائي والقوائم وSkeleton والتوافق وتوثيق تفاعلي بالعربي والإنجليزي.
+
 ## 0.5.0
 
 - إضافة WTabs وWTree وWDropdown بخصائص typed وslots، مع فصل الترجمة والتوجيه عن الحزمة.

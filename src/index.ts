@@ -20,3 +20,7 @@ export { default as WTabs } from "./components/WTabs.vue";
 export { default as WTree } from "./components/WTree.vue";
 export { default as WDropdown } from "./components/WDropdown.vue";
 export type { NavigationKey, TabContext, TabItem, TabsProps, TreeNode, TreeToggleSlotProps, TreeProps, DropdownItem, DropdownProps } from "./types";
+export { default as WCarousel } from "./components/WCarousel.vue";
+export { default as WExportDropdown } from "./components/WExportDropdown.vue";
+export { default as WBaseSidebar } from "./components/WBaseSidebar.vue";
+export type { CarouselProps, ExportFormat, ExportDropdownProps, SidebarItem, BaseSidebarProps } from "./types";

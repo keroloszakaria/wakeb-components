@@ -2428,5 +2428,323 @@ export default [
     ],
     "example": "<WDropdown title=\"Status\" :menu-items=\"[{ label: 'Pending', value: 0 }, { label: 'Approved', value: 1 }]\" show-selected />",
     "playground": "NavigationPlayground"
+  },
+  {
+    "name": "WCarousel",
+    "slug": "carousel",
+    "interface": "CarouselProps",
+    "summary": [
+      "A Vuetify carousel with scoped slides, host-owned playback and accessible custom indicators.",
+      "عرض شرائح من Vuetify بمحتوى مخصص وتحكم في التشغيل ومؤشرات قابلة للوصول."
+    ],
+    "props": [
+      [
+        "slides",
+        "readonly unknown[]",
+        "[]",
+        "Records passed unchanged to the slide slot.",
+        "عناصر تمر كما هي إلى slot الشريحة."
+      ],
+      [
+        "modelValue",
+        "number",
+        "undefined",
+        "Optional external index; local selection starts at zero.",
+        "فهرس خارجي اختياري؛ الاختيار المحلي يبدأ من صفر."
+      ],
+      [
+        "interval",
+        "number",
+        "5000",
+        "Vuetify autoplay delay in milliseconds.",
+        "الفاصل الزمني للتشغيل التلقائي بالمللي ثانية."
+      ],
+      [
+        "cycle",
+        "boolean",
+        "true",
+        "Enable Vuetify cycling; offer a visible pause control when autoplay is used.",
+        "تشغيل التنقل التلقائي؛ وفر تحكمًا ظاهرًا للإيقاف عند استخدامه."
+      ],
+      [
+        "showArrows",
+        "boolean | \"hover\"",
+        "false",
+        "Native previous/next controls.",
+        "أزرار السابق والتالي الأصلية."
+      ],
+      [
+        "showIndicators",
+        "boolean",
+        "false",
+        "Show custom clickable indicators; this name has normal positive semantics.",
+        "إظهار مؤشرات قابلة للنقر؛ الاسم بمعناه المباشر."
+      ],
+      [
+        "height",
+        "string | number",
+        "\"100%\"",
+        "Native carousel height.",
+        "ارتفاع Carousel."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "\"Carousel\"",
+        "Accessible carousel region name.",
+        "اسم عرض الشرائح المقروء."
+      ],
+      [
+        "indicatorLabel",
+        "(index: number) => string",
+        "index => `Go to slide ${index + 1}`",
+        "Host-localized indicator names; index is zero-based.",
+        "دالة تسمية المؤشرات من المشروع؛ الفهرس يبدأ من صفر."
+      ],
+      [
+        "indicatorAttrs",
+        "Record<string, unknown>",
+        "undefined",
+        "Extra DOM attrs/style on each indicator; may override its native type.",
+        "خصائص وأنماط كل مؤشر؛ يمكنها استبدال type الخاص بالزر."
+      ],
+      [
+        "keyboardIndicators",
+        "boolean",
+        "true",
+        "Enable enhanced indicator arrow/Home/End keys and focus styling; false keeps native button behavior.",
+        "تفعيل مفاتيح الأسهم وHome/End وتنسيق التركيز؛ false يحتفظ بسلوك الزر الطبيعي."
+      ]
+    ],
+    "slots": [
+      "`slide`: `{slide,index}`; `prev`/`next`: `{props}` from Vuetify; bind those props to your native arrow controls.",
+      "`slide`: يستقبل `{slide,index}`؛ `prev` و`next`: يستقبلان `{props}` من Vuetify؛ اربطها بأزرار التنقل."
+    ],
+    "variables": [
+      [
+        "--wakeb-carousel-indicator-bg",
+        "#98a2b3"
+      ],
+      [
+        "--wakeb-carousel-indicator-active-bg",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-carousel-focus",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-carousel-fallback",
+        "undefined (legacy adapter switch)"
+      ]
+    ],
+    "events": [
+      "`update:modelValue(index: number)` once for an actual local index change; syncing the same valid parent value is silent.",
+      "`update:modelValue(index: number)` مرة عند تغيير الفهرس محليًا؛ مزامنة قيمة الأب الصالحة لا تكرر الحدث."
+    ],
+    "limits": [
+      "The component keeps two root nodes, without a layout wrapper. Put it in a positioned parent because custom indicators are absolutely positioned 2rem above its bottom. Ordinary attrs target VCarousel. Native delimiters stay hidden; showIndicators controls the custom dots. Custom indicators are type=button, have accessible names/current state, and support Arrow Left/Right (reversed in RTL), Home/End and normal Enter/Space. Arrow slots retain Vuetify keyboard behavior. Slides render through Vuetify lazy items. Use finite indices in range and positive intervals. Autoplay uses Vuetify scheduling; it does not automatically pause on pointer hover or keyboard focus. The demo starts paused and exposes a cycle control. Use cycle=false for static/reduced-motion experiences; the indicator animation respects reduced motion, while slide transitions are Vuetify attrs. Labels and URLs/content come from the host. Aware keeps the original inverted hideDelimiters=true meaning through its adapter and retains the legacy missing indicator type. Aware disables the enhanced indicator keys/focus styling to retain its original behavior.",
+      "المكوّن يحتفظ بجذرين دون حاوية إضافية. ضعه داخل أب position:relative لأن المؤشرات موضوعة absolute على بعد 2rem من أسفله. الخصائص العادية تستهدف VCarousel. مؤشرات Vuetify الأصلية مخفية، وshowIndicators يتحكم في المؤشرات المخصصة. المؤشرات العامة type=button ولها أسماء وحالة حالية وتدعم اليمين واليسار مع عكس RTL وHome/End وEnter/Space. أزرار السابق والتالي تحتفظ بسلوك Vuetify. الشرائح تُركب عند الحاجة. استخدم فهارس محدودة ضمن النطاق وفواصل زمنية موجبة. التشغيل التلقائي من Vuetify ولا يتوقف تلقائيًا عند hover أو التركيز؛ المثال يبدأ متوقفًا ويوفر تحكمًا في cycle. استخدم cycle=false للتجارب الثابتة أو قليلة الحركة؛ حركة المؤشرات تحترم reduced-motion وانتقالات الشرائح من خصائص Vuetify. المحتوى من المشروع. Aware يحتفظ بعكس معنى hideDelimiters=true وبسلوك type القديم للمؤشرات. Aware يعطل مفاتيح المؤشرات وتنسيق التركيز الإضافيين للاحتفاظ بالسلوك الأصلي."
+    ],
+    "example": "<div style=\"position:relative;height:240px\"><WCarousel :slides=\"['First', 'Second']\" :cycle=\"false\" show-indicators><template #slide=\"{slide}\">{{slide}}</template></WCarousel></div>",
+    "playground": "CompositionPlayground"
+  },
+  {
+    "name": "WExportDropdown",
+    "slug": "export-dropdown",
+    "interface": "ExportDropdownProps",
+    "summary": [
+      "An export-format picker that emits intent while the host owns permissions and file generation.",
+      "قائمة صيغ تصدير ترسل الاختيار؛ المشروع يملك الصلاحيات وتوليد الملفات."
+    ],
+    "props": [
+      [
+        "isLoading",
+        "boolean",
+        "false",
+        "Disable menu/activator while a host export is in progress.",
+        "تعطيل القائمة والزر أثناء التصدير في المشروع."
+      ],
+      [
+        "disabled",
+        "boolean",
+        "false",
+        "Disable the menu and button.",
+        "تعطيل القائمة والزر."
+      ],
+      [
+        "title",
+        "string",
+        "\"Download\"",
+        "Already translated button text.",
+        "نص الزر مترجم مسبقًا."
+      ],
+      [
+        "formats",
+        "readonly ExportFormat[]",
+        "PDF / XLSX",
+        "Configurable labels, string values and optional icons/disabled flags.",
+        "الأسماء والقيم النصية وأيقونات وحالات التعطيل الاختيارية."
+      ],
+      [
+        "menuStyle",
+        "CSSProperties",
+        "undefined",
+        "Direct styles on the teleported list.",
+        "أنماط على القائمة المنقولة خارج الحاوية."
+      ]
+    ],
+    "slots": [
+      "`activator`: `{props,buttonProps}`. Bind menu props and button props, and attach your host permission directive there. `format-icon` / `format-label`: `{format,index}`.",
+      "`activator`: يستقبل `{props,buttonProps}`؛ اربط خصائص القائمة والزر وضع directive صلاحيات المشروع هنا. `format-icon` و`format-label`: يستقبلان `{format,index}`."
+    ],
+    "variables": [
+      [
+        "--wakeb-export-button-height",
+        "44px"
+      ]
+    ],
+    "events": [
+      "`select(value: string)` once for an enabled format. No file is generated or downloaded by the component.",
+      "`select(value: string)` مرة لاختيار صيغة متاحة. المكوّن لا يولد ملفًا ولا ينزله."
+    ],
+    "limits": [
+      "The root is VMenu, preserving its attrs/teleport contract. Default formats are PDF/pdf and Excel/xlsx with English labels; supply localized records. Inline SVG fallbacks need no icon font; optional format.icon uses the host Vuetify icon configuration. Loading disables the public default activator and menu; custom activators receive buttonProps and may preserve their existing loading contract. Permission checks, export state, network requests, MIME handling and download services stay in the host. Use the activator slot for directives; the package has no permission prop or auth dependency. menuStyle targets the actual teleported list. VMenu/VList provide outside-click, Escape and keyboard behavior. The default native action is button, and its default height is 44px.",
+      "الجذر VMenu ويحتفظ بعقد الخصائص وteleport. الافتراضي PDF/pdf وExcel/xlsx بأسماء إنجليزية؛ مرر بيانات مترجمة. أيقونات SVG الافتراضية لا تحتاج خط أيقونات؛ format.icon الاختيارية تستخدم إعداد Vuetify للمشروع. التحميل يعطل الزر العام والقائمة؛ الـactivator المخصص يمكنه الحفاظ على سلوكه القديم. الصلاحيات وحالة التصدير والشبكة وتوليد الملف والتنزيل في المشروع. استخدم activator للصلاحيات؛ الحزمة لا تستقبل permission ولا تعتمد على auth. menuStyle يستهدف القائمة المنقولة. Vuetify يدير النقر الخارجي وEscape والكيبورد. نوع الزر button وارتفاعه الافتراضي 44px."
+    ],
+    "example": "<WExportDropdown title=\"Download report\" @select=\"format => console.log(format)\" />",
+    "playground": "CompositionPlayground"
+  },
+  {
+    "name": "WBaseSidebar",
+    "slug": "base-sidebar",
+    "interface": "BaseSidebarProps",
+    "summary": [
+      "A gradient sidebar shell with search/content slots, filter actions and loading/empty/list states.",
+      "حاوية جانبية بخلفية متدرجة وslots للبحث والمحتوى وأزرار الفلترة وحالات القائمة."
+    ],
+    "props": [
+      [
+        "title",
+        "string",
+        "required",
+        "Already translated heading.",
+        "العنوان مترجم مسبقًا."
+      ],
+      [
+        "loading",
+        "boolean",
+        "false",
+        "Loading state takes precedence over empty/items.",
+        "التحميل له أولوية على القائمة والحالة الفارغة."
+      ],
+      [
+        "items",
+        "readonly SidebarItem[]",
+        "[]",
+        "Presentational item records.",
+        "عناصر العرض."
+      ],
+      [
+        "skeletonType",
+        "string",
+        "\"list-item-two-line, list-item-two-line, list-item-two-line\"",
+        "Vuetify skeleton type.",
+        "نوع Skeleton في Vuetify."
+      ],
+      [
+        "hasFilter",
+        "boolean",
+        "true",
+        "Render default filter controls.",
+        "إظهار أزرار الفلترة الافتراضية."
+      ],
+      [
+        "isFiltered",
+        "boolean",
+        "false",
+        "Render the default cancel control.",
+        "إظهار زر إلغاء الفلتر."
+      ],
+      [
+        "skeletonWidth",
+        "string | number",
+        "\"360px\"",
+        "Vuetify skeleton width.",
+        "عرض Skeleton."
+      ],
+      [
+        "itemKey",
+        "string",
+        "\"id\"",
+        "Direct key field, falling back to row index.",
+        "حقل المفتاح المباشر؛ البديل فهرس الصف."
+      ],
+      [
+        "filterLabel",
+        "string",
+        "\"Filter\"",
+        "Default filter button text.",
+        "نص زر الفلتر."
+      ],
+      [
+        "cancelLabel",
+        "string",
+        "\"Cancel\"",
+        "Default cancel button text.",
+        "نص زر الإلغاء."
+      ],
+      [
+        "emptyLabel",
+        "string",
+        "\"No data\"",
+        "Already translated empty-state text.",
+        "نص الحالة الفارغة مترجم مسبقًا."
+      ]
+    ],
+    "slots": [
+      "`header-actions`: `{isFiltered,filterClick,filterCancel}`; `content` / `search`: `{search(payload)}`; `item`: `{item,index}`; `loading`: `{type,width}`; `empty`: `{label}`; `filter-modal`: no props. The content slot replaces search and the list entirely.",
+      "`header-actions`: يستقبل `{isFiltered,filterClick,filterCancel}`؛ `content` و`search`: يستقبلان `{search(payload)}`؛ `item`: يستقبل `{item,index}`؛ `loading`: يستقبل `{type,width}`؛ `empty`: يستقبل `{label}`؛ `filter-modal`: دون خصائص. content يستبدل البحث والقائمة بالكامل."
+    ],
+    "variables": [
+      [
+        "--wakeb-sidebar-outer-bg",
+        "120deg conic gradient"
+      ],
+      [
+        "--wakeb-sidebar-inner-bg",
+        "240deg linear gradient"
+      ],
+      [
+        "--wakeb-sidebar-body",
+        "#fff"
+      ],
+      [
+        "--wakeb-sidebar-body-rgb",
+        "255,255,255"
+      ],
+      [
+        "--wakeb-sidebar-title",
+        "#fff"
+      ],
+      [
+        "--wakeb-sidebar-empty-color",
+        "#667085"
+      ],
+      [
+        "--wakeb-sidebar-fallback",
+        "undefined (legacy adapter switch)"
+      ]
+    ],
+    "events": [
+      "`search(payload: unknown)` only when a search/content slot calls its search callback; `filterClick()` and `filterCancel()` for controls. No records or schemas are mutated.",
+      "`search(payload: unknown)` عندما يستدعي slot البحث دالة search؛ و`filterClick()` و`filterCancel()` للأزرار. لا تتغير العناصر أو schemas داخل المكوّن."
+    ],
+    "limits": [
+      "Attrs target the outer div. The package owns no form/schema, store, translations or filter modal. Supply a native input or your form library through search and call search(payload). Aware retains GenericForm and updateSchema in its adapter. Without a search slot, the public component renders no search control. The header remains while content is replaced. Loading wins over empty/list. The default list keeps min-height 400px and max-height 60dvh, with a 340px minimum shell width; override root min-width for narrower responsive layouts. The bottom 72px fade is decorative and does not intercept pointers. Use namespaced CSS variables for gradients/body/title colors and loading/empty slots for custom states. Legacy global card-gradient/sidebar rules remain in Aware only; package styles are scoped. List item identity uses a direct field or index, and slots own item interactions.",
+      "الخصائص على div الخارجي. الحزمة لا تملك form أو schema أو store أو ترجمة أو نافذة فلتر. وفر input أو مكتبة الفورم في search واستدعِ search(payload). Aware يحتفظ بـGenericForm وupdateSchema في adapter. دون search لا يظهر بحث افتراضي. يبقى الـheader عند استبدال المحتوى. التحميل له أولوية على الحالة الفارغة والقائمة. القائمة تحتفظ بحد أدنى 400px وأقصى 60dvh والحاوية بحد أدنى 340px؛ استبدل min-width للتصميم الأضيق. التلاشي السفلي 72px زخرفي ولا يمنع النقر. خصص الألوان عبر CSS والتحميل والحالة الفارغة عبر slots. أنماط card-gradient العامة القديمة تبقى في Aware فقط، وأنماط الحزمة scoped. هوية العنصر من حقل مباشر أو الفهرس وslot يملك التفاعل معه."
+    ],
+    "example": "<WBaseSidebar title=\"People\" :items=\"[{id:1,name:'Ada'}]\" :has-filter=\"false\"><template #item=\"{item}\">{{item.name}}</template></WBaseSidebar>",
+    "playground": "CompositionPlayground"
   }
 ];

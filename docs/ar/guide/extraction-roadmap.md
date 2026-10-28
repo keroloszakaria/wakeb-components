@@ -1,10 +1,9 @@
 # خريطة الفصل
 
-تم فصل ستة عشر مكونًا عرض وتحميل وأزرار وAccordion، مع الاحتفاظ بمسارات Aware كـadapters. مراجعة بقية مجلد common أظهرت أن المكونات التالية تحتاج عقودًا إضافية قبل نقلها.
+تم فصل تسعة عشر مكونًا عرض وتحميل وأزرار وAccordion، مع الاحتفاظ بمسارات Aware كـadapters. مراجعة بقية مجلد common أظهرت أن المكونات التالية تحتاج عقودًا إضافية قبل نقلها.
 
 | المجموعة | المكونات | المطلوب قبل الفصل |
 | --- | --- | --- |
-| التنقل والقوائم | Carousel, ExportDropdown, BaseSidebar | تثبيت selection/events/keyboard وslots؛ Carousel يحتوي اسم hideDelimiters بسلوك عكسي يجب الاحتفاظ به في adapter |
 | النوافذ | Modal, Drawer, AddEditModal | فصل صورة header وButton وحالات الحفظ والتحميل والترجمة، والتحقق من التركيز وEscape وscroll lock |
 | الجداول والنماذج | Table, CardView, Card, GenericForm, AdvancedFiltersModal, CheckboxFilterDropdown, PageTabsFilter, ActiveToggleBadge | فصل schema والصلاحيات وenums/actions وjervis-form؛ المكون العام يتلقى بيانات وأحداثًا |
 | التاريخ والملفات | Calendar, DatePicker, DateTimeField, CurrentDataTime, FilePreview | عقود locale/timezone وتنسيق التاريخ واعتمادات datepicker؛ مؤقت الساعة يحتاج lifecycle مستقلًا |
@@ -17,4 +16,4 @@
 الإصدار 0.4.0 يفصل BadgeStack وUserBadge وTooltipBtn؛ المراجعة التالية للتنقل والقوائم ثم النوافذ.
 
 
-الإصدار 0.5.0 يفصل Tabs وTree وDropdown. Carousel وExportDropdown وBaseSidebar والنوافذ تظل للمراجعة التالية.
+الإصدار 0.5.0 يفصل Tabs وTree وDropdown. Carousel وExportDropdown وBaseSidebar متاحة منذ 0.6.0؛ النوافذ تظل للمراجعة التالية.

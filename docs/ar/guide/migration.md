@@ -58,3 +58,14 @@ Tabs وTree وDropdown يحتفظون بمسارات الاستيراد في Awa
 | components/common/Tabs.vue | WTabs |
 | components/common/Tree.vue | WTree |
 | components/common/Dropdown.vue | WDropdown |
+
+
+## 0.6.0
+
+Carousel وExportDropdown وBaseSidebar يحتفظون بمسارات Aware الحالية. Carousel يظل بجذرين ويتجاهل خصائص fragment كما كان؛ hideDelimiters=true القديم يتحول إلى showIndicators=true، والمؤشرات تحتفظ بغياب type القديم. المشاريع الجديدة تستخدم showIndicators بمعناه المباشر ومؤشرات من نوع button. ExportDropdown يترك directive الصلاحيات على زر Aware الفعلي ويحافظ على أسماء SvgIcon والترجمة وقيمة select النصية. الحزمة العامة تختار الصيغة فقط؛ الصلاحيات وتوليد الملف في المشروع. BaseSidebar يترك GenericForm وsearchSchema وemitOnChange وupdateSchema داخل Aware عبر search slot. Tokens التدرج والأنماط العامة القديمة وأزرار وأيقونات الفلترة والترجمة في adapter. مواضع header وcontent وitem وfilter-modal وحالات التحميل والفراغ محفوظة.
+
+| المسار | المكون |
+| --- | --- |
+| components/common/Carousel.vue | WCarousel |
+| components/common/ExportDropdown.vue | WExportDropdown |
+| components/common/BaseSidebar.vue | WBaseSidebar |

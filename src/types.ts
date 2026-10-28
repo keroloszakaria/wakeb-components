@@ -246,3 +246,39 @@ export interface DropdownProps {
   colorMap?: Record<string, string>;
   menuStyle?: CSSProperties;
 }
+
+export interface CarouselProps {
+  slides?: readonly unknown[];
+  modelValue?: number;
+  interval?: number;
+  cycle?: boolean;
+  showArrows?: boolean | "hover";
+  showIndicators?: boolean;
+  height?: string | number;
+  ariaLabel?: string;
+  indicatorLabel?: (index: number) => string;
+  indicatorAttrs?: Record<string, unknown>;
+  keyboardIndicators?: boolean;
+}
+export interface ExportFormat { label: string; value: string; icon?: SharedIcon; disabled?: boolean; }
+export interface ExportDropdownProps {
+  isLoading?: boolean;
+  disabled?: boolean;
+  title?: string;
+  formats?: readonly ExportFormat[];
+  menuStyle?: CSSProperties;
+}
+export interface SidebarItem { [field: string]: unknown; id?: NavigationKey; }
+export interface BaseSidebarProps {
+  title: string;
+  loading?: boolean;
+  items?: readonly SidebarItem[];
+  skeletonType?: string;
+  hasFilter?: boolean;
+  isFiltered?: boolean;
+  skeletonWidth?: string | number;
+  itemKey?: string;
+  filterLabel?: string;
+  cancelLabel?: string;
+  emptyLabel?: string;
+}

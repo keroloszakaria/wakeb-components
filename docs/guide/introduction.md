@@ -1,6 +1,6 @@
 # Introduction
 
-Wakeb Components provides sixteen focused primitives: truncated text, segmented progress, a semicircle gauge, avatar stacks, a loading indicator, page skeletons, vertical steps, buttons, badges, accordion panels, badge stacks, user badges, tooltip buttons, tabs, trees and dropdown menus. Application colors, icons and translations stay in consumer adapters.
+Wakeb Components provides nineteen focused primitives: truncated text, segmented progress, a semicircle gauge, avatar stacks, a loading indicator, page skeletons, vertical steps, buttons, badges, accordion panels, badge stacks, user badges, tooltip buttons, tabs, trees, dropdown menus, carousels, export pickers and sidebar shells. Application colors, icons and translations stay in consumer adapters.
 
 Vue 3.5 and Vuetify 3.13.2+ are peers. Import components by name from `wakeb-components`.
 No registry plugin, route, store or auto-import convention is needed.

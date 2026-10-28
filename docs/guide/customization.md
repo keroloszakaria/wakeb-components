@@ -49,3 +49,8 @@ WBadgeStack supports `icon`, `badgeIcon` and `label` slots. Pass already formatt
 ## Navigation
 
 Use WTabs tab-label/tab-icon slots for company icons and trusted content. Set WTree activeKey and expandedKeys from its events; custom action controls belong in actions or must stop their own click propagation. WDropdown accepts a host labelFormatter, colorMap, menuStyle and router-link through item-label. Keep routing, translation instances and application permissions in the host. See [Tabs](/components/tabs), [Tree](/components/tree) and [Dropdown](/components/dropdown) for exact defaults and keyboard contracts.
+
+
+## Carousels, export pickers and sidebar shells
+
+Place WCarousel in a positioned parent and control autoplay through cycle; offer a visible pause control. Use prev/next/slide slots for host content. WExportDropdown formats are typed records; select emits the value and leaves file generation to the host. Put permission directives on the activator slot. WBaseSidebar search slot bridges any form library through its search(payload) callback; content replaces both search and the list. Namespaced CSS variables style gradients, body/title colors and indicators. [Carousel](/components/carousel), [ExportDropdown](/components/export-dropdown) and [BaseSidebar](/components/base-sidebar) document all contracts.

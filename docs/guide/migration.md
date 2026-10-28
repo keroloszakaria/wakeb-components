@@ -60,3 +60,14 @@ Tabs, Tree and Dropdown keep their Aware import paths. Tabs forwards named panel
 | components/common/Tabs.vue | WTabs |
 | components/common/Tree.vue | WTree |
 | components/common/Dropdown.vue | WDropdown |
+
+
+## 0.6.0
+
+Carousel, ExportDropdown and BaseSidebar retain their existing Aware paths. Carousel keeps two root nodes and drops fragment attrs as before; its legacy hideDelimiters=true maps to showIndicators=true, and indicators retain their old missing native type. New projects use showIndicators with normal positive semantics and non-submit indicator buttons. ExportDropdown keeps the permission directive on the actual Aware Button, its download/PDF/Excel SvgIcon names, translations and select string payloads. The public package only picks a format; host code owns permissions and file generation. BaseSidebar keeps GenericForm/searchSchema/emitOnChange/updateSchema inside Aware via the search slot; the public package receives presentation records and callbacks. App-only gradient tokens, legacy global card-gradient rules, filter buttons/icons and translations stay in the adapter. Header/content/item/filter-modal placement and loading/empty behavior stay compatible.
+
+| Existing path | Shared component |
+| --- | --- |
+| components/common/Carousel.vue | WCarousel |
+| components/common/ExportDropdown.vue | WExportDropdown |
+| components/common/BaseSidebar.vue | WBaseSidebar |

@@ -48,3 +48,8 @@ WBadgeStack يوفر slots للأيقونة والصورة والاسم. مرر 
 ## التنقل
 
 استخدم tab-label وtab-icon لأيقونات المشروع ومحتوى التبويبات. حدّث activeKey وexpandedKeys في WTree من الأحداث، وضع الإجراءات في actions أو أوقف تصاعد نقرها. WDropdown يقبل labelFormatter وcolorMap وmenuStyle وrouter-link عبر item-label. التوجيه والترجمة والصلاحيات تظل في المشروع. راجع [Tabs](/ar/components/tabs) و[Tree](/ar/components/tree) و[Dropdown](/ar/components/dropdown) لكل العقود والافتراضات.
+
+
+## الشرائح والتصدير والحاويات الجانبية
+
+ضع WCarousel داخل أب position:relative وتحكم في التشغيل عبر cycle مع إيقاف ظاهر. استخدم slots للمحتوى والسابق والتالي. صيغ WExportDropdown بيانات typed والحدث select يترك توليد الملف للمشروع؛ الصلاحيات على activator slot. search في WBaseSidebar يربط أي فورم عبر search(payload)، وcontent يستبدل البحث والقائمة. متغيرات CSS تخصص التدرج والألوان والمؤشرات. راجع [Carousel](/ar/components/carousel) و[ExportDropdown](/ar/components/export-dropdown) و[BaseSidebar](/ar/components/base-sidebar).

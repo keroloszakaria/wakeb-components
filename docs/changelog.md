@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0
+
+- Add typed WCarousel, WExportDropdown and WBaseSidebar with playback/indicator controls, configurable export records and form-independent sidebar slots.
+- Keep Aware permissions, GenericForm schemas, translations, SvgIcon names, gradient tokens and inverted carousel indicator semantics in adapters.
+- Verify actual Vuetify cycling/menu/skeleton behavior, compatibility adapters and bilingual interactive documentation.
+
 ## 0.5.0
 
 - Add typed WTabs, WTree and WDropdown with named panels, recursive slots and host-owned translation/router integration.

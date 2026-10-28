@@ -1,0 +1,80 @@
+{
+  "name": "wakeb-components",
+  "version": "0.1.0",
+  "description": "Typed, customizable Vue 3 and Vuetify 3 display components.",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./style.css": "./dist/wakeb-components.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "dependencies": {
+    "wakeb-utils": "0.1.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0",
+    "vuetify": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitejs/plugin-vue": "5.2.4",
+    "@vue/server-renderer": "^3.5.0",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "26.1.0",
+    "sass": "^1.77.4",
+    "typescript": "5.9.3",
+    "vite": "6.4.4",
+    "vitepress": "1.6.4",
+    "vitest": "4.1.12",
+    "vue": "^3.5.0",
+    "vue-tsc": "3.3.13",
+    "vuetify": "3.13.7"
+  },
+  "overrides": {
+    "vite": "6.4.4"
+  },
+  "scripts": {
+    "typecheck": "vue-tsc --noEmit",
+    "build": "vite build && vue-tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "check:package": "node scripts/check-package.mjs",
+    "docs:build": "node scripts/docs-build.mjs",
+    "docs:dev": "vitepress dev docs --host localhost",
+    "docs:preview": "vitepress preview docs --host localhost",
+    "check": "npm run typecheck && npm run build && npm test && npm run check:package && npm run docs:build",
+    "prepack": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/keroloszakaria/wakeb-components.git"
+  },
+  "homepage": "https://wakeb-components.surge.sh",
+  "keywords": [
+    "vue",
+    "vuetify",
+    "components",
+    "wakeb",
+    "typescript",
+    "rtl"
+  ]
+}

@@ -117,7 +117,10 @@ const show = (kind: string) =>
             color: 'var(--vp-c-text-1)',
           }"
           :badge-attrs="{
-            style: { '--wakeb-badge-neutral-text': 'var(--vp-c-text-1)' },
+            style: {
+              '--wakeb-badge-neutral-text': 'var(--vp-c-text-1)',
+              '--wakeb-badge-neutral-bg': 'var(--vp-c-bg-soft)',
+            },
           }"
         />
         <WUserBadge
@@ -214,6 +217,7 @@ const show = (kind: string) =>
   --wakeb-badge-primary-text: var(--vp-c-text-1);
   --wakeb-badge-outline-border: var(--vp-c-divider);
   --wakeb-badge-neutral-text: var(--vp-c-text-1);
+  --wakeb-badge-neutral-bg: var(--vp-c-bg-soft);
   --wakeb-badge-stack-overflow-background: var(--vp-c-bg);
   --wakeb-badge-stack-overflow-color: var(--vp-c-text-1);
 }

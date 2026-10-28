@@ -14,23 +14,28 @@ const output = run([npm, "pack", "--json", "--ignore-scripts", "--pack-destinati
 const [packed] = JSON.parse(output.slice(output.indexOf("[")));
 for (const path of ["dist/index.js", "dist/index.d.ts", "dist/wakeb-components.css", "LICENSE", "README.md"]) assert(packed.files.some(file => file.path === path), path);
 assert(!packed.files.some(file => /(^|\/)(node_modules|tests|\.env)(\/|$)/.test(file.path)));
-writeFileSync(join(fixture, "package.json"), JSON.stringify({ private: true, type: "module", dependencies: { "wakeb-components": join(fixture, packed.filename), vue: "^3.5.0", vuetify: "^3.0.0", "@vue/server-renderer": "^3.5.0" } }));
-console.log(run([npm, "install", "--ignore-scripts", "--no-fund", "--no-audit"], fixture));
-writeFileSync(join(fixture, "consumer.ts"), `import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge, type TruncatedTextProps, type SemiCircleGaugeProps } from 'wakeb-components';
+writeFileSync(join(fixture, "package.json"), JSON.stringify({ private: true, type: "module", dependencies: { "wakeb-components": join(fixture, packed.filename), vue: "^3.5.0", vuetify: "3.13.2", "@vue/server-renderer": "^3.5.0" } }));
+console.log(run([npm, "install", "--ignore-scripts", "--no-fund", "--no-audit", "--prefer-offline", ...(process.env.WAKEB_CHECK_OFFLINE ? ["--offline"] : [])], fixture));
+writeFileSync(join(fixture, "consumer.ts"), `import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps, type AvatarStackProps, type SkeletonRow, type VerticalStep, type TruncatedTextProps, type SemiCircleGaugeProps } from 'wakeb-components';
 const text: TruncatedTextProps = { label: 'Public package', length: 8, tooltipLocation: 'top' };
 const gauge: SemiCircleGaugeProps = { value: 30, ariaLabel: 'Quality' };
 // @ts-expect-error arbitrary locations are not public tooltip locations
 const bad: TruncatedTextProps = { tooltipLocation: 'diagonal' };
-void [text, gauge, bad, WTruncatedText, WSegmentedProgress, WSemiCircleGauge];`);
+const avatars: AvatarStackProps = { items: [{ name: 'Ada' }], max: 2, nameKey: 'name' };
+const skeleton: SkeletonRow = { repeat: 2, cols: 6, variant: 'card', items: [{ type: 'text' }] };
+const step: VerticalStep = { title: 'Review', is_active: true };
+// @ts-expect-error skeleton direction is a closed public union
+const badDirection: import('wakeb-components').PageSkeletonProps = { config: [], direction: 'diagonal' };
+void [text, gauge, bad, avatars, skeleton, step, badDirection, WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps];`);
 run([join(root, "node_modules/typescript/bin/tsc"), "--noEmit", "--strict", "--skipLibCheck", "--target", "ES2022", "--module", "ESNext", "--moduleResolution", "Bundler", "consumer.ts"], fixture);
-const components = `h(WTruncatedText, { label: 'Public package consumer' }), h(WSegmentedProgress, { value: 60, label: 'Ready' }), h(WSemiCircleGauge, { value: 75, label: '75' })`;
+const components = `h(WTruncatedText, { label: 'Public package consumer' }), h(WSegmentedProgress, { value: 60, label: 'Ready' }), h(WSemiCircleGauge, { value: 75, label: '75' }), h(WAvatarStack, { items: [{ name: 'Ada' }], showTooltip: false }), h(WLoading, { label: 'Loading report' }), h(WPageSkeleton, { config: [{ items: [{ type: 'text' }] }] }), h(WVerticalSteps, { steps: [{ title: 'Review' }] })`;
 writeFileSync(join(fixture, "index.html"), '<div id="app"></div><script type="module" src="/browser.js"></script>');
-writeFileSync(join(fixture, "browser.js"), `import { createApp, h } from 'vue'; import { createVuetify } from 'vuetify'; import 'vuetify/styles'; import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge } from 'wakeb-components'; import 'wakeb-components/style.css'; createApp({ render: () => h('main', [${components}]) }).use(createVuetify()).mount('#app');`);
+writeFileSync(join(fixture, "browser.js"), `import { createApp, h } from 'vue'; import { createVuetify } from 'vuetify'; import 'vuetify/styles'; import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps } from 'wakeb-components'; import 'wakeb-components/style.css'; createApp({ render: () => h('main', [${components}]) }).use(createVuetify()).mount('#app');`);
 await build({ root: fixture, configFile: false, logLevel: "warn", build: { outDir: "browser-dist" } });
-writeFileSync(join(fixture, "server.js"), `import { createSSRApp, h } from 'vue'; import { renderToString } from '@vue/server-renderer'; import { createVuetify } from 'vuetify'; import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge } from 'wakeb-components'; export async function render() { return renderToString(createSSRApp({ render: () => h('main', [${components}]) }).use(createVuetify({ ssr: true }))); }`);
+writeFileSync(join(fixture, "server.js"), `import { createSSRApp, h } from 'vue'; import { renderToString } from '@vue/server-renderer'; import { createVuetify } from 'vuetify'; import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps } from 'wakeb-components'; export async function render() { return renderToString(createSSRApp({ render: () => h('main', [${components}]) }).use(createVuetify({ ssr: true }))); }`);
 await build({ root: fixture, configFile: false, logLevel: "warn", ssr: { noExternal: ["wakeb-components", "vuetify"] }, build: { ssr: join(fixture, "server.js"), outDir: "ssr-dist" } });
 const { render } = await import(pathToFileURL(join(fixture, "ssr-dist/server.js")).href);
 const html = await render();
-assert(html.includes('role="progressbar"')); assert(html.includes('aria-label="75%"')); assert(!/NaN|Infinity/.test(html));
+assert(html.includes('role="progressbar"')); assert(html.includes('aria-label="75%"')); assert(!/NaN|Infinity/.test(html)); assert(html.includes('Loading report')); assert(html.includes('Ada')); assert(html.includes('Review')); assert(html.includes('skeleton-block'));
 console.log("Packed package passed: typed consumer, real browser bundle, Vuetify and server rendering.");
 console.log(`Consumer fixture: ${fixture}`);

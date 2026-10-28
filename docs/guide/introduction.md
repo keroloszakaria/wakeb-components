@@ -1,10 +1,8 @@
 # Introduction
 
-Wakeb Components starts with three focused display primitives: text truncation,
-segmented progress and a semicircle gauge. They preserve the useful interaction
-patterns extracted from Aware, while application-specific colors live in adapters.
+Wakeb Components provides seven focused primitives: truncated text, segmented progress, a semicircle gauge, avatar stacks, a loading indicator, page skeletons and vertical steps. Application colors, icons and translations stay in consumer adapters.
 
-Vue 3.5 and Vuetify 3 are peers. Import components by name from `wakeb-components`.
+Vue 3.5 and Vuetify 3.13.2+ are peers. Import components by name from `wakeb-components`.
 No registry plugin, route, store or auto-import convention is needed.
 
 This first release deliberately excludes forms, tables, business badges, permission

@@ -7,6 +7,10 @@ The first extraction keeps the existing application paths as thin adapters:
 | `components/common/TruncatedText.vue` | `WTruncatedText` |
 | `components/common/SegmentedProgress.vue` | `WSegmentedProgress` |
 | `components/common/SemiCircleGauge.vue` | `WSemiCircleGauge` |
+| `components/common/AvatarStack.vue` | `WAvatarStack` |
+| `components/common/Loading.vue` | `WLoading` |
+| `components/common/PageSkeleton.vue` | `WPageSkeleton` |
+| `components/common/VerticalSteps.vue` | `WVerticalSteps` |
 
 Adapters map Aware tokens to namespaced variables and keep the old prop defaults.
 Existing screens do not need to change imports. New applications import named
@@ -20,3 +24,6 @@ These are documented defensive changes, not business-rule changes.
 Buttons, badges, forms, tables, layouts, permissions, data loading and theme
 configuration remain in Aware. The next extraction should be chosen after its
 own dependency and public-API review.
+
+
+The 0.2 extraction adds defensive boundaries: avatar max and skeleton repeats reject negative/nonfinite ranges, and malformed user names use fallback text. Aware keeps SvgIcon step icons through slots. Avatar menu colors are passed through menuStyle because Vuetify teleports the overlay. Status labels and translations belong to the host.

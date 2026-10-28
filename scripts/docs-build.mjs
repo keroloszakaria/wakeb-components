@@ -10,6 +10,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const { name, version } = JSON.parse(readFileSync(join(root,"package.json"),"utf8"));
 const types = ts.createSourceFile("types.ts", readFileSync(join(root,"src/types.ts"),"utf8"), ts.ScriptTarget.Latest, true);
 const interfaces = Object.fromEntries(types.statements.filter(ts.isInterfaceDeclaration).map(item => [item.name.text, item.members.map(member => member.name?.getText(types))]));
+for (const locale of ["", "ar/"]) {
+  assert.ok(readFileSync(join(root, "docs", locale, "guide/data-models.md"), "utf8").includes(readFileSync(join(root, "src/types.ts"), "utf8")), "Public data model docs must match declarations");
+}
 const publicNames = [...readFileSync(join(root,"src/index.ts"),"utf8").matchAll(/default as (\w+)/g)].map(m => m[1]);
 assert.deepEqual(reference.map(item=>item.name).sort(),publicNames.sort());
 for (const entry of reference) {

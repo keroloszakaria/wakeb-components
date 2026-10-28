@@ -1,6 +1,6 @@
 {
   "name": "wakeb-components",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Typed, customizable Vue 3 and Vuetify 3 display components.",
   "type": "module",
   "license": "MIT",
@@ -33,7 +33,7 @@
   },
   "peerDependencies": {
     "vue": "^3.5.0",
-    "vuetify": "^3.0.0"
+    "vuetify": "^3.13.2"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

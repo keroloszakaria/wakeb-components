@@ -1,7 +1,7 @@
 # wakeb-components
 
-Three typed Vue 3 display components, extracted for reuse with Vuetify 3:
-WTruncatedText, WSegmentedProgress and WSemiCircleGauge.
+Seven typed Vue 3 components, extracted for reuse with Vuetify 3:
+WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton and WVerticalSteps.
 
 [Documentation](https://wakeb-components.surge.sh) · [العربية](https://wakeb-components.surge.sh/ar/)
 
@@ -10,10 +10,10 @@ WTruncatedText, WSegmentedProgress and WSemiCircleGauge.
 Install the public npm package in your Vue application:
 
 ```sh
-npm install wakeb-components@0.1.1
+npm install wakeb-components@0.2.0
 ```
 
-Use Vue 3.5+ and Vuetify 3, and keep your existing Vuetify plugin setup.
+Use Vue 3.5+ and Vuetify 3.13.2+, and keep your existing Vuetify plugin setup.
 Import styles once in the application entry:
 
 ```ts
@@ -53,7 +53,7 @@ The production output is `docs/.vitepress/dist` at `wakeb-components.surge.sh`.
 
 ## Scope
 
-Version 0.1.0 covers three display primitives. Tables, forms, buttons, business
+Version 0.2.0 covers seven display and loading primitives. Tables, forms, buttons, business
 badges, routing and permissions remain in their current packages/application
 until their separate contracts are reviewed.
 

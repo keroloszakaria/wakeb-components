@@ -11,3 +11,7 @@
 .w-demo button { margin-top: 16px; color: var(--vp-c-brand-1); font-weight: 600; font-size: 13px; }
 .w-demo code { display: block; margin-top: 16px; white-space: normal; }
 @media(max-width:600px) { .w-demo { padding: 16px; } .w-demo__controls { grid-template-columns: 1fr; } .w-demo__stage { padding: 16px; } }
+
+.w-demo__stage .steps { min-width:0; overflow-x:auto; padding-block:4px; }
+.w-demo__stage .steps h2, .w-demo__stage .steps p { margin:0; border:0; padding:0; }
+.w-demo__stage .actor-overflow { margin-top:0; }

@@ -7,11 +7,10 @@ WTruncatedText, WSegmentedProgress and WSemiCircleGauge.
 
 ## Installation
 
-The initial release is available as a versioned download from the documentation.
-It is not yet published to the npm registry.
+Install the public npm package in your Vue application:
 
 ```sh
-npm install https://wakeb-components.surge.sh/downloads/wakeb-components-0.1.0.tgz
+npm install wakeb-components@0.1.1
 ```
 
 Use Vue 3.5+ and Vuetify 3, and keep your existing Vuetify plugin setup.

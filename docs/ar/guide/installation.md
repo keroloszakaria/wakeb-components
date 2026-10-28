@@ -1,10 +1,9 @@
 # التثبيت
 
-يتوفر الإصدار الأول مع التوثيق ولم يُنشر على npm بعد. ثبّت الأرشيف المحدد
-الإصدار داخل مشروع Vue3.5 وVuetify3:
+ثبّت الحزمة العامة من npm داخل مشروع Vue 3.5 وVuetify 3:
 
 ```sh
-npm install https://wakeb-components.surge.sh/downloads/wakeb-components-0.1.0.tgz
+npm install wakeb-components@0.1.1
 ```
 
 استورد CSS مرة واحدة في مدخل التطبيق، واحتفظ بإعداد Vuetify الحالي:
@@ -37,5 +36,5 @@ import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge } from 'wakeb-comp
 
 Vue وVuetify هما peers، وWakeb Utils0.1.1 يُثبت من npm. الحزمة ESM لمشاريع
 Vue التي تستخدم bundler. التطوير على Node22.14+. للعمل دون اتصال، احفظ
-<a href="/downloads/wakeb-components-0.1.0.tgz" download>الأرشيف</a> داخل المشروع وثبّته محليًا.
+<a href="/downloads/wakeb-components-0.1.1.tgz" download>الأرشيف</a> داخل المشروع وثبّته محليًا.
 احفظ package.json وملف القفل معًا.

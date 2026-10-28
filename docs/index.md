@@ -24,4 +24,4 @@ features:
 
 <ComponentPlayground />
 
-Version 0.1.0 is available as a versioned package download. Follow [installation](/guide/installation).
+Version 0.1.1 is published on npm. Follow [installation](/guide/installation).

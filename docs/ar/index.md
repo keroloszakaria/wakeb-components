@@ -24,4 +24,4 @@ features:
 
 <ComponentPlayground />
 
-الإصدار 0.1.0 متاح كأرشيف حزمة محدد الإصدار. راجع [دليل التثبيت](/ar/guide/installation).
+الإصدار 0.1.1 منشور على npm. راجع [دليل التثبيت](/ar/guide/installation).

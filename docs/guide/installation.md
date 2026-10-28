@@ -1,11 +1,9 @@
 # Installation
 
-This initial package is available with the documentation. It has not been
-published to the npm registry. Install the versioned download in a Vue 3.5 +
-Vuetify 3 project:
+Install the public npm package in a Vue 3.5 + Vuetify 3 project:
 
 ```sh
-npm install https://wakeb-components.surge.sh/downloads/wakeb-components-0.1.0.tgz
+npm install wakeb-components@0.1.1
 ```
 
 Import CSS once in your application entry and keep your existing Vuetify setup:
@@ -38,5 +36,5 @@ import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge } from 'wakeb-comp
 
 Vue and Vuetify are external peers; Wakeb Utils 0.1.1 is resolved from npm.
 The package is ESM for Vue bundlers. Development uses Node 22.14+.
-For offline use, copy <a href="/downloads/wakeb-components-0.1.0.tgz" download>the archive</a>
+For offline use, copy <a href="/downloads/wakeb-components-0.1.1.tgz" download>the archive</a>
 into your project and install that file. Commit the manifest and lockfile together.

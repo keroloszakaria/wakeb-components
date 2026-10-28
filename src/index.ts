@@ -16,3 +16,7 @@ export { default as WBadgeStack } from "./components/WBadgeStack.vue";
 export { default as WUserBadge } from "./components/WUserBadge.vue";
 export { default as WTooltipBtn } from "./components/WTooltipBtn.vue";
 export type { BadgeStackItem, BadgeStackProps, BadgeStackIconSlotProps, BadgeUser, UserBadgeProps, TooltipBtnProps } from "./types";
+export { default as WTabs } from "./components/WTabs.vue";
+export { default as WTree } from "./components/WTree.vue";
+export { default as WDropdown } from "./components/WDropdown.vue";
+export type { NavigationKey, TabContext, TabItem, TabsProps, TreeNode, TreeToggleSlotProps, TreeProps, DropdownItem, DropdownProps } from "./types";

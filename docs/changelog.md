@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.0
+
+- Add typed WTabs, WTree and WDropdown with named panels, recursive slots and host-owned translation/router integration.
+- Preserve Aware selection synchronization, tree connector/edit state, SvgIcon rendering and dropdown event ordering through compatibility adapters.
+- Add controlled-tree keyboard navigation, Vuetify interaction tests, packed SSR/browser consumers and bilingual live examples.
+
 ## 0.4.0
 
 - Add typed WBadgeStack, WUserBadge and WTooltipBtn with image/avatar/icon slots and explicit host translation.

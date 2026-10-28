@@ -176,3 +176,73 @@ export interface TooltipBtnProps {
   tooltipStyle?: CSSProperties;
   wrapperAttrs?: Record<string, unknown>;
 }
+
+export type NavigationKey = string | number;
+export interface TabContext { value: unknown; isSelected: boolean; }
+export interface TabItem {
+  [field: string]: unknown;
+  label?: string;
+  slot?: NavigationKey;
+  icon?: SharedIcon;
+  notification?: string | number;
+  sectionLabel?: string;
+  content?: string | number;
+  customHTML?: string | ((item: TabItem, context: TabContext) => string);
+  itemClassList?: ComponentClass | ((item: TabItem, index: number, context: TabContext) => ComponentClass);
+}
+export interface TabsProps {
+  styleType?: "outlined" | "filled" | "none" | "minimal";
+  isVertical?: boolean;
+  tabs: readonly TabItem[];
+  selectedTab?: NavigationKey | null;
+  isSwitcherOnly?: boolean;
+  valueKey?: string;
+  iconOnly?: boolean;
+  tabHeight?: string | number | null;
+  iconSize?: string | number;
+  classList?: ComponentClass;
+  contentGap?: string | number | null;
+  ariaLabel?: string;
+}
+export interface TreeNode { [field: string]: unknown; id?: NavigationKey; name?: string; description?: string; children?: readonly TreeNode[]; }
+export interface TreeToggleSlotProps { node: TreeNode; level: number; expanded: boolean; hasChildren: boolean; toggle: () => void; }
+export interface TreeProps {
+  nodes?: readonly TreeNode[];
+  itemKey?: string;
+  itemLabel?: string;
+  itemDescription?: string;
+  childrenKey?: string;
+  level?: number;
+  isRoot?: boolean;
+  expandedKeys?: readonly NavigationKey[];
+  activeKey?: NavigationKey | null;
+  activePath?: readonly NavigationKey[];
+  rtl?: boolean;
+  editingNodeId?: NavigationKey | null;
+  keyboardNavigation?: boolean;
+  ariaLabel?: string;
+  toggleLabel?: string;
+}
+export interface DropdownItem { [field: string]: unknown; label: string; value?: NavigationKey | null; icon?: SharedIcon; color?: string; disabled?: boolean; to?: unknown; href?: string; }
+export interface DropdownProps {
+  menuItems?: readonly DropdownItem[];
+  title?: string;
+  icon?: SharedIcon;
+  iconColor?: string;
+  showSelected?: boolean;
+  showBoth?: boolean;
+  iconPosition?: "start" | "end";
+  type?: string;
+  classList?: ComponentClass;
+  size?: string;
+  isLinks?: boolean;
+  isLoading?: boolean;
+  disabled?: boolean;
+  showChevron?: boolean;
+  modelValue?: NavigationKey | null;
+  expandIcon?: SharedIcon;
+  collapseIcon?: SharedIcon;
+  labelFormatter?: (label: string | undefined) => string;
+  colorMap?: Record<string, string>;
+  menuStyle?: CSSProperties;
+}

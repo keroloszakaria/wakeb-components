@@ -1,7 +1,7 @@
 # Wakeb Components
 
 - Vue 3.5 and Vuetify 3 are peers; do not bundle another copy.
-- Public runtime exports are WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps, WButton, WBadge, WAccordion, WBadgeStack, WUserBadge and WTooltipBtn.
+- Public runtime exports are WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps, WButton, WBadge, WAccordion, WBadgeStack, WUserBadge, WTooltipBtn, WTabs, WTree and WDropdown.
 - Keep business data, stores, routing, i18n instances, app aliases and Aware tokens out of the package.
 - Public customization uses typed props, slots, attributes and namespaced CSS variables.
 - Keep Aware compatibility adapters in Aware; test their default contracts.

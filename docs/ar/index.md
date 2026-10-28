@@ -3,7 +3,7 @@ layout: home
 hero:
   name: Wakeb Components
   text: واجهة مشتركة. بعقد واضح.
-  tagline: ثلاثة عشر مكونًا Vue 3 مع Vuetify، وتفاعل قابل للوصول، ومساحة لتصميم مشروعك.
+  tagline: ستة عشر مكونًا Vue 3 مع Vuetify، وتفاعل قابل للوصول، ومساحة لتصميم مشروعك.
   actions:
     - theme: brand
       text: ابدأ الاستخدام
@@ -28,4 +28,6 @@ features:
 
 <IdentityPlayground />
 
-الإصدار 0.4.0 منشور على npm. راجع [دليل التثبيت](/ar/guide/installation).
+<NavigationPlayground />
+
+الإصدار 0.5.0 منشور على npm. راجع [دليل التثبيت](/ar/guide/installation).

@@ -49,3 +49,14 @@ BadgeStack, UserBadge and TooltipBtn are compatibility adapters. Stack image slo
 | components/common/BadgeStack.vue | WBadgeStack |
 | components/common/UserBadge.vue | WUserBadge |
 | components/common/TooltipBtn.vue | WTooltipBtn |
+
+
+## 0.5.0
+
+Tabs, Tree and Dropdown keep their Aware import paths. Tabs forwards named panels and keeps its scoped SvgIcon shadow-color patch in the app adapter. Layout and semantic colors move to namespaced CSS variables; missing-token behavior stays compatible. Tabs mount/parent synchronization does not emit updateTab. Tree retains controlled expandedKeys/activeKey, connector geometry, inline edit matching and node/action/toggle slots. Default labels render at every depth; empty named slots use Vue fallback content. Standalone WTree additionally supplies ARIA/roving keyboard controls. Aware uses keyboardNavigation=false to keep existing focus behavior. Dropdown translates the complete activator label through host i18n and renders router-link/SvgIcon through slots. Semantic app colors stay in its adapter; root attrs and selectedItem then update:modelValue events retain their targets/order.
+
+| Existing path | Shared component |
+| --- | --- |
+| components/common/Tabs.vue | WTabs |
+| components/common/Tree.vue | WTree |
+| components/common/Dropdown.vue | WDropdown |

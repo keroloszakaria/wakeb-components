@@ -44,3 +44,8 @@ WButton and WBadge default to VIcon. Use your host Vuetify icon configuration or
 ## Badge compositions and tooltip buttons
 
 WBadgeStack supports `icon`, `badgeIcon` and `label` slots. Pass already formatted records; keep themed detection icons in the application. Use `menuStyle` on the teleported list and `badgeAttrs` for per-badge attributes/styles. WUserBadge offers avatar, name and actions slots; its initials size uses `--wakeb-user-badge-initials-size`. WTooltipBtn receives translated `text`, native VBtn attrs and an optional SVG icon slot. Use `tooltipStyle` for the teleported tooltip. The [component reference](/components/badge-stack) documents all defaults and limits.
+
+
+## Navigation
+
+Use WTabs tab-label/tab-icon slots for company icons and trusted content. Set WTree activeKey and expandedKeys from its events; custom action controls belong in actions or must stop their own click propagation. WDropdown accepts a host labelFormatter, colorMap, menuStyle and router-link through item-label. Keep routing, translation instances and application permissions in the host. See [Tabs](/components/tabs), [Tree](/components/tree) and [Dropdown](/components/dropdown) for exact defaults and keyboard contracts.

@@ -1866,5 +1866,567 @@ export default [
       "No custom events. Native click/keyboard/form attrs are forwarded to VBtn without an extra wrapper listener.",
       "لا توجد أحداث مخصصة. أحداث النقر والكيبورد وخصائص الفورم تصل إلى VBtn دون مستمع إضافي على الحاوية."
     ]
+  },
+  {
+    "name": "WTabs",
+    "slug": "tabs",
+    "interface": "TabsProps",
+    "summary": [
+      "Styled tab rails and lazy Vuetify panels with explicit selection events.",
+      "شريط تبويبات ولوحات Vuetify مع أحداث اختيار واضحة."
+    ],
+    "props": [
+      [
+        "styleType",
+        "\"outlined\" | \"filled\" | \"none\" | \"minimal\"",
+        "\"outlined\"",
+        "Visual rail preset.",
+        "شكل شريط التبويبات."
+      ],
+      [
+        "isVertical",
+        "boolean",
+        "false",
+        "Vertical rail layout.",
+        "شريط تبويبات رأسي."
+      ],
+      [
+        "tabs",
+        "readonly TabItem[]",
+        "[] (required)",
+        "Tab records with labels, slot keys and optional content.",
+        "بيانات التبويبات: الاسم ومفتاح slot والمحتوى الاختياري."
+      ],
+      [
+        "selectedTab",
+        "NavigationKey | null",
+        "\"\"",
+        "External selected value; empty switcher means no highlight.",
+        "قيمة الاختيار الخارجية؛ القيمة الفارغة في switcher تلغي التحديد."
+      ],
+      [
+        "isSwitcherOnly",
+        "boolean",
+        "false",
+        "Render only the rail, without panels.",
+        "عرض الشريط فقط دون المحتوى."
+      ],
+      [
+        "valueKey",
+        "string",
+        "\"slot\"",
+        "Record property used for values and named content slots.",
+        "الحقل المستخدم لقيمة التبويب واسم slot للمحتوى."
+      ],
+      [
+        "iconOnly",
+        "boolean",
+        "false",
+        "Hide default labels while retaining icon and notification; the label becomes its aria-label.",
+        "إخفاء الاسم الظاهر مع بقاء الأيقونة والعداد؛ الاسم يصبح aria-label."
+      ],
+      [
+        "tabHeight",
+        "string | number | null",
+        "null",
+        "Numeric pixel height; numeric strings are accepted.",
+        "الارتفاع بالبكسل؛ يقبل رقمًا أو نصًا رقميًا."
+      ],
+      [
+        "iconSize",
+        "string | number",
+        "\"sm\"",
+        "Icon size token or pixels.",
+        "حجم الأيقونة كاسم أو بكسل."
+      ],
+      [
+        "classList",
+        "ComponentClass",
+        "\"\"",
+        "Extra classes on the outer layout.",
+        "classes إضافية على الحاوية."
+      ],
+      [
+        "contentGap",
+        "string | number | null",
+        "null",
+        "Numeric pixel gap; default 32px.",
+        "المسافة بالبكسل؛ الافتراضي 32px."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "\"Tabs\"",
+        "Accessible tablist name.",
+        "اسم شريط التبويبات لقارئ الشاشة."
+      ]
+    ],
+    "slots": [
+      "`header`, `actions`; `tab-label`: `{ tabItem, index }` replaces the default label/HTML; `tab-icon`: `{ tabItem, index, size }`; content slots use each record valueKey. Header/actions/tab-label/tab-icon are reserved names.",
+      "`header` و`actions`؛ `tab-label`: يستقبل `{ tabItem, index }` ويستبدل الاسم وHTML؛ `tab-icon`: يستقبل `{ tabItem, index, size }`. أسماء محتوى التبويبات من valueKey؛ الأسماء السابقة محجوزة."
+    ],
+    "variables": [
+      [
+        "--wakeb-tabs-item-height",
+        "44px"
+      ],
+      [
+        "--wakeb-tabs-filled-tab-radius",
+        "10px"
+      ],
+      [
+        "--wakeb-tabs-filled-item-active-bg",
+        "#e6f2f3"
+      ],
+      [
+        "--wakeb-tabs-filled-item-active-color",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-tabs-item-active-color",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-tabs-item-active-border",
+        "#d0d5dd"
+      ],
+      [
+        "--wakeb-tabs-item-color",
+        "#344054"
+      ],
+      [
+        "--wakeb-tabs-input-bg",
+        "#fff"
+      ],
+      [
+        "--wakeb-tabs-input-border",
+        "#d0d5dd"
+      ],
+      [
+        "--wakeb-tabs-input-label",
+        "#344054"
+      ],
+      [
+        "--wakeb-tabs-minimal-tab-gap",
+        "4px"
+      ],
+      [
+        "--wakeb-tabs-minimal-tab-padding",
+        "4px"
+      ],
+      [
+        "--wakeb-tabs-minimal-tab-bg",
+        "#f2f4f7"
+      ],
+      [
+        "--wakeb-tabs-minimal-tab-border",
+        "#d0d5dd"
+      ],
+      [
+        "--wakeb-tabs-minimal-tab-radius",
+        "12px"
+      ],
+      [
+        "--wakeb-tabs-minimal-item-radius",
+        "8px"
+      ],
+      [
+        "--wakeb-tabs-minimal-item-color",
+        "#667085"
+      ],
+      [
+        "--wakeb-tabs-minimal-item-active-color",
+        "#101828"
+      ],
+      [
+        "--wakeb-tabs-minimal-item-active-radius",
+        "8px"
+      ],
+      [
+        "--wakeb-tabs-section-color",
+        "#667085"
+      ],
+      [
+        "--wakeb-tabs-section-border",
+        "#d0d5dd"
+      ],
+      [
+        "--wakeb-tabs-content-gap",
+        "32px"
+      ],
+      [
+        "--wakeb-tabs-fallback",
+        "undefined (legacy adapter switch)"
+      ]
+    ],
+    "events": [
+      "`updateTab(value: NavigationKey | undefined)` for accepted local changes only; no mount or parent-sync echo.",
+      "`updateTab(value: NavigationKey | undefined)` للتغيير المحلي فقط؛ لا يُرسل عند التركيب أو مزامنة الأب."
+    ],
+    "limits": [
+      "Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content.",
+      "الخصائص على الحاوية. Vue وVuetify هما peers ولا تحتاج Tailwind. الارتفاع والمسافة يضيفان px؛ لا تمرر وحدات CSS. عناوين الأقسام والـheader داخل الشريط. Vuetify يوفر tablist والتركيز والأسهم؛ اللوحات تُركب عند الحاجة وتحتفظ بحالة Vue بعد التركيب. selectedTab الفارغ في switcher يلغي التحديد. المزامنة تخص selectedTab وisSwitcherOnly؛ تغيير قائمة العناصر يترك سلوك المجموعة لـVuetify. الصفر في content أو notification يتبع فحص truthy القديم. customHTML يدخل كما هو عبر v-html ويجب أن يكون موثوقًا أو منقّى من المشروع؛ سياق الدالة {value,isSelected}. استخدم tab-label للبيانات غير الموثوقة. الأيقونات عبر VIcon أو slot دون تعديل shadow DOM داخل الحزمة. التبويب المصور فقط يستخدم label كاسم ARIA؛ وفر اسمًا واضحًا حتى مع المحتوى المخصص."
+    ],
+    "example": "<WTabs :tabs=\"[{ slot: 'overview', label: 'Overview' }, { slot: 'details', label: 'Details' }]\"><template #overview>Overview panel</template><template #details>Details panel</template></WTabs>",
+    "playground": "NavigationPlayground"
+  },
+  {
+    "name": "WTree",
+    "slug": "tree",
+    "interface": "TreeProps",
+    "summary": [
+      "A controlled recursive tree with connector lines, composable rows and keyboard navigation.",
+      "شجرة متداخلة يتحكم فيها المشروع مع خطوط الربط وslots وتنقل بالكيبورد."
+    ],
+    "props": [
+      [
+        "nodes",
+        "readonly TreeNode[]",
+        "[]",
+        "Acyclic presentational records with unique primitive keys.",
+        "بيانات عرض دون مراجع دائرية ومفاتيح نصية أو رقمية فريدة."
+      ],
+      [
+        "itemKey",
+        "string",
+        "\"id\"",
+        "Key field.",
+        "حقل المفتاح."
+      ],
+      [
+        "itemLabel",
+        "string",
+        "\"name\"",
+        "Visible/accessibility name field.",
+        "حقل الاسم الظاهر والمقروء."
+      ],
+      [
+        "itemDescription",
+        "string",
+        "\"description\"",
+        "Optional description field.",
+        "حقل الوصف الاختياري."
+      ],
+      [
+        "childrenKey",
+        "string",
+        "\"children\"",
+        "Child array field.",
+        "حقل قائمة الأبناء."
+      ],
+      [
+        "level",
+        "number",
+        "0",
+        "Starting depth, mainly for recursive composition.",
+        "عمق البداية؛ يستخدم في التركيب المتداخل."
+      ],
+      [
+        "isRoot",
+        "boolean",
+        "true",
+        "Root tree vs nested group; internal recursion sets false.",
+        "شجرة رئيسية أو مجموعة داخلية؛ التداخل الداخلي يمرر false."
+      ],
+      [
+        "expandedKeys",
+        "readonly NavigationKey[]",
+        "[]",
+        "Controlled expanded branches; update in the host on toggle.",
+        "الفروع المفتوحة؛ حدّثها في المشروع عند toggle."
+      ],
+      [
+        "activeKey",
+        "NavigationKey | null",
+        "null",
+        "Controlled selected node key.",
+        "مفتاح العنصر المختار من المشروع."
+      ],
+      [
+        "activePath",
+        "readonly NavigationKey[]",
+        "[]",
+        "Explicit path for nested/nonroot groups; root resolves from activeKey.",
+        "مسار المجموعات الداخلية؛ الجذر يستنتجه من activeKey."
+      ],
+      [
+        "rtl",
+        "boolean",
+        "false",
+        "RTL connectors and reversed expand/collapse arrow keys.",
+        "اتجاه RTL مع عكس أسهم الفتح والإغلاق."
+      ],
+      [
+        "editingNodeId",
+        "NavigationKey | null",
+        "null",
+        "Inline-edit class hook; numeric/string IDs compare compatibly.",
+        "class لحالة التعديل؛ المقارنة تدعم الرقم وتمثيله النصي."
+      ],
+      [
+        "keyboardNavigation",
+        "boolean",
+        "true",
+        "ARIA tree and roving keyboard navigation; false preserves legacy list behavior.",
+        "شجرة ARIA وتنقل بالكيبورد؛ false يحتفظ بسلوك القائمة القديم."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "\"Tree\"",
+        "Accessible root name.",
+        "اسم الشجرة المقروء."
+      ],
+      [
+        "toggleLabel",
+        "string",
+        "\"Toggle branch\"",
+        "Accessible name for the default branch toggle.",
+        "اسم زر فتح الفرع الافتراضي."
+      ]
+    ],
+    "slots": [
+      "`node`: `{node,level,expanded}`; `actions`: `{node,level}`; `toggle-leading` and `toggle-trailing`: `{node,level,expanded,hasChildren,toggle}`. Slots propagate to every level. Actions stop click bubbling; custom leading toggles must stop their own click.",
+      "`node`: يستقبل `{node,level,expanded}`؛ `actions`: يستقبل `{node,level}`؛ `toggle-leading` و`toggle-trailing`: يستقبلان `{node,level,expanded,hasChildren,toggle}`. جميعها تنتقل لكل المستويات. actions توقف تصاعد النقر؛ أوقف تصاعد زر leading المخصص عند الحاجة."
+    ],
+    "variables": [
+      [
+        "--wakeb-tree-input-border",
+        "#d0d5dd"
+      ],
+      [
+        "--wakeb-tree-primary",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-tree-hover-bg",
+        "#f2f4f7"
+      ],
+      [
+        "--wakeb-tree-active-text",
+        "#fff"
+      ],
+      [
+        "--wakeb-tree-paragraph-primary",
+        "#101828"
+      ],
+      [
+        "--wakeb-tree-paragraph-tertiary",
+        "#667085"
+      ],
+      [
+        "--wakeb-tree-toggle-color",
+        "#667085"
+      ],
+      [
+        "--wakeb-tree-focus",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-tree-fallback",
+        "undefined (legacy adapter switch)"
+      ]
+    ],
+    "events": [
+      "`node-click(node: TreeNode)` requests selection; `toggle(node: TreeNode)` requests expansion. Update activeKey/expandedKeys in the host; the tree never mutates records.",
+      "`node-click(node: TreeNode)` لطلب الاختيار، و`toggle(node: TreeNode)` لطلب الفتح. حدّث activeKey وexpandedKeys في المشروع؛ الشجرة لا تعدل البيانات."
+    ],
+    "limits": [
+      "Root attrs target ul. Data must be acyclic with globally unique string/number keys; only loaded children are considered. Field keys are direct properties, not dotted paths. activeKey uses strict identity; editingNodeId also supports string equivalence. Root computes active ancestors; nonroot groups use activePath. Collapsing unmounts descendant DOM through v-if and transition, so keep editable drafts in host state. Arrow Up/Down traverse visible nodes; Home/End move to bounds; expand/collapse arrows reverse in RTL; Enter/Space request selection. Expansion remains controlled. Nested controls keep their own keys. There is one roving tab target per tree; disappearing rows reset it to a visible key. No typeahead, virtualization, drag/drop, checkbox selection or remote loading is built in. Default labels propagate to every level. Empty named slots use Vue fallback content, including branch toggles. Motion respects reduced-motion preferences.",
+      "الخصائص تستهدف ul. البيانات دون دورات وبمفاتيح نصية أو رقمية فريدة في الشجرة، والأبناء المحمّلون فقط هم المعروضون. مفاتيح الحقول مباشرة دون dotted paths. activeKey يقارن بدقة وeditingNodeId يدعم تمثيل المفتاح النصي. الجذر يستنتج مسار العنصر؛ المجموعة الداخلية تستخدم activePath. الإغلاق يزيل DOM الأبناء عبر v-if؛ احفظ مسودات التعديل في حالة المشروع. أعلى/أسفل للتنقل وHome/End للحدود وأسهم الفروع تنعكس في RTL وEnter/Space لطلب الاختيار. الفتح يظل بتحكم الأب. عناصر التحكم الداخلية تحتفظ بمفاتيحها. يوجد هدف Tab واحد لكل شجرة ويتغير عند اختفاء العنصر. لا يوجد typeahead أو virtualization أو سحب أو checkboxes أو تحميل بعيد. الأسماء الافتراضية تظهر بكل المستويات؛ slots الفارغة تستخدم بديل Vue، بما فيها أزرار الفروع. الحركة تحترم reduced-motion."
+    ],
+    "example": "<WTree :nodes=\"[{ id: 1, name: 'Team', children: [{ id: 2, name: 'Member' }] }]\" :expanded-keys=\"[1]\" aria-label=\"Teams\" />",
+    "playground": "NavigationPlayground"
+  },
+  {
+    "name": "WDropdown",
+    "slug": "dropdown",
+    "interface": "DropdownProps",
+    "summary": [
+      "A selection/action menu with native button integration and host-owned labels, colors and links.",
+      "قائمة اختيار وإجراءات بزر فعلي وترجمة وألوان وروابط من المشروع."
+    ],
+    "props": [
+      [
+        "menuItems",
+        "readonly DropdownItem[]",
+        "[]",
+        "Option records; original objects are emitted.",
+        "عناصر القائمة؛ الحدث يرجع نفس الكائن."
+      ],
+      [
+        "title",
+        "string",
+        "undefined",
+        "Activator title before formatting.",
+        "عنوان الزر قبل التنسيق."
+      ],
+      [
+        "icon",
+        "SharedIcon",
+        "\"\"",
+        "Explicit leading activator icon.",
+        "أيقونة صريحة في زر القائمة."
+      ],
+      [
+        "iconColor",
+        "string",
+        "\"\"",
+        "Activator semantic color override.",
+        "لون دلالي صريح للزر."
+      ],
+      [
+        "showSelected",
+        "boolean",
+        "false",
+        "Show selection label; takes precedence over showBoth.",
+        "عرض اسم الاختيار؛ له أولوية على showBoth."
+      ],
+      [
+        "showBoth",
+        "boolean",
+        "false",
+        "Format title: selected label as one string.",
+        "تنسيق العنوان والاختيار كنص واحد."
+      ],
+      [
+        "iconPosition",
+        "\"start\" | \"end\"",
+        "undefined",
+        "Activator icon placement; fallback start.",
+        "موضع أيقونة الزر؛ البديل start."
+      ],
+      [
+        "type",
+        "string",
+        "undefined",
+        "WButton visual type; fallback primary.",
+        "نوع WButton؛ البديل primary."
+      ],
+      [
+        "classList",
+        "ComponentClass",
+        "\"\"",
+        "Classes on the activator button.",
+        "classes على زر القائمة."
+      ],
+      [
+        "size",
+        "string",
+        "\"lg\"",
+        "Activator size.",
+        "حجم زر القائمة."
+      ],
+      [
+        "isLinks",
+        "boolean",
+        "false",
+        "Native anchors for href/string to; router links belong in item-label.",
+        "روابط عادية لـhref أو to النصي؛ router-link داخل item-label."
+      ],
+      [
+        "isLoading",
+        "boolean",
+        "false",
+        "Disable activator/menu and show button loading.",
+        "تعطيل القائمة والزر مع إظهار التحميل."
+      ],
+      [
+        "disabled",
+        "boolean",
+        "false",
+        "Disable menu and activator.",
+        "تعطيل القائمة والزر."
+      ],
+      [
+        "showChevron",
+        "boolean",
+        "true",
+        "Append a chevron when a leading icon exists.",
+        "إضافة سهم عند وجود أيقونة رئيسية."
+      ],
+      [
+        "modelValue",
+        "NavigationKey | null",
+        "undefined",
+        "External selection; zero is valid, null retains prior selection.",
+        "الاختيار الخارجي؛ صفر صالح وnull يحتفظ بالاختيار السابق."
+      ],
+      [
+        "expandIcon",
+        "SharedIcon",
+        "\"$expand\"",
+        "Collapsed fallback icon.",
+        "أيقونة القائمة المغلقة."
+      ],
+      [
+        "collapseIcon",
+        "SharedIcon",
+        "\"$collapse\"",
+        "Open fallback icon.",
+        "أيقونة القائمة المفتوحة."
+      ],
+      [
+        "labelFormatter",
+        "(label: string | undefined) => string",
+        "label => label ?? \"\"",
+        "Host formatter/translator for activator and items.",
+        "دالة التنسيق أو الترجمة من المشروع للزر والعناصر."
+      ],
+      [
+        "colorMap",
+        "Record<string, string>",
+        "undefined",
+        "Override semantic success/danger/warning/primary/info colors.",
+        "استبدال الألوان الدلالية success وdanger وwarning وprimary وinfo."
+      ],
+      [
+        "menuStyle",
+        "CSSProperties",
+        "undefined",
+        "Styles/variables directly on the teleported list.",
+        "أنماط ومتغيرات على القائمة المنقولة خارج الحاوية."
+      ]
+    ],
+    "slots": [
+      "`activator`: `{props,isActive,buttonProps}`; bind both props and buttonProps to your button. `item-icon`: `{item,color}`; `item-label`: `{item,text}` for router-link or custom labels.",
+      "`activator`: يستقبل `{props,isActive,buttonProps}`؛ اربط props وbuttonProps بزرّك. `item-icon`: يستقبل `{item,color}`؛ `item-label`: يستقبل `{item,text}` للروابط أو الأسماء المخصصة."
+    ],
+    "variables": [
+      [
+        "--wakeb-dropdown-color-success",
+        "#12b76a"
+      ],
+      [
+        "--wakeb-dropdown-color-danger",
+        "#f04438"
+      ],
+      [
+        "--wakeb-dropdown-color-warning",
+        "#f79009"
+      ],
+      [
+        "--wakeb-dropdown-color-primary",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-dropdown-color-info",
+        "#2e90fa"
+      ],
+      [
+        "--wakeb-dropdown-activator-color",
+        "computed inline from selected color"
+      ]
+    ],
+    "events": [
+      "`selectedItem(item: DropdownItem)` then `update:modelValue(value: NavigationKey)` on an enabled option click, once each; selection updates afterwards.",
+      "`selectedItem(item: DropdownItem)` ثم `update:modelValue(value: NavigationKey)` عند نقر عنصر متاح، مرة لكل حدث؛ تتحدث الحالة بعدهما."
+    ],
+    "limits": [
+      "Attrs target the outer div. VMenu/VList own click-away, Escape and keyboard movement; the WButton activator uses action=button. No i18n/router instance is imported. Format title: label through labelFormatter as one string, matching the legacy composite-label contract. modelValue synchronization runs when the value changes, not when menuItems changes; null keeps the last selection. Initial showSelected falls back to title or the first label without marking it active. Value matching is strict, with label matching as fallback; zero is supported. Raw CSS colors work on option icons/text; activator text accepts semantic keys and var()/hex values, preserving the old contract. Semantic WButton icon colors have their own WButton variables. Bind colors to menuStyle or colorMap for teleported lists. Native links use href/string to; route objects require an item-label slot. Clicking a row emits selection; navigation belongs to the nested link. Disabled/loading suppress normal menu interaction.",
+      "الخصائص على div الخارجي. Vuetify يدير النقر الخارجي وEscape والكيبورد وزر WButton من نوع button. لا يوجد اعتماد على i18n أو router. عنوان showBoth يمر إلى labelFormatter كنص واحد مثل الأصل. مزامنة modelValue تعمل عند تغير القيمة لا عند تغير menuItems؛ null يحتفظ بالاختيار. showSelected الأولي يختار عنوانًا أو أول اسم دون تمييز عنصر active. القيم تقارن بدقة مع بديل مقارنة الاسم، والصفر مدعوم. ألوان CSS الخام تعمل للعناصر؛ نص الزر يقبل المفاتيح الدلالية وvar() وhex مثل القديم. ألوان أيقونة WButton لها متغيراته المستقلة. menuStyle وcolorMap يخصصان القائمة المنقولة. href أو to النصي رابط عادي؛ كائنات router تحتاج slot. نقر الصف يرسل الاختيار والتنقل مسؤولية الرابط الداخلي. التعطيل والتحميل يمنعان تفاعل القائمة الطبيعي."
+    ],
+    "example": "<WDropdown title=\"Status\" :menu-items=\"[{ label: 'Pending', value: 0 }, { label: 'Approved', value: 1 }]\" show-selected />",
+    "playground": "NavigationPlayground"
   }
 ];

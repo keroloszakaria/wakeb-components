@@ -43,3 +43,8 @@ WButton وWBadge يستخدمان VIcon كافتراضي؛ استخدم إعدا
 ## مجموعات الشارات وأزرار المساعدة
 
 WBadgeStack يوفر slots للأيقونة والصورة والاسم. مرر بيانات جاهزة للعرض واترك أيقونات الاكتشاف الخاصة بالمشروع داخله. menuStyle يخصص القائمة المنقولة وbadgeAttrs يخصص حاوية كل شارة. WUserBadge يوفر slots للصورة والاسم والإجراءات وحجم الأحرف عبر --wakeb-user-badge-initials-size. WTooltipBtn يستقبل text مترجمًا وخصائص VBtn وslot اختياريًا لـSVG. tooltipStyle يخصص Tooltip المنقول. راجع [المرجع](/ar/components/badge-stack) لكل الافتراضات والحدود.
+
+
+## التنقل
+
+استخدم tab-label وtab-icon لأيقونات المشروع ومحتوى التبويبات. حدّث activeKey وexpandedKeys في WTree من الأحداث، وضع الإجراءات في actions أو أوقف تصاعد نقرها. WDropdown يقبل labelFormatter وcolorMap وmenuStyle وrouter-link عبر item-label. التوجيه والترجمة والصلاحيات تظل في المشروع. راجع [Tabs](/ar/components/tabs) و[Tree](/ar/components/tree) و[Dropdown](/ar/components/dropdown) لكل العقود والافتراضات.

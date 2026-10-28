@@ -47,3 +47,14 @@ BadgeStack وUserBadge وTooltipBtn أصبحوا adapters. صور الدوائر
 | components/common/BadgeStack.vue | WBadgeStack |
 | components/common/UserBadge.vue | WUserBadge |
 | components/common/TooltipBtn.vue | WTooltipBtn |
+
+
+## 0.5.0
+
+Tabs وTree وDropdown يحتفظون بمسارات الاستيراد في Aware. Tabs يمرر slots المحتوى ويترك تعديل لون SvgIcon داخل shadow DOM في adapter المشروع فقط. التنسيق والألوان تنتقل إلى متغيرات namespaced مع الحفاظ على سلوك tokens المفقودة. التركيب ومزامنة الأب لا يرسلان updateTab. Tree يحتفظ بالتحكم الخارجي في الفتح والاختيار وخطوط الربط والتعديل وslots. أسماء العناصر تظهر بكل الأعماق؛ slots الفارغة تستخدم بديل Vue مثل الأصل. WTree العام يضيف ARIA وتنقلًا بالكيبورد. Aware يستخدم keyboardNavigation=false للاحتفاظ بالتركيز الحالي. Dropdown يترجم عنوان الزر كاملًا من i18n المشروع ويعرض router-link وSvgIcon عبر slots؛ ألوان Aware وترتيب selectedItem ثم update:modelValue محفوظان.
+
+| المسار | المكون |
+| --- | --- |
+| components/common/Tabs.vue | WTabs |
+| components/common/Tree.vue | WTree |
+| components/common/Dropdown.vue | WDropdown |

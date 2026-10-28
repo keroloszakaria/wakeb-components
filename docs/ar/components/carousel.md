@@ -26,7 +26,7 @@ import { WCarousel } from 'wakeb-components'
 | `showIndicators` | `boolean` | `false` | إظهار مؤشرات قابلة للنقر؛ الاسم بمعناه المباشر. |
 | `height` | `string \| number` | `"100%"` | ارتفاع Carousel. |
 | `ariaLabel` | `string` | `"Carousel"` | اسم عرض الشرائح المقروء. |
-| `indicatorLabel` | `(index: number) => string` | ``index => `Go to slide ${index + 1}` `` | دالة تسمية المؤشرات من المشروع؛ الفهرس يبدأ من صفر. |
+| `indicatorLabel` | `(index: number) => string` | `index => 'Go to slide ' + (index + 1)` | دالة تسمية المؤشرات من المشروع؛ الفهرس يبدأ من صفر. |
 | `indicatorAttrs` | `Record<string, unknown>` | `undefined` | خصائص وأنماط كل مؤشر؛ يمكنها استبدال type الخاص بالزر. |
 | `keyboardIndicators` | `boolean` | `true` | تفعيل مفاتيح الأسهم وHome/End وتنسيق التركيز؛ false يحتفظ بسلوك الزر الطبيعي. |
 

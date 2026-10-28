@@ -2497,7 +2497,7 @@ export default [
       [
         "indicatorLabel",
         "(index: number) => string",
-        "index => `Go to slide ${index + 1}`",
+        "index => 'Go to slide ' + (index + 1)",
         "Host-localized indicator names; index is zero-based.",
         "دالة تسمية المؤشرات من المشروع؛ الفهرس يبدأ من صفر."
       ],

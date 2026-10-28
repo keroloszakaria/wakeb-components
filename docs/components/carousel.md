@@ -26,7 +26,7 @@ import { WCarousel } from 'wakeb-components'
 | `showIndicators` | `boolean` | `false` | Show custom clickable indicators; this name has normal positive semantics. |
 | `height` | `string \| number` | `"100%"` | Native carousel height. |
 | `ariaLabel` | `string` | `"Carousel"` | Accessible carousel region name. |
-| `indicatorLabel` | `(index: number) => string` | `index => `Go to slide ${index + 1}`` | Host-localized indicator names; index is zero-based. |
+| `indicatorLabel` | `(index: number) => string` | ``index => `Go to slide ${index + 1}` `` | Host-localized indicator names; index is zero-based. |
 | `indicatorAttrs` | `Record<string, unknown>` | `undefined` | Extra DOM attrs/style on each indicator; may override its native type. |
 | `keyboardIndicators` | `boolean` | `true` | Enable enhanced indicator arrow/Home/End keys and focus styling; false keeps native button behavior. |
 

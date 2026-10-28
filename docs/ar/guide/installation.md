@@ -34,7 +34,7 @@ import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge } from 'wakeb-comp
 </template>
 ```
 
-Vue وVuetify هما peers، وWakeb Utils0.2.0 يُثبت من npm. الحزمة ESM لمشاريع
+Vue وVuetify هما peers، وWakeb Utils 0.1.1 يُثبت من npm. الحزمة ESM لمشاريع
 Vue التي تستخدم bundler. التطوير على Node22.14+. للعمل دون اتصال، احفظ
 <a href="/downloads/wakeb-components-0.2.0.tgz" download>الأرشيف</a> داخل المشروع وثبّته محليًا.
 احفظ package.json وملف القفل معًا.

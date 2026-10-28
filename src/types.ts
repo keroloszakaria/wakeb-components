@@ -105,3 +105,74 @@ export interface AccordionProps {
   toggleLabel?: string;
   contentId?: string;
 }
+
+export interface BadgeStackItem {
+  id?: string | number;
+  label?: string;
+  icon?: string;
+  color?: string;
+  type?: string;
+  variant?: BadgeProps["variant"];
+  borderRadius?: string;
+  customBorderRadius?: string;
+  customPadding?: string;
+  dotColor?: string;
+  isDot?: boolean;
+  classList?: ComponentClass;
+  badgeIcon?: SharedIcon;
+  iconSize?: string | number;
+  iconPosition?: "before" | "after";
+}
+export interface BadgeStackProps {
+  items?: readonly BadgeStackItem[];
+  max?: number;
+  truncateLength?: number;
+  showOverflowMenu?: boolean;
+  badgeType?: string;
+  badgeVariant?: BadgeProps["variant"];
+  badgeBorderRadius?: string;
+  customBorderRadius?: string;
+  badgePadding?: string;
+  dotColor?: string;
+  badgeClassList?: ComponentClass;
+  isDot?: boolean;
+  iconSize?: string | number;
+  iconPosition?: "before" | "after";
+  iconVariant?: "default" | "circle";
+  iconBackgroundOpacity?: number;
+  customOverflowBorderRadius?: string;
+  overflowLabel?: string;
+  overflowTag?: "button" | "div";
+  menuStyle?: CSSProperties;
+  badgeAttrs?: Record<string, unknown>;
+}
+export interface BadgeStackIconSlotProps {
+  item: BadgeStackItem;
+  index: number;
+  overflow: boolean;
+  variant: "default" | "circle";
+  style: CSSProperties;
+}
+export interface BadgeUser { name?: string; avatar?: string; }
+export interface UserBadgeProps {
+  user?: BadgeUser;
+  type?: string;
+  borderRadius?: string;
+  icon?: SharedIcon;
+  iconSize?: string | number;
+  iconPosition?: "before" | "after";
+  avatarSize?: string | number;
+  avatarColor?: string;
+}
+export interface TooltipBtnProps {
+  icon?: SharedIcon;
+  text?: string;
+  ariaLabel?: string | null;
+  btnIcon?: boolean;
+  variant?: "text" | "flat" | "elevated" | "tonal" | "outlined" | "plain";
+  location?: "top" | "bottom" | "start" | "end";
+  openDelay?: string | number;
+  contentClass?: string;
+  tooltipStyle?: CSSProperties;
+  wrapperAttrs?: Record<string, unknown>;
+}

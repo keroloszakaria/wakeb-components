@@ -12,3 +12,7 @@ export { default as WButton } from "./components/WButton.vue";
 export { default as WBadge } from "./components/WBadge.vue";
 export { default as WAccordion } from "./components/WAccordion.vue";
 export type { ComponentClass, SharedIcon, IconSlotProps, ButtonProps, BadgeProps, AccordionProps } from "./types";
+export { default as WBadgeStack } from "./components/WBadgeStack.vue";
+export { default as WUserBadge } from "./components/WUserBadge.vue";
+export { default as WTooltipBtn } from "./components/WTooltipBtn.vue";
+export type { BadgeStackItem, BadgeStackProps, BadgeStackIconSlotProps, BadgeUser, UserBadgeProps, TooltipBtnProps } from "./types";

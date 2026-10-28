@@ -3,7 +3,7 @@ layout: home
 hero:
   name: Wakeb Components
   text: Shared UI. Clear contracts.
-  tagline: Ten focused Vue 3 components with Vuetify integration, accessible interactions and room for your own design.
+  tagline: Thirteen focused Vue 3 components with Vuetify integration, accessible interactions and room for your own design.
   actions:
     - theme: brand
       text: Get started
@@ -13,7 +13,7 @@ hero:
       link: /components/truncated-text
 features:
   - title: Ready to use
-    details: Named imports, typed props and ten focused components. No app store, router or company-specific configuration.
+    details: Named imports, typed props and thirteen focused components. No app store, router or company-specific configuration.
   - title: Ready to customize
     details: Slots, attributes and namespaced CSS variables. Keep your own Vuetify theme and branding.
   - title: Verified as a package
@@ -26,4 +26,6 @@ features:
 
 <FoundationPlayground />
 
-Version 0.3.0 is published on npm. Follow [installation](/guide/installation).
+<IdentityPlayground />
+
+Version 0.4.0 is published on npm. Follow [installation](/guide/installation).

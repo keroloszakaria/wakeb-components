@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.0
+
+- Add typed WBadgeStack, WUserBadge and WTooltipBtn with image/avatar/icon slots and explicit host translation.
+- Preserve Aware badge item overrides, overflow styling, themed detection icons, user initials/actions and legacy tooltip attrs through adapters.
+- Add real Vuetify overflow, tooltip, avatar and compatibility checks plus bilingual interactive reference pages.
+
 ## 0.3.0
 
 - Extract WButton, WBadge and WAccordion with typed props, events and icon slots.

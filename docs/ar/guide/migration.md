@@ -36,3 +36,14 @@ Button وBadge وAccordion أصبحوا adapters أيضًا. SvgIcon يظل في
 | components/common/Button.vue | WButton |
 | components/common/Badge.vue | WBadge |
 | components/common/Accordion.vue | WAccordion |
+
+
+## 0.4.0
+
+BadgeStack وUserBadge وTooltipBtn أصبحوا adapters. صور الدوائر الظاهرة في المجموعة تظل DetectionTypeIcon الخاص بثيم Aware، وصور القائمة تظل img عادية. حاوية القائمة div القديمة وتقصير الأسماء وتخصيص كل عنصر ونصف القطر والشفافية محفوظة. WBadgeStack العام يوفر زر قائمة HTML افتراضيًا وmenuStyle وbadgeAttrs لتنسيق القائمة المنقولة. UserBadge يحتفظ بصورة 16px والأحرف عبر charAt وترتيب actions وتصاعد الأحداث. TooltipBtn يترجم path من i18n المشروع ويحتفظ بـpath كاسم ARIA القديم، مع تمرير attrs للحاوية والزر كما كان، بما فيه سلوك المستمعين والتصاعد القديم. WTooltipBtn العام يستقبل text مترجمًا ويمرر الأحداث والخصائص للزر مرة واحدة. استخدم العقد العام الأبسط في المشاريع الجديدة.
+
+| المسار | المكون |
+| --- | --- |
+| components/common/BadgeStack.vue | WBadgeStack |
+| components/common/UserBadge.vue | WUserBadge |
+| components/common/TooltipBtn.vue | WTooltipBtn |

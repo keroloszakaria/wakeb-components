@@ -39,3 +39,8 @@ locale direction. Register Vuetify with your application's locale configuration.
 WButton and WBadge default to VIcon. Use your host Vuetify icon configuration or supply SVG through slots. WAccordion uses WButton for indicators. The package needs no global SvgIcon, permission service or i18n instance. Name icon-only buttons with aria-label and pass localized toggleLabel text.
 
 --wakeb-button-fallback, --wakeb-badge-fallback and --wakeb-accordion-fallback are reserved for compatibility adapters; leave them undefined in normal use. Aware supplies an invalid CSS-value sentinel so missing legacy tokens retain their original CSS behavior. Use the documented color/size variables for ordinary customization.
+
+
+## Badge compositions and tooltip buttons
+
+WBadgeStack supports `icon`, `badgeIcon` and `label` slots. Pass already formatted records; keep themed detection icons in the application. Use `menuStyle` on the teleported list and `badgeAttrs` for per-badge attributes/styles. WUserBadge offers avatar, name and actions slots; its initials size uses `--wakeb-user-badge-initials-size`. WTooltipBtn receives translated `text`, native VBtn attrs and an optional SVG icon slot. Use `tooltipStyle` for the teleported tooltip. The [component reference](/components/badge-stack) documents all defaults and limits.

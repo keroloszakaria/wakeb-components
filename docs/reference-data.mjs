@@ -1485,5 +1485,386 @@ export default [
       "`update:modelValue(value: boolean)` — emitted only by local toggle actions.",
       "`update:modelValue(value: boolean)` — يُرسل عند التفعيل المحلي فقط."
     ]
+  },
+  {
+    "name": "WBadgeStack",
+    "slug": "badge-stack",
+    "interface": "BadgeStackProps",
+    "summary": [
+      "Badges with per-item styling, image slots and an optional overflow menu.",
+      "مجموعة شارات بتخصيص لكل عنصر وأيقونات قابلة للاستبدال وقائمة زيادة اختيارية."
+    ],
+    "props": [
+      [
+        "items",
+        "readonly BadgeStackItem[]",
+        "[]",
+        "Records with label, image URL, color and per-badge overrides.",
+        "عناصر تحمل الاسم ورابط الصورة واللون وتخصيصات الشارة."
+      ],
+      [
+        "max",
+        "number",
+        "1",
+        "Visible item slice limit; use a finite nonnegative integer.",
+        "حد العناصر الظاهرة؛ استخدم عددًا صحيحًا محدودًا لا يقل عن صفر."
+      ],
+      [
+        "truncateLength",
+        "number",
+        "12",
+        "Visible label length including the three-dot suffix. Overflow labels stay full.",
+        "طول الاسم الظاهر شامل النقاط؛ أسماء قائمة الزيادة كاملة."
+      ],
+      [
+        "showOverflowMenu",
+        "boolean",
+        "false",
+        "Enable a real hover/click/keyboard Vuetify menu on +N.",
+        "تفعيل قائمة Vuetify عند hover أو النقر أو الكيبورد على +N."
+      ],
+      [
+        "badgeType",
+        "string",
+        "\"transparent\"",
+        "Default WBadge semantic type.",
+        "نوع WBadge الافتراضي."
+      ],
+      [
+        "badgeVariant",
+        "BadgeProps[\"variant\"]",
+        "\"default\"",
+        "Default chip variant; default maps to tonal.",
+        "شكل الشارة؛ default يتحول إلى tonal."
+      ],
+      [
+        "badgeBorderRadius",
+        "string",
+        "\"md\"",
+        "Default preset radius.",
+        "نصف القطر الافتراضي."
+      ],
+      [
+        "customBorderRadius",
+        "string",
+        "\"sm\"",
+        "Legacy custom radius passed verbatim; use a CSS length for new code.",
+        "القيمة القديمة تمر كما هي؛ استخدم طول CSS صالحًا في المشاريع الجديدة."
+      ],
+      [
+        "badgePadding",
+        "string",
+        "\"\"",
+        "Default custom chip padding.",
+        "حشو الشارة المخصص."
+      ],
+      [
+        "dotColor",
+        "string",
+        "\"\"",
+        "Default dot color.",
+        "لون النقطة الافتراضي."
+      ],
+      [
+        "badgeClassList",
+        "ComponentClass",
+        "\"\"",
+        "Classes applied to each chip.",
+        "classes على كل chip."
+      ],
+      [
+        "isDot",
+        "boolean",
+        "false",
+        "Default status dot visibility.",
+        "إظهار نقطة الحالة افتراضيًا."
+      ],
+      [
+        "iconSize",
+        "string | number",
+        "\"xs\"",
+        "Default badge glyph size; image dimensions use the stack stylesheet.",
+        "حجم glyph؛ أبعاد الصور تحددها أنماط المجموعة."
+      ],
+      [
+        "iconPosition",
+        "\"before\" | \"after\"",
+        "\"before\"",
+        "Image/glyph placement in each badge.",
+        "موضع الأيقونة أو الصورة داخل الشارة."
+      ],
+      [
+        "iconVariant",
+        "\"default\" | \"circle\"",
+        "\"default\"",
+        "Flat images or a circular image wrapper.",
+        "صورة عادية أو حاوية دائرية."
+      ],
+      [
+        "iconBackgroundOpacity",
+        "number",
+        "1",
+        "Circle background mix, clamped to 0–1.",
+        "قوة لون الدائرة، بين صفر وواحد."
+      ],
+      [
+        "customOverflowBorderRadius",
+        "string",
+        "\"999px\"",
+        "Custom radius of +N when it opens a menu.",
+        "نصف قطر +N عندما يفتح قائمة."
+      ],
+      [
+        "overflowLabel",
+        "string",
+        "\"\"",
+        "Accessible menu button name; fallback +N.",
+        "الاسم المقروء لزر القائمة؛ البديل +N."
+      ],
+      [
+        "overflowTag",
+        "\"button\" | \"div\"",
+        "\"button\"",
+        "Native button by default; div is reserved for legacy adapters.",
+        "زر HTML افتراضيًا؛ div لتوافق المشاريع القديمة."
+      ],
+      [
+        "menuStyle",
+        "CSSProperties",
+        "undefined",
+        "Styles/variables placed directly on the teleported list.",
+        "أنماط ومتغيرات على القائمة المنقولة خارج الحاوية."
+      ],
+      [
+        "badgeAttrs",
+        "Record<string, unknown>",
+        "undefined",
+        "Wrapper attributes on every WBadge, including teleported rows. Avoid overriding its content props.",
+        "خصائص حاوية كل WBadge، حتى صفوف القائمة؛ تجنب استبدال خصائص المحتوى."
+      ]
+    ],
+    "slots": [
+      "`icon`: `{ item, index, overflow, variant, style }`, replacing the complete image wrapper. `badgeIcon`: `{ item, icon, size }` for glyph-only rows. `label`: `{ item, text, overflow }`. Index is local to the visible/overflow slice.",
+      "`icon`: يستقبل `{ item, index, overflow, variant, style }` ويستبدل حاوية الصورة كاملة. `badgeIcon`: للأيقونات غير المصورة. `label`: يستقبل `{ item, text, overflow }`. الفهرس داخل الجزء الظاهر أو المخفي."
+    ],
+    "variables": [
+      [
+        "--wakeb-badge-stack-overflow-background",
+        "#fff"
+      ],
+      [
+        "--wakeb-badge-stack-overflow-color",
+        "#101828"
+      ],
+      [
+        "--wakeb-badge-stack-menu-surface",
+        "Vuetify surface"
+      ],
+      [
+        "--wakeb-badge-stack-icon-background",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-badge-stack-focus",
+        "#087f8c"
+      ],
+      [
+        "--wakeb-badge-stack-fallback",
+        "not defined (legacy menu adapter switch)"
+      ]
+    ],
+    "limits": [
+      "Ordinary attrs target the flex wrapper. No business/theme/icon registry is imported. WBadge variables also apply. Set menu colors through menuStyle and badgeAttrs styles/classes because Vuetify teleports the list outside the stack. Image URLs render as decorative img elements; no fetch proxy or detection tint is built in. Nullish per-item overrides preserve false/empty values. max keeps Array.slice and count arithmetic for compatibility; negative, fractional or nonfinite values are unsupported configurations. Visible labels use Wakeb Utils UTF-16 truncation; the menu shows full labels. Only the menu overflow uses customOverflowBorderRadius; the static +N uses customBorderRadius. The inherited 58px overflow selector and the legacy circle sizing rules are retained; replace through CSS as needed. Native menu button supports focus, Enter/Space and Escape via Vuetify. The legacy div tag does not provide a native tab stop.",
+      "الخصائص العادية تستهدف حاوية flex. لا يوجد اعتماد على بيانات العمل أو theme أو registry للأيقونات. متغيرات WBadge متاحة أيضًا. خصص ألوان القائمة عبر menuStyle وbadgeAttrs لأن Vuetify ينقلها خارج الحاوية. الصور زخرفية ولا توجد خدمة لجلبها أو تلوين خاص بنوع الاكتشاف. تخصيص العنصر يحترم false والقيم الفارغة. max يحافظ على Array.slice والحساب القديم؛ الأعداد السالبة والكسرية وغير المحدودة إعدادات غير مدعومة. التقصير بوحدات UTF-16 من Wakeb Utils. القائمة تعرض الأسماء كاملة. customOverflowBorderRadius يخص زر القائمة فقط؛ +N الثابت يستخدم customBorderRadius. قواعد أحجام الزيادة والدائرة القديمة محفوظة. الزر الافتراضي يدعم التركيز وEnter/Space وEscape من Vuetify؛ div القديم لا يضيف tab stop."
+    ],
+    "example": "<WBadgeStack :items=\"[{ id: 1, label: 'Administrator' }, { id: 2, label: 'Reviewer' }]\" show-overflow-menu overflow-label=\"More roles\" />",
+    "playground": "IdentityPlayground",
+    "events": [
+      "No custom events. Native wrapper listeners bubble normally; menu state belongs to Vuetify.",
+      "لا توجد أحداث مخصصة. أحداث الحاوية تتصاعد طبيعيًا؛ حالة القائمة يديرها Vuetify."
+    ]
+  },
+  {
+    "name": "WUserBadge",
+    "slug": "user-badge",
+    "interface": "UserBadgeProps",
+    "summary": [
+      "A compact user badge with avatar/initials and an actions slot.",
+      "شارة مستخدم بصورة أو أحرف بديلة وslot للإجراءات."
+    ],
+    "props": [
+      [
+        "user",
+        "BadgeUser",
+        "{}",
+        "Presentational name/avatar record; data is escaped text.",
+        "بيانات العرض للاسم والصورة؛ الاسم نص آمن."
+      ],
+      [
+        "type",
+        "string",
+        "\"outline\"",
+        "WBadge semantic type.",
+        "نوع WBadge."
+      ],
+      [
+        "borderRadius",
+        "string",
+        "\"md\"",
+        "Badge radius preset.",
+        "نصف قطر الشارة."
+      ],
+      [
+        "icon",
+        "SharedIcon",
+        "\"\"",
+        "Legacy WBadge icon prop; avatar slot replaces the glyph.",
+        "خاصية الأيقونة القديمة؛ الصورة تستبدل glyph."
+      ],
+      [
+        "iconSize",
+        "string | number",
+        "\"xs\"",
+        "Legacy WBadge glyph size; avatarSize controls the actual avatar.",
+        "حجم glyph القديم؛ avatarSize يتحكم في الصورة."
+      ],
+      [
+        "iconPosition",
+        "\"before\" | \"after\"",
+        "\"before\"",
+        "Avatar position relative to content.",
+        "موضع الصورة بالنسبة للمحتوى."
+      ],
+      [
+        "avatarSize",
+        "string | number",
+        "16",
+        "Vuetify avatar size.",
+        "حجم صورة Vuetify."
+      ],
+      [
+        "avatarColor",
+        "string",
+        "\"primary\"",
+        "Vuetify initials avatar color.",
+        "لون حاوية الأحرف في Vuetify."
+      ]
+    ],
+    "slots": [
+      "`avatar`: `{ user, avatar, initials, size }`. `default`: `{ user }`, replacing the name only. `actions`: `{ user }`, rendered after the name.",
+      "`avatar`: يستقبل `{ user, avatar, initials, size }`. `default`: يستقبل `{ user }` لاستبدال الاسم فقط. `actions`: بعد الاسم."
+    ],
+    "variables": [
+      [
+        "--wakeb-user-badge-initials-size",
+        "8px"
+      ]
+    ],
+    "limits": [
+      "Ordinary attrs/listeners target the WBadge wrapper. WBadge variables control the chip. HTTP-prefixed, root-relative and data URLs use VImg; other values use initials. There is no network-error initials fallback, matching the original component. Missing/empty name or an em dash uses ?, whitespace-only uses an empty initial; initials preserve charAt(0) UTF-16 behavior and use the first two words. Supply a user object with string fields; null is not supported. Avatars are decorative because the adjacent name identifies the user. Actions bubble naturally; stop propagation in the action if its parent has a click handler. No Tailwind dependency is required for the 8px initials.",
+      "الخصائص والأحداث تستهدف حاوية WBadge ومتغيراته تخصص الشارة. الصور التي تبدأ بـhttp أو / أو data تعرض عبر VImg؛ الباقي يستخدم الأحرف. لا يوجد بديل تلقائي عند فشل تحميل الصورة، مثل الأصل. الاسم الفارغ أو — يعطي ?؛ المسافات فقط تعطي حرفًا فارغًا. الأحرف تحافظ على charAt(0) بوحدات UTF-16 لأول كلمتين. مرر كائنًا بحقول نصية؛ null غير مدعوم. الصورة زخرفية لأن الاسم بجوارها. الإجراءات تتصاعد طبيعيًا؛ أوقف التصاعد عند الحاجة. حجم الأحرف 8px يعمل دون Tailwind."
+    ],
+    "example": "<WUserBadge :user=\"{ name: 'Ada Lovelace', avatar: '/avatars/ada.png' }\"><template #actions><button type=\"button\">Remove</button></template></WUserBadge>",
+    "playground": "IdentityPlayground",
+    "events": [
+      "No custom events. Native listeners target the outer badge wrapper.",
+      "لا توجد أحداث مخصصة؛ الأحداث العادية تستهدف حاوية الشارة."
+    ]
+  },
+  {
+    "name": "WTooltipBtn",
+    "slug": "tooltip-btn",
+    "interface": "TooltipBtnProps",
+    "summary": [
+      "An icon button with host-translated tooltip text and native button attributes.",
+      "زر أيقونة بنص Tooltip مترجم من المشروع وخصائص زر HTML."
+    ],
+    "props": [
+      [
+        "icon",
+        "SharedIcon",
+        "undefined",
+        "Vuetify icon; replace with the icon slot for custom SVGs.",
+        "أيقونة Vuetify؛ استخدم slot للأيقونات المخصصة."
+      ],
+      [
+        "text",
+        "string",
+        "\"\"",
+        "Already translated tooltip text; empty disables the tooltip.",
+        "نص Tooltip مترجم مسبقًا؛ القيمة الفارغة تلغيه."
+      ],
+      [
+        "ariaLabel",
+        "string | null",
+        "undefined",
+        "Explicit accessible button name; fallback text.",
+        "اسم مقروء صريح للزر؛ البديل text."
+      ],
+      [
+        "btnIcon",
+        "boolean",
+        "false",
+        "Enable the native Vuetify icon-button layout.",
+        "تفعيل شكل زر الأيقونة في Vuetify."
+      ],
+      [
+        "variant",
+        "\"text\" | \"flat\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\"",
+        "\"text\"",
+        "Vuetify button variant.",
+        "شكل زر Vuetify."
+      ],
+      [
+        "location",
+        "\"top\" | \"bottom\" | \"start\" | \"end\"",
+        "\"bottom\"",
+        "Tooltip placement.",
+        "موضع Tooltip."
+      ],
+      [
+        "openDelay",
+        "string | number",
+        "200",
+        "Tooltip opening delay in milliseconds.",
+        "تأخير فتح Tooltip بالمللي ثانية."
+      ],
+      [
+        "contentClass",
+        "string",
+        "\"v-app-tooltip-btn__content\"",
+        "Class on the tooltip overlay.",
+        "class على Tooltip overlay."
+      ],
+      [
+        "tooltipStyle",
+        "CSSProperties",
+        "undefined",
+        "Styles directly on the teleported tooltip content.",
+        "أنماط على محتوى Tooltip المنقول."
+      ],
+      [
+        "wrapperAttrs",
+        "Record<string, unknown>",
+        "undefined",
+        "Explicit attributes for the layout span; ordinary attrs target VBtn.",
+        "خصائص span الخارجي؛ الخصائص العادية تستهدف VBtn."
+      ]
+    ],
+    "slots": [
+      "`icon`: `{ icon }`, replacing VIcon. There is no default content slot; use WButton for text actions.",
+      "`icon`: يستقبل `{ icon }` ويستبدل VIcon. لا يوجد slot افتراضي للنص؛ استخدم WButton للأزرار النصية."
+    ],
+    "variables": [],
+    "limits": [
+      "VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults match the original text variant, bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. VIcon requires your Vuetify icon configuration; the icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.",
+      "الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات مطابقة للأصل: text وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. VIcon يحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة."
+    ],
+    "example": "<WTooltipBtn text=\"Save changes\" icon=\"$complete\" btn-icon aria-label=\"Save changes\" @click=\"() => {}\" />",
+    "playground": "IdentityPlayground",
+    "events": [
+      "No custom events. Native click/keyboard/form attrs are forwarded to VBtn without an extra wrapper listener.",
+      "لا توجد أحداث مخصصة. أحداث النقر والكيبورد وخصائص الفورم تصل إلى VBtn دون مستمع إضافي على الحاوية."
+    ]
   }
 ];

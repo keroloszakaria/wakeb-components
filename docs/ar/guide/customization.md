@@ -38,3 +38,8 @@
 WButton وWBadge يستخدمان VIcon كافتراضي؛ استخدم إعداد أيقونات Vuetify في المشروع أو مرر SVG عبر slots. WAccordion يستخدم WButton لمؤشراته. لا تحتاج الحزمة إلى SvgIcon عالمي أو صلاحيات أو i18n. لاسم زر أيقونة مرر aria-label، ومرر toggleLabel مترجمًا للـAccordion.
 
 متغيرات --wakeb-button-fallback و--wakeb-badge-fallback و--wakeb-accordion-fallback محجوزة لطبقات التوافق؛ اتركها غير معرفة في الاستخدام العادي. تستخدم طبقة Aware sentinel غير صالح كقيمة CSS حتى تحتفظ القيم القديمة المفقودة بسلوك CSS الأصلي. خصص المظهر العادي بمتغيرات الألوان والمقاسات الموثقة.
+
+
+## مجموعات الشارات وأزرار المساعدة
+
+WBadgeStack يوفر slots للأيقونة والصورة والاسم. مرر بيانات جاهزة للعرض واترك أيقونات الاكتشاف الخاصة بالمشروع داخله. menuStyle يخصص القائمة المنقولة وbadgeAttrs يخصص حاوية كل شارة. WUserBadge يوفر slots للصورة والاسم والإجراءات وحجم الأحرف عبر --wakeb-user-badge-initials-size. WTooltipBtn يستقبل text مترجمًا وخصائص VBtn وslot اختياريًا لـSVG. tooltipStyle يخصص Tooltip المنقول. راجع [المرجع](/ar/components/badge-stack) لكل الافتراضات والحدود.

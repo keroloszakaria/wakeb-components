@@ -21,7 +21,7 @@ the same. The shared gauge also guards invalid sizes/thickness values; the
 shared text component composes listener handlers with Vuetify for keyboard access.
 These are documented defensive changes, not business-rule changes.
 
-Buttons, badges, forms, tables, layouts, permissions, data loading and theme
+Forms, tables, layouts, permissions, data loading and theme
 configuration remain in Aware. The next extraction should be chosen after its
 own dependency and public-API review.
 
@@ -38,3 +38,14 @@ Button, Badge and Accordion are now adapters too. Aware keeps SvgIcon through sl
 | components/common/Button.vue | WButton |
 | components/common/Badge.vue | WBadge |
 | components/common/Accordion.vue | WAccordion |
+
+
+## 0.4.0
+
+BadgeStack, UserBadge and TooltipBtn are compatibility adapters. Stack image slots keep Aware's themed DetectionTypeIcon for visible circles and raw images for overflow circles; its original div activator, per-item overrides, truncation, radius and opacity remain. New WBadgeStack consumers get a native overflow button and can pass menuStyle/badgeAttrs for teleported styling. UserBadge retains 16px avatars, charAt initials, action ordering and native bubbling. TooltipBtn resolves path with the host i18n instance and keeps path as the legacy aria-label. Its old attrs are still forwarded to both the wrapper span and VBtn, including the old bubbling/listener behavior. The shared WTooltipBtn instead accepts translated text and targets ordinary attrs/listeners at VBtn once. New applications should use that simpler public contract.
+
+| Existing path | Shared component |
+| --- | --- |
+| components/common/BadgeStack.vue | WBadgeStack |
+| components/common/UserBadge.vue | WUserBadge |
+| components/common/TooltipBtn.vue | WTooltipBtn |

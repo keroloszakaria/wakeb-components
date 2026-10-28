@@ -17,3 +17,11 @@ in the browser entry, retain Vue-generated IDs during hydration and use the same
 initial props on both sides. This is an ESM Vue library, not a plain Node require
 module. Framework-specific SSR adapters beyond the tested Vite consumer are not
 claimed as verified integrations.
+
+In an SSR application, enable Vuetify SSR mode in both server and browser plugin
+setup. This defers overlay mounting until hydration and keeps initial HTML aligned:
+
+```ts
+import { createVuetify } from 'vuetify'
+const vuetify = createVuetify({ ssr: true })
+```

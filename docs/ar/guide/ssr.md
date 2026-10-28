@@ -16,3 +16,11 @@ export default {
 المتصفح. حافظ على IDs الخاصة بـVue ونفس props الأولية أثناء hydration.
 هذه حزمة ESM لـVue، وليست module لـNode require المباشر. لم نتحقق من
 تكاملات SSR خاصة بأطر أخرى خارج مستهلك Vite الموضح.
+
+في تطبيق SSR، فعّل وضع SSR في Vuetify على الخادم والمتصفح معًا. يؤجل ذلك
+تركيب overlays حتى اكتمال hydration، ويحافظ على تطابق HTML الأولي:
+
+```ts
+import { createVuetify } from 'vuetify'
+const vuetify = createVuetify({ ssr: true })
+```

@@ -182,11 +182,12 @@ defineSlots<{
   width: 36px;
   height: 36px;
   padding: 8px !important;
+  color: var(--wakeb-drawer-close-color, rgb(var(--v-theme-on-surface))) !important;
 }
 .wakeb-drawer__loading-overlay {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: var(--wakeb-drawer-loading-bg, #ffffffaa);
+  background: var(--wakeb-drawer-loading-bg, rgba(var(--v-theme-surface), 0.72));
 }
 </style>

@@ -201,11 +201,12 @@ defineSlots<{
   align-items: center;
   justify-content: center;
   background: var(--wakeb-modal-icon-bg, #e6f4f5);
+  color: var(--wakeb-modal-icon-color, #087f8c);
 }
 .wakeb-modal__description {
   max-width: 32rem;
   margin: -0.5rem auto 0;
-  color: var(--wakeb-modal-description, #667085);
+  color: var(--wakeb-modal-description, rgb(var(--v-theme-on-surface)));
   font-size: 0.875rem;
   line-height: 1.65;
   text-align: center;
@@ -227,11 +228,12 @@ defineSlots<{
   width: 36px;
   height: 36px;
   padding: 8px !important;
+  color: var(--wakeb-modal-close-color, rgb(var(--v-theme-on-surface))) !important;
 }
 .wakeb-modal__loading-overlay {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: var(--wakeb-modal-loading-bg, #ffffffaa);
+  background: var(--wakeb-modal-loading-bg, rgba(var(--v-theme-surface), 0.72));
 }
 </style>

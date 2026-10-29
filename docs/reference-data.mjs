@@ -2886,15 +2886,23 @@ export default [
       ],
       [
         "--wakeb-modal-description",
-        "#667085"
+        "rgb(var(--v-theme-on-surface))"
       ],
       [
         "--wakeb-modal-loading-bg",
-        "#ffffffaa"
+        "rgba(var(--v-theme-surface), 0.72)"
       ],
       [
         "--wakeb-modal-fallback",
         "undefined (legacy adapter switch)"
+      ],
+      [
+        "--wakeb-modal-close-color",
+        "rgb(var(--v-theme-on-surface))"
+      ],
+      [
+        "--wakeb-modal-icon-color",
+        "#087f8c"
       ]
     ],
     "events": [
@@ -3030,11 +3038,15 @@ export default [
       ],
       [
         "--wakeb-drawer-loading-bg",
-        "#ffffffaa"
+        "rgba(var(--v-theme-surface), 0.72)"
       ],
       [
         "--wakeb-drawer-fallback",
         "undefined (legacy adapter switch)"
+      ],
+      [
+        "--wakeb-drawer-close-color",
+        "rgb(var(--v-theme-on-surface))"
       ]
     ],
     "events": [

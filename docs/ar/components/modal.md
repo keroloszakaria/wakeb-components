@@ -55,9 +55,11 @@ const open = ref(false)
 | `--wakeb-modal-padding` | `1.25rem` |
 | `--wakeb-modal-radius` | `4px` |
 | `--wakeb-modal-icon-bg` | `#e6f4f5` |
-| `--wakeb-modal-description` | `#667085` |
-| `--wakeb-modal-loading-bg` | `#ffffffaa` |
+| `--wakeb-modal-description` | `rgb(var(--v-theme-on-surface))` |
+| `--wakeb-modal-loading-bg` | `rgba(var(--v-theme-surface), 0.72)` |
 | `--wakeb-modal-fallback` | `undefined (legacy adapter switch)` |
+| `--wakeb-modal-close-color` | `rgb(var(--v-theme-on-surface))` |
+| `--wakeb-modal-icon-color` | `#087f8c` |
 
 ## الوصول وحدود السلوك
 

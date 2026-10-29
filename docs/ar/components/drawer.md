@@ -51,8 +51,9 @@ const open = ref(false)
 | `--wakeb-drawer-title` | `inherit` |
 | `--wakeb-drawer-radius` | `20px` |
 | `--wakeb-drawer-padding` | `1.25rem` |
-| `--wakeb-drawer-loading-bg` | `#ffffffaa` |
+| `--wakeb-drawer-loading-bg` | `rgba(var(--v-theme-surface), 0.72)` |
 | `--wakeb-drawer-fallback` | `undefined (legacy adapter switch)` |
+| `--wakeb-drawer-close-color` | `rgb(var(--v-theme-on-surface))` |
 
 ## الوصول وحدود السلوك
 

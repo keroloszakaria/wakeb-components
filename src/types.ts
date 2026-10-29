@@ -282,3 +282,34 @@ export interface BaseSidebarProps {
   cancelLabel?: string;
   emptyLabel?: string;
 }
+
+export interface ModalProps {
+  modelValue?: boolean;
+  width?: string | number;
+  title?: string;
+  description?: string;
+  persistent?: boolean;
+  closable?: boolean;
+  loading?: boolean;
+  dataLoaded?: boolean;
+  showActions?: boolean;
+  titleClass?: ComponentClass;
+  headerIcon?: SharedIcon;
+  closeLabel?: string;
+  loadingLabel?: string;
+  ariaLabel?: string;
+}
+export interface DrawerProps {
+  modelValue?: boolean;
+  title?: string;
+  width?: string | number;
+  position?: "start" | "end";
+  persistent?: boolean;
+  transparentOverlay?: boolean;
+  closable?: boolean;
+  loading?: boolean;
+  dataLoaded?: boolean;
+  closeLabel?: string;
+  loadingLabel?: string;
+  ariaLabel?: string;
+}

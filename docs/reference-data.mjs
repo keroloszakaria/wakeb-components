@@ -2746,5 +2746,311 @@ export default [
     ],
     "example": "<WBaseSidebar title=\"People\" :items=\"[{id:1,name:'Ada'}]\" :has-filter=\"false\"><template #item=\"{item}\">{{item.name}}</template></WBaseSidebar>",
     "playground": "CompositionPlayground"
+  },
+  {
+    "name": "WModal",
+    "slug": "modal",
+    "interface": "ModalProps",
+    "summary": [
+      "A Vuetify dialog shell with independent data/loading states, header composition and explicit action slots.",
+      "حاوية Dialog من Vuetify مع تحميل البيانات والعمليات بشكل منفصل وslots للرأس والإجراءات."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "boolean",
+        "false",
+        "Open state; local changes emit once.",
+        "حالة الفتح؛ التغيير المحلي يرسل حدثًا واحدًا."
+      ],
+      [
+        "title",
+        "string",
+        "\"\"",
+        "Already translated heading.",
+        "عنوان مترجم من المشروع."
+      ],
+      [
+        "persistent",
+        "boolean",
+        "true",
+        "Prevent native outside/Escape dismissal.",
+        "منع الإغلاق الأصلي من الخارج أو Escape."
+      ],
+      [
+        "closable",
+        "boolean",
+        "true",
+        "Show the close button.",
+        "إظهار زر الإغلاق."
+      ],
+      [
+        "loading",
+        "boolean",
+        "false",
+        "Show an independent overlay; never initiates a request.",
+        "طبقة تحميل مستقلة دون تنفيذ طلب."
+      ],
+      [
+        "dataLoaded",
+        "boolean",
+        "true",
+        "Replace the content with the loading slot until data is ready.",
+        "استبدال المحتوى بالتحميل حتى تجهز البيانات."
+      ],
+      [
+        "closeLabel",
+        "string",
+        "\"Close\"",
+        "Localized accessible close-button name.",
+        "اسم زر الإغلاق المقروء بعد ترجمته."
+      ],
+      [
+        "loadingLabel",
+        "string",
+        "\"Loading\"",
+        "Localized name for loading indicators.",
+        "اسم مقروء ومترجم للتحميل."
+      ],
+      [
+        "width",
+        "string | number",
+        "undefined",
+        "Maximum dialog width; native attrs remain available.",
+        "أقصى عرض للنافذة؛ خصائص Vuetify متاحة."
+      ],
+      [
+        "description",
+        "string",
+        "\"\"",
+        "Optional description in the default header.",
+        "وصف اختياري في الرأس الافتراضي."
+      ],
+      [
+        "showActions",
+        "boolean",
+        "true",
+        "Render the VCard action slot, including its empty footer.",
+        "إظهار منطقة إجراءات VCard بما فيها القدم الفارغة."
+      ],
+      [
+        "titleClass",
+        "ComponentClass",
+        "\"\"",
+        "Classes on the default title.",
+        "كلاسات العنوان الافتراضي."
+      ],
+      [
+        "headerIcon",
+        "SharedIcon",
+        "\"\"",
+        "Optional host Vuetify icon; use header-icon for SVG.",
+        "أيقونة Vuetify من المشروع؛ استخدم header-icon لـSVG."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "\"Dialog\"",
+        "Fallback dialog name when title is empty.",
+        "اسم بديل للنافذة عند غياب العنوان."
+      ]
+    ],
+    "variables": [
+      [
+        "--wakeb-modal-bg",
+        "rgb(var(--v-theme-surface))"
+      ],
+      [
+        "--wakeb-modal-border",
+        "#d0d5dd"
+      ],
+      [
+        "--wakeb-modal-title",
+        "inherit"
+      ],
+      [
+        "--wakeb-modal-margin",
+        "1rem"
+      ],
+      [
+        "--wakeb-modal-padding",
+        "1.25rem"
+      ],
+      [
+        "--wakeb-modal-radius",
+        "4px"
+      ],
+      [
+        "--wakeb-modal-icon-bg",
+        "#e6f4f5"
+      ],
+      [
+        "--wakeb-modal-description",
+        "#667085"
+      ],
+      [
+        "--wakeb-modal-loading-bg",
+        "#ffffffaa"
+      ],
+      [
+        "--wakeb-modal-fallback",
+        "undefined (legacy adapter switch)"
+      ]
+    ],
+    "events": [
+      "`update:modelValue(value: boolean)` for local changes; parent synchronization is silent. `afterLeave()` when the native dialog transition ends.",
+      "`update:modelValue(value: boolean)` للتغييرات المحلية؛ مزامنة الأب صامتة. `afterLeave()` بعد انتهاء انتقال إغلاق Vuetify."
+    ],
+    "slots": [
+      "`activator {props,isActive}`: bind props to the launch button to retain native focus return. `header {close}` replaces the entire header. `title`, `header-icon`, `header-decoration`, `header-actions` compose the default header. `close-button {close,label}` replaces its button. `content` falls back to `default`; `actions` supplies the footer. `loading {label}` replaces content; `loading-overlay {label}` replaces the independent overlay.",
+      "`activator {props,isActive}`: اربط props بزر الفتح لإعادة التركيز أصليًا. `header {close}` يستبدل الرأس بالكامل. `title` و`header-icon` و`header-decoration` و`header-actions` لتركيب الرأس الافتراضي. `close-button {close,label}` يستبدل زر الإغلاق. `content` وبديله `default` للمحتوى؛ `actions` للقدم. `loading {label}` بديل المحتوى؛ `loading-overlay {label}` لطبقة تحميل مستقلة."
+    ],
+    "limits": [
+      "Attrs target VDialog; its native transition, scrim, scrollStrategy and focus behavior remain available. Persistent defaults true, so Escape/outside clicks do not close it. Native focus capture/trap, scroll blocking and overlay stacking are delegated to Vuetify. Use the activator slot for focus return; programmatic launchers own restoration if no activator exists. Mount within your Vuetify application. Header slots are trusted Vue content: no raw SVG injection is built into the package. Aware retains its raw header decoration, SvgIcon, translated close button and legacy title/header visibility through header replacement; customAction maps to !showActions. Data-not-ready content is unmounted, not merely hidden. loading is presentation only; the host decides whether close/save is allowed and owns submission/permissions. The shared default loading overlay covers the card; Aware retains its existing loader markup through a slot. Modal radius is 4px, matching Vuetify dialog cards.",
+      "الخصائص تستهدف VDialog؛ خصائص الانتقال وscrim وscrollStrategy والتركيز الأصلية متاحة. persistent افتراضيًا true فيمنع Escape والنقر خارج النافذة من إغلاقها. Vuetify يدير التركيز وحصره وحجب التمرير وتراص النوافذ. استخدم activator لإعادة التركيز؛ زر الفتح البرمجي دون activator مسؤول عن استعادته. استخدمها داخل تطبيق Vuetify. slots محتوى Vue موثوق؛ الحزمة لا تحقن SVG خامًا. Aware يحتفظ بزخرفة الرأس وSvgIcon وترجمة الإغلاق وقواعد ظهور الرأس القديمة؛ customAction يقابل عكس showActions. المحتوى يزال أثناء عدم جاهزية البيانات. loading للعرض فقط؛ المشروع يقرر الإغلاق والحفظ ويملك الصلاحيات والإرسال. الطبقة العامة تغطي البطاقة؛ Aware يحتفظ بعناصر التحميل القديمة عبر slot. حافة البطاقة 4px مثل Dialog في Vuetify."
+    ],
+    "example": "<button type=\"button\" @click=\"open = true\">Open</button>\n  <WModal v-model=\"open\" title=\"Report\" width=\"640\"><template #content>Report content</template></WModal>",
+    "playground": "OverlayPlayground",
+    "setup": "import { ref } from 'vue'\nconst open = ref(false)"
+  },
+  {
+    "name": "WDrawer",
+    "slug": "drawer",
+    "interface": "DrawerProps",
+    "summary": [
+      "A temporary Vuetify navigation drawer with logical RTL positions, scrolling content and composable actions.",
+      "حاوية جانبية مؤقتة من Vuetify باتجاهات RTL ومحتوى قابل للتمرير وإجراءات قابلة للتركيب."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "boolean",
+        "false",
+        "Open state; local changes emit once.",
+        "حالة الفتح؛ التغيير المحلي يرسل حدثًا واحدًا."
+      ],
+      [
+        "title",
+        "string",
+        "\"\"",
+        "Already translated heading.",
+        "عنوان مترجم من المشروع."
+      ],
+      [
+        "persistent",
+        "boolean",
+        "false",
+        "Prevent scrim dismissal.",
+        "منع الإغلاق بالنقر على الخلفية."
+      ],
+      [
+        "closable",
+        "boolean",
+        "true",
+        "Show the close button.",
+        "إظهار زر الإغلاق."
+      ],
+      [
+        "loading",
+        "boolean",
+        "false",
+        "Show an independent overlay; never initiates a request.",
+        "طبقة تحميل مستقلة دون تنفيذ طلب."
+      ],
+      [
+        "dataLoaded",
+        "boolean",
+        "true",
+        "Replace the content with the loading slot until data is ready.",
+        "استبدال المحتوى بالتحميل حتى تجهز البيانات."
+      ],
+      [
+        "closeLabel",
+        "string",
+        "\"Close\"",
+        "Localized accessible close-button name.",
+        "اسم زر الإغلاق المقروء بعد ترجمته."
+      ],
+      [
+        "loadingLabel",
+        "string",
+        "\"Loading\"",
+        "Localized name for loading indicators.",
+        "اسم مقروء ومترجم للتحميل."
+      ],
+      [
+        "width",
+        "string | number",
+        "420",
+        "Numbers pass through; strings use parseInt with 420 fallback.",
+        "الأرقام تمر كما هي؛ النصوص تستخدم parseInt والبديل 420."
+      ],
+      [
+        "position",
+        "\"start\" | \"end\"",
+        "\"end\"",
+        "Logical side resolved from Vuetify RTL.",
+        "جانب منطقي حسب RTL في Vuetify."
+      ],
+      [
+        "transparentOverlay",
+        "boolean",
+        "false",
+        "Remove the scrim, retaining temporary drawer semantics.",
+        "إزالة الخلفية المعتمة مع الاحتفاظ بحاوية مؤقتة."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "\"Drawer\"",
+        "Fallback accessible name when title is empty.",
+        "اسم مقروء بديل عند غياب العنوان."
+      ]
+    ],
+    "variables": [
+      [
+        "--wakeb-drawer-bg",
+        "rgb(var(--v-theme-surface))"
+      ],
+      [
+        "--wakeb-drawer-border",
+        "#d0d5dd"
+      ],
+      [
+        "--wakeb-drawer-title",
+        "inherit"
+      ],
+      [
+        "--wakeb-drawer-radius",
+        "20px"
+      ],
+      [
+        "--wakeb-drawer-padding",
+        "1.25rem"
+      ],
+      [
+        "--wakeb-drawer-loading-bg",
+        "#ffffffaa"
+      ],
+      [
+        "--wakeb-drawer-fallback",
+        "undefined (legacy adapter switch)"
+      ]
+    ],
+    "events": [
+      "`update:modelValue(value: boolean)` for local changes. `close()` only from the supplied/default close callback, after the model update; scrim/parent updates do not emit close.",
+      "`update:modelValue(value: boolean)` للتغييرات المحلية. `close()` من دالة زر الإغلاق فقط بعد تحديث الموديل؛ الخلفية وتغيير الأب لا يرسلان close."
+    ],
+    "slots": [
+      "`title`, `header-actions`, `close-button {close,label}`, `content`, `default`, `actions`, `loading {label}` and `loading-overlay {label}`. content and default render in sequence; footer exists only when actions is supplied.",
+      "`title` و`header-actions` و`close-button {close,label}` و`content` و`default` و`actions` و`loading {label}` و`loading-overlay {label}`. content وdefault يظهران بالتتابع؛ القدم تظهر فقط عند توفير actions."
+    ],
+    "limits": [
+      "Requires a Vuetify layout provider (normally VApp); do not instantiate it outside a layout. Attrs target VNavigationDrawer, including native focus/resize/route-watcher options. It remains temporary, keeps its native scrim and touch behavior and maps end to right in LTR/left in RTL. Unlike VDialog, VNavigationDrawer does not provide Escape dismissal or dialog scroll blocking; this component preserves those native semantics. Do not infer dialog-style stacked-overlay guarantees when nesting drawers and dialogs; test your composition. Manage launch/return focus in the host. Width \"50%\" parses to 50px, preserving Aware behavior; use numeric/pixel widths. Content scrolls, header/footer stay outside its scroll area. Data-not-ready unmounts content; loading overlays are independent and contain no form or save logic. Aware keeps its icon button, translated slot content, theme-token aliases and per-screen drawer-panel hooks. AddEditModal, schemas, validation and permissions remain in Aware.",
+      "تحتاج مزود layout من Vuetify، عادة VApp؛ لا تستخدمها خارج layout. الخصائص تستهدف VNavigationDrawer بما فيها خيارات التركيز وresize ومراقبة المسار الأصلية. تظل temporary مع الخلفية واللمس الأصليين؛ end يمين في LTR ويسار في RTL. بعكس VDialog، VNavigationDrawer لا يوفر إغلاق Escape أو حجب تمرير Dialog؛ المكوّن يحتفظ بالسلوك الأصلي. لا تفترض ضمان تراص Dialog عند تداخل حاويات جانبية ونوافذ؛ اختبر التركيب. المشروع يدير التركيز عند الفتح والعودة. العرض \"50%\" يتحول إلى 50px للحفاظ على سلوك Aware؛ استخدم أرقامًا أو بكسل. المحتوى يتمرر والرأس والقدم خارجه. عدم جاهزية البيانات يزيل المحتوى؛ طبقة التحميل مستقلة دون حفظ أو form. Aware يحتفظ بزر الأيقونة وترجمة المحتوى وربط الثيم ونقاط تنسيق drawer-panel. AddEditModal وschema والتحقق والصلاحيات تبقى في Aware."
+    ],
+    "example": "<button type=\"button\" @click=\"open = true\">Open</button>\n  <WDrawer v-model=\"open\" title=\"Details\"><template #content>Details content</template></WDrawer>",
+    "playground": "OverlayPlayground",
+    "setup": "import { ref } from 'vue'\nconst open = ref(false)"
   }
 ];

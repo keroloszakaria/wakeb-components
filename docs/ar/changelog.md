@@ -1,5 +1,9 @@
 # سجل التغييرات
 
+## 0.7.0
+
+إضافة WModal وWDrawer لحاويات النوافذ مع تحميل مستقل وslots وإغلاق ومتغيرات CSS. Aware يحتفظ بـAddEditModal وGenericForm وschema والتحقق والصلاحيات وزخرفة الرأس وربط الثيم. يستمر سلوك Dialog الأصلي للتركيز وEscape والتمرير، وسلوك Drawer الأصلي.
+
 ## 0.6.0
 
 - إضافة WCarousel وWExportDropdown وWBaseSidebar بخصائص typed وتحكم في الشرائح وصيغ تصدير وslots مستقلة عن الفورم.

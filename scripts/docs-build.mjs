@@ -30,7 +30,7 @@ ${entry.summary[lang]}
 
 \`\`\`vue
 <script setup lang="ts">
-import { ${entry.name} } from 'wakeb-components'
+import { ${entry.name} } from 'wakeb-components'${entry.setup ? "\n" + entry.setup : ""}
 </script>
 <template>
   ${entry.example}

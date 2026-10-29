@@ -1,7 +1,7 @@
 # wakeb-components
 
-Nineteen typed Vue 3 components, extracted for reuse with Vuetify 3:
-WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps, WButton, WBadge, WAccordion, WBadgeStack, WUserBadge, WTooltipBtn, WTabs, WTree, WDropdown, WCarousel, WExportDropdown and WBaseSidebar.
+Twenty-one typed Vue 3 components, extracted for reuse with Vuetify 3:
+WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps, WButton, WBadge, WAccordion, WBadgeStack, WUserBadge, WTooltipBtn, WTabs, WTree, WDropdown, WCarousel, WExportDropdown, WBaseSidebar, WModal and WDrawer.
 
 [Documentation](https://wakeb-components.surge.sh) · [العربية](https://wakeb-components.surge.sh/ar/)
 
@@ -10,7 +10,7 @@ WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WP
 Install the public npm package in your Vue application:
 
 ```sh
-npm install wakeb-components@0.6.0
+npm install wakeb-components@0.7.0
 ```
 
 Use Vue 3.5+ and Vuetify 3.13.2+, and keep your existing Vuetify plugin setup.
@@ -55,9 +55,11 @@ The production output is `docs/.vitepress/dist` at `wakeb-components.surge.sh`.
 
 ## Scope
 
-Version 0.6.0 covers nineteen display, action and disclosure components. Tables, forms, routing and permissions remain in their current packages/application
+Version 0.7.0 covers twenty-one display, action and disclosure components. Tables, forms, routing and permissions remain in their current packages/application
 until their separate contracts are reviewed.
 
 ## License
 
 MIT. See LICENSE.
+
+WModal and WDrawer provide dialog and temporary drawer shells with typed models, explicit loading slots and no form, router or permission dependency. Use a Vuetify layout provider (normally VApp) for WDrawer. See the bilingual overlay examples and native behavior limits in the docs.

@@ -69,3 +69,7 @@ Carousel وExportDropdown وBaseSidebar يحتفظون بمسارات Aware ال
 | components/common/Carousel.vue | WCarousel |
 | components/common/ExportDropdown.vue | WExportDropdown |
 | components/common/BaseSidebar.vue | WBaseSidebar |
+
+## النوافذ (0.7.0)
+
+Modal وDrawer يحتفظان بمسارات Aware. يقابل isCloseable/ isLoading/ isDataLoaded خصائص closable/loading/dataLoaded في الحزمة، وcustomAction يقابل عكس showActions. يحافظ Modal على ظهور الرأس القديم وزخرفته وSvgIcon وترجمة الإغلاق؛ Drawer يحافظ على أسماء drawer-panel وتوقيت close من الزر فقط. إعدادات jervis-form تستمر في استخدام adapters؛ AddEditModal وschema والتحقق وخطوات الحفظ والصلاحيات وdrawerTarget غير المستخدم تبقى كما هي. العرض النصي في Drawer يستخدم parseInt كما كان.

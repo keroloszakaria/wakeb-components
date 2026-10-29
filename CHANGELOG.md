@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+- Add WModal and WDrawer with typed models, header/content/action/loading slots and namespaced CSS variables.
+- Retain native Vuetify overlay behavior and explicit Aware compatibility adapters; AddEditModal, forms and permissions remain in the application.
+- Add standalone and host integration checks and bilingual interactive documentation.
+
 ## 0.6.0
 
 - Add typed WCarousel, WExportDropdown and WBaseSidebar with playback/indicator controls, configurable export records and form-independent sidebar slots.

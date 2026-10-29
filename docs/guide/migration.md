@@ -71,3 +71,7 @@ Carousel, ExportDropdown and BaseSidebar retain their existing Aware paths. Caro
 | components/common/Carousel.vue | WCarousel |
 | components/common/ExportDropdown.vue | WExportDropdown |
 | components/common/BaseSidebar.vue | WBaseSidebar |
+
+## Overlays (0.7.0)
+
+Modal and Drawer keep their Aware import paths. isCloseable/isLoading/isDataLoaded map to closable/loading/dataLoaded; customAction maps to !showActions. Modal retains legacy header visibility, raw decoration, SvgIcon and localized close text. Drawer retains drawer-panel hooks and button-only close timing. jervis-form continues using the adapters. AddEditModal, schemas, validation, step submission, permissions and the unused drawerTarget remain unchanged. String Drawer widths still use parseInt.

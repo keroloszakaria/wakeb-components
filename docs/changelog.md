@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+WModal and WDrawer add reusable dialog/drawer shells with explicit loading, close controls, slots and CSS variables. Aware keeps AddEditModal, GenericForm, schemas, validation, permissions, header SVG and theme aliases. Native Dialog Escape/focus/scroll behavior and native Drawer semantics are preserved.
+
 ## 0.6.0
 
 - Add typed WCarousel, WExportDropdown and WBaseSidebar with playback/indicator controls, configurable export records and form-independent sidebar slots.

@@ -1,3 +1,4 @@
+import OverlayPlayground from "../components/OverlayPlayground.vue";
 import DefaultTheme from "vitepress/theme";
 import { createVuetify } from "vuetify";
 import "vuetify/styles";
@@ -7,4 +8,4 @@ import FoundationPlayground from "../components/FoundationPlayground.vue";
 import IdentityPlayground from "../components/IdentityPlayground.vue";
 import NavigationPlayground from "../components/NavigationPlayground.vue";
 import CompositionPlayground from "../components/CompositionPlayground.vue";
-export default { extends: DefaultTheme, enhanceApp({ app }) { app.use(createVuetify({ ssr: true })); app.component("ComponentPlayground", ComponentPlayground); app.component("FoundationPlayground", FoundationPlayground); app.component("IdentityPlayground", IdentityPlayground); app.component("NavigationPlayground", NavigationPlayground); app.component("CompositionPlayground", CompositionPlayground); } };
+export default { extends: DefaultTheme, enhanceApp({ app }) { app.use(createVuetify({ ssr: true })); app.component("OverlayPlayground", OverlayPlayground); app.component("ComponentPlayground", ComponentPlayground); app.component("FoundationPlayground", FoundationPlayground); app.component("IdentityPlayground", IdentityPlayground); app.component("NavigationPlayground", NavigationPlayground); app.component("CompositionPlayground", CompositionPlayground); } };

@@ -17,6 +17,8 @@ const publicNames = [...readFileSync(join(root,"src/index.ts"),"utf8").matchAll(
 assert.deepEqual(reference.map(item=>item.name).sort(),publicNames.sort());
 for (const entry of reference) {
   assert.deepEqual(entry.props.map(row=>row[0]).sort(), interfaces[entry.interface].sort(), `${entry.name} public props documentation`);
+  const source = readFileSync(join(root, "src/components", entry.name + ".vue"), "utf8");
+  for (const [variable] of entry.variables) for (const token of variable.match(/--[a-z0-9-]+/g) ?? []) assert.ok(source.includes(token), `${entry.name} documents ${token} but never consumes it`);
   for (const [prefix, lang] of [["",0],["ar/",1]]) {
     const title = lang ? ["الاستخدام","المدخلات","Slots","متغيرات CSS","الوصول وحدود السلوك","جرّب بنفسك"] : ["Usage","Props","Slots","CSS variables","Accessibility and limits","Try it"];
     const rows = entry.props.map(([n,t,d,en,ar])=>`| \`${n}\` | \`${t.replaceAll("|","\\|")}\` | \`${d}\` | ${lang ? ar : en} |`).join("\n");
@@ -65,6 +67,9 @@ ${entry.limits[lang]}
   }
 }
 function run(args) { const result=spawnSync(process.execPath,args,{cwd:root,encoding:"utf8",windowsHide:true}); if(result.status!==0) throw new Error(result.stderr||result.stdout||result.error?.message); return result.stdout; }
+// Build the library first so the downloadable archive never packs a stale or missing dist.
+assert.ok(process.env.npm_execpath, "Use npm run docs:build");
+run([process.env.npm_execpath,"run","build"]);
 const downloads=join(root,"docs/public/downloads"); mkdirSync(downloads,{recursive:true});
 run([process.env.npm_execpath,"pack","--ignore-scripts","--pack-destination",downloads]);
 console.log(run([join(root,"node_modules/vitepress/bin/vitepress.js"),"build","docs"]));
@@ -72,5 +77,6 @@ const out=join(root,"docs/.vitepress/dist"), files={};
 function walk(dir,prefix="") { for(const item of readdirSync(dir,{withFileTypes:true})) { const path=prefix+item.name; if(item.isDirectory()) walk(join(dir,item.name),path+"/"); else if(path!=="deployment-proof.json") files[path]=createHash("sha256").update(readFileSync(join(dir,item.name))).digest("hex"); } }
 walk(out);
 const git=spawnSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8",windowsHide:true});
-writeFileSync(join(out,"deployment-proof.json"),JSON.stringify({package:name,version,builtAt:new Date().toISOString(),sourceCommit:git.status===0?git.stdout.trim():"local",files},null,2)+"\n");
+const dirty=spawnSync("git",["status","--porcelain"],{cwd:root,encoding:"utf8",windowsHide:true});
+writeFileSync(join(out,"deployment-proof.json"),JSON.stringify({package:name,version,builtAt:new Date().toISOString(),sourceCommit:git.status===0?git.stdout.trim():"local",sourceDirty:dirty.status!==0||dirty.stdout.trim()!=="",files},null,2)+"\n");
 console.log("All public component props documented in both languages.");

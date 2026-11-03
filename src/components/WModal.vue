@@ -45,6 +45,13 @@ const dialog = computed({
 const close = () => {
   dialog.value = false;
 };
+/** The typed width prop wins; a native max-width attr applies only when width is absent. */
+const maxWidth = computed(
+  () =>
+    props.width ??
+    (attrs["max-width"] as string | number | undefined) ??
+    (attrs.maxWidth as string | number | undefined),
+);
 defineSlots<{
   activator(props: {
     props: Record<string, unknown>;
@@ -68,7 +75,7 @@ defineSlots<{
     v-bind="attrs"
     v-model="dialog"
     :persistent="persistent"
-    :max-width="width"
+    :max-width="maxWidth"
     :aria-label="title || ariaLabel"
     class="wakeb-modal"
     @after-leave="emit('afterLeave')"
@@ -81,6 +88,7 @@ defineSlots<{
         <div
           v-if="
             title ||
+            description ||
             $slots.title ||
             $slots['header-actions'] ||
             closable ||

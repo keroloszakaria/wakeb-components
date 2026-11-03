@@ -151,7 +151,7 @@ const truncate = (text: string | undefined) =>
       <template #activator="{ props: menuProps }">
         <component
           :is="overflowTag"
-          v-bind="menuProps"
+          v-bind="{ ...menuProps, 'aria-haspopup': undefined }"
           class="badge-stack__overflow-activator"
           :type="overflowTag === 'button' ? 'button' : undefined"
           :aria-label="overflowLabel || `+${overflowCount}`"
@@ -167,7 +167,11 @@ const truncate = (text: string | undefined) =>
           />
         </component>
       </template>
-      <VList class="overflow-menu-list py-1" :style="menuStyle">
+      <VList
+        class="overflow-menu-list py-1"
+        :class="{ 'badge-stack--circle-icon': iconVariant === 'circle' }"
+        :style="menuStyle"
+      >
         <VListItem
           v-for="(item, index) in overflowItems"
           :key="item.id ?? index"

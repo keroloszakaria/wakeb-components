@@ -10,14 +10,14 @@
     <div
       v-if="normalizedValue > 0"
       class="segmented-progress__fill"
-      :style="{ flexGrow: normalizedValue, backgroundColor: color }"
+      :style="{ flex: `${normalizedValue} 1 0%`, backgroundColor: color }"
     >
       <span v-if="label || $slots.default"><slot :value="normalizedValue" :label="label">{{ label }}</slot></span>
     </div>
     <div
       v-if="normalizedValue < 100"
       class="segmented-progress__track"
-      :style="{ flexGrow: 100 - normalizedValue }"
+      :style="{ flex: `${100 - normalizedValue} 1 0%` }"
     />
   </div>
 </template>

@@ -67,6 +67,14 @@ const pixelSize = computed(() =>
         String(props.iconSize)
       ] ?? props.iconSize),
 );
+/** Loading suppresses activation like disabled: no click event and no native submit/reset. */
+const onClick = (event: MouseEvent) => {
+  if (props.disabled || props.isLoading) {
+    event.preventDefault();
+    return;
+  }
+  emit("click", event);
+};
 const actualAttrs = (tooltip: Record<string, unknown> = {}) =>
   mergeProps(
     tooltip,
@@ -86,7 +94,7 @@ const actualAttrs = (tooltip: Record<string, unknown> = {}) =>
           :disabled="disabled"
           :loading="isLoading"
           :type="action"
-          @click="emit('click', $event)"
+          @click="onClick"
         >
           <slot name="icon" v-bind="iconProps"
             ><VIcon
@@ -112,7 +120,7 @@ const actualAttrs = (tooltip: Record<string, unknown> = {}) =>
       :loading="isLoading"
       :type="action"
       v-bind="actualAttrs()"
-      @click="emit('click', $event)"
+      @click="onClick"
     >
       <template v-if="title !== ''">
         <slot
@@ -327,14 +335,18 @@ const actualAttrs = (tooltip: Record<string, unknown> = {}) =>
         var(--wakeb-button-fallback, transparent)
       );
 
+    // Documented names first; the undocumented 0.7 surface/text names stay as fallbacks.
     background-color: var(
-      --wakeb-button-secondary-surface,
-      var(--wakeb-button-fallback, #f2f4f7)
-    ) !important;
+      --wakeb-button-secondary-background,
+      var(
+        --wakeb-button-secondary-surface,
+        var(--wakeb-button-fallback, #f2f4f7)
+      )
+    );
     color: var(
-      --wakeb-button-secondary-text,
-      var(--wakeb-button-fallback, #344054)
-    ) !important;
+      --wakeb-button-secondary-color,
+      var(--wakeb-button-secondary-text, var(--wakeb-button-fallback, #344054))
+    );
 
     :deep(svg) {
       color: var(

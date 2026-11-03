@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased (0.7.x)
+
+- Fix progress geometry, dropdown value precedence, null clearing and item refresh, disabled link navigation, menu roles, tab-panel ARIA, tree focus recovery, button loading activation, teleported circle badge styles, secondary button tokens and modal description/width handling.
+- The docs build packs a fresh library and checks documented CSS variables; deployment verification compares against the trusted local receipt.
+- Update Vite to 6.4.5.
+
 ## 0.7.0
 
 - Add WModal and WDrawer with typed models, header/content/action/loading slots and namespaced CSS variables.

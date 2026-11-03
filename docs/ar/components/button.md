@@ -158,7 +158,7 @@ import { WButton } from 'wakeb-components'
 
 ## الوصول وحدود السلوك
 
-الزر يحتفظ بـform/type والتعطيل وaria-busy من Vuetify. click يمرر MouseEvent الأصلي مرة واحدة ويدعم .stop/.prevent. التفعيل بالكيبورد يتبع المتصفح. زر الأيقونة يحتاج aria-label؛ زر Tooltip يستخدم title كاسم بديل. أحداث التركيز تُدمج مع أحداث Vuetify. التحميل يمنع تفاعل المؤشر العادي عبر Vuetify/CSS، وإرسال حدث صناعي ليس بديلًا لقفل الطلبات. attribute باسم loading يصل أيضًا إلى VBtn دون إضافة class الخاصة بـisLoading. reduced-motion يلغي transitions المشتركة. div الخارجية مخصصة للتخطيط؛ wrapperAttrs لا يغيّر وجهة attributes العادية. الأنواع والمقاسات غير المعروفة classes للتوسعة. متغير --wakeb-button-fallback مخصص للتوافق؛ اتركه غير معرف لاستخدام القيم الافتراضية.
+الزر يحتفظ بـform/type والتعطيل وaria-busy من Vuetify. click يمرر MouseEvent الأصلي مرة واحدة ويدعم .stop/.prevent. التفعيل بالكيبورد يتبع المتصفح. زر الأيقونة يحتاج aria-label؛ زر Tooltip يستخدم title كاسم بديل. أحداث التركيز تُدمج مع أحداث Vuetify. التحميل يعمل مثل التعطيل في الوضع العادي ووضع Tooltip: لا يرسل click ولا يرسل الفورم أو يعيد ضبطه. ومع ذلك ليس قفلًا للطلبات؛ المشروع يملك حالة الطلب. attribute باسم loading يصل أيضًا إلى VBtn دون إضافة class الخاصة بـisLoading. reduced-motion يلغي transitions المشتركة. div الخارجية مخصصة للتخطيط؛ wrapperAttrs لا يغيّر وجهة attributes العادية. الأنواع والمقاسات غير المعروفة classes للتوسعة. متغير --wakeb-button-fallback مخصص للتوافق؛ اتركه غير معرف لاستخدام القيم الافتراضية.
 
 ## جرّب بنفسك
 

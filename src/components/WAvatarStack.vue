@@ -33,7 +33,7 @@ const initials = (item: unknown) => { const value = field(item, props.nameKey); 
     </VTooltip>
     <VMenu v-if="overflowCount > 0 && showOverflowMenu" open-on-hover location="top" :offset="8">
       <template #activator="{ props: menuProps }">
-        <VAvatar v-bind="menuProps" tag="button" type="button" :size="size" :color="avatarColor" class="actor-avatar actor-overflow" :aria-label="overflowName"><span class="actor-initials"><slot name="overflow" :count="overflowCount">+{{ overflowCount }}</slot></span></VAvatar>
+        <VAvatar v-bind="{ ...menuProps, 'aria-haspopup': undefined }" tag="button" type="button" :size="size" :color="avatarColor" class="actor-avatar actor-overflow" :aria-label="overflowName"><span class="actor-initials"><slot name="overflow" :count="overflowCount">+{{ overflowCount }}</slot></span></VAvatar>
       </template>
       <VList class="overflow-menu-list py-1" :style="menuStyle">
         <VListItem v-for="(item, index) in overflowItems" :key="getKey(item, index)" class="overflow-menu-item" density="compact">

@@ -327,7 +327,7 @@ describe("WDropdown", () => {
     expect(w.get("button").text()).toContain("Approved");
     expect(w.get("button").attributes("aria-label")).toBe("Approved");
   });
-  it("syncs numeric zero and label keys without echoing, and retains selection on null", async () => {
+  it("syncs numeric zero and label keys without echoing, and clears selection on null", async () => {
     const w = render(WDropdown, {
       props: { menuItems, modelValue: 0, showBoth: true, title: "Status" },
     });
@@ -336,8 +336,8 @@ describe("WDropdown", () => {
     expect(w.get("button").text()).toContain("Approved");
     expect(w.get("button").attributes("aria-label")).toBe("Status: Approved");
     await w.setProps({ modelValue: null });
-    expect(w.get("button").text()).toContain("Approved");
-    expect(w.get("button").attributes("aria-label")).toBe("Status: Approved");
+    expect(w.get("button").text()).toContain("Status: Pending");
+    expect(w.findComponent(WButton).props("icon")).toBe("$expand");
     expect(w.emitted("selectedItem")).toBeUndefined();
     expect(w.emitted("update:modelValue")).toBeUndefined();
   });

@@ -56,11 +56,13 @@ function select(format: ExportFormat) {
                 stroke-width="2"
               /></svg></template></WButton></slot
     ></template>
-    <VList :style="menuStyle">
+    <VList :style="menuStyle" role="menu">
       <VListItem
         v-for="(format, index) in formats"
         :key="format.value"
+        role="menuitem"
         :disabled="isLoading || format.disabled"
+        :aria-disabled="isLoading || format.disabled || undefined"
         @click="select(format)"
       >
         <template #prepend

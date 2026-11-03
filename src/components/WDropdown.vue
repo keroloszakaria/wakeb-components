@@ -55,18 +55,32 @@ const resolveItemColor = (item: DropdownItem) => {
   return COLOR_TOKENS.value[item.color] || item.color;
 };
 
+/** Exact values win over label fallbacks so a label can never shadow another row's value. */
 const findItemByValue = (value: NavigationKey) =>
-  props.menuItems?.find(
-    (item: DropdownItem) => item.value === value || item.label === value,
-  ) ?? null;
+  props.menuItems?.find((item: DropdownItem) => item.value === value) ??
+  props.menuItems?.find((item: DropdownItem) => item.label === value) ??
+  null;
+const keyOf = (item: DropdownItem) => item.value ?? item.label;
 
 watch(
   () => props.modelValue,
-  (value) => {
-    if (value == null) return;
+  (value, previous) => {
+    // undefined leaves an uncontrolled selection alone; null is an explicit clear.
+    if (value === undefined) return;
+    if (value === null) {
+      if (previous !== undefined) selectedItem.value = null;
+      return;
+    }
     selectedItem.value = findItemByValue(value);
   },
   { immediate: true },
+);
+watch(
+  () => props.menuItems,
+  () => {
+    const key = props.modelValue ?? (selectedItem.value && keyOf(selectedItem.value));
+    selectedItem.value = key == null ? null : findItemByValue(key);
+  },
 );
 
 const buttonTitle = computed(() => {
@@ -135,10 +149,18 @@ const isItemActive = (item: DropdownItem) => {
   return item.label === selectedItem.value.label;
 };
 
-const onMenuItemClick = (item: DropdownItem) => {
-  if (props.isLoading || item.disabled) return;
+const isItemDisabled = (item: DropdownItem) =>
+  Boolean(props.isLoading || props.disabled || item.disabled);
+const itemHref = (item: DropdownItem) =>
+  item.href ?? (typeof item.to === "string" ? item.to : undefined);
+
+const onMenuItemClick = (event: Event, item: DropdownItem) => {
+  if (isItemDisabled(item)) {
+    event.preventDefault();
+    return;
+  }
   emits("selectedItem", item);
-  emits("update:modelValue", item.value ?? item.label);
+  emits("update:modelValue", keyOf(item));
   selectedItem.value = item;
 };
 
@@ -185,13 +207,16 @@ const buttonProps = (active: boolean): ButtonProps => ({
           /></slot>
         </div>
       </template>
-      <v-list :style="menuStyle">
+      <v-list :style="menuStyle" role="menu">
         <v-list-item
           v-for="(item, index) in menuItems"
           :key="item.value ?? index"
-          :disabled="isLoading || item.disabled"
+          role="menuitem"
+          :href="isLinks && !isItemDisabled(item) ? itemHref(item) : undefined"
+          :disabled="isItemDisabled(item)"
+          :aria-disabled="isItemDisabled(item) || undefined"
           :class="{ 'list-item-active': isItemActive(item) }"
-          @click="() => onMenuItemClick(item)"
+          @click="(event: MouseEvent | KeyboardEvent) => onMenuItemClick(event, item)"
         >
           <template v-if="item.icon" #prepend>
             <slot name="item-icon" :item="item" :color="resolveItemColor(item)"
@@ -208,14 +233,7 @@ const buttonProps = (active: boolean): ButtonProps => ({
               name="item-label"
               :item="item"
               :text="labelFormatter(item.label)"
-              ><a
-                v-if="isLinks"
-                :href="
-                  item.href ??
-                  (typeof item.to === 'string' ? item.to : undefined)
-                "
-                >{{ labelFormatter(item.label) }}</a
-              ><span v-else>{{ labelFormatter(item.label) }}</span></slot
+              ><span>{{ labelFormatter(item.label) }}</span></slot
             >
           </v-list-item-title>
         </v-list-item>
@@ -225,7 +243,6 @@ const buttonProps = (active: boolean): ButtonProps => ({
 </template>
 
 <style lang="scss" scoped>
-:deep(.v-list-item-title a),
 :deep(.v-list-item-title span) {
   text-decoration: none;
   font-size: 14px;

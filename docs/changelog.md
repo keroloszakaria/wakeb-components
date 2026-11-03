@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased (0.7.x)
+
+- Fix WSegmentedProgress so the fill ratio ignores label width.
+- WDropdown: exact values win over label fallbacks, replaced records refresh the label, `null` clears the selection, rows use menu roles and disabled link rows lose their `href`.
+- Add menu roles to WExportDropdown. Informational overflow lists in WAvatarStack and WBadgeStack are no longer announced as menus, and circle icon styles reach the teleported list.
+- Link WTabs tabs and panels with unique IDs; WTree restores focus to a visible row when the focused row disappears.
+- WButton loading suppresses clicks and native submit in both modes; secondary state tokens and the documented secondary background/color variables now apply.
+- WModal renders description-only headers and honors a native `max-width` when `width` is absent.
+- The docs build packs a freshly built library and checks that documented CSS variables are consumed; deployment verification compares against the local build receipt and commit.
+- Update Vite to 6.4.5.
+
 ## 0.7.0
 
 WModal and WDrawer add reusable dialog/drawer shells with explicit loading, close controls, slots and CSS variables. Aware keeps AddEditModal, GenericForm, schemas, validation, permissions, header SVG and theme aliases. Native Dialog Escape/focus/scroll behavior and native Drawer semantics are preserved.

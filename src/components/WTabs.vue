@@ -4,6 +4,7 @@ import {
   nextTick,
   onMounted,
   ref,
+  useId,
   useSlots,
   watch,
   type CSSProperties,
@@ -65,6 +66,9 @@ const rootStyle = computed(() => {
 });
 
 const tabsRoot = ref<HTMLElement | null>(null);
+const uid = useId();
+const tabId = (index: number) => `wakeb-tabs-${uid}-tab-${index}`;
+const panelId = (index: number) => `wakeb-tabs-${uid}-panel-${index}`;
 const emits = defineEmits<{ updateTab: [value: NavigationKey | undefined] }>();
 
 /** Empty selectedTab + isSwitcherOnly = no highlight (dual rails on settings). */
@@ -173,7 +177,14 @@ onMounted(() => {
             <span class="tabs__section-label-line" aria-hidden="true"></span>
           </div>
           <v-tab
+            :id="tabId(index)"
             :value="tabValue(tabItem)"
+            :aria-controls="
+              // Inactive panels are lazy, so only the rendered panel is referenced.
+              isSwitcherOnly || tab !== tabValue(tabItem)
+                ? undefined
+                : panelId(index)
+            "
             :aria-label="iconOnly ? tabItem.label : undefined"
             :class="resolveItemClassList(tabItem, index)"
             :ripple="false"
@@ -211,16 +222,24 @@ onMounted(() => {
     <v-card-text class="w-full py-0!" v-if="!isSwitcherOnly">
       <v-tabs-window v-model="tab">
         <v-tabs-window-item
-          v-for="tabItem in tabs"
+          v-for="(tabItem, index) in tabs"
           :key="tabValue(tabItem)"
           :value="tabValue(tabItem)"
         >
-          <template v-if="tabItem.content">
-            {{ tabItem.content }}
-          </template>
-          <template v-else>
-            <slot :name="String(tabValue(tabItem))"></slot>
-          </template>
+          <div
+            :id="panelId(index)"
+            class="wakeb-tabs__panel"
+            role="tabpanel"
+            :aria-labelledby="tabId(index)"
+            tabindex="0"
+          >
+            <template v-if="tabItem.content">
+              {{ tabItem.content }}
+            </template>
+            <template v-else>
+              <slot :name="String(tabValue(tabItem))"></slot>
+            </template>
+          </div>
         </v-tabs-window-item>
       </v-tabs-window>
     </v-card-text>

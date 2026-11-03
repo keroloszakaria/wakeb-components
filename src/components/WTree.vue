@@ -62,17 +62,6 @@ const visibleKeys = computed(() => {
   walk(props.nodes);
   return keys;
 });
-if (props.isRoot || !inherited)
-  watch(
-    visibleKeys,
-    (keys) => {
-      if (focusKey.value === undefined || !keys.includes(focusKey.value))
-        focusKey.value = keys.includes(props.activeKey as NavigationKey)
-          ? (props.activeKey as NavigationKey)
-          : keys[0];
-    },
-    { immediate: true },
-  );
 function clickNode(event: MouseEvent, node: TreeNode) {
   if (props.keyboardNavigation)
     (event.currentTarget as HTMLElement)
@@ -197,6 +186,75 @@ const isInlineEditingNode = (node: TreeNode) => {
     key === props.editingNodeId || String(key) === String(props.editingNodeId)
   );
 };
+
+const ownsFocus = props.isRoot || !inherited;
+let previousKeys: NavigationKey[] = [];
+/** Prefer the nearest visible ancestor, then the previous visible row, so a hidden or removed row hands focus to a neighbour. */
+function nextFocusKey(keys: NavigationKey[], lost: NavigationKey | undefined) {
+  if (lost !== undefined) {
+    const path = findPathToNode(props.nodes, lost) ?? [];
+    for (let i = path.length - 2; i >= 0; i--)
+      if (keys.includes(path[i])) return path[i];
+    const old = previousKeys.indexOf(lost);
+    for (let i = old - 1; i >= 0; i--)
+      if (keys.includes(previousKeys[i])) return previousKeys[i];
+  }
+  return keys.includes(props.activeKey as NavigationKey)
+    ? (props.activeKey as NavigationKey)
+    : keys[0];
+}
+if (ownsFocus)
+  watch(
+    visibleKeys,
+    (keys) => {
+      if (focusKey.value === undefined || !keys.includes(focusKey.value))
+        focusKey.value = nextFocusKey(keys, focusKey.value);
+      previousKeys = keys;
+    },
+    { immediate: true },
+  );
+
+// Restores DOM focus only when it was inside this tree and its row disappeared; focus elsewhere is never taken.
+let focusWithin = false;
+function onFocusIn() {
+  focusWithin = true;
+}
+function onFocusOut(event: FocusEvent) {
+  const next = event.relatedTarget as Node | null;
+  if (next) {
+    focusWithin = Boolean(treeRoot.value?.contains(next));
+    return;
+  }
+  const target = event.target as Node;
+  queueMicrotask(() => {
+    if (target.isConnected) focusWithin = false;
+  });
+}
+const rowIsVisible = (row: Element | null) =>
+  !row ||
+  visibleKeys.value.some(
+    (key) => String(key) === row.getAttribute("data-tree-key"),
+  );
+if (ownsFocus)
+  watch(
+    visibleKeys,
+    () => {
+      const root = treeRoot.value;
+      if (!root || typeof document === "undefined") return;
+      const active = document.activeElement;
+      // A leaving row still holds focus during its transition; a removed row leaves focus on body.
+      const lost =
+        (active &&
+          root.contains(active) &&
+          !rowIsVisible(active.closest("[data-tree-key]"))) ||
+        (focusWithin && (!active || active === document.body));
+      if (!lost) return;
+      Array.from(root.querySelectorAll<HTMLElement>("[data-tree-key]"))
+        .find((row) => row.dataset.treeKey === String(focusKey.value))
+        ?.focus();
+    },
+    { flush: "post" },
+  );
 </script>
 <template>
   <ul
@@ -204,12 +262,15 @@ const isInlineEditingNode = (node: TreeNode) => {
     :role="keyboardNavigation ? (isRoot ? 'tree' : 'group') : undefined"
     :aria-label="keyboardNavigation && isRoot ? ariaLabel : undefined"
     class="tree"
+    @focusin="ownsFocus && keyboardNavigation && onFocusIn()"
+    @focusout="ownsFocus && keyboardNavigation && onFocusOut($event)"
     :class="{ 'tree--root': isRoot, 'tree--rtl': rtl }"
   >
     <li
       v-for="(node, index) in nodes"
       :key="keyOf(node) ?? index"
       class="tree__node"
+      :data-tree-key="keyboardNavigation ? String(keyOf(node)) : undefined"
       :role="keyboardNavigation ? 'treeitem' : undefined"
       :aria-label="
         keyboardNavigation ? String(node[itemLabel] ?? '') : undefined

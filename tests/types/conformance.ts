@@ -33,6 +33,10 @@ import type PrimeVueWButton from "../../src/adapters/primevue/WButton.vue";
 import type PrimeVueWDropdown from "../../src/adapters/primevue/WDropdown.vue";
 import type PrimeVueWLoading from "../../src/adapters/primevue/WLoading.vue";
 import type PrimeVueWModal from "../../src/adapters/primevue/WModal.vue";
+import type PrimeVueWPageSkeleton from "../../src/adapters/primevue/WPageSkeleton.vue";
+import type PrimeVueWSegmentedProgress from "../../src/adapters/primevue/WSegmentedProgress.vue";
+import type PrimeVueWSemiCircleGauge from "../../src/adapters/primevue/WSemiCircleGauge.vue";
+import type PrimeVueWVerticalSteps from "../../src/adapters/primevue/WVerticalSteps.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -91,6 +95,10 @@ interface PrimeVue {
   WDropdown: typeof PrimeVueWDropdown;
   WLoading: typeof PrimeVueWLoading;
   WModal: typeof PrimeVueWModal;
+  WPageSkeleton: typeof PrimeVueWPageSkeleton;
+  WSegmentedProgress: typeof PrimeVueWSegmentedProgress;
+  WSemiCircleGauge: typeof PrimeVueWSemiCircleGauge;
+  WVerticalSteps: typeof PrimeVueWVerticalSteps;
 }
 
 /** The Vuetify renderer set is complete: every public component has one. */

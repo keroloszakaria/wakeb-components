@@ -446,8 +446,8 @@ attributes with the same name follow the rules below.
 | WTruncatedText | The text `<span>` that opens the tooltip. |
 | WTooltipBtn | The native `<button>`. `wrapperAttrs` targets the outer span. |
 | WCarousel | The carousel root (`role="region"`). Each indicator takes `indicatorAttrs`. |
-| WDrawer | The element that carries `.wakeb-drawer`: on Vuetify the `<nav>` drawer root; on PrimeVue the teleported `role="dialog"` element, present only while open. |
-| WExportDropdown | The teleported menu overlay on every provider, present only while open (baseline compatibility). |
+| WDrawer | The element that carries `.wakeb-drawer`: on Vuetify the `<nav>` drawer root; on PrimeVue and shadcn-vue the teleported `role="dialog"` element, present only while open. |
+| WExportDropdown | The teleported menu overlay on every provider, present only while open (baseline compatibility). On shadcn-vue it is a wrapper around the `role="menu"` element. |
 | WTree | The root `ul` (`role="tree"`). |
 | The other components | Their root element. WBadge sends `chipAttrs` to the chip; WBadgeStack sends `badgeAttrs` to each badge. |
 
@@ -517,7 +517,7 @@ Under shadcn-vue the primitives are Wakeb's adapted copies of the shadcn-vue com
 | Component | shadcn-vue primitive | Ignored Wakeb-owned keys |
 | --- | --- | --- |
 | WButton | `Button` (`variant`, `size`, plus reka-ui `Primitive`) | `as`, `asChild`, `disabled`, `type`, `onClick` |
-| WDropdown | `DropdownMenuContent` (reka-ui) | `forceMount`, `as`, `asChild`, `reference`, `onEscapeKeyDown`, `onCloseAutoFocus` |
+| WDropdown | `DropdownMenuContent` (reka-ui) | `forceMount`, `as`, `asChild`, `reference`, `portal`, `onEscapeKeyDown`, `onCloseAutoFocus` |
 | WModal | `DialogContent` (reka-ui) | `forceMount`, `disableOutsidePointerEvents`, `as`, `asChild`, `overlayAttrs`, `onEscapeKeyDown`, `onPointerDownOutside`, `onInteractOutside`, `onCloseAutoFocus`, `onAfterLeave` |
 | WLoading | `Spinner` (Lucide `loader-circle`) | `size`, `color` |
 
@@ -610,7 +610,7 @@ errors, and production builds drop them.
 | WExportDropdown, WBaseSidebar, WDrawer | Yes | Yes |
 | WAvatarStack, WBadgeStack, WAccordion | Yes | Yes |
 | WTruncatedText, WTooltipBtn, WBadge, WUserBadge | Yes | Yes |
-| shadcn-vue (alpha) | — | WButton, WDropdown, WModal, WLoading; WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps (native Wakeb markup); WPageSkeleton (shadcn-vue Skeleton bones on the Wakeb grid); WAccordion (Wakeb disclosure, shadcn-vue Button indicators); the other components: `WAKEB_COMPONENT_UNSUPPORTED` |
+| shadcn-vue (alpha) | — | WButton, WDropdown, WModal, WLoading, WExportDropdown, WBaseSidebar, WDrawer; WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps (native Wakeb markup); WPageSkeleton (shadcn-vue Skeleton bones on the Wakeb grid); WAccordion (Wakeb disclosure, shadcn-vue Button indicators); the other components: `WAKEB_COMPONENT_UNSUPPORTED` |
 
 ## Limits of this alpha
 
@@ -685,14 +685,15 @@ errors, and production builds drop them.
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning Alpha
-The shadcn-vue adapter renders WButton, WDropdown, WModal, WLoading, WTabs, WTree, WCarousel,
-WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WPageSkeleton and WAccordion. Every other
-component fails with `WAKEB_COMPONENT_UNSUPPORTED` under `framework: 'shadcn'`.
+The shadcn-vue adapter renders WButton, WDropdown, WModal, WLoading, WExportDropdown, WBaseSidebar,
+WDrawer, WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps,
+WPageSkeleton and WAccordion. Every other component fails with `WAKEB_COMPONENT_UNSUPPORTED` under
+`framework: 'shadcn'`.
 :::
 
 shadcn-vue is not an npm component library. Its components are source files that the
 shadcn-vue CLI copies into an app, styled with Tailwind CSS. Wakeb ships its own adapted copies
-of the Button, DropdownMenu, Dialog, Tooltip, Spinner and Skeleton components, so your app does not need
+of the Button, DropdownMenu, Dialog, Sheet, Skeleton, Tooltip and Spinner components, so your app does not need
 the CLI, Tailwind CSS or the shadcn-vue copies of those components:
 
 - **Peer.** The only peer is `reka-ui` (`^2.10.5`), the headless library under shadcn-vue. It
@@ -739,6 +740,22 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
   `aria-controls`; the indicators are WButton (the shadcn-vue Button); the panel is a region named
   by `title` when a title is set. A closed panel stays mounted, so nested state is kept. reka-ui
   Collapsible is not used, because it unmounts a closed panel unless it is force-mounted.
+- **WExportDropdown** renders the formats in reka-ui DropdownMenu, like WDropdown: arrow keys skip
+  disabled formats, Enter or Space selects, Escape and a click outside close the menu, and focus
+  returns to the activator. `select` fires once for an enabled format, never while `isLoading` is
+  set. Attributes and the theme scope reach a wrapper around the `role="menu"` element, which
+  exists only while the menu is open; `menuStyle` and `zIndexOverlay` reach the menu itself.
+- **WBaseSidebar** uses the shared Wakeb markup and styles; the filter buttons are shadcn-vue
+  WButtons. While `loading` is set it renders the portable skeleton names (SPEC R16) with shadcn-vue
+  Skeleton bones inside one `role="alert"` region named "Loading..."; Vuetify-only names are
+  skipped with `WAKEB_UNKNOWN_VALUE`.
+- **WDrawer** renders the shadcn-vue Sheet, built on reka-ui Dialog. The panel has `role="dialog"`,
+  `aria-modal="true"` and its name from `title`, then `ariaLabel`. It traps focus, hides the rest
+  of the page from assistive technology, locks body scroll, closes on Escape and outside presses
+  unless `persistent` is set, and returns focus to the element that opened it. It needs no layout
+  host. The physical side follows Wakeb's `direction` option (`end` is the right side in
+  left-to-right pages and the left side in right-to-left pages). `zIndexOverlay` reaches both the
+  overlay and the panel; `transparentOverlay` keeps the overlay, so the page stays blocked.
 
 **Limits.**
 
@@ -761,6 +778,11 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
 - **Styles.** `style.css` contains the CSS of every renderer, including the shadcn-vue rules.
 - **Skeleton look.** shadcn-vue WPageSkeleton bones pulse with the shadcn-vue look; Vuetify and
   PrimeVue bones use a wave. The grid, shapes, sizes and ARIA are the same.
+- **WDrawer.** Only the left and right Sheet sides are used; the drawer has no top or bottom
+  position. On Escape or an outside press the drawer emits only `update:modelValue`, like PrimeVue;
+  `close` comes from the close button.
+- **WExportDropdown.** The menu is non-modal, like the other providers: the page behind it is not
+  inert while it is open.
 
 **License.** shadcn-vue is MIT licensed (Copyright (c) 2023 unovue), and the inlined Lucide
 icon is ISC licensed (Copyright (c) 2026 Lucide Icons and Contributors). The package includes

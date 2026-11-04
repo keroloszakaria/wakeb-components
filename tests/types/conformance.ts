@@ -62,6 +62,9 @@ import type ShadcnWSemiCircleGauge from "../../src/adapters/shadcn/WSemiCircleGa
 import type ShadcnWVerticalSteps from "../../src/adapters/shadcn/WVerticalSteps.vue";
 import type ShadcnWPageSkeleton from "../../src/adapters/shadcn/WPageSkeleton.vue";
 import type ShadcnWAccordion from "../../src/adapters/shadcn/WAccordion.vue";
+import type ShadcnWExportDropdown from "../../src/adapters/shadcn/WExportDropdown.vue";
+import type ShadcnWBaseSidebar from "../../src/adapters/shadcn/WBaseSidebar.vue";
+import type ShadcnWDrawer from "../../src/adapters/shadcn/WDrawer.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -151,6 +154,9 @@ interface Shadcn {
   WVerticalSteps: typeof ShadcnWVerticalSteps;
   WPageSkeleton: typeof ShadcnWPageSkeleton;
   WAccordion: typeof ShadcnWAccordion;
+  WExportDropdown: typeof ShadcnWExportDropdown;
+  WBaseSidebar: typeof ShadcnWBaseSidebar;
+  WDrawer: typeof ShadcnWDrawer;
 }
 
 /** The Vuetify renderer set is complete: every public component has one. */

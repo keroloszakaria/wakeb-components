@@ -12,7 +12,7 @@ bundled; they are installed by the consuming application under their own license
 
 Source:   https://github.com/unovue/shadcn-vue, release v2.9.0
           (commit 39cb0b277f009e47de2dc62c4217755fb9a27eec),
-          apps/v4/registry/new-york-v4/ui/{button,dialog,dropdown-menu,skeleton,spinner,tooltip}
+          apps/v4/registry/new-york-v4/ui/{button,dialog,dropdown-menu,sheet,skeleton,spinner,tooltip}
 Used in:  src/adapters/shadcn/ui/*.vue, compiled into dist/_internal/adapters/shadcn/*.js and
           dist/wakeb-components.css
 Changes:  The Tailwind CSS utility classes are translated into precompiled, namespaced

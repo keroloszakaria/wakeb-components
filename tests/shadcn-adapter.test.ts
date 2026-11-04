@@ -3,7 +3,7 @@ import { defineComponent, h, nextTick, ref } from "vue";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { WButton, WCarousel, WDropdown, WLoading, WModal, WTabs, WTree } from "../src";
+import { WButton, WCarousel, WDrawer, WDropdown, WExportDropdown, WLoading, WModal, WTabs, WTree } from "../src";
 import TooltipContent from "../src/adapters/shadcn/ui/TooltipContent.vue";
 import { shadcnHost, wakeb } from "./wakeb";
 
@@ -142,6 +142,131 @@ describe("shadcn WModal focus, dismissal and afterLeave", () => {
     render(defineComponent(() => () => [h("main", { class: "page" }, "Page"), h(WModal, { modelValue: true, title: "Edit" })]));
     await settle();
     expect(document.querySelector(".page")?.closest("[aria-hidden='true']")).not.toBeNull();
+  });
+});
+
+describe("shadcn WExportDropdown keyboard and focus", () => {
+  const formats = [
+    { label: "PDF", value: "pdf" },
+    { label: "Locked", value: "locked", disabled: true },
+    { label: "CSV", value: "csv" },
+  ];
+  const menu = () => document.querySelector<HTMLElement>('[role="menu"]');
+
+  it("moves with arrow keys past disabled formats, emits one select on Enter and returns focus", async () => {
+    const w = render(WExportDropdown, { props: { formats } });
+    const activator = w.get("button").element as HTMLButtonElement;
+    activator.focus();
+    activator.click();
+    await vi.waitFor(() => expect(menu()).not.toBeNull());
+    expect(activator.getAttribute("aria-controls")).toBe(menu()!.id);
+    expect(menu()!.getAttribute("aria-label")).toBe("Download");
+    for (const name of ["ArrowDown", "ArrowDown"]) {
+      key(document.activeElement ?? menu()!, name);
+      await settle();
+    }
+    expect(document.activeElement?.textContent).toContain("CSV");
+    key(document.activeElement!, "Enter");
+    await settle();
+    expect(w.emitted("select")).toEqual([["csv"]]);
+    await vi.waitFor(() => expect(menu()).toBeNull());
+    await vi.waitFor(() => expect(document.activeElement).toBe(activator));
+  });
+
+  it("closes on Escape without selecting, removes the overlay wrapper and never opens while loading", async () => {
+    const w = render(WExportDropdown, { props: { formats }, attrs: { "data-test": "exports" } });
+    const activator = w.get("button").element as HTMLButtonElement;
+    activator.focus();
+    activator.click();
+    await vi.waitFor(() => expect(menu()).not.toBeNull());
+    key(document.activeElement ?? menu()!, "Escape");
+    await settle();
+    await vi.waitFor(() => expect(document.querySelector('[data-test="exports"]')).toBeNull());
+    expect(w.emitted("select")).toBeUndefined();
+    await w.setProps({ isLoading: true });
+    activator.click();
+    await settle();
+    expect(menu()).toBeNull();
+  });
+});
+
+describe("shadcn WDrawer overlay host (R18, R19)", () => {
+  const drawer = () => document.querySelector<HTMLElement>(".wakeb-drawer");
+  const view = (props: Record<string, unknown> = {}) => {
+    const open = ref(false);
+    const component = defineComponent(() => () => [
+      h("main", { class: "page" }, [h("button", { class: "opener", onClick: () => (open.value = true) }, "Open")]),
+      h(
+        WDrawer,
+        { title: "Filters", ...props, modelValue: open.value, "onUpdate:modelValue": (value: boolean) => (open.value = value) },
+        { content: () => [h("input", { class: "first" }), h("button", { class: "last" }, "Last")] },
+      ),
+    ]);
+    return { open, component };
+  };
+
+  it("renders a named modal dialog with no layout host, traps focus, locks scroll and returns focus to the opener", async () => {
+    const { open, component } = view();
+    const w = render(component);
+    const opener = w.get(".opener").element as HTMLButtonElement;
+    opener.focus();
+    opener.click();
+    await vi.waitFor(() => expect(drawer()?.contains(document.activeElement)).toBe(true));
+    const root = drawer()!;
+    expect(root.getAttribute("role")).toBe("dialog");
+    expect(root.getAttribute("aria-modal")).toBe("true");
+    expect(root.getAttribute("aria-label")).toBe("Filters");
+    expect(root.parentElement).toBe(document.body);
+    expect(document.querySelector(".page")?.closest("[aria-hidden='true']")).not.toBeNull();
+    await vi.waitFor(() => expect(document.body.style.overflow).toBe("hidden"));
+    // reka-ui's focus scope wraps Tab from the last tabbable element to the first.
+    (root.querySelector(".last") as HTMLElement).focus();
+    key(root.querySelector(".last")!, "Tab");
+    await settle();
+    expect(document.activeElement?.getAttribute("aria-label")).toBe("Close");
+    (root.querySelector('button[aria-label="Close"]') as HTMLElement).click();
+    await settle();
+    expect(open.value).toBe(false);
+    await vi.waitFor(() => expect(drawer()).toBeNull());
+    await vi.waitFor(() => expect(document.activeElement).toBe(opener));
+    expect(document.body.style.overflow).toBe("");
+  });
+
+  it("closes from an outside press unless persistent, and a transparent overlay still blocks the background", async () => {
+    const { open, component } = view({ transparentOverlay: true });
+    const w = render(component);
+    w.get(".opener").element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await vi.waitFor(() => expect(drawer()).not.toBeNull());
+    const overlay = document.querySelector<HTMLElement>(".wakeb-sc-sheet-overlay")!;
+    expect(overlay.classList.contains("wakeb-sc-sheet-overlay--transparent")).toBe(true);
+    await settle();
+    document.body.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true }));
+    await settle();
+    expect(open.value).toBe(false);
+
+    const persistent = view({ persistent: true });
+    const p = render(persistent.component);
+    p.get(".opener").element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await vi.waitFor(() => expect(drawer()).not.toBeNull());
+    await settle();
+    key(drawer()!, "Escape");
+    document.body.dispatchEvent(new MouseEvent("pointerdown", { bubbles: true }));
+    await settle();
+    expect(persistent.open.value).toBe(true);
+    expect(drawer()).not.toBeNull();
+  });
+
+  it("maps logical positions through the Wakeb direction and stacks the overlay with zIndexOverlay", async () => {
+    render(WDrawer, { props: { modelValue: true, position: "end", width: "560px" } }, wakeb({ direction: "rtl", theme: { tokens: { zIndexOverlay: 3100 } } }));
+    await settle();
+    const root = drawer()!;
+    expect(root.getAttribute("data-side")).toBe("left");
+    expect(root.style.width).toBe("560px");
+    expect(root.style.zIndex).toBe("3100");
+    expect(document.querySelector<HTMLElement>(".wakeb-sc-sheet-overlay")!.style.zIndex).toBe("3100");
+    render(WDrawer, { props: { modelValue: true, position: "start" } });
+    await settle();
+    expect([...document.querySelectorAll(".wakeb-drawer")].at(-1)!.getAttribute("data-side")).toBe("left");
   });
 });
 

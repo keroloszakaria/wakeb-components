@@ -45,7 +45,7 @@ const native = useProviderProps(context, () => props.providerProps, {
   component: "WDropdown",
   primitive: DropdownMenuContent,
   label: "DropdownMenuContent",
-  owned: ["forceMount", "as", "asChild", "reference", "onEscapeKeyDown", "onCloseAutoFocus"],
+  owned: ["forceMount", "as", "asChild", "reference", "portal", "onEscapeKeyDown", "onCloseAutoFocus"],
 });
 const menuId = `wakeb-dropdown-${useId()}`;
 const isActive = ref(false);

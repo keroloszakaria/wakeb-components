@@ -5,17 +5,18 @@ import { createVuetify } from "vuetify";
 import { VLayout } from "vuetify/components/VLayout";
 import PrimeVue from "primevue/config";
 import { WBaseSidebar, WDrawer, WExportDropdown, WModal, type WakebComponentsOptions } from "../src";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /*
  * WExportDropdown, WBaseSidebar and WDrawer contract (SPEC R12–R19, M4), run once per provider
  * project. Queries go through roles and Wakeb classes, never provider DOM. The only host difference
- * is the Vuetify layout that VNavigationDrawer needs; PrimeVue renders WDrawer with no host markup.
+ * is the Vuetify layout that VNavigationDrawer needs; PrimeVue and shadcn-vue render WDrawer with no
+ * host markup.
  */
 const vuetify = framework === "vuetify";
-const host = () => (vuetify ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const host = () => (vuetify ? createVuetify() : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost);
 const plugins = (options: Partial<WakebComponentsOptions> = {}) => [host() as never, wakeb(options)];
-/** Vuetify needs an application layout for WDrawer (documented limit); PrimeVue needs nothing. */
+/** Vuetify needs an application layout for WDrawer (documented limit); PrimeVue and shadcn-vue need nothing. */
 const layout = (render: () => unknown) => (vuetify ? h(VLayout, null, { default: render }) : render());
 const render = (component: unknown, options: { props?: Record<string, unknown>; attrs?: Record<string, unknown>; slots?: Record<string, unknown>; wakeb?: Partial<WakebComponentsOptions> } = {}) =>
   mount(component as never, {
@@ -280,7 +281,7 @@ describe(`WDrawer contract (${framework})`, () => {
     expect(drawer()?.querySelector('[aria-busy="true"]')).not.toBeNull();
   });
 
-  it("closes on Escape unless persistent (PrimeVue); the Vuetify drawer keeps its documented native behavior", async () => {
+  it("closes on Escape unless persistent (PrimeVue, shadcn-vue); the Vuetify drawer keeps its documented native behavior", async () => {
     const w = renderDrawer({ modelValue: true, persistent: false });
     await settle();
     escape();
@@ -304,7 +305,7 @@ describe(`WDrawer contract (${framework})`, () => {
     expect(root.getAttribute("dir")).toBe("rtl");
     // Caller styles merge after the scope, so they win.
     expect(root.style.getPropertyValue("--wakeb-ui-primary")).toBe("#abcdef");
-    // PrimeVue teleports the drawer under a mask that takes zIndexOverlay; Vuetify keeps its layout z-index.
+    // PrimeVue and shadcn-vue teleport the drawer with an overlay stacking of zIndexOverlay; Vuetify keeps its layout z-index.
     if (!vuetify) expect(stackedZ(root)).toBe("3100");
   });
 
@@ -317,8 +318,8 @@ describe(`WDrawer contract (${framework})`, () => {
   });
 });
 
-/* PrimeVue-only R18/R19 behavior: the provider-neutral overlay host Vuetify does not have. */
-describe.runIf(!vuetify)("PrimeVue WDrawer overlay host (R18, R19)", () => {
+/* PrimeVue-only R18/R19 wiring: the overlay host Vuetify does not have (shadcn-vue: tests/shadcn-adapter.test.ts). */
+describe.runIf(framework === "primevue")("PrimeVue WDrawer overlay host (R18, R19)", () => {
   it("renders with no layout host, traps focus inside, blocks body scroll and returns focus to the opener", async () => {
     const open = ref(false);
     const view = defineComponent(() => () => [

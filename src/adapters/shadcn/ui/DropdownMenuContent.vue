@@ -2,24 +2,31 @@
   Adapted from shadcn-vue 2.9.0, apps/v4/registry/new-york-v4/ui/dropdown-menu/DropdownMenuContent.vue
   (MIT License, Copyright (c) 2023 unovue). See THIRD-PARTY-NOTICES.txt.
   Wakeb changes: Tailwind and tw-animate-css classes are replaced by the precompiled
-  `wakeb-sc-dropdown-menu` rules below; cn() and reactiveOmit are not needed.
+  `wakeb-sc-dropdown-menu` rules below; cn() and reactiveOmit are not needed; `portal: false` lets
+  a caller teleport the content inside its own overlay wrapper.
 -->
 <script setup lang="ts">
 import type { DropdownMenuContentEmits, DropdownMenuContentProps } from "reka-ui";
+import { computed } from "vue";
 import { DropdownMenuContent, DropdownMenuPortal, useForwardPropsEmits } from "reka-ui";
+import Passthrough from "./Passthrough";
 
 defineOptions({ inheritAttrs: false });
-const props = withDefaults(defineProps<DropdownMenuContentProps>(), { sideOffset: 4 });
+const props = withDefaults(defineProps<DropdownMenuContentProps & { portal?: boolean }>(), { sideOffset: 4, portal: true });
 const emits = defineEmits<DropdownMenuContentEmits>();
-const forwarded = useForwardPropsEmits(props, emits);
+const delegated = computed(() => {
+  const { portal: _portal, ...rest } = props;
+  return rest;
+});
+const forwarded = useForwardPropsEmits(delegated, emits);
 </script>
 
 <template>
-  <DropdownMenuPortal>
+  <component :is="portal ? DropdownMenuPortal : Passthrough">
     <DropdownMenuContent data-slot="dropdown-menu-content" v-bind="{ ...$attrs, ...forwarded }" class="wakeb-sc-dropdown-menu">
       <slot />
     </DropdownMenuContent>
-  </DropdownMenuPortal>
+  </component>
 </template>
 
 <style>

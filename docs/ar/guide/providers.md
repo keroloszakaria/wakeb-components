@@ -440,8 +440,8 @@ Skeleton في Wakeb.
 | WTruncatedText | عنصر `<span>` النصي الذي يفتح الـTooltip. |
 | WTooltipBtn | عنصر `<button>` الأصلي. أما `wrapperAttrs` فتستهدف الـspan الخارجي. |
 | WCarousel | جذر العرض المتتابع (`role="region"`). وكل مؤشر يستقبل `indicatorAttrs`. |
-| WDrawer | العنصر الذي يحمل `.wakeb-drawer`: على Vuetify جذر اللوحة، وهو عنصر `<nav>`؛ وعلى PrimeVue العنصر المنقول الذي يحمل `role="dialog"`، ولا يوجد إلا أثناء فتح اللوحة. |
-| WExportDropdown | طبقة القائمة المنقولة على كل المزودين، ولا توجد إلا أثناء فتح القائمة (للتوافق مع الإصدار الأساسي). |
+| WDrawer | العنصر الذي يحمل `.wakeb-drawer`: على Vuetify جذر اللوحة، وهو عنصر `<nav>`؛ وعلى PrimeVue وshadcn-vue العنصر المنقول الذي يحمل `role="dialog"`، ولا يوجد إلا أثناء فتح اللوحة. |
+| WExportDropdown | طبقة القائمة المنقولة على كل المزودين، ولا توجد إلا أثناء فتح القائمة (للتوافق مع الإصدار الأساسي). وعلى shadcn-vue هي عنصر يغلّف العنصر ذا `role="menu"`. |
 | WTree | عنصر `ul` الجذري (`role="tree"`). |
 | بقية المكونات | العنصر الجذري. يرسل WBadge القيمة `chipAttrs` إلى الـchip، ويرسل WBadgeStack القيمة `badgeAttrs` إلى كل شارة. |
 
@@ -511,7 +511,7 @@ Skeleton في Wakeb.
 | المكوّن | primitive في shadcn-vue | مفاتيح يملكها Wakeb وتُتجاهل |
 | --- | --- | --- |
 | WButton | `Button` (`variant` و`size`، إضافة إلى `Primitive` من reka-ui) | `as` و`asChild` و`disabled` و`type` و`onClick` |
-| WDropdown | `DropdownMenuContent` (reka-ui) | `forceMount` و`as` و`asChild` و`reference` و`onEscapeKeyDown` و`onCloseAutoFocus` |
+| WDropdown | `DropdownMenuContent` (reka-ui) | `forceMount` و`as` و`asChild` و`reference` و`portal` و`onEscapeKeyDown` و`onCloseAutoFocus` |
 | WModal | `DialogContent` (reka-ui) | `forceMount` و`disableOutsidePointerEvents` و`as` و`asChild` و`overlayAttrs` و`onEscapeKeyDown` و`onPointerDownOutside` و`onInteractOutside` و`onCloseAutoFocus` و`onAfterLeave` |
 | WLoading | `Spinner` (أيقونة `loader-circle` من Lucide) | `size` و`color` |
 
@@ -602,7 +602,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | WExportDropdown وWBaseSidebar وWDrawer | مدعوم | مدعوم |
 | WAvatarStack وWBadgeStack وWAccordion | مدعوم | مدعوم |
 | WTruncatedText وWTooltipBtn وWBadge وWUserBadge | مدعوم | مدعوم |
-| shadcn-vue (تجريبي) | — | WButton وWDropdown وWModal وWLoading؛ وWTabs وWTree وWCarousel وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps (markup أصلي من Wakeb)؛ وWPageSkeleton (عظام Skeleton من shadcn-vue على شبكة Wakeb)؛ وWAccordion (إفصاح من Wakeb بمؤشرات زر shadcn-vue)؛ وبقية المكونات: `WAKEB_COMPONENT_UNSUPPORTED` |
+| shadcn-vue (تجريبي) | — | WButton وWDropdown وWModal وWLoading وWExportDropdown وWBaseSidebar وWDrawer؛ وWTabs وWTree وWCarousel وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps (markup أصلي من Wakeb)؛ وWPageSkeleton (عظام Skeleton من shadcn-vue على شبكة Wakeb)؛ وWAccordion (إفصاح من Wakeb بمؤشرات زر shadcn-vue)؛ وبقية المكونات: `WAKEB_COMPONENT_UNSUPPORTED` |
 
 ## حدود الإصدار التجريبي
 
@@ -672,14 +672,14 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning تجريبي
-يرسم محوّل shadcn-vue المكونات WButton وWDropdown وWModal وWLoading وWTabs وWTree وWCarousel
-وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton وWAccordion. أما بقية المكونات
-فتفشل بالرمز `WAKEB_COMPONENT_UNSUPPORTED` مع `framework: 'shadcn'`.
+يرسم محوّل shadcn-vue المكونات WButton وWDropdown وWModal وWLoading وWExportDropdown وWBaseSidebar
+وWDrawer وWTabs وWTree وWCarousel وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton
+وWAccordion. أما بقية المكونات فتفشل بالرمز `WAKEB_COMPONENT_UNSUPPORTED` مع `framework: 'shadcn'`.
 :::
 
 shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملفات مصدرية تنسخها أداة shadcn-vue CLI إلى
 التطبيق، وتُنسَّق بـTailwind CSS. يوفّر Wakeb نسخه المعدّلة من مكونات Button وDropdownMenu
-وDialog وTooltip وSpinner وSkeleton، فلا يحتاج تطبيقك إلى الأداة ولا إلى Tailwind CSS ولا إلى نسخ shadcn-vue
+وDialog وSheet وSkeleton وTooltip وSpinner، فلا يحتاج تطبيقك إلى الأداة ولا إلى Tailwind CSS ولا إلى نسخ shadcn-vue
 من هذه المكونات:
 
 - **الـpeer.** الـpeer الوحيد هو `reka-ui` ‏(`^2.10.5`)، وهي المكتبة غير المنسقة التي يقوم عليها
@@ -725,6 +725,22 @@ shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملف�
   والمؤشرات هي WButton (زر shadcn-vue)، واللوحة منطقة (region) يسمّيها `title` عند ضبطه. وتبقى
   اللوحة المغلقة مركّبة في الصفحة، فتُحفظ حالة ما بداخلها. لا يُستخدم Collapsible من reka-ui، لأنه
   يزيل اللوحة المغلقة من الصفحة ما لم يُفرض تركيبها.
+- **WExportDropdown** يرسم الصيغ في DropdownMenu من reka-ui كما يفعل WDropdown: تتخطى مفاتيح
+  الأسهم الصيغ المعطّلة، ويختار Enter أو Space الصيغة، ويغلق Escape أو النقر خارج القائمة القائمةَ،
+  ويعود التركيز إلى زر الفتح. يُطلق الحدث `select` مرة واحدة لكل صيغة متاحة، ولا يُطلق أبدًا ما دامت
+  `isLoading` مفعّلة. تصل السمات ونطاق الثيم إلى عنصر يغلّف العنصر ذا `role="menu"`، ولا يوجد هذا
+  العنصر إلا أثناء فتح القائمة؛ أما `menuStyle` و`zIndexOverlay` فيصلان إلى القائمة نفسها.
+- **WBaseSidebar** يستخدم markup وأنماط Wakeb المشتركة، وأزرار التصفية فيه أزرار WButton من
+  shadcn-vue. وأثناء `loading` يرسم أسماء الهياكل القابلة للنقل (SPEC R16) بعظام Skeleton من
+  shadcn-vue داخل منطقة واحدة بالدور `role="alert"` واسمها "Loading..."؛ وتُتخطّى الأسماء الخاصة
+  بـVuetify مع التحذير `WAKEB_UNKNOWN_VALUE`.
+- **WDrawer** يرسم Sheet من shadcn-vue المبني على Dialog من reka-ui. تحمل اللوحة `role="dialog"`
+  و`aria-modal="true"`، ويُؤخذ اسمها من `title` ثم من `ariaLabel`. تحصر التركيز داخلها، وتخفي بقية
+  الصفحة عن التقنيات المساعدة، وتمنع تمرير الصفحة، وتُغلق بـEscape وبالضغط خارجها ما لم تُضبط
+  `persistent`، وتعيد التركيز إلى العنصر الذي فتحها. لا تحتاج إلى مضيف layout. ويتبع الجانب
+  الفعلي الخيار `direction` في Wakeb (`end` هو الجانب الأيمن في الصفحات من اليسار إلى اليمين،
+  والأيسر في الصفحات من اليمين إلى اليسار). تصل `zIndexOverlay` إلى الطبقة الخلفية وإلى اللوحة معًا،
+  ويُبقي `transparentOverlay` الطبقة الخلفية، فتبقى الصفحة محجوبة.
 
 **الحدود.**
 
@@ -747,6 +763,11 @@ shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملف�
 - **الأنماط.** يحتوي `style.css` أنماط كل الـrenderers، ومنها قواعد shadcn-vue.
 - **شكل هياكل التحميل.** تنبض عظام WPageSkeleton في shadcn-vue بأسلوب shadcn-vue، أما في Vuetify
   وPrimeVue فتتحرك العظام بموجة. والشبكة والأشكال والمقاسات وسمات ARIA واحدة.
+- **WDrawer.** يُستخدم الجانبان الأيسر والأيمن فقط من Sheet، فلا موضع علويًا أو سفليًا للوحة.
+  ولا يُطلق الدرج عند Escape أو الضغط خارجه إلا `update:modelValue` كما في PrimeVue؛ أما `close`
+  فيأتي من زر الإغلاق.
+- **WExportDropdown.** القائمة غير modal كما في المزوّدين الآخرين، فلا تصبح الصفحة خلفها خاملة أثناء
+  فتحها.
 
 **الترخيص.** يخضع shadcn-vue لرخصة MIT ‏(Copyright (c) 2023 unovue)، وتخضع أيقونة Lucide المضمّنة
 لرخصة ISC ‏(Copyright (c) 2026 Lucide Icons and Contributors). تحتوي الحزمة نصوص الترخيص في

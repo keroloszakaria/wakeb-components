@@ -61,7 +61,7 @@ Upgrading needs the migration guide. Root imports alone no longer work.
   - Server-to-client hydration has no browser evidence.
   - All component evidence is jsdom, `renderToString` or packed-consumer builds (ACCEPTANCE.md R18, R19).
 - **No Jervis DevOps pipeline run is recorded** for this branch, and the docs are not published from it (ACCEPTANCE.md R22).
-- **Vuetify WDrawer** still needs `VApp` or `VLayout` and does not close on Escape. PrimeVue and shadcn-vue do close on Escape.
+- **Vuetify WDrawer** keeps closed content in the DOM under `inert`, and also closes on touch swipe and route change (PrimeVue and shadcn-vue do not render closed content). Its root is now a `div role="dialog"`, not a `nav`.
 - **WDropdown `colorMap` keys** are open strings.
 - **Deprecated Vuetify color names and badge types.** They type-check, flagged `@deprecated`, and render only under Vuetify; PrimeVue and shadcn-vue fall back with `WAKEB_UNKNOWN_VALUE`.
 - **shadcn-vue overlays** write `dir="ltr"` unless Wakeb `direction` is set. The theme bridge assumes Tailwind v4 complete-color variables.
@@ -73,11 +73,11 @@ Upgrading needs the migration guide. Root imports alone no longer work.
 
 Each of these must be decided before a stable release. They can be deferred for an alpha only if this list ships with it.
 
-1. **Vuetify WDrawer.** Either accept the layout-host requirement and the missing Escape close as a documented provider difference, or require parity, which means an internal host and Escape handling.
+1. ~~**Vuetify WDrawer.**~~ **Decided:** parity. The Vuetify WDrawer renders a Wakeb-owned layout host teleported to Vuetify's overlay container, needs no `VApp` or `VLayout`, and closes on Escape unless `persistent`.
 2. ~~**PrimeVue tooltips and `zIndexOverlay`.**~~ **Decided:** PrimeVue tooltips honor `zIndexOverlay` like every other overlay. Wakeb sets it on each Wakeb tooltip element only, so PrimeVue's global tooltip z-index for the rest of the host app is unchanged.
 3. **WDropdown `colorMap`.** Either keep keys as open strings, or narrow them to `WakebIntent | string` with documented semantics.
 4. ~~**Deprecated Vuetify values.**~~ **Decided.** TypeScript accepts the deprecated values the runtime still renders, flagged with `@deprecated`, for the one-major deprecation window.
-5. **Release version and dist-tag** (below).
+5. ~~**Release version and dist-tag.**~~ **Decided:** `0.8.0-alpha.0` under the `alpha` dist-tag (`publishConfig.tag`). Not published yet.
 6. **Aware compatibility.** R20 needs external Aware evidence or a recorded blocker.
 
 ## Version proposal

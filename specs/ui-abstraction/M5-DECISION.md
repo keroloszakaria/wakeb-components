@@ -112,4 +112,4 @@ In the WButton-only shadcn graph, reka Dialog and DropdownMenu content are tree-
   - Six components are on the parallel track (see "Coverage"). Until they land they fail with `WAKEB_COMPONENT_UNSUPPORTED`.
   - Still outstanding: SSR hydration-mismatch tests in a real browser, and real-browser keyboard, focus and visual contract tests.
   - The module counts above need re-recording for the full 21-component graph.
-- **WDrawer difference across providers.** shadcn-vue and PrimeVue close the drawer on Escape. Vuetify does not, and still needs `VApp` or `VLayout`. This is an open owner decision; see RELEASE-NOTES-DRAFT.md.
+- **WDrawer across providers.** Owner decision: parity. All three providers close the drawer on Escape unless `persistent` and need no app layout host; the Vuetify drawer uses a Wakeb-owned layout host. See RELEASE-NOTES-DRAFT.md.

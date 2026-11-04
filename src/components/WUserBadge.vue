@@ -5,33 +5,11 @@ import { VImg } from "vuetify/components/VImg";
 import WBadge from "./WBadge.vue";
 import type { UserBadgeProps, BadgeUser } from "../types";
 import { VUETIFY_INTENTS, useColor, vuetifyFill } from "../core/vocabulary";
-const props = withDefaults(defineProps<UserBadgeProps>(), {
-  user: () => ({}),
-  type: "outline",
-  borderRadius: "md",
-  icon: "",
-  iconSize: "xs",
-  iconPosition: "before",
-  avatarSize: 16,
-  avatarColor: "primary",
-});
+import { AVATAR_TEXT, useUserBadge, userBadgeDefaults } from "../composables/user-badge";
+const props = withDefaults(defineProps<UserBadgeProps>(), userBadgeDefaults);
 const toColor = useColor("WUserBadge", VUETIFY_INTENTS, true);
-const fill = computed(() => vuetifyFill(toColor(props.avatarColor, "avatarColor", "primary"), "var(--wakeb-avatar-text, var(--wakeb-ui-on-primary, #fff))"));
-const avatar = computed(() => {
-  const value = props.user.avatar;
-  return typeof value === "string" &&
-    (value.startsWith("http") ||
-      value.startsWith("/") ||
-      value.startsWith("data:"))
-    ? value
-    : "";
-});
-const initials = computed(() => {
-  const name = props.user.name;
-  if (!name || name === "—") return "?";
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  return `${parts[0]?.charAt(0) || ""}${parts[1]?.charAt(0) || ""}`.toUpperCase();
-});
+const fill = computed(() => vuetifyFill(toColor(props.avatarColor, "avatarColor", "primary"), AVATAR_TEXT));
+const { avatar, initials } = useUserBadge(props);
 defineSlots<{
   avatar?(props: {
     user: BadgeUser;

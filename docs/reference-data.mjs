@@ -4,8 +4,8 @@ export default [
     "slug": "truncated-text",
     "interface": "TruncatedTextProps",
     "summary": [
-      "Readable shortened text with a keyboard-accessible Vuetify tooltip.",
-      "نص مختصر مع Tooltip من Vuetify يعمل عند التركيز بالكيبورد."
+      "Readable shortened text with a tooltip that opens on hover and keyboard focus.",
+      "نص مختصر مع Tooltip يفتح عند مرور المؤشر وعند التركيز بالكيبورد."
     ],
     "props": [
       [
@@ -26,8 +26,8 @@ export default [
         "tooltipLocation",
         "\"top\" | \"bottom\" | \"start\" | \"end\"",
         "\"top\"",
-        "Tooltip placement through Vuetify.",
-        "موضع Tooltip من خلال Vuetify."
+        "Tooltip placement; start and end are logical sides.",
+        "موضع Tooltip؛ start وend جهتان منطقيتان."
       ],
       [
         "tooltipMaxWidth",
@@ -58,7 +58,7 @@ export default [
     "variables": [
       [
         "--wakeb-text-focus-color",
-        "Vuetify primary / #087f5b"
+        "Vuetify primary or --wakeb-ui-focus / PrimeVue primary / #087f5b"
       ]
     ],
     "attrs": [
@@ -66,8 +66,8 @@ export default [
       "عنصر `<span>` الذي يفتح الـTooltip. تُدمج أحداث التركيز والمرور من المستخدم مع أحداث الـTooltip. يملك Wakeb قيمتي tabindex وaria-label: يضعهما للنص المختصر ويزيلهما في غير ذلك، فتُتجاهل القيم القادمة من المستخدم. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "The span receives DOM attributes and listeners. Focus/hover handlers are composed with Vuetify. Truncated labels get tabindex=0 and the full aria-label; short labels add no tab stop. Text truncation preserves Wakeb Utils behavior, including limits below 3 and UTF-16 emoji splitting. Tooltip location and delays follow Vuetify.",
-      "تصل attributes والأحداث إلى span، وتُدمج أحداث التركيز مع Vuetify. النص المختصر قابل للتركيز وله aria-label كامل؛ النص القصير لا يضيف tab stop. نحافظ على سلوك Wakeb Utils: حد أقل من 3 يرجع النقاط الثلاث، وقد ينقسم emoji بسبب UTF-16. موضع Tooltip وتوقيته يتبعان Vuetify."
+      "The span receives DOM attributes and listeners. Focus/hover handlers are composed with Vuetify. Truncated labels get tabindex=0 and the full aria-label; short labels add no tab stop. Text truncation preserves Wakeb Utils behavior, including limits below 3 and UTF-16 emoji splitting. Tooltip location and delays follow Vuetify. Under PrimeVue: the PrimeVue tooltip directive renders the tooltip on document.body; Wakeb opens it on hover and keyboard focus, and it closes on blur, click and Escape. The span references it through aria-describedby with a useId id, and a caller aria-describedby wins, as on Vuetify. start and end follow the plugin direction option. tooltipStyle styles the tooltip text bubble, contentClass and tooltipMaxWidth the tooltip root, which also carries the plugin theme scope; PrimeVue keeps its own tooltip z-index, so zIndexOverlay does not apply. The focus outline falls back to --wakeb-ui-focus, then the PrimeVue primary color.",
+      "تصل attributes والأحداث إلى span، وتُدمج أحداث التركيز مع Vuetify. النص المختصر قابل للتركيز وله aria-label كامل؛ النص القصير لا يضيف tab stop. نحافظ على سلوك Wakeb Utils: حد أقل من 3 يرجع النقاط الثلاث، وقد ينقسم emoji بسبب UTF-16. موضع Tooltip وتوقيته يتبعان Vuetify. تحت PrimeVue: يرسم توجيه Tooltip في PrimeVue التلميح داخل document.body، ويفتحه Wakeb عند مرور المؤشر وعند التركيز بالكيبورد، ويُغلق عند فقدان التركيز والنقر وEscape. يشير الـspan إليه عبر aria-describedby بمعرّف من useId، وتتقدم قيمة aria-describedby القادمة من المستخدم كما في Vuetify. تتبع start وend خيار direction في الـplugin. تنسّق tooltipStyle فقاعة نص التلميح، وتنسّق contentClass وtooltipMaxWidth جذر التلميح الذي يحمل نطاق theme الخاص بالـplugin أيضًا؛ ويحتفظ PrimeVue بترتيب z-index الخاص بتلميحاته، فلا ينطبق zIndexOverlay. يرجع إطار التركيز إلى --wakeb-ui-focus ثم إلى اللون الأساسي في PrimeVue."
     ],
     "example": "<WTruncatedText label=\"A shared foundation for every team\" :length=\"20\" />"
   },
@@ -1162,8 +1162,8 @@ export default [
         "type",
         "WakebBadgeType",
         "\"primary\"",
-        "Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names: they still render under Vuetify with WAKEB_DEPRECATED_VALUE.",
-        "مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة، وما زالت تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE."
+        "Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names: they still render under Vuetify with WAKEB_DEPRECATED_VALUE. Under PrimeVue they fall back to primary with WAKEB_UNKNOWN_VALUE.",
+        "مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة، وما زالت تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. وتحت PrimeVue ترجع إلى primary مع WAKEB_UNKNOWN_VALUE."
       ],
       [
         "icon",
@@ -1232,13 +1232,13 @@ export default [
         "chipAttrs",
         "Record<string, unknown>",
         "{}",
-        "Explicit attrs for VChip; normal attrs belong to the wrapper.",
-        "attributes صريحة لـVChip؛ العادية تصل للحاوية الخارجية."
+        "Explicit attrs for the chip element (VChip on Vuetify, the unstyled PrimeVue Tag on PrimeVue); normal attrs belong to the wrapper.",
+        "attributes صريحة لعنصر الشارة (VChip في Vuetify، وTag من PrimeVue دون أنماطه في PrimeVue)؛ العادية تصل للحاوية الخارجية."
       ]
     ],
     "slots": [
-      "`default`: replaces label. `icon`: `{ icon, size }`, with VIcon fallback. `actions`: follows the icon. Before order: icon/actions/dot/content. After order: dot/content/icon/actions.",
-      "`default`: يستبدل label. `icon`: يستقبل `{ icon, size }` مع VIcon كافتراضي. `actions`: يلي الأيقونة. الترتيب before: أيقونة/actions/نقطة/محتوى؛ after: نقطة/محتوى/أيقونة/actions."
+      "`default`: replaces label. `icon`: `{ icon, size }`, with a provider icon fallback. `actions`: follows the icon. Before order: icon/actions/dot/content. After order: dot/content/icon/actions.",
+      "`default`: يستبدل label. `icon`: يستقبل `{ icon, size }` مع أيقونة المزود كافتراضي. `actions`: يلي الأيقونة. الترتيب before: أيقونة/actions/نقطة/محتوى؛ after: نقطة/محتوى/أيقونة/actions."
     ],
     "variables": [
       [
@@ -1371,8 +1371,8 @@ export default [
       "الحاوية الجذرية `div`. الـchip الداخلي يستقبل `chipAttrs` فقط. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "A badge is presentational unless explicit chipAttrs make it interactive. Supply visible status text; color and dot alone are not an accessible label. Native wrapper listeners receive bubbling DOM events; there are no custom emits. Chip styles preserve the extracted outline descendant backgrounds and specialized class hooks. Custom icons belong in the icon slot. Semantic variables customize colors without app tokens. Current-color variables are implementation details; use dotColor or documented semantic tokens. The compatibility-only --wakeb-badge-fallback switch stays undefined in normal use.",
-      "الشارة للعرض ما لم تجعلها chipAttrs تفاعلية. قدم نص حالة واضحًا؛ اللون والنقطة وحدهما لا يمثلان اسمًا لقارئ الشاشة. أحداث الحاوية هي أحداث DOM المتصاعدة ولا توجد emits مخصصة. التنسيق يحتفظ بخلفيات descendants للنوع outline وclasses الخاصة. ضع الأيقونات المخصصة في icon slot. الألوان الدلالية مستقلة عن tokens المشروع. متغيرات اللون الحالي داخلية؛ استخدم dotColor أو tokens الموثقة. اترك --wakeb-badge-fallback غير معرف في الاستخدام العادي."
+      "A badge is presentational unless explicit chipAttrs make it interactive. Supply visible status text; color and dot alone are not an accessible label. Native wrapper listeners receive bubbling DOM events; there are no custom emits. Chip styles preserve the extracted outline descendant backgrounds and specialized class hooks. Custom icons belong in the icon slot. Semantic variables customize colors without app tokens. Current-color variables are implementation details; use dotColor or documented semantic tokens. The compatibility-only --wakeb-badge-fallback switch stays undefined in normal use. Every renderer marks the chip with .wakeb-badge, its Wakeb type class and one of .wakeb-badge--soft, --solid, --outline or --ghost. Under PrimeVue: the chip is an unstyled PrimeVue Tag (a span) whose content sits in span.wakeb-badge__content; the same Wakeb stylesheet as on Vuetify paints types, the solid variant, radius, padding and the dot, and Wakeb CSS adds the VChip looks for soft (12% currentColor underlay) and outline (1px currentColor border). chipAttrs reach the Tag element as DOM attributes, so VChip props in it have no effect. Non-Wakeb types are not colors: primary is used with WAKEB_UNKNOWN_VALUE. Icons render through the Wakeb icon renderer; MDI names need an icons alias. providerProps is not accepted on either provider.",
+      "الشارة للعرض ما لم تجعلها chipAttrs تفاعلية. قدم نص حالة واضحًا؛ اللون والنقطة وحدهما لا يمثلان اسمًا لقارئ الشاشة. أحداث الحاوية هي أحداث DOM المتصاعدة ولا توجد emits مخصصة. التنسيق يحتفظ بخلفيات descendants للنوع outline وclasses الخاصة. ضع الأيقونات المخصصة في icon slot. الألوان الدلالية مستقلة عن tokens المشروع. متغيرات اللون الحالي داخلية؛ استخدم dotColor أو tokens الموثقة. اترك --wakeb-badge-fallback غير معرف في الاستخدام العادي. كل renderer يضع على الشارة class ‏.wakeb-badge وclass نوع Wakeb وواحدًا من .wakeb-badge--soft و--solid و--outline و--ghost. تحت PrimeVue: الشارة مكوّن Tag من PrimeVue دون أنماطه (span)، ومحتواها داخل span.wakeb-badge__content؛ وملف أنماط Wakeb نفسه المستخدم في Vuetify يرسم الأنواع والنمط solid ونصف القطر والـpadding والنقطة، وتضيف Wakeb CSS مظهري VChip في soft (طبقة سفلية من currentColor بنسبة 12%) وoutline (حد بعرض 1px من currentColor). تصل chipAttrs إلى عنصر Tag كسمات DOM، فلا أثر لخصائص VChip فيها. الأنواع غير التابعة لـWakeb ليست ألوانًا: يُستخدم primary مع WAKEB_UNKNOWN_VALUE. تُرسم الأيقونات عبر عارض أيقونات Wakeb، وتحتاج أسماء MDI إلى alias في الخيار icons. لا يقبل أي من المزودين providerProps."
     ],
     "example": "<WBadge label=\"Approved\" type=\"success\" is-dot />",
     "playground": "FoundationPlayground"
@@ -1744,8 +1744,8 @@ export default [
       "حاوية flex الجذرية `div.badge-stack`. كل شارة تستقبل `badgeAttrs`، وقائمة الزيادة المنقولة لا تستقبل أيًّا منهما. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "Ordinary attrs target the flex wrapper. No business/theme/icon registry is imported. WBadge variables also apply. Set menu colors through menuStyle and badgeAttrs styles/classes because Vuetify teleports the list outside the stack; the menu carries only the plugin theme scope and zIndexOverlay, and menuStyle wins over it. Image URLs render as decorative img elements; no fetch proxy or detection tint is built in. Nullish per-item overrides preserve false/empty values. max keeps Array.slice and count arithmetic for compatibility; negative, fractional or nonfinite values are unsupported configurations. Visible labels use Wakeb Utils UTF-16 truncation; the menu shows full labels. Only the menu overflow uses customOverflowBorderRadius; the static +N uses customBorderRadius. The circle icon variant also applies to the teleported overflow list. The overflow activator is not announced as a menu because the list is informational. The inherited 58px overflow selector and the legacy circle sizing rules are retained; replace through CSS as needed. Native menu button supports focus, Enter/Space and Escape via Vuetify. The legacy div tag does not provide a native tab stop. PrimeVue: the overflow list opens in a Popover with the same opening rules (hover; click toggles the button; the legacy div opens on hover only). Escape and outside clicks close it; it takes the theme scope and zIndexOverlay, and menuStyle on the list wins. Until the PrimeVue WBadge renderer lands, the stack draws its badges with an internal badge that takes WBadge's props and uses Wakeb CSS only: badge type and variant classes and the --wakeb-badge-* variables match, but the DOM is not a VChip, and a non-Wakeb badge type falls back to primary with WAKEB_UNKNOWN_VALUE. Badge glyphs resolve through the Wakeb icon resolver.",
-      "الخصائص العادية تستهدف حاوية flex. لا يوجد اعتماد على بيانات العمل أو theme أو registry للأيقونات. متغيرات WBadge متاحة أيضًا. خصص ألوان القائمة عبر menuStyle وbadgeAttrs لأن Vuetify ينقلها خارج الحاوية؛ لا تحمل القائمة إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم menuStyle عليه. الصور زخرفية ولا توجد خدمة لجلبها أو تلوين خاص بنوع الاكتشاف. تخصيص العنصر يحترم false والقيم الفارغة. max يحافظ على Array.slice والحساب القديم؛ الأعداد السالبة والكسرية وغير المحدودة إعدادات غير مدعومة. التقصير بوحدات UTF-16 من Wakeb Utils. القائمة تعرض الأسماء كاملة. customOverflowBorderRadius يخص زر القائمة فقط؛ +N الثابت يستخدم customBorderRadius. شكل الأيقونة الدائري يطبق أيضًا على القائمة المنقولة، وزر الزيادة لا يُعلن كقائمة أوامر لأن القائمة معلوماتية. قواعد أحجام الزيادة والدائرة القديمة محفوظة. الزر الافتراضي يدعم التركيز وEnter/Space وEscape من Vuetify؛ div القديم لا يضيف tab stop. في PrimeVue: تُفتح قائمة الزيادة داخل Popover بنفس قواعد الفتح (المرور دائمًا، والنقر يفتح ويغلق مع الزر، وdiv القديم يُفتح بالمرور فقط). يغلقها Escape والنقر خارجها، وتحمل نطاق theme وzIndexOverlay، وتتقدم menuStyle على القائمة. إلى أن يصل WBadge الخاص بـPrimeVue، ترسم المجموعة شاراتها بشارة داخلية تستقبل خصائص WBadge وتعتمد على CSS الخاص بـWakeb فقط: أصناف type وvariant ومتغيرات --wakeb-badge-* متطابقة، لكن الـDOM ليس VChip، ونوع الشارة غير المعرّف في Wakeb يعود إلى primary مع WAKEB_UNKNOWN_VALUE. أيقونات الشارات تمر عبر محلل أيقونات Wakeb."
+      "Ordinary attrs target the flex wrapper. No business/theme/icon registry is imported. WBadge variables also apply. Set menu colors through menuStyle and badgeAttrs styles/classes because Vuetify teleports the list outside the stack; the menu carries only the plugin theme scope and zIndexOverlay, and menuStyle wins over it. Image URLs render as decorative img elements; no fetch proxy or detection tint is built in. Nullish per-item overrides preserve false/empty values. max keeps Array.slice and count arithmetic for compatibility; negative, fractional or nonfinite values are unsupported configurations. Visible labels use Wakeb Utils UTF-16 truncation; the menu shows full labels. Only the menu overflow uses customOverflowBorderRadius; the static +N uses customBorderRadius. The circle icon variant also applies to the teleported overflow list. The overflow activator is not announced as a menu because the list is informational. The inherited 58px overflow selector and the legacy circle sizing rules are retained; replace through CSS as needed. Native menu button supports focus, Enter/Space and Escape via Vuetify. The legacy div tag does not provide a native tab stop. PrimeVue: the overflow list opens in a Popover with the same opening rules (hover; click toggles the button; the legacy div opens on hover only). Escape and outside clicks close it; it takes the theme scope and zIndexOverlay, and menuStyle on the list wins. Badges are the PrimeVue WBadge: type and variant classes and the --wakeb-badge-* variables match, but the DOM is a PrimeVue Tag, not a VChip, and a non-Wakeb badge type falls back to primary with WAKEB_UNKNOWN_VALUE. Badge glyphs resolve through the Wakeb icon resolver.",
+      "الخصائص العادية تستهدف حاوية flex. لا يوجد اعتماد على بيانات العمل أو theme أو registry للأيقونات. متغيرات WBadge متاحة أيضًا. خصص ألوان القائمة عبر menuStyle وbadgeAttrs لأن Vuetify ينقلها خارج الحاوية؛ لا تحمل القائمة إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم menuStyle عليه. الصور زخرفية ولا توجد خدمة لجلبها أو تلوين خاص بنوع الاكتشاف. تخصيص العنصر يحترم false والقيم الفارغة. max يحافظ على Array.slice والحساب القديم؛ الأعداد السالبة والكسرية وغير المحدودة إعدادات غير مدعومة. التقصير بوحدات UTF-16 من Wakeb Utils. القائمة تعرض الأسماء كاملة. customOverflowBorderRadius يخص زر القائمة فقط؛ +N الثابت يستخدم customBorderRadius. شكل الأيقونة الدائري يطبق أيضًا على القائمة المنقولة، وزر الزيادة لا يُعلن كقائمة أوامر لأن القائمة معلوماتية. قواعد أحجام الزيادة والدائرة القديمة محفوظة. الزر الافتراضي يدعم التركيز وEnter/Space وEscape من Vuetify؛ div القديم لا يضيف tab stop. في PrimeVue: تُفتح قائمة الزيادة داخل Popover بنفس قواعد الفتح (المرور دائمًا، والنقر يفتح ويغلق مع الزر، وdiv القديم يُفتح بالمرور فقط). يغلقها Escape والنقر خارجها، وتحمل نطاق theme وzIndexOverlay، وتتقدم menuStyle على القائمة. الشارات هي WBadge الخاص بـPrimeVue: أصناف type وvariant ومتغيرات --wakeb-badge-* متطابقة، لكن الـDOM عنصر Tag من PrimeVue وليس VChip، ونوع الشارة غير المعرّف في Wakeb يعود إلى primary مع WAKEB_UNKNOWN_VALUE. أيقونات الشارات تمر عبر محلل أيقونات Wakeb."
     ],
     "example": "<WBadgeStack :items=\"[{ id: 1, label: 'Administrator' }, { id: 2, label: 'Reviewer' }]\" show-overflow-menu overflow-label=\"More roles\" />",
     "playground": "IdentityPlayground",
@@ -1809,8 +1809,8 @@ export default [
         "avatarSize",
         "string | number",
         "16",
-        "Vuetify avatar size.",
-        "حجم صورة Vuetify."
+        "Avatar size: a number of pixels or a CSS length. Vuetify size names work only under Vuetify.",
+        "حجم الصورة: رقم بالبكسل أو طول CSS. أسماء أحجام Vuetify تعمل تحت Vuetify فقط."
       ],
       [
         "avatarColor",
@@ -1839,8 +1839,8 @@ export default [
       "العنصر الجذري `div.wakeb-user-badge`، وهو حاوية WBadge. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "Ordinary attrs/listeners target the WBadge wrapper. WBadge variables control the chip. HTTP-prefixed, root-relative and data URLs use VImg; other values use initials. There is no network-error initials fallback, matching the original component. Missing/empty name or an em dash uses ?, whitespace-only uses an empty initial; initials preserve charAt(0) UTF-16 behavior and use the first two words. Supply a user object with string fields; null is not supported. Avatars are decorative because the adjacent name identifies the user. Actions bubble naturally; stop propagation in the action if its parent has a click handler. No Tailwind dependency is required for the 8px initials.",
-      "الخصائص والأحداث تستهدف حاوية WBadge ومتغيراته تخصص الشارة. الصور التي تبدأ بـhttp أو / أو data تعرض عبر VImg؛ الباقي يستخدم الأحرف. لا يوجد بديل تلقائي عند فشل تحميل الصورة، مثل الأصل. الاسم الفارغ أو — يعطي ?؛ المسافات فقط تعطي حرفًا فارغًا. الأحرف تحافظ على charAt(0) بوحدات UTF-16 لأول كلمتين. مرر كائنًا بحقول نصية؛ null غير مدعوم. الصورة زخرفية لأن الاسم بجوارها. الإجراءات تتصاعد طبيعيًا؛ أوقف التصاعد عند الحاجة. حجم الأحرف 8px يعمل دون Tailwind."
+      "Ordinary attrs/listeners target the WBadge wrapper. WBadge variables control the chip. HTTP-prefixed, root-relative and data URLs use VImg; other values use initials. There is no network-error initials fallback, matching the original component. Missing/empty name or an em dash uses ?, whitespace-only uses an empty initial; initials preserve charAt(0) UTF-16 behavior and use the first two words. Supply a user object with string fields; null is not supported. Avatars are decorative because the adjacent name identifies the user. Actions bubble naturally; stop propagation in the action if its parent has a click handler. No Tailwind dependency is required for the 8px initials. Under PrimeVue: the badge is the PrimeVue WBadge renderer and the avatar is a PrimeVue Avatar (.wakeb-avatar) with a decorative img (alt=\"\") or the initials; Wakeb CSS gives it the round VAvatar box, so it looks the same in PrimeVue styled or unstyled mode. avatarColor resolves Wakeb intents through --wakeb-ui-* and then the PrimeVue primary color for primary; provider color names fall back to primary with WAKEB_UNKNOWN_VALUE.",
+      "الخصائص والأحداث تستهدف حاوية WBadge ومتغيراته تخصص الشارة. الصور التي تبدأ بـhttp أو / أو data تعرض عبر VImg؛ الباقي يستخدم الأحرف. لا يوجد بديل تلقائي عند فشل تحميل الصورة، مثل الأصل. الاسم الفارغ أو — يعطي ?؛ المسافات فقط تعطي حرفًا فارغًا. الأحرف تحافظ على charAt(0) بوحدات UTF-16 لأول كلمتين. مرر كائنًا بحقول نصية؛ null غير مدعوم. الصورة زخرفية لأن الاسم بجوارها. الإجراءات تتصاعد طبيعيًا؛ أوقف التصاعد عند الحاجة. حجم الأحرف 8px يعمل دون Tailwind. تحت PrimeVue: الشارة هي renderer ‏WBadge الخاص بـPrimeVue، والصورة مكوّن Avatar من PrimeVue ‏(.wakeb-avatar) يحوي img زخرفيًا (alt=\"\") أو الأحرف؛ وتمنحه Wakeb CSS شكل VAvatar الدائري، فيبدو بالشكل نفسه في وضعي PrimeVue بأنماط أو دونها. يحل avatarColor قيم intent من Wakeb عبر --wakeb-ui-* ثم عبر اللون الأساسي في PrimeVue لقيمة primary؛ وترجع أسماء ألوان المزود إلى primary مع WAKEB_UNKNOWN_VALUE."
     ],
     "example": "<WUserBadge :user=\"{ name: 'Ada Lovelace', avatar: '/avatars/ada.png' }\"><template #actions><button type=\"button\">Remove</button></template></WUserBadge>",
     "playground": "IdentityPlayground",
@@ -1883,8 +1883,8 @@ export default [
         "btnIcon",
         "boolean",
         "false",
-        "Enable the native Vuetify icon-button layout.",
-        "تفعيل شكل زر الأيقونة في Vuetify."
+        "Enable the round icon-button layout (VBtn icon on Vuetify, a 48px circle on PrimeVue).",
+        "تفعيل شكل زر الأيقونة الدائري (icon في VBtn على Vuetify، ودائرة بقطر 48px على PrimeVue)."
       ],
       [
         "variant",
@@ -1925,28 +1925,28 @@ export default [
         "wrapperAttrs",
         "Record<string, unknown>",
         "undefined",
-        "Explicit attributes for the layout span; ordinary attrs target VBtn.",
-        "خصائص span الخارجي؛ الخصائص العادية تستهدف VBtn."
+        "Explicit attributes for the layout span; ordinary attrs target the native button.",
+        "خصائص span الخارجي؛ الخصائص العادية تستهدف زر HTML الأصلي."
       ]
     ],
     "slots": [
-      "`icon`: `{ icon }`, replacing VIcon. There is no default content slot; use WButton for text actions.",
-      "`icon`: يستقبل `{ icon }` ويستبدل VIcon. لا يوجد slot افتراضي للنص؛ استخدم WButton للأزرار النصية."
+      "`icon`: `{ icon }`, replacing the default icon. There is no default content slot; use WButton for text actions.",
+      "`icon`: يستقبل `{ icon }` ويستبدل الأيقونة الافتراضية. لا يوجد slot افتراضي للنص؛ استخدم WButton للأزرار النصية."
     ],
     "variables": [],
     "attrs": [
-      "The native `<button>` (VBtn), not the outer span; use `wrapperAttrs` for the span. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
-      "عنصر `<button>` الأصلي (VBtn)، وليس الـspan الخارجي؛ استخدم `wrapperAttrs` لذلك الـspan. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+      "The native `<button>` (VBtn on Vuetify, an unstyled PrimeVue Button on PrimeVue), not the outer span; use `wrapperAttrs` for the span. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "عنصر `<button>` الأصلي (VBtn في Vuetify، وButton من PrimeVue دون أنماطه في PrimeVue)، وليس الـspan الخارجي؛ استخدم `wrapperAttrs` لذلك الـspan. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. Icon names resolve through the icons plugin option and the Wakeb built-ins first; other names need your Vuetify icon configuration. The icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport; the tooltip carries only the plugin theme scope and zIndexOverlay, and tooltipStyle wins over it. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.",
-      "الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. تُحل أسماء الأيقونات أولًا عبر الخيار icons والأيقونات المدمجة، وبقية الأسماء تحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport؛ لا يحمل التلميح إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم tooltipStyle عليه. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة."
+      "VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. Icon names resolve through the icons plugin option and the Wakeb built-ins first; other names need your Vuetify icon configuration. The icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport; the tooltip carries only the plugin theme scope and zIndexOverlay, and tooltipStyle wins over it. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables. Under PrimeVue: the button is an unstyled PrimeVue Button with type=button by default; caller attrs such as type, form, disabled and aria-label win, and native listeners fire once. Wakeb CSS paints the four variants with currentColor (solid uses --wakeb-ui-primary and --wakeb-ui-on-primary) in the VBtn box: 36px high with a 64px minimum width, or a 48px circle with btnIcon; there are no PrimeVue severities or sizes. The PrimeVue tooltip directive opens on hover and keyboard focus after openDelay, closes on blur, click and Escape, and is linked through aria-describedby with a useId id. start and end follow the plugin direction option. tooltipStyle styles the tooltip text bubble and contentClass the tooltip root, which carries the plugin theme scope; PrimeVue keeps its own tooltip z-index, so zIndexOverlay does not apply. Without an icon nothing renders inside the button; Vuetify renders an empty VIcon.",
+      "الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. تُحل أسماء الأيقونات أولًا عبر الخيار icons والأيقونات المدمجة، وبقية الأسماء تحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport؛ لا يحمل التلميح إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم tooltipStyle عليه. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة. تحت PrimeVue: الزر هو Button من PrimeVue دون أنماطه، ونوعه type=button افتراضيًا؛ وتتقدم سمات المستخدم مثل type وform وdisabled وaria-label، وتعمل الأحداث الأصلية مرة واحدة. ترسم Wakeb CSS الأنماط الأربعة بلون currentColor (ويستخدم solid المتغيرين --wakeb-ui-primary و--wakeb-ui-on-primary) بأبعاد VBtn: ارتفاع 36px وعرض أدنى 64px، أو دائرة بقطر 48px مع btnIcon؛ ولا تُستخدم severities أو أحجام PrimeVue. يفتح توجيه Tooltip في PrimeVue عند مرور المؤشر وعند التركيز بالكيبورد بعد openDelay، ويُغلق عند فقدان التركيز والنقر وEscape، ويرتبط بالزر عبر aria-describedby بمعرّف من useId. تتبع start وend خيار direction في الـplugin. تنسّق tooltipStyle فقاعة نص التلميح، وتنسّق contentClass جذر التلميح الذي يحمل نطاق theme الخاص بالـplugin؛ ويحتفظ PrimeVue بترتيب z-index الخاص بتلميحاته، فلا ينطبق zIndexOverlay. دون أيقونة لا يُرسم شيء داخل الزر، بينما يرسم Vuetify مكوّن VIcon فارغًا."
     ],
     "example": "<WTooltipBtn text=\"Save changes\" icon=\"$complete\" btn-icon aria-label=\"Save changes\" @click=\"() => {}\" />",
     "playground": "IdentityPlayground",
     "events": [
-      "No custom events. Native click/keyboard/form attrs are forwarded to VBtn without an extra wrapper listener.",
-      "لا توجد أحداث مخصصة. أحداث النقر والكيبورد وخصائص الفورم تصل إلى VBtn دون مستمع إضافي على الحاوية."
+      "No custom events. Native click/keyboard/form attrs are forwarded to the native button without an extra wrapper listener.",
+      "لا توجد أحداث مخصصة. أحداث النقر والكيبورد وخصائص الفورم تصل إلى زر HTML الأصلي دون مستمع إضافي على الحاوية."
     ]
   },
   {

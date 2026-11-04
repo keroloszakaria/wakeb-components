@@ -3,17 +3,11 @@
     <VChip
       v-bind="chipAttrs"
       :color="nativeColor"
-      :class="[
-        type,
-        `wakeb-badge--${portableVariant}`,
-        classList,
-        `border-radius-${borderRadius}`,
-        { 'badge--custom-padding': customPadding },
-      ]"
+      :class="classes"
       :style="chipStyle"
       label
       small
-      :variant="VUETIFY_VARIANTS[portableVariant]"
+      :variant="VUETIFY_VARIANTS[variant]"
     >
       <template v-if="iconPosition === 'before'">
         <slot name="icon" :icon="icon" :size="iconSize">
@@ -35,361 +29,31 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed, inject } from "vue";
 import { VChip } from "vuetify/components/VChip";
 import { VIcon } from "vuetify/components/VIcon";
 import { useVuetifyIcon } from "../core/icons";
-import type { CSSProperties } from "vue";
 import type { BadgeProps, SharedIcon } from "../types";
-import { BADGE_TYPES, VUETIFY_VARIANTS, useColor, useVariant } from "../core/vocabulary";
-import { WAKEB_CONTEXT, warnOnce } from "../core/runtime";
-const props = withDefaults(defineProps<BadgeProps>(), {
-  label: "",
-  classList: "",
-  type: "primary",
-  icon: "",
-  isDot: false,
-  borderRadius: "md",
-  customBorderRadius: "",
-  customPadding: "",
-  variant: "soft",
-  iconSize: "xs",
-  iconPosition: "before",
-  chipAttrs: () => ({}),
-});
-const toVariant = useVariant("WBadge");
-const portableVariant = computed(() => toVariant(props.variant, "variant", "soft"));
-const toColor = useColor("WBadge");
-const dot = computed(() => toColor(props.dotColor, "dotColor", "").css);
-const context = inject(WAKEB_CONTEXT, null);
+import { VUETIFY_VARIANTS } from "../core/vocabulary";
+import { badgeDefaults, useBadge } from "../composables/badge";
+const props = withDefaults(defineProps<BadgeProps>(), badgeDefaults);
 /*
  * Wakeb types are painted by Wakeb CSS only. Any other type is a Vuetify theme or palette name from
  * the 0.7 contract, still forwarded as the chip color during the deprecation window (SPEC R23).
  */
-const nativeColor = computed(() => {
-  if ((BADGE_TYPES as readonly string[]).includes(props.type)) return undefined;
-  if (process.env.NODE_ENV !== "production")
-    warnOnce(context, "WAKEB_DEPRECATED_VALUE", `WBadge.type.${props.type}`, `WBadge type '${props.type}' is not a Wakeb badge type; it is passed to Vuetify as a color name, which is not portable. Use one of: ${BADGE_TYPES.join(", ")}. Provider names are removed in the next major release.`);
-  return props.type;
-});
+const { variant, nativeColor, classes, pixelSize, chipStyle, dotStyle } = useBadge(props, { nativeTypes: true });
 defineSlots<{
   icon(props: { icon: SharedIcon; size: string | number }): unknown;
   actions(): unknown;
   default(): unknown;
 }>();
-const pixelSize = computed(
-  () =>
-    (({ xs: 16, sm: 20, md: 24, lg: 32, xl: 40 }) as Record<string, number>)[
-      String(props.iconSize)
-    ] ?? props.iconSize,
-);
-const chipStyle = computed<CSSProperties>(() => ({
-  ...(props.customBorderRadius
-    ? { borderRadius: props.customBorderRadius }
-    : {}),
-  ...(props.customPadding
-    ? { padding: props.customPadding, height: "auto" }
-    : {}),
-  ...(dot.value ? { "--wakeb-badge-current-dot": dot.value } : {}),
-}));
-const dotStyle = computed(() =>
-  dot.value ? { backgroundColor: dot.value } : undefined,
-);
 const toIcon = useVuetifyIcon();
 </script>
 <style lang="scss" scoped>
+@use "../styles/badge";
+
 :deep() {
   .v-chip {
-    &.success {
-      --wakeb-badge-current-bg: var(
-        --wakeb-badge-success-bg,
-        var(--wakeb-badge-fallback, #ecfdf3)
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-success-text,
-        var(--wakeb-badge-fallback, #027a48)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-success-dot,
-        var(--wakeb-badge-fallback, #12b76a)
-      );
-    }
-    &.success-transparent {
-      --wakeb-badge-current-bg: rgba(
-        var(
-          --wakeb-badge-success-bg-rgb,
-          var(--wakeb-badge-fallback, 236, 253, 243)
-        ),
-        0.5
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-success-text,
-        var(--wakeb-badge-fallback, #027a48)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-success-dot,
-        var(--wakeb-badge-fallback, #12b76a)
-      );
-      color: var(
-        --wakeb-badge-success-text,
-        var(--wakeb-badge-fallback, #027a48)
-      );
-      border: 1px solid
-        var(--wakeb-badge-success-bg, var(--wakeb-badge-fallback, #ecfdf3));
-    }
-    &.primary {
-      --wakeb-badge-current-bg: var(
-        --wakeb-badge-primary-bg,
-        var(--wakeb-badge-fallback, #eff8ff)
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-primary-text,
-        var(--wakeb-badge-fallback, #175cd3)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-primary-dot,
-        var(--wakeb-badge-fallback, #2e90fa)
-      );
-    }
-    &.primarybtn {
-      --wakeb-badge-current-bg: var(
-        --wakeb-badge-primary-button-bg,
-        var(--wakeb-badge-fallback, #087f8c)
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-dark-bg,
-        var(--wakeb-badge-fallback, #fff)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-dark-bg,
-        var(--wakeb-badge-fallback, #fff)
-      );
-    }
-
-    &.danger {
-      --wakeb-badge-current-bg: var(
-        --wakeb-badge-danger-bg,
-        var(--wakeb-badge-fallback, #fef3f2)
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-danger-text,
-        var(--wakeb-badge-fallback, #b42318)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-danger-dot,
-        var(--wakeb-badge-fallback, #f04438)
-      );
-      color: var(
-        --wakeb-badge-danger-text,
-        var(--wakeb-badge-fallback, #b42318)
-      );
-    }
-    &.danger-transparent {
-      --wakeb-badge-current-bg: rgba(
-        var(
-          --wakeb-badge-danger-bg-rgb,
-          var(--wakeb-badge-fallback, 254, 243, 242)
-        ),
-        0.3
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-danger-text,
-        var(--wakeb-badge-fallback, #b42318)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-danger-dot,
-        var(--wakeb-badge-fallback, #f04438)
-      );
-      color: var(
-        --wakeb-badge-danger-text,
-        var(--wakeb-badge-fallback, #b42318)
-      );
-      border: 1px solid
-        var(--wakeb-badge-danger-bg, var(--wakeb-badge-fallback, #fef3f2));
-    }
-    &.warning {
-      --wakeb-badge-current-bg: var(
-        --wakeb-badge-warning-bg,
-        var(--wakeb-badge-fallback, #fffaeb)
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-warning-text,
-        var(--wakeb-badge-fallback, #b54708)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-warning-dot,
-        var(--wakeb-badge-fallback, #f79009)
-      );
-    }
-    &.info {
-      --wakeb-badge-current-bg: var(
-        --wakeb-badge-info-bg,
-        var(--wakeb-badge-fallback, #f0f9ff)
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-info-text,
-        var(--wakeb-badge-fallback, #026aa2)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-info-dot,
-        var(--wakeb-badge-fallback, #0ba5ec)
-      );
-    }
-    &.transparent {
-      --wakeb-badge-current-bg: var(
-        --wakeb-badge-neutral-bg,
-        var(--wakeb-badge-fallback, #f2f4f7)
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-neutral-text,
-        var(--wakeb-badge-fallback, #667085)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-neutral-text,
-        var(--wakeb-badge-fallback, #667085)
-      );
-    }
-    &.dark {
-      --wakeb-badge-current-bg: var(
-        --wakeb-badge-dark-bg,
-        var(--wakeb-badge-fallback, #fff)
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-dark-text,
-        var(--wakeb-badge-fallback, #667085)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-dark-text,
-        var(--wakeb-badge-fallback, #667085)
-      );
-    }
-    &.tertiary {
-      --wakeb-badge-current-bg: rgba(
-        var(
-          --wakeb-badge-tertiary-bg-rgb,
-          var(--wakeb-badge-fallback, 242, 244, 247)
-        ),
-        1
-      );
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-tertiary-text,
-        var(--wakeb-badge-fallback, #667085)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-tertiary-text,
-        var(--wakeb-badge-fallback, #667085)
-      );
-    }
-    &.outline-secondary {
-      --wakeb-badge-current-bg: transparent;
-      --wakeb-badge-current-text: var(
-        --wakeb-badge-outline-secondary-text,
-        var(--wakeb-badge-fallback, #667085)
-      );
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-outline-secondary-text,
-        var(--wakeb-badge-fallback, #667085)
-      );
-    }
-    &.check {
-      .icon {
-        color: var(
-          --wakeb-badge-check-color,
-          var(--wakeb-badge-fallback, #667085)
-        );
-      }
-    }
-    &.uncheck {
-      .icon {
-        color: var(
-          --wakeb-badge-danger-text,
-          var(--wakeb-badge-fallback, #b42318)
-        );
-      }
-    }
-    &.outline {
-      outline: 1px solid
-        var(--wakeb-badge-outline-border, var(--wakeb-badge-fallback, #d0d5dd)) !important;
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-success-dot,
-        var(--wakeb-badge-fallback, #12b76a)
-      );
-
-      *:not(.v-avatar):not(.badge-stack__icon-wrap):not(.dot) {
-        background-color: transparent !important;
-      }
-      .dot {
-        width: 6px;
-        height: 6px;
-        background-color: var(--wakeb-badge-current-dot) !important;
-        border-radius: 50%;
-      }
-    }
-    &.outline-secondary {
-      border: 1px solid
-        var(
-          --wakeb-badge-outline-secondary-border,
-          var(--wakeb-badge-fallback, #d0d5dd)
-        ) !important;
-      --wakeb-badge-current-dot: var(
-        --wakeb-badge-outline-secondary-border,
-        var(--wakeb-badge-fallback, #d0d5dd)
-      );
-    }
-    --wakeb-badge-current-bg: var(
-      --wakeb-badge-neutral-bg,
-      var(--wakeb-badge-fallback, #f2f4f7)
-    );
-    border-radius: 24px;
-    background-color: var(--wakeb-badge-current-bg);
-    /* Wakeb-owned text color; icons and the tonal underlay follow it instead of a Vuetify theme color. */
-    color: var(--wakeb-badge-current-text, currentColor);
-
-    /* solid: filled with the type's strong color (SPEC R23 visual policy). */
-    &.wakeb-badge--solid {
-      background-color: var(
-        --wakeb-badge-solid-bg,
-        var(--wakeb-badge-current-dot, var(--wakeb-ui-primary, #087f8c))
-      ) !important;
-      color: var(--wakeb-badge-solid-text, var(--wakeb-ui-on-primary, #fff)) !important;
-
-      .v-chip__content span {
-        color: inherit;
-      }
-    }
-    padding: 0;
-    height: 24px;
-
-    &.badge--custom-padding {
-      .v-chip__content {
-        padding: 0 !important;
-        gap: 4px;
-      }
-    }
-
-    &.border-radius-sm {
-      border-radius: 8px;
-    }
-    &__content {
-      padding: 0 12px;
-      font-size: 12px;
-      font-weight: 400;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 7px;
-
-      span {
-        color: var(--wakeb-badge-current-text);
-      }
-
-      .dot {
-        width: 6px;
-        height: 6px;
-        background-color: var(--wakeb-badge-current-dot) !important;
-        border-radius: 50%;
-      }
-    }
+    @include badge.badge(".v-chip__content", ".v-avatar");
   }
 }
 </style>

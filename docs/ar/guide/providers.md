@@ -294,15 +294,25 @@ Vuetify أيضًا وبالحجم نفسه. لاستخدام شكلك الخاص
 مجموعة قابلة للنقل هي `variant` في WBadge وWTooltipBtn، و`badgeVariant` و`variant` الخاص
 بالعناصر في WBadgeStack:
 
-| القيمة | المعنى | الرسم في Vuetify |
-| --- | --- | --- |
-| `soft` | خلفية خفيفة اللون (افتراضي WBadge) | `tonal` |
-| `solid` | خلفية ممتلئة | `flat` |
-| `outline` | حدود دون تعبئة | `outlined` |
-| `ghost` | نص فقط (افتراضي WTooltipBtn) | `text` |
+| القيمة | المعنى | الرسم في Vuetify | WBadge في PrimeVue | WTooltipBtn في PrimeVue |
+| --- | --- | --- | --- | --- |
+| `soft` | خلفية خفيفة اللون (افتراضي WBadge) | `tonal` | `.wakeb-badge--soft` | `.wakeb-tooltip-btn--soft` |
+| `solid` | خلفية ممتلئة | `flat` | `.wakeb-badge--solid` | `.wakeb-tooltip-btn--solid` |
+| `outline` | حدود دون تعبئة | `outlined` | `.wakeb-badge--outline` | `.wakeb-tooltip-btn--outline` |
+| `ghost` | نص فقط (افتراضي WTooltipBtn) | `text` | `.wakeb-badge--ghost` | `.wakeb-tooltip-btn--ghost` |
 
 عمود Vuetify ربط مبدئي لإصدار Vuetify 3.13، وقد يتغير عند إضافة اختبارات العقد المرئي، أما
 قيم Wakeb فتبقى ثابتة.
+
+لا يوفر PrimeVue 4.5 نمطًا خفيف اللون (tonal) للشارات أو الأزرار، لذلك لا يستخدم عمودا PrimeVue
+أي نمط أصلي. يرسم WBadge مكوّن `Tag` من PrimeVue دون أنماطه، ويرسم WTooltipBtn مكوّن `Button`
+دون أنماطه، وتتولى Wakeb CSS رسم القيم الأربع (سياسة المظهر في SPEC R23). يتشارك WBadge ملف
+أنماط واحدًا مع renderer ‏Vuetify لألوان الأنواع والتعبئة في `solid` ونصف القطر والـpadding
+والنقطة، ويضيف المظهرين اللذين يرسمهما VChip تحتها: طبقة سفلية من `currentColor` بنسبة 12% في
+`soft`، وحدًّا بعرض 1px من `currentColor` في `outline`. ويحتفظ WTooltipBtn بأبعاد VBtn (ارتفاع
+36px، أو دائرة بقطر 48px مع `btnIcon`) وبلون `currentColor`، ويملأ `solid` الزر بـ
+`--wakeb-ui-primary` و`--wakeb-ui-on-primary`. لم تُقارن هذه المظاهر في PrimeVue بمظهر Vuetify
+في متصفح حقيقي بعد.
 
 ما زالت الأسماء القديمة تعمل حتى الإصدار الرئيسي التالي. في وضع التطوير يسجّل كل اسم منها
 التحذير `WAKEB_DEPRECATED_VALUE` مرة واحدة لكل تطبيق ومكوّن وخاصية وقيمة:
@@ -367,6 +377,8 @@ Vuetify أيضًا وبالحجم نفسه. لاستخدام شكلك الخاص
 Vuetify بوصفه `color` للشارة. لذلك يتبع نص الشارة وأيقونتها لون نص الشارة. والنوع غير الموجود في
 القائمة يُعامل كاسم لون من Vuetify، ويخضع لمعالجة الإهمال نفسها. ويملأ `variant="solid"` الشارة
 باللون القوي لنوعها، ويمكن تغييره عبر `--wakeb-badge-solid-bg` و`--wakeb-badge-solid-text`.
+أما تحت PrimeVue فلا يُقرأ النوع غير الموجود في القائمة كلون: تستخدم الشارة `primary` وتسجّل
+`WAKEB_UNKNOWN_VALUE` في وضع التطوير.
 
 ### أسماء الـSkeleton
 
@@ -554,8 +566,8 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | WSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton | مدعوم | مدعوم |
 | WTabs وWTree وWCarousel | مدعوم | مدعوم (markup أصلي من Wakeb) |
 | WExportDropdown وWBaseSidebar وWDrawer | مدعوم | مدعوم |
-| WAvatarStack وWBadgeStack وWAccordion | مدعوم | مدعوم (ترسم WBadgeStack شاراتها بشارة داخلية من Wakeb إلى أن يصل WBadge الخاص بـPrimeVue) |
-| بقية المكونات | مدعوم | ليس بعد: `WAKEB_COMPONENT_UNSUPPORTED` |
+| WAvatarStack وWBadgeStack وWAccordion | مدعوم | مدعوم |
+| WTruncatedText وWTooltipBtn وWBadge وWUserBadge | مدعوم | مدعوم |
 | shadcn-vue | — | مخطط له (المرحلة M5) |
 
 ## حدود الإصدار التجريبي
@@ -572,8 +584,12 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
   في WTree على PrimeVue هو WButton الخاص بـPrimeVue.
 - **سمات خاصة بـVuetify.** تبقى `max-width` في WModal وبقية سمات Vuetify الأصلية واجهة توافق
   مع Vuetify فقط. على PrimeVue استخدم الخاصية `width`.
-- **التلميح في PrimeVue.** يفتح تلميح WButton على PrimeVue عند مرور المؤشر فقط، ويبقى للزر
-  اسم متاح لقارئ الشاشة من `title`.
+- **التلميح في PrimeVue.** تفتح تلميحات WButton وWTooltipBtn وWTruncatedText على PrimeVue عند
+  مرور المؤشر وعند التركيز بلوحة المفاتيح، وتُغلق عند فقدان التركيز والنقر ومفتاح Escape. لا
+  يدعم توجيه PrimeVue إلا مُشغّلًا واحدًا، لذلك يشغّل Wakeb معالجات المرور الخاصة بالتوجيه عند
+  التركيز، ولا تُستدعى مستمعات الفأرة الخاصة بالمستخدم عند التركيز. ويشير العنصر إلى التلميح عبر
+  `aria-describedby` بمعرّف من `useId` في Vue. ولأن جهات PrimeVue فيزيائية، تتبع `start` و`end`
+  خيار `direction` في الـplugin، لا اتجاه الصفحة.
 - **الأنماط في PrimeVue.** يرسم WButton زر PrimeVue دون أنماطه ويعتمد على tokens ‏Wakeb.
   القائمة والنافذة تحتاجان وضع الأنماط في PrimeVue، والتطبيق الذي يفعّل `unstyled: true`
   عمومًا يجب أن يضبط أنماط هذه الطبقات بنفسه.
@@ -586,12 +602,13 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
   و`tooltipStyle` توضع على محتوى الطبقة داخل هذا النطاق، لذا تتقدم عليه. ويحتفظ كل تطبيق في
   الصفحة نفسها بنطاق طبقاته الخاص.
 - **حدود ترتيب الطبقات.** يُطبَّق `zIndexOverlay` على كل طبقات Vuetify السابقة وعلى قوائم
-  PrimeVue ونافذته ولوحته الجانبية. يستقبل تلميح WButton على PrimeVue سمات الـtheme، لكنه
-  يحتفظ بترتيب z-index الخاص بتلميحات PrimeVue. على Vuetify لا يُنقل WDrawer: هو عنصر تخطيط
-  في Vuetify يُرسم في مكانه، فتصل سمات النطاق إلى لوحته كجذر، ويبقى z-index الخاص به للتخطيط
-  في Vuetify الذي يحدد موضع الخلفية المعتمة أيضًا. أما على PrimeVue فيُنقل WDrawer تحت طبقة
-  الخلفية الخاصة به، وهي التي تأخذ `zIndexOverlay`؛ وبدونه تتشارك اللوحة وWModal ترتيب
-  z-index الخاص بالنوافذ في PrimeVue، فتظهر النافذة المفتوحة من داخل اللوحة فوقها.
+  PrimeVue ونافذته ولوحته الجانبية. تستقبل تلميحات WButton وWTooltipBtn وWTruncatedText على
+  PrimeVue سمات الـtheme، لكنها تحتفظ بترتيب z-index الخاص بتلميحات PrimeVue. على Vuetify لا
+  يُنقل WDrawer: هو عنصر تخطيط في Vuetify يُرسم في مكانه، فتصل سمات النطاق إلى لوحته كجذر،
+  ويبقى z-index الخاص به للتخطيط في Vuetify الذي يحدد موضع الخلفية المعتمة أيضًا. أما على
+  PrimeVue فيُنقل WDrawer تحت طبقة الخلفية الخاصة به، وهي التي تأخذ `zIndexOverlay`؛ وبدونه
+  تتشارك اللوحة وWModal ترتيب z-index الخاص بالنوافذ في PrimeVue، فتظهر النافذة المفتوحة من
+  داخل اللوحة فوقها.
 - **مستخدمو المتغيرات.** تستخدم WButton وWDropdown وWModal هذه المتغيرات، وتحتفظ بقية المكونات
   بمتغيراتها الخاصة حتى يتم نقلها. والمتغيرات الموجودة على الطبقة متاحة لأنماطك الخاصة بمحتواها.
 - **التقدم والمؤشر والخطوات وهيكل الصفحة على PrimeVue.** ترسم WSegmentedProgress

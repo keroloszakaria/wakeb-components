@@ -301,15 +301,24 @@ Props that choose a visual style accept Wakeb values only, so the same value wor
 provider. The first portable set is `variant` on WBadge and WTooltipBtn, and `badgeVariant` and
 item `variant` on WBadgeStack:
 
-| Value | Meaning | Vuetify rendering |
-| --- | --- | --- |
-| `soft` | Tinted background (WBadge default) | `tonal` |
-| `solid` | Filled background | `flat` |
-| `outline` | Border, no fill | `outlined` |
-| `ghost` | Text only (WTooltipBtn default) | `text` |
+| Value | Meaning | Vuetify rendering | PrimeVue WBadge | PrimeVue WTooltipBtn |
+| --- | --- | --- | --- | --- |
+| `soft` | Tinted background (WBadge default) | `tonal` | `.wakeb-badge--soft` | `.wakeb-tooltip-btn--soft` |
+| `solid` | Filled background | `flat` | `.wakeb-badge--solid` | `.wakeb-tooltip-btn--solid` |
+| `outline` | Border, no fill | `outlined` | `.wakeb-badge--outline` | `.wakeb-tooltip-btn--outline` |
+| `ghost` | Text only (WTooltipBtn default) | `text` | `.wakeb-badge--ghost` | `.wakeb-tooltip-btn--ghost` |
 
 The Vuetify column is a draft mapping for Vuetify 3.13. It may change once the visual contract
 tests exist, while the Wakeb values stay the same.
+
+PrimeVue 4.5 has no tonal chip or button variant, so the PrimeVue columns use no native variant.
+WBadge renders an unstyled PrimeVue `Tag` and WTooltipBtn an unstyled PrimeVue `Button`, and Wakeb
+CSS paints all four values (the visual policy of SPEC R23). WBadge shares one stylesheet with the
+Vuetify renderer for the type colors, the solid fill, radius, padding and the dot. It adds the two
+looks that VChip draws under them: a 12% `currentColor` underlay for `soft` and a 1px
+`currentColor` border for `outline`. WTooltipBtn keeps the VBtn box (36px high, or a 48px circle
+with `btnIcon`) and `currentColor`; `solid` fills with `--wakeb-ui-primary` and
+`--wakeb-ui-on-primary`. These PrimeVue looks are not yet compared with Vuetify in a real browser.
 
 The baseline names still work until the next major release. In development, each one logs
 `WAKEB_DEPRECATED_VALUE` once per app, component, prop and value:
@@ -374,7 +383,9 @@ WBadge `type` is a Wakeb style key (`WakebBadgeType`) painted by Wakeb CSS. It i
 sent to Vuetify as a chip `color`, so the chip text and icon follow the badge's text color. A
 type outside the list is treated as a Vuetify color name and gets the same deprecation
 handling. `variant="solid"` fills the badge with the type's strong color, which you can
-override with `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`.
+override with `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`. Under PrimeVue a type
+outside the list is not read as a color: the badge uses `primary` and logs `WAKEB_UNKNOWN_VALUE`
+in development.
 
 ### Skeleton names
 
@@ -562,8 +573,8 @@ errors, and production builds drop them.
 | WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WPageSkeleton | Yes | Yes |
 | WTabs, WTree, WCarousel | Yes | Yes (native Wakeb markup) |
 | WExportDropdown, WBaseSidebar, WDrawer | Yes | Yes |
-| WAvatarStack, WBadgeStack, WAccordion | Yes | Yes (WBadgeStack draws badges with an internal Wakeb badge until the PrimeVue WBadge lands) |
-| The other components | Yes | Not yet: `WAKEB_COMPONENT_UNSUPPORTED` |
+| WAvatarStack, WBadgeStack, WAccordion | Yes | Yes |
+| WTruncatedText, WTooltipBtn, WBadge, WUserBadge | Yes | Yes |
 | shadcn-vue | — | Planned (milestone M5) |
 
 ## Limits of this alpha
@@ -581,8 +592,12 @@ errors, and production builds drop them.
   PrimeVue WButton.
 - **Vuetify-only attributes.** `max-width` on WModal and other native Vuetify attributes stay a
   Vuetify compatibility surface. On PrimeVue, use the typed `width` prop.
-- **PrimeVue tooltip.** The PrimeVue WButton tooltip opens on hover only. The button still
-  gets its accessible name from `title`.
+- **PrimeVue tooltip.** The PrimeVue tooltips of WButton, WTooltipBtn and WTruncatedText open on
+  hover and on keyboard focus, and close on blur, click and Escape. PrimeVue's directive supports
+  one trigger only, so Wakeb runs the directive's hover handlers on focus; caller mouse listeners
+  do not fire on focus. The target points to the tooltip through `aria-describedby`, with an id
+  from Vue's `useId`. PrimeVue sides are physical, so `start` and `end` follow the plugin
+  `direction` option, not the page direction.
 - **PrimeVue styling.** WButton renders PrimeVue's Button unstyled and uses Wakeb tokens. The
   menu and dialog need PrimeVue's styled mode. A host that sets `unstyled: true` globally must
   style those overlays itself.
@@ -596,8 +611,8 @@ errors, and production builds drop them.
   styling props such as `menuStyle` and `tooltipStyle` sit on the overlay content inside that
   scope, so they win. Two apps on one page keep their own overlay scope.
 - **Overlay stacking limits.** `zIndexOverlay` applies to every Vuetify overlay above and to
-  the PrimeVue menus, dialog and drawer. The PrimeVue WButton tooltip receives the theme
-  attributes but keeps PrimeVue's own tooltip z-index stack. On Vuetify, WDrawer is not
+  the PrimeVue menus, dialog and drawer. The PrimeVue tooltips of WButton, WTooltipBtn and WTruncatedText
+  receive the theme attributes but keep PrimeVue's own tooltip z-index stack. On Vuetify, WDrawer is not
   teleported: it is a Vuetify layout item rendered in place, so its panel takes the scope
   attributes as a root, and its z-index stays with the Vuetify layout, which also places the
   scrim. On PrimeVue, WDrawer is teleported under its own mask, which takes `zIndexOverlay`;

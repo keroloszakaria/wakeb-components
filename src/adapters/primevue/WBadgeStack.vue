@@ -6,7 +6,7 @@ import { useWakebContext } from "../../core/runtime";
 import { badgeStackDefaults, useBadgeStack } from "../../composables/badge-stack";
 import { useOverflowPopup } from "./overlay";
 /* WBadge's public props are the interface; swap to "./WBadge.vue" once the PrimeVue WBadge renderer lands. */
-import WBadge from "./StackBadge.vue";
+import WBadge from "./WBadge.vue";
 import type { BadgeStackProps, BadgeStackItem, BadgeStackIconSlotProps, SharedIcon } from "../../types";
 defineOptions({ name: "WBadgeStack" });
 const props = withDefaults(defineProps<BadgeStackProps>(), badgeStackDefaults);

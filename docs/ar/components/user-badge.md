@@ -24,7 +24,7 @@ import { WUserBadge } from 'wakeb-components'
 | `icon` | `SharedIcon` | `""` | خاصية الأيقونة القديمة؛ الصورة تستبدل glyph. |
 | `iconSize` | `string \| number` | `"xs"` | حجم glyph القديم؛ avatarSize يتحكم في الصورة. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | موضع الصورة بالنسبة للمحتوى. |
-| `avatarSize` | `string \| number` | `16` | حجم صورة Vuetify. |
+| `avatarSize` | `string \| number` | `16` | حجم الصورة: رقم بالبكسل أو طول CSS. أسماء أحجام Vuetify تعمل تحت Vuetify فقط. |
 | `avatarColor` | `WakebColor` | `"primary"` | خلفية حاوية الأحرف. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. |
 
 ## الأحداث
@@ -48,7 +48,7 @@ import { WUserBadge } from 'wakeb-components'
 
 ## الوصول وحدود السلوك
 
-الخصائص والأحداث تستهدف حاوية WBadge ومتغيراته تخصص الشارة. الصور التي تبدأ بـhttp أو / أو data تعرض عبر VImg؛ الباقي يستخدم الأحرف. لا يوجد بديل تلقائي عند فشل تحميل الصورة، مثل الأصل. الاسم الفارغ أو — يعطي ?؛ المسافات فقط تعطي حرفًا فارغًا. الأحرف تحافظ على charAt(0) بوحدات UTF-16 لأول كلمتين. مرر كائنًا بحقول نصية؛ null غير مدعوم. الصورة زخرفية لأن الاسم بجوارها. الإجراءات تتصاعد طبيعيًا؛ أوقف التصاعد عند الحاجة. حجم الأحرف 8px يعمل دون Tailwind.
+الخصائص والأحداث تستهدف حاوية WBadge ومتغيراته تخصص الشارة. الصور التي تبدأ بـhttp أو / أو data تعرض عبر VImg؛ الباقي يستخدم الأحرف. لا يوجد بديل تلقائي عند فشل تحميل الصورة، مثل الأصل. الاسم الفارغ أو — يعطي ?؛ المسافات فقط تعطي حرفًا فارغًا. الأحرف تحافظ على charAt(0) بوحدات UTF-16 لأول كلمتين. مرر كائنًا بحقول نصية؛ null غير مدعوم. الصورة زخرفية لأن الاسم بجوارها. الإجراءات تتصاعد طبيعيًا؛ أوقف التصاعد عند الحاجة. حجم الأحرف 8px يعمل دون Tailwind. تحت PrimeVue: الشارة هي renderer ‏WBadge الخاص بـPrimeVue، والصورة مكوّن Avatar من PrimeVue ‏(.wakeb-avatar) يحوي img زخرفيًا (alt="") أو الأحرف؛ وتمنحه Wakeb CSS شكل VAvatar الدائري، فيبدو بالشكل نفسه في وضعي PrimeVue بأنماط أو دونها. يحل avatarColor قيم intent من Wakeb عبر --wakeb-ui-* ثم عبر اللون الأساسي في PrimeVue لقيمة primary؛ وترجع أسماء ألوان المزود إلى primary مع WAKEB_UNKNOWN_VALUE.
 
 ## جرّب بنفسك
 

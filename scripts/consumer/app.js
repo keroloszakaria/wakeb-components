@@ -28,7 +28,7 @@ const views = {
 export const expected = {
   WModal: [], WCarousel: ['Welcome'], WExportDropdown: ['Export report'], WBaseSidebar: ['Team sidebar'], WTabs: ['Public tab panel'],
   WTree: ['Root navigation'], WDropdown: ['Actions'], WBadgeStack: ['Owner'], WUserBadge: ['Grace Hopper'], WTooltipBtn: ['Open settings'],
-  WTruncatedText: [], WSegmentedProgress: ['role="progressbar"'], WSemiCircleGauge: ['aria-label="75%"'], WAvatarStack: ['Ada'],
+  WTruncatedText: ['aria-label="Public package consumer"'], WSegmentedProgress: ['role="progressbar"'], WSemiCircleGauge: ['aria-label="75%"'], WAvatarStack: ['Ada'],
   WLoading: ['Loading report'], WPageSkeleton: ['skeleton-block'], WVerticalSteps: ['Review'], WButton: ['Save'], WBadge: ['Approved'],
   WAccordion: ['wakeb-accordion-', 'Draft'],
 }

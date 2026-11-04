@@ -1,7 +1,7 @@
 <!-- Generated from docs/reference-data.mjs -->
 # WTruncatedText
 
-نص مختصر مع Tooltip من Vuetify يعمل عند التركيز بالكيبورد.
+نص مختصر مع Tooltip يفتح عند مرور المؤشر وعند التركيز بالكيبورد.
 
 ## الاستخدام
 
@@ -20,7 +20,7 @@ import { WTruncatedText } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `label` | `string` | `""` | النص الكامل؛ لا يُفسر كـHTML. |
 | `length` | `number` | `12` | الطول بوحدات UTF-16 ويشمل النقاط الثلاث. |
-| `tooltipLocation` | `"top" \| "bottom" \| "start" \| "end"` | `"top"` | موضع Tooltip من خلال Vuetify. |
+| `tooltipLocation` | `"top" \| "bottom" \| "start" \| "end"` | `"top"` | موضع Tooltip؛ start وend جهتان منطقيتان. |
 | `tooltipMaxWidth` | `string \| number` | `280` | أقصى عرض للـTooltip. |
 | `contentClass` | `string` | `"wakeb-truncated-tooltip"` | class على محتوى Tooltip المنقول إلى overlay. |
 | `tooltipStyle` | `CSSProperties` | `undefined` | styles على محتوى Tooltip نفسه، بما فيها الألوان. |
@@ -33,7 +33,7 @@ import { WTruncatedText } from 'wakeb-components'
 
 | المتغير | الافتراضي |
 | --- | --- |
-| `--wakeb-text-focus-color` | `Vuetify primary / #087f5b` |
+| `--wakeb-text-focus-color` | `Vuetify primary or --wakeb-ui-focus / PrimeVue primary / #087f5b` |
 
 ## وجهة السمات
 
@@ -41,7 +41,7 @@ import { WTruncatedText } from 'wakeb-components'
 
 ## الوصول وحدود السلوك
 
-تصل attributes والأحداث إلى span، وتُدمج أحداث التركيز مع Vuetify. النص المختصر قابل للتركيز وله aria-label كامل؛ النص القصير لا يضيف tab stop. نحافظ على سلوك Wakeb Utils: حد أقل من 3 يرجع النقاط الثلاث، وقد ينقسم emoji بسبب UTF-16. موضع Tooltip وتوقيته يتبعان Vuetify.
+تصل attributes والأحداث إلى span، وتُدمج أحداث التركيز مع Vuetify. النص المختصر قابل للتركيز وله aria-label كامل؛ النص القصير لا يضيف tab stop. نحافظ على سلوك Wakeb Utils: حد أقل من 3 يرجع النقاط الثلاث، وقد ينقسم emoji بسبب UTF-16. موضع Tooltip وتوقيته يتبعان Vuetify. تحت PrimeVue: يرسم توجيه Tooltip في PrimeVue التلميح داخل document.body، ويفتحه Wakeb عند مرور المؤشر وعند التركيز بالكيبورد، ويُغلق عند فقدان التركيز والنقر وEscape. يشير الـspan إليه عبر aria-describedby بمعرّف من useId، وتتقدم قيمة aria-describedby القادمة من المستخدم كما في Vuetify. تتبع start وend خيار direction في الـplugin. تنسّق tooltipStyle فقاعة نص التلميح، وتنسّق contentClass وtooltipMaxWidth جذر التلميح الذي يحمل نطاق theme الخاص بالـplugin أيضًا؛ ويحتفظ PrimeVue بترتيب z-index الخاص بتلميحاته، فلا ينطبق zIndexOverlay. يرجع إطار التركيز إلى --wakeb-ui-focus ثم إلى اللون الأساسي في PrimeVue.
 
 ## جرّب بنفسك
 

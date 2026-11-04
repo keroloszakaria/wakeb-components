@@ -20,7 +20,7 @@ import { WBadge } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `label` | `string` | `""` | النص الافتراضي الآمن. |
 | `classList` | `ComponentClass` | `""` | classes على الشارة. |
-| `type` | `WakebBadgeType` | `"primary"` | مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة، وما زالت تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. |
+| `type` | `WakebBadgeType` | `"primary"` | مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة، وما زالت تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. وتحت PrimeVue ترجع إلى primary مع WAKEB_UNKNOWN_VALUE. |
 | `icon` | `SharedIcon` | `""` | اسم أيقونة أو بيانات مسار SVG أو مكوّن (المزودات > الأيقونات)، أو قيمة icon slot. |
 | `isDot` | `boolean` | `false` | عرض النقطة الزخرفية قبل المحتوى. |
 | `borderRadius` | `string` | `"md"` | sm يختار 8px؛ md والافتراضي يحتفظان بنصف قطر 24px. |
@@ -30,11 +30,11 @@ import { WBadge } from 'wakeb-components'
 | `variant` | `WakebVariant \| WakebDeprecatedVariant` | `"soft"` | النمط القابل للنقل: soft أو solid أو outline أو ghost. الأسماء القديمة (default وtonal وflat وelevated وoutlined وtext وplain) ما زالت تعمل مع تحذير في وضع التطوير. |
 | `iconSize` | `string \| number` | `"xs"` | xs/sm/md/lg/xl تعني 16/20/24/32/40px. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | موضع الأيقونة والـactions قبل أو بعد المحتوى. |
-| `chipAttrs` | `Record<string, unknown>` | `{}` | attributes صريحة لـVChip؛ العادية تصل للحاوية الخارجية. |
+| `chipAttrs` | `Record<string, unknown>` | `{}` | attributes صريحة لعنصر الشارة (VChip في Vuetify، وTag من PrimeVue دون أنماطه في PrimeVue)؛ العادية تصل للحاوية الخارجية. |
 
 ## Slots
 
-`default`: يستبدل label. `icon`: يستقبل `{ icon, size }` مع VIcon كافتراضي. `actions`: يلي الأيقونة. الترتيب before: أيقونة/actions/نقطة/محتوى؛ after: نقطة/محتوى/أيقونة/actions.
+`default`: يستبدل label. `icon`: يستقبل `{ icon, size }` مع أيقونة المزود كافتراضي. `actions`: يلي الأيقونة. الترتيب before: أيقونة/actions/نقطة/محتوى؛ after: نقطة/محتوى/أيقونة/actions.
 
 ## متغيرات CSS
 
@@ -78,7 +78,7 @@ import { WBadge } from 'wakeb-components'
 
 ## الوصول وحدود السلوك
 
-الشارة للعرض ما لم تجعلها chipAttrs تفاعلية. قدم نص حالة واضحًا؛ اللون والنقطة وحدهما لا يمثلان اسمًا لقارئ الشاشة. أحداث الحاوية هي أحداث DOM المتصاعدة ولا توجد emits مخصصة. التنسيق يحتفظ بخلفيات descendants للنوع outline وclasses الخاصة. ضع الأيقونات المخصصة في icon slot. الألوان الدلالية مستقلة عن tokens المشروع. متغيرات اللون الحالي داخلية؛ استخدم dotColor أو tokens الموثقة. اترك --wakeb-badge-fallback غير معرف في الاستخدام العادي.
+الشارة للعرض ما لم تجعلها chipAttrs تفاعلية. قدم نص حالة واضحًا؛ اللون والنقطة وحدهما لا يمثلان اسمًا لقارئ الشاشة. أحداث الحاوية هي أحداث DOM المتصاعدة ولا توجد emits مخصصة. التنسيق يحتفظ بخلفيات descendants للنوع outline وclasses الخاصة. ضع الأيقونات المخصصة في icon slot. الألوان الدلالية مستقلة عن tokens المشروع. متغيرات اللون الحالي داخلية؛ استخدم dotColor أو tokens الموثقة. اترك --wakeb-badge-fallback غير معرف في الاستخدام العادي. كل renderer يضع على الشارة class ‏.wakeb-badge وclass نوع Wakeb وواحدًا من .wakeb-badge--soft و--solid و--outline و--ghost. تحت PrimeVue: الشارة مكوّن Tag من PrimeVue دون أنماطه (span)، ومحتواها داخل span.wakeb-badge__content؛ وملف أنماط Wakeb نفسه المستخدم في Vuetify يرسم الأنواع والنمط solid ونصف القطر والـpadding والنقطة، وتضيف Wakeb CSS مظهري VChip في soft (طبقة سفلية من currentColor بنسبة 12%) وoutline (حد بعرض 1px من currentColor). تصل chipAttrs إلى عنصر Tag كسمات DOM، فلا أثر لخصائص VChip فيها. الأنواع غير التابعة لـWakeb ليست ألوانًا: يُستخدم primary مع WAKEB_UNKNOWN_VALUE. تُرسم الأيقونات عبر عارض أيقونات Wakeb، وتحتاج أسماء MDI إلى alias في الخيار icons. لا يقبل أي من المزودين providerProps.
 
 ## جرّب بنفسك
 

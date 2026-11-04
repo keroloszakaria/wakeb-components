@@ -46,6 +46,10 @@ import type PrimeVueWDrawer from "../../src/adapters/primevue/WDrawer.vue";
 import type PrimeVueWAvatarStack from "../../src/adapters/primevue/WAvatarStack.vue";
 import type PrimeVueWBadgeStack from "../../src/adapters/primevue/WBadgeStack.vue";
 import type PrimeVueWAccordion from "../../src/adapters/primevue/WAccordion.vue";
+import type PrimeVueWTruncatedText from "../../src/adapters/primevue/WTruncatedText.vue";
+import type PrimeVueWTooltipBtn from "../../src/adapters/primevue/WTooltipBtn.vue";
+import type PrimeVueWBadge from "../../src/adapters/primevue/WBadge.vue";
+import type PrimeVueWUserBadge from "../../src/adapters/primevue/WUserBadge.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -117,6 +121,10 @@ interface PrimeVue {
   WAvatarStack: typeof PrimeVueWAvatarStack;
   WBadgeStack: typeof PrimeVueWBadgeStack;
   WAccordion: typeof PrimeVueWAccordion;
+  WTruncatedText: typeof PrimeVueWTruncatedText;
+  WTooltipBtn: typeof PrimeVueWTooltipBtn;
+  WBadge: typeof PrimeVueWBadge;
+  WUserBadge: typeof PrimeVueWUserBadge;
 }
 
 /** The Vuetify renderer set is complete: every public component has one. */

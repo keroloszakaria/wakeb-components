@@ -10,20 +10,17 @@
   </VTooltip>
 </template>
 <script setup lang="ts">
-import { computed, mergeProps, useAttrs } from "vue";
+import { mergeProps, useAttrs } from "vue";
 import { VTooltip } from "vuetify/components/VTooltip";
-import { truncateText } from "wakeb-utils";
 import { useWakebContext } from "../core/runtime";
+import { truncatedTextDefaults, useTruncatedText } from "../composables/truncated-text";
 import type { TruncatedTextProps } from "../types";
 defineOptions({ inheritAttrs: false });
-const props = withDefaults(defineProps<TruncatedTextProps>(), {
-  label: "", length: 12, tooltipLocation: "top", tooltipMaxWidth: 280, contentClass: "wakeb-truncated-tooltip",
-});
+const props = withDefaults(defineProps<TruncatedTextProps>(), truncatedTextDefaults);
 defineSlots<{ default?(props: { text: string; label: string; truncated: boolean }): unknown }>();
 const attrs = useAttrs();
 const context = useWakebContext("WTruncatedText");
-const displayLabel = computed(() => truncateText(props.label || "", props.length));
-const isTruncated = computed(() => (props.label || "").length > props.length);
+const { displayLabel, isTruncated } = useTruncatedText(props);
 </script>
 <style scoped>
 .truncated-text { outline: none; }

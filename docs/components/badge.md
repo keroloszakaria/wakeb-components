@@ -20,7 +20,7 @@ import { WBadge } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `label` | `string` | `""` | Escaped fallback content. |
 | `classList` | `ComponentClass` | `""` | Classes on the chip. |
-| `type` | `WakebBadgeType` | `"primary"` | Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names: they still render under Vuetify with WAKEB_DEPRECATED_VALUE. |
+| `type` | `WakebBadgeType` | `"primary"` | Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names: they still render under Vuetify with WAKEB_DEPRECATED_VALUE. Under PrimeVue they fall back to primary with WAKEB_UNKNOWN_VALUE. |
 | `icon` | `SharedIcon` | `""` | Icon name, SVG path data or component (Providers > Icons), or the icon-slot value. |
 | `isDot` | `boolean` | `false` | Show the decorative dot before content. |
 | `borderRadius` | `string` | `"md"` | sm selects 8px; md/default preserves the 24px chip radius. |
@@ -30,11 +30,11 @@ import { WBadge } from 'wakeb-components'
 | `variant` | `WakebVariant \| WakebDeprecatedVariant` | `"soft"` | Portable style: soft, solid, outline or ghost. Baseline names (default, tonal, flat, elevated, outlined, text, plain) still work and warn in development. |
 | `iconSize` | `string \| number` | `"xs"` | xs/sm/md/lg/xl map to 16/20/24/32/40px. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | Place icon and actions before or after the content. |
-| `chipAttrs` | `Record<string, unknown>` | `{}` | Explicit attrs for VChip; normal attrs belong to the wrapper. |
+| `chipAttrs` | `Record<string, unknown>` | `{}` | Explicit attrs for the chip element (VChip on Vuetify, the unstyled PrimeVue Tag on PrimeVue); normal attrs belong to the wrapper. |
 
 ## Slots
 
-`default`: replaces label. `icon`: `{ icon, size }`, with VIcon fallback. `actions`: follows the icon. Before order: icon/actions/dot/content. After order: dot/content/icon/actions.
+`default`: replaces label. `icon`: `{ icon, size }`, with a provider icon fallback. `actions`: follows the icon. Before order: icon/actions/dot/content. After order: dot/content/icon/actions.
 
 ## CSS variables
 
@@ -78,7 +78,7 @@ The root wrapper `div`. The chip inside receives only `chipAttrs`. Listeners for
 
 ## Accessibility and limits
 
-A badge is presentational unless explicit chipAttrs make it interactive. Supply visible status text; color and dot alone are not an accessible label. Native wrapper listeners receive bubbling DOM events; there are no custom emits. Chip styles preserve the extracted outline descendant backgrounds and specialized class hooks. Custom icons belong in the icon slot. Semantic variables customize colors without app tokens. Current-color variables are implementation details; use dotColor or documented semantic tokens. The compatibility-only --wakeb-badge-fallback switch stays undefined in normal use.
+A badge is presentational unless explicit chipAttrs make it interactive. Supply visible status text; color and dot alone are not an accessible label. Native wrapper listeners receive bubbling DOM events; there are no custom emits. Chip styles preserve the extracted outline descendant backgrounds and specialized class hooks. Custom icons belong in the icon slot. Semantic variables customize colors without app tokens. Current-color variables are implementation details; use dotColor or documented semantic tokens. The compatibility-only --wakeb-badge-fallback switch stays undefined in normal use. Every renderer marks the chip with .wakeb-badge, its Wakeb type class and one of .wakeb-badge--soft, --solid, --outline or --ghost. Under PrimeVue: the chip is an unstyled PrimeVue Tag (a span) whose content sits in span.wakeb-badge__content; the same Wakeb stylesheet as on Vuetify paints types, the solid variant, radius, padding and the dot, and Wakeb CSS adds the VChip looks for soft (12% currentColor underlay) and outline (1px currentColor border). chipAttrs reach the Tag element as DOM attributes, so VChip props in it have no effect. Non-Wakeb types are not colors: primary is used with WAKEB_UNKNOWN_VALUE. Icons render through the Wakeb icon renderer; MDI names need an icons alias. providerProps is not accepted on either provider.
 
 ## Try it
 

@@ -21,21 +21,21 @@ import { WTooltipBtn } from 'wakeb-components'
 | `icon` | `SharedIcon` | `undefined` | اسم أيقونة أو بيانات مسار SVG أو مكوّن (المزودات > الأيقونات)؛ ويمكن استبدالها بـslot. |
 | `text` | `string` | `""` | نص Tooltip مترجم مسبقًا؛ القيمة الفارغة تلغيه. |
 | `ariaLabel` | `string \| null` | `undefined` | اسم مقروء صريح للزر؛ البديل text. |
-| `btnIcon` | `boolean` | `false` | تفعيل شكل زر الأيقونة في Vuetify. |
+| `btnIcon` | `boolean` | `false` | تفعيل شكل زر الأيقونة الدائري (icon في VBtn على Vuetify، ودائرة بقطر 48px على PrimeVue). |
 | `variant` | `WakebVariant \| WakebDeprecatedVariant` | `"ghost"` | النمط القابل للنقل: soft أو solid أو outline أو ghost. الأسماء القديمة (text وflat وelevated وtonal وoutlined وplain) ما زالت تعمل مع تحذير في وضع التطوير. |
 | `location` | `"top" \| "bottom" \| "start" \| "end"` | `"bottom"` | موضع Tooltip. |
 | `openDelay` | `string \| number` | `200` | تأخير فتح Tooltip بالمللي ثانية. |
 | `contentClass` | `string` | `"v-app-tooltip-btn__content"` | class على Tooltip overlay. |
 | `tooltipStyle` | `CSSProperties` | `undefined` | أنماط على محتوى Tooltip المنقول. |
-| `wrapperAttrs` | `Record<string, unknown>` | `undefined` | خصائص span الخارجي؛ الخصائص العادية تستهدف VBtn. |
+| `wrapperAttrs` | `Record<string, unknown>` | `undefined` | خصائص span الخارجي؛ الخصائص العادية تستهدف زر HTML الأصلي. |
 
 ## الأحداث
 
-لا توجد أحداث مخصصة. أحداث النقر والكيبورد وخصائص الفورم تصل إلى VBtn دون مستمع إضافي على الحاوية.
+لا توجد أحداث مخصصة. أحداث النقر والكيبورد وخصائص الفورم تصل إلى زر HTML الأصلي دون مستمع إضافي على الحاوية.
 
 ## Slots
 
-`icon`: يستقبل `{ icon }` ويستبدل VIcon. لا يوجد slot افتراضي للنص؛ استخدم WButton للأزرار النصية.
+`icon`: يستقبل `{ icon }` ويستبدل الأيقونة الافتراضية. لا يوجد slot افتراضي للنص؛ استخدم WButton للأزرار النصية.
 
 ## متغيرات CSS
 
@@ -45,11 +45,11 @@ import { WTooltipBtn } from 'wakeb-components'
 
 ## وجهة السمات
 
-عنصر `<button>` الأصلي (VBtn)، وليس الـspan الخارجي؛ استخدم `wrapperAttrs` لذلك الـspan. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
+عنصر `<button>` الأصلي (VBtn في Vuetify، وButton من PrimeVue دون أنماطه في PrimeVue)، وليس الـspan الخارجي؛ استخدم `wrapperAttrs` لذلك الـspan. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
 ## الوصول وحدود السلوك
 
-الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. تُحل أسماء الأيقونات أولًا عبر الخيار icons والأيقونات المدمجة، وبقية الأسماء تحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport؛ لا يحمل التلميح إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم tooltipStyle عليه. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة.
+الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. تُحل أسماء الأيقونات أولًا عبر الخيار icons والأيقونات المدمجة، وبقية الأسماء تحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport؛ لا يحمل التلميح إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم tooltipStyle عليه. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة. تحت PrimeVue: الزر هو Button من PrimeVue دون أنماطه، ونوعه type=button افتراضيًا؛ وتتقدم سمات المستخدم مثل type وform وdisabled وaria-label، وتعمل الأحداث الأصلية مرة واحدة. ترسم Wakeb CSS الأنماط الأربعة بلون currentColor (ويستخدم solid المتغيرين --wakeb-ui-primary و--wakeb-ui-on-primary) بأبعاد VBtn: ارتفاع 36px وعرض أدنى 64px، أو دائرة بقطر 48px مع btnIcon؛ ولا تُستخدم severities أو أحجام PrimeVue. يفتح توجيه Tooltip في PrimeVue عند مرور المؤشر وعند التركيز بالكيبورد بعد openDelay، ويُغلق عند فقدان التركيز والنقر وEscape، ويرتبط بالزر عبر aria-describedby بمعرّف من useId. تتبع start وend خيار direction في الـplugin. تنسّق tooltipStyle فقاعة نص التلميح، وتنسّق contentClass جذر التلميح الذي يحمل نطاق theme الخاص بالـplugin؛ ويحتفظ PrimeVue بترتيب z-index الخاص بتلميحاته، فلا ينطبق zIndexOverlay. دون أيقونة لا يُرسم شيء داخل الزر، بينما يرسم Vuetify مكوّن VIcon فارغًا.
 
 ## جرّب بنفسك
 

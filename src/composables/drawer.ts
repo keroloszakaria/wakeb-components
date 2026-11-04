@@ -63,6 +63,16 @@ const unlockScroll = () => {
 };
 
 /**
+ * True while another open overlay matching `selector` (a dialog or menu opened from the drawer)
+ * was mounted after the drawer's host. Providers close their topmost overlay on Escape even when
+ * focus has fallen back to the body, so the drawer must leave that key press to it.
+ */
+export const hasOverlayAbove = (host: Element, selector: string) =>
+  [...document.querySelectorAll(selector)].some(
+    (overlay) => !host.contains(overlay) && !overlay.contains(host) && Boolean(host.compareDocumentPosition(overlay) & Node.DOCUMENT_POSITION_FOLLOWING),
+  );
+
+/**
  * Modal behavior for a renderer whose provider drawer is not a dialog (Vuetify VNavigationDrawer),
  * matching what PrimeVue Drawer and reka-ui Dialog own on the other providers (SPEC R18): Escape
  * closes unless persistent, the body scroll is locked while open, focus moves into the panel on
@@ -84,6 +94,7 @@ export function useModalDrawer(options: {
     const root = panel();
     const active = document.activeElement;
     if (active && active !== document.body && root && !root.contains(active)) return;
+    if (root && hasOverlayAbove(root.closest(".wakeb-drawer-host") ?? root, ".v-overlay--active")) return;
     open.value = false;
   };
   const activate = () => {

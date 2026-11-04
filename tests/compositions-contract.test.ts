@@ -341,6 +341,10 @@ describe(`WDrawer contract (${framework})`, () => {
 });
 
 /* Vuetify-only R18/R19 wiring: the Wakeb-owned layout host around VNavigationDrawer. */
+/* A real Escape key press: from the focused element, bubbling to document and window. */
+const pressEscape = () =>
+  (document.activeElement ?? document.body).dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", code: "Escape", bubbles: true }));
+
 describe.runIf(vuetify)("Vuetify WDrawer layout host (R18, R19)", () => {
   it("renders with no layout host, teleported next to Vuetify overlays, and locks body scroll while open", async () => {
     const open = ref(true);
@@ -389,9 +393,29 @@ describe.runIf(vuetify)("Vuetify WDrawer layout host (R18, R19)", () => {
     await settle();
     const dialog = document.querySelector<HTMLElement>(".wakeb-modal")!;
     (dialog.querySelector("button") ?? dialog).focus();
-    escape();
+    pressEscape();
     await settle();
     expect(w.emitted("update:modelValue")).toBeUndefined();
+  });
+
+  it("leaves Escape to a newer active overlay even when focus is inside the drawer", async () => {
+    // In a browser, focus can stay in the drawer or fall back to the body while a dialog opened from
+    // it is still open. Vuetify closes the topmost overlay on Escape, so the drawer must not close too.
+    const w = renderDrawer({ modelValue: true, persistent: false, title: "Drawer" }, { content: () => h("button", { type: "button", class: "inner" }, "Inner") });
+    await settle();
+    document.querySelector<HTMLElement>(".inner")!.focus();
+    const host = document.querySelector<HTMLElement>(".wakeb-drawer-host")!;
+    const above = document.createElement("div");
+    above.className = "v-overlay v-overlay--active";
+    host.after(above);
+    pressEscape();
+    await settle();
+    expect(w.emitted("update:modelValue")).toBeUndefined();
+    above.classList.remove("v-overlay--active");
+    pressEscape();
+    await settle();
+    expect(w.emitted("update:modelValue")).toEqual([[false]]);
+    above.remove();
   });
 });
 
@@ -445,6 +469,27 @@ describe.runIf(framework === "primevue")("PrimeVue WDrawer overlay host (R18, R1
     const root = document.querySelector<HTMLElement>(".wakeb-drawer")!;
     expect(root.parentElement?.getAttribute("data-p")).toContain("left");
     expect(root.style.width).toBe("560px");
+  });
+
+  it("closes only a dialog opened from the drawer on Escape, then the drawer on the next Escape", async () => {
+    const drawer = ref(true);
+    const modal = ref(true);
+    const view = defineComponent(() => () =>
+      h(
+        WDrawer,
+        { modelValue: drawer.value, "onUpdate:modelValue": (value: boolean) => (drawer.value = value), title: "Drawer" },
+        { content: () => h(WModal, { modelValue: modal.value, "onUpdate:modelValue": (value: boolean) => (modal.value = value), persistent: false, title: "Nested" }) },
+      ),
+    );
+    mount(view, { attachTo: document.body, global: { plugins: plugins(), stubs: { transition: false } } });
+    await settle();
+    pressEscape();
+    await settle();
+    expect(modal.value).toBe(false);
+    expect(drawer.value).toBe(true);
+    pressEscape();
+    await settle();
+    expect(drawer.value).toBe(false);
   });
 
   it("stacks a dialog opened from the drawer above it through PrimeVue's shared modal z-index", async () => {

@@ -8,6 +8,13 @@ export type WakebErrorCode =
   | "WAKEB_INSTALL_CONFLICT"
   | "WAKEB_HOST_PROVIDER_MISSING"
   | "WAKEB_COMPONENT_UNSUPPORTED"
+  /**
+   * Reserved. Raised only when a documented optional feature (a typed entry in the capability
+   * manifest, SPEC R05/R21) cannot work on the selected provider; the message must name the
+   * capability and its alternative. No optional feature is defined in this build, so nothing raises
+   * it. Missing mandatory behavior never uses this code: a missing component is
+   * WAKEB_COMPONENT_UNSUPPORTED, and layout-host needs such as the Vuetify WDrawer are R19 limits.
+   */
   | "WAKEB_CAPABILITY_UNSUPPORTED";
 
 export class WakebError extends Error {

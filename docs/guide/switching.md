@@ -28,11 +28,10 @@ When you change `framework` in the plugin file and install the new provider's pe
 - Your bundle contains only the selected provider's renderers. Changing `framework` restarts the
   dev server; providers are never swapped while the app runs.
 
-Coverage is not yet complete. In this alpha, PrimeVue does not render WTruncatedText, WBadge,
-WUserBadge and WTooltipBtn; they fail with `WAKEB_COMPONENT_UNSUPPORTED`. `framework: 'shadcn'`
-fails the build with `WAKEB_CAPABILITY_UNSUPPORTED`. Check the
-[capability matrix](./providers#capability-matrix), or read `wakeb.capabilities.components` at
-runtime, before you switch.
+Vuetify and PrimeVue render all 21 components. Under `framework: 'shadcn'`, the alpha adapter
+renders the components listed in the capability matrix; any other component fails with
+`WAKEB_COMPONENT_UNSUPPORTED`. Check the [capability matrix](./providers#capability-matrix), or
+read `wakeb.capabilities.components` at runtime, before you switch.
 
 Visual parity is not promised. Markup, class names, animations and transitions differ between
 providers; the [limits of this alpha](./providers#limits-of-this-alpha) list the known

@@ -68,7 +68,7 @@ Upgrading needs the migration guide. Root imports alone no longer work.
 - **Deprecated Vuetify color names and badge types.** TypeScript rejects them, but the runtime still accepts them under Vuetify.
 - **shadcn-vue overlays** write `dir="ltr"` unless Wakeb `direction` is set. The theme bridge assumes Tailwind v4 complete-color variables.
 - **`style.css`** still contains every provider's CSS.
-- **Error codes.** `WAKEB_CAPABILITY_UNSUPPORTED` is declared but never raised.
+- **Error codes.** `WAKEB_CAPABILITY_UNSUPPORTED` is reserved for documented optional features; none is defined in this build.
 - **The 0.7.x fixes** (CHANGELOG "Unreleased (0.7.x)") have not been released as a 0.7.x patch, as IMPLEMENTATION.md M0 intended.
 
 ## Open owner decisions

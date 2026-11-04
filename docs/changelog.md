@@ -24,7 +24,7 @@ Breaking: root imports now need a plugin file and `wakebComponents()` from `wake
 - PrimeVue renderers for all 21 components. WTabs, WTree and WCarousel use Wakeb-owned markup; the others use PrimeVue primitives. Shared behavior lives in provider-neutral composables, and one contract and SSR suite runs on every provider.
 - PrimeVue WDrawer needs no layout host: it traps focus, closes on Escape and outside click unless `persistent`, locks scrolling, returns focus to its opener and takes `zIndexOverlay`. On Vuetify it is unchanged and still needs `VApp` or `VLayout`.
 - PrimeVue tooltips, including WButton's, open on keyboard focus as well as hover and are linked through `aria-describedby`.
-- Alpha shadcn-vue provider (`framework: 'shadcn'`) for WButton, WLoading, WDropdown and WModal on the optional `reka-ui` peer (`^2.10.5`). It ships precompiled, namespaced CSS with no Tailwind setup or global reset, plus third-party notices. The peer matrix gains shadcn-vue cells.
+- Alpha shadcn-vue provider (`framework: 'shadcn'`) for all 21 components on the optional `reka-ui` peer (`^2.10.5`): shadcn-vue primitives where they keep the contract, and Wakeb-owned markup for tabs, tree, carousel, progress, gauge, steps and badges. It ships precompiled, namespaced CSS with no Tailwind setup or global reset, plus third-party notices. The peer matrix gains shadcn-vue cells.
 - Breaking: WCarousel autoplay is owned by Wakeb on every provider. It pauses on hover, on focus, while the document is hidden and under reduced motion, and cleans up on unmount.
 - A titled WAccordion panel is a named `region`.
 - WTabs item `customHTML` is deprecated: it still renders and logs `WAKEB_DEPRECATED_VALUE` once per app. Use the `tab-label` slot.

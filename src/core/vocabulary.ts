@@ -79,6 +79,12 @@ export const VUETIFY_INTENTS: IntentBridge = {
 /** PrimeVue preset colors behind each intent. */
 export const PRIMEVUE_INTENTS: IntentBridge = { primary: "var(--p-primary-color)" };
 
+/**
+ * shadcn-vue theme variables behind each intent. shadcn-vue 2 themes (Tailwind CSS 4) store complete
+ * colors in `--primary` and `--destructive`; an app without a shadcn-vue theme gets the Wakeb fallback.
+ */
+export const SHADCN_INTENTS: IntentBridge = { primary: "var(--primary, #087f8c)", danger: "var(--destructive, #f04438)" };
+
 /** The CSS for an intent: its `--wakeb-ui-*` token, then the provider bridge, then the Wakeb fallback. */
 export const intentColor = (intent: WakebIntent, bridge: IntentBridge = {}) =>
   `var(--wakeb-ui-${intent}, ${bridge[intent] ?? INTENT_FALLBACKS[intent]})`;

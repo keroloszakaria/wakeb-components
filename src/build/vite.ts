@@ -19,7 +19,7 @@ const UNSUPPORTED = "\0wakeb-components:unsupported:";
 const PEERS: Record<WakebFramework, readonly string[]> = {
   vuetify: ["vuetify"],
   primevue: ["primevue", "@primeuix/themes"],
-  shadcn: [],
+  shadcn: ["reka-ui"],
 };
 
 /* Running from src/build/vite.ts (repository) or dist/vite.js (published package). */
@@ -68,11 +68,6 @@ export function wakebComponents(options: WakebVitePluginOptions = {}): Plugin {
       const root = resolve(config.root ?? process.cwd());
       selection = await select(root, options.configFile);
       const { framework } = selection;
-      if (framework === "shadcn")
-        throw new WakebError(
-          "WAKEB_CAPABILITY_UNSUPPORTED",
-          `${selection.file} selects 'shadcn', but this build of wakeb-components has no shadcn-vue adapter yet. Select 'vuetify' or 'primevue'.`,
-        );
       const missing = PEERS[framework].filter((name) => !installed(root, name));
       if (missing.length)
         throw new WakebError(

@@ -49,6 +49,10 @@ const mismatched = createWakebComponents({ framework: 'vuetify', providerOptions
 // @ts-expect-error there is no default provider
 const unselected = createWakebComponents({});
 void [plugin, mismatched, unselected];
+const shadcnPlugin: WakebPlugin = createWakebComponents({ framework: 'shadcn', providerOptions: { kind: 'shadcn', mode: 'install' } });
+// @ts-expect-error shadcn provider options must name shadcn
+const shadcnMismatched = createWakebComponents({ framework: 'shadcn', providerOptions: { kind: 'vuetify' } });
+void [shadcnPlugin, shadcnMismatched];
 const configured: WakebPlugin = createWakebComponents({ framework: 'vuetify', defaults: { WButton: { size: 'md', disabled: false }, WModal: { persistent: false, closeLabel: 'Dismiss' } }, locale: 'ar', direction: 'rtl', theme: { mode: 'dark', tokens: { primary: '#123456', radius: '6px', zIndexOverlay: 3000 } } });
 // @ts-expect-error model props stay on each instance
 const modelDefault = createWakebComponents({ framework: 'vuetify', defaults: { WDropdown: { modelValue: 'x' } } });

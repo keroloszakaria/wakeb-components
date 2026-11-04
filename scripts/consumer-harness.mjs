@@ -46,7 +46,7 @@ export function packTarball(work) {
   assert(npm, "Run through an npm script so npm_execpath is set");
   const output = run([npm, "pack", "--json", "--ignore-scripts", "--pack-destination", work], root);
   const [packed] = JSON.parse(output.slice(output.indexOf("[")));
-  for (const path of ["dist/index.js", "dist/index.d.ts", "dist/vite.js", "dist/build/vite.d.ts", "dist/wakeb-components.css", "dist/_internal/core.js", "dist/_internal/selected/WButton.js", "dist/_internal/selected/services.js", "dist/_internal/adapters/vuetify/services.js", "dist/_internal/adapters/primevue/WModal.js", "LICENSE", "README.md"])
+  for (const path of ["dist/index.js", "dist/index.d.ts", "dist/vite.js", "dist/build/vite.d.ts", "dist/wakeb-components.css", "dist/_internal/core.js", "dist/_internal/selected/WButton.js", "dist/_internal/selected/services.js", "dist/_internal/adapters/vuetify/services.js", "dist/_internal/adapters/primevue/WModal.js", "dist/_internal/adapters/shadcn/services.js", "dist/_internal/adapters/shadcn/WModal.js", "LICENSE", "THIRD-PARTY-NOTICES.txt", "README.md"])
     assert(packed.files.some((file) => file.path === path), `packed ${path}`);
   assert(!packed.files.some((file) => /(^|\/)(node_modules|tests|\.env)(\/|$)/.test(file.path)));
   return { ...packed, path: join(work, packed.filename) };
@@ -67,7 +67,33 @@ const collector = (sink) => ({
       if (chunk.type === "chunk") for (const [id, info] of Object.entries(chunk.modules)) if (info.renderedLength > 0) sink.add(id.replaceAll("\\", "/"));
   },
 });
-const PROVIDER_MODULE = { vuetify: /\/node_modules\/vuetify\//, primevue: /\/node_modules\/(primevue|@primevue|@primeuix)\// };
+const PROVIDER_MODULE = { vuetify: /\/node_modules\/vuetify\//, primevue: /\/node_modules\/(primevue|@primevue|@primeuix)\//, shadcn: /\/node_modules\/reka-ui\// };
+/* Component entry modules of each provider's dialog and menu primitives. */
+const OVERLAY_MODULE = {
+  // VTooltip legitimately shares the tiny VMenu/shared.js symbol module.
+  vuetify: /\/components\/(VDialog\/VDialog|VMenu\/VMenu)\.js$/,
+  primevue: /\/primevue\/(dialog|menu)\/index\.mjs$/,
+  shadcn: /\/reka-ui\/dist\/(Dialog\/DialogContent|DropdownMenu\/DropdownMenuContent)\.js$/,
+};
+
+/**
+ * Precompiled shadcn adapter CSS (SPEC R11, R17): no Preflight or other global reset, and every class
+ * the selected adapter can put on the page at runtime has a rule in the shipped CSS.
+ */
+function assertScopedAdapterCss(css, js) {
+  const rules = css.replace(/\/\*[\s\S]*?\*\//g, "").replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, "");
+  const selectors = [...rules.matchAll(/(?:^|[{};])\s*([^{};@]+)\{/g)].flatMap(([, list]) => list.split(",").map((part) => part.trim()));
+  assert(selectors.length > 50, "shipped CSS has rules");
+  // A rule's first compound selector must hold a class or attribute, never a bare element.
+  const unscoped = selectors.filter((selector) => !/^([a-z][\w-]*)?[.[]/.test(selector));
+  assert.deepEqual(unscoped, [], "shipped CSS targets elements outside Wakeb scope");
+  assert(!/(^|[\s,}])(\*|html|body|:root|::?before|::?after|::backdrop)\s*[,{]/.test(rules), "shipped CSS has no Preflight or global reset");
+  assert(!/--tw-|@tailwind|@layer\s+(base|preflight)/.test(css), "shipped CSS has no Tailwind runtime");
+  const runtime = new Set([...js.matchAll(/wakeb-sc-[\w-]+/g)].map(([name]) => name));
+  assert(runtime.size > 10, "shadcn bundle uses adapter classes");
+  for (const name of runtime) assert(new RegExp(`\\.${name}(?![\\w-])`).test(css), `shipped CSS styles runtime class ${name}`);
+  for (const name of ["btn--primary", "btn--danger", "btn--lg", "btn--sm", "btn--loading", "btn--disabled"]) assert(css.includes(`.${name}`), `shipped CSS styles ${name}`);
+}
 
 /**
  * Verifies an installed consumer: unselected peers are absent, root declarations type-check under
@@ -76,8 +102,9 @@ const PROVIDER_MODULE = { vuetify: /\/node_modules\/vuetify\//, primevue: /\/nod
  * overlay primitives tree-shaken from the WButton-only graph.
  */
 export async function verifyConsumer(dir, framework) {
-  const other = FRAMEWORKS.find((name) => name !== framework);
-  for (const name of PROVIDER_PEERS[other]) assert(!existsSync(join(dir, "node_modules", name)), `${framework} consumer must not install ${name}`);
+  const others = FRAMEWORKS.filter((name) => name !== framework);
+  for (const other of others)
+    for (const name of PROVIDER_PEERS[other]) assert(!existsSync(join(dir, "node_modules", name)), `${framework} consumer must not install ${name}`);
 
   // Root declarations type-check with only this provider present, without skipping library checks.
   const compilerFlags = ["--noEmit", "--strict", "--target", "ES2022", "--module", "ESNext", "--moduleResolution", "Bundler", "--lib", "ES2022,DOM"];
@@ -116,7 +143,8 @@ export async function verifyConsumer(dir, framework) {
   assert(!/NaN|Infinity/.test(html));
   for (const [name, needles] of server.checks) for (const needle of needles) assert(html.includes(needle), `${framework} SSR ${name} renders ${needle}`);
 
-  for (const build of [full, button]) assert(!build.modules.some((id) => PROVIDER_MODULE[other].test(id)), `${framework} build must not contain ${other} modules`);
+  for (const build of [full, button])
+    for (const other of others) assert(!build.modules.some((id) => PROVIDER_MODULE[other].test(id)), `${framework} build must not contain ${other} modules`);
   assert(full.modules.some((id) => PROVIDER_MODULE[framework].test(id)), `${framework} build uses its provider`);
   const adapter = (name) => (id) => id.endsWith(`/_internal/adapters/${framework}/${name}.js`);
   // WButton-only graph: no other renderer and no dialog/menu primitives; the full graph has them.
@@ -124,10 +152,10 @@ export async function verifyConsumer(dir, framework) {
     assert(full.modules.some(adapter(name)), `${framework} full build includes ${name}`);
     assert(!button.modules.some(adapter(name)), `${framework} WButton-only build excludes ${name}`);
   }
-  // Component entry modules only: VTooltip legitimately shares the tiny VMenu/shared.js symbol module.
-  const overlay = framework === "vuetify" ? /\/components\/(VDialog\/VDialog|VMenu\/VMenu)\.js$/ : /\/primevue\/(dialog|menu)\/index\.mjs$/;
+  const overlay = OVERLAY_MODULE[framework];
   assert(full.modules.some((id) => overlay.test(id)) && !button.modules.some((id) => overlay.test(id)), `${framework} overlay primitives are tree-shaken`);
-  if (framework === "primevue") assert(!/\.v-application|--v-theme-surface:/.test(full.css), "PrimeVue CSS must not include Vuetify framework styles");
+  if (framework !== "vuetify") assert(!/\.v-application|--v-theme-surface:/.test(full.css), `${framework} CSS must not include Vuetify framework styles`);
+  if (framework === "shadcn") assertScopedAdapterCss(full.css, full.js);
 
   return { rendered: server.checks.map(([name]) => name), fullModules: full.modules.length, buttonOnlyModules: button.modules.length };
 }

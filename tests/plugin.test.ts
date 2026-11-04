@@ -6,7 +6,7 @@ import PrimeVue from "primevue/config";
 import { WButton, WTabs, createWakebComponents, type WakebComponentsOptions } from "../src";
 import { WAKEB_CONTEXT, type WakebContext } from "../src/core/runtime";
 import { SUPPORTED } from "../src/adapters/manifest";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 const other = framework === "vuetify" ? "primevue" : "vuetify";
 const installHost = (app: ReturnType<typeof createApp>) =>
@@ -66,7 +66,8 @@ describe(`createWakebComponents (${framework})`, () => {
   });
 });
 
-describe(`host provider modes (${framework})`, () => {
+// shadcn-vue has no app-level instance to detect or reuse; its modes are covered below.
+describe.skipIf(framework === "shadcn")(`host provider modes (${framework})`, () => {
   it("auto reuses a host installed first and leaves its state untouched", () => {
     const app = createApp({ render: () => null });
     installHost(app);
@@ -125,6 +126,38 @@ describe(`host provider modes (${framework})`, () => {
   });
 });
 
+describe.runIf(framework === "shadcn")("host provider modes (shadcn)", () => {
+  it("auto and install add only Wakeb's own context", () => {
+    for (const mode of [undefined, "auto", "install"] as const) {
+      const app = createApp({ render: () => null });
+      app.use(wakeb(mode ? ({ providerOptions: { kind: "shadcn", mode } } as never) : {}));
+      expect(context(app)?.providerReused).toBe(false);
+      expect(Object.keys(app.config.globalProperties)).toEqual([]);
+    }
+  });
+
+  it("reuse fails because there is no host instance to reuse", () => {
+    const plugin = wakeb({ providerOptions: { kind: "shadcn", mode: "reuse" } } as never);
+    expect(codeOf(() => createApp({ render: () => null }).use(plugin))).toBe("WAKEB_HOST_PROVIDER_MISSING");
+    expect(() => createApp({ render: () => null }).use(plugin)).toThrow("no app-level instance to reuse");
+  });
+
+  it("rejects native options, which have no receiver", () => {
+    const app = createApp({ render: () => null });
+    expect(codeOf(() => app.use(wakeb({ providerOptions: { kind: "shadcn", options: { dir: "rtl" } } } as never)))).toBe("WAKEB_CONFIG_INVALID");
+  });
+
+  it("keeps one plugin object isolated across two apps on one page", () => {
+    const plugin = wakeb();
+    const first = createApp({ render: () => null });
+    const second = createApp({ render: () => null });
+    first.use(plugin);
+    second.use(plugin);
+    expect(context(first)).not.toBe(context(second));
+    expect(context(first)?.warned).not.toBe(context(second)?.warned);
+  });
+});
+
 describe(`capability coverage (${framework})`, () => {
   it("renders supported components and fails unsupported ones with a stable code", () => {
     const view = defineComponent(() => () => h(WTabs, { tabs: [{ slot: "a", label: "A" }] }));
@@ -135,5 +168,5 @@ describe(`capability coverage (${framework})`, () => {
 });
 
 function installHostPlugin() {
-  return framework === "vuetify" ? createVuetify() : ([PrimeVue, { theme: "none" }] as never);
+  return framework === "vuetify" ? createVuetify() : framework === "shadcn" ? shadcnHost : ([PrimeVue, { theme: "none" }] as never);
 }

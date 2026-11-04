@@ -50,6 +50,10 @@ import type PrimeVueWTruncatedText from "../../src/adapters/primevue/WTruncatedT
 import type PrimeVueWTooltipBtn from "../../src/adapters/primevue/WTooltipBtn.vue";
 import type PrimeVueWBadge from "../../src/adapters/primevue/WBadge.vue";
 import type PrimeVueWUserBadge from "../../src/adapters/primevue/WUserBadge.vue";
+import type ShadcnWButton from "../../src/adapters/shadcn/WButton.vue";
+import type ShadcnWDropdown from "../../src/adapters/shadcn/WDropdown.vue";
+import type ShadcnWLoading from "../../src/adapters/shadcn/WLoading.vue";
+import type ShadcnWModal from "../../src/adapters/shadcn/WModal.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -126,10 +130,17 @@ interface PrimeVue {
   WBadge: typeof PrimeVueWBadge;
   WUserBadge: typeof PrimeVueWUserBadge;
 }
+interface Shadcn {
+  WButton: typeof ShadcnWButton;
+  WDropdown: typeof ShadcnWDropdown;
+  WLoading: typeof ShadcnWLoading;
+  WModal: typeof ShadcnWModal;
+}
 
 /** The Vuetify renderer set is complete: every public component has one. */
 export const vuetify: Conforming<Record<WakebComponentName, unknown>> = null as unknown as Check<Vuetify>;
 export const primevue: Conforming<PrimeVue> = null as unknown as Check<PrimeVue>;
+export const shadcn: Conforming<Shadcn> = null as unknown as Check<Shadcn>;
 
 /* The checks themselves must reject drift. */
 type Fake<E, S> = WakebFacade<ButtonProps, E, S>;

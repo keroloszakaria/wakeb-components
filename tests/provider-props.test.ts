@@ -12,11 +12,15 @@ import Menu from "primevue/menu";
 import Dialog from "primevue/dialog";
 import ProgressSpinner from "primevue/progressspinner";
 import { VLayout } from "vuetify/components/VLayout";
+import ShadcnButton from "../src/adapters/shadcn/ui/Button.vue";
+import ShadcnDropdownMenuContent from "../src/adapters/shadcn/ui/DropdownMenuContent.vue";
+import ShadcnDialogContent from "../src/adapters/shadcn/ui/DialogContent.vue";
+import ShadcnSpinner from "../src/adapters/shadcn/ui/Spinner.vue";
 import {
   WAccordion, WAvatarStack, WBadge, WBadgeStack, WBaseSidebar, WButton, WCarousel, WDrawer, WDropdown, WExportDropdown, WLoading, WModal,
   WPageSkeleton, WSegmentedProgress, WSemiCircleGauge, WTabs, WTooltipBtn, WTree, WTruncatedText, WUserBadge, WVerticalSteps,
 } from "../src";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /*
  * Attribute targets (SPEC R14) and the providerProps escape hatch (SPEC R12), run on each provider.
@@ -24,7 +28,8 @@ import { framework, wakeb } from "./wakeb";
  * provider's own native prop names, which is exactly why they are not portable.
  */
 const vuetify = framework === "vuetify";
-const host = () => (vuetify ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const shadcn = framework === "shadcn";
+const host = () => (vuetify ? createVuetify() : shadcn ? shadcnHost : ([PrimeVue, { theme: "none" }] as const));
 const render = (component: unknown, options: Record<string, unknown> = {}) =>
   mount(component as never, {
     attachTo: document.body,
@@ -37,7 +42,12 @@ const settle = async () => {
 };
 const warnings = () => vi.mocked(console.warn).mock.calls.map(([message]) => String(message));
 const ignored = () => warnings().filter((message) => message.startsWith("[WAKEB_PROVIDER_PROP_IGNORED]"));
-const primitive = { WButton: vuetify ? VBtn : Button, WDropdown: vuetify ? VMenu : Menu, WModal: vuetify ? VDialog : Dialog, WLoading: vuetify ? VProgressCircular : ProgressSpinner };
+const primitive = {
+  vuetify: { WButton: VBtn, WDropdown: VMenu, WModal: VDialog, WLoading: VProgressCircular },
+  primevue: { WButton: Button, WDropdown: Menu, WModal: Dialog, WLoading: ProgressSpinner },
+  // shadcn-vue primitives are Wakeb's adapted copies of the shadcn-vue components over reka-ui.
+  shadcn: { WButton: ShadcnButton, WDropdown: ShadcnDropdownMenuContent, WModal: ShadcnDialogContent, WLoading: ShadcnSpinner },
+}[framework];
 const portableAttrs = (listener: () => void) => ({
   class: "caller-class",
   style: { outline: "1px solid red" },
@@ -172,12 +182,13 @@ describe.skipIf(!vuetify)("attribute targets of Vuetify-only components", () => 
 });
 
 describe(`providerProps (${framework})`, () => {
+  const openAutoFocus = () => {};
   const native = {
-    WButton: vuetify ? { variant: "tonal", ripple: false } : { severity: "danger", raised: true },
-    WDropdown: vuetify ? { location: "end", closeOnContentClick: false } : { appendTo: "self" },
-    WModal: vuetify ? { scrollable: true } : { position: "top" },
-    WLoading: vuetify ? { width: 7 } : { animationDuration: "3s" },
-  } as const;
+    vuetify: { WButton: { variant: "tonal", ripple: false }, WDropdown: { location: "end", closeOnContentClick: false }, WModal: { scrollable: true }, WLoading: { width: 7 } },
+    primevue: { WButton: { severity: "danger", raised: true }, WDropdown: { appendTo: "self" }, WModal: { position: "top" }, WLoading: { animationDuration: "3s" } },
+    // reka-ui's DialogContent declares no free native prop, only callbacks; onOpenAutoFocus is one.
+    shadcn: { WButton: { variant: "destructive", size: "sm" }, WDropdown: { side: "top", sideOffset: 8 }, WModal: { onOpenAutoFocus: openAutoFocus }, WLoading: { strokeWidth: 3 } },
+  }[framework] as Record<"WButton" | "WDropdown" | "WModal" | "WLoading", Record<string, unknown>>;
   const props = {
     WButton: { title: "Save" },
     WDropdown: { title: "Status", menuItems: [{ label: "Done", value: 1 }] },
@@ -191,12 +202,13 @@ describe(`providerProps (${framework})`, () => {
     await settle();
     const target = w.findComponent(primitive[name] as never);
     expect(target.exists()).toBe(true);
-    for (const [key, value] of Object.entries(native[name])) expect(target.props(key)).toEqual(value);
+    // Native listeners are declared events, so they arrive as vnode props rather than component props.
+    for (const [key, value] of Object.entries(native[name])) expect(/^on[A-Z]/.test(key) ? target.vm.$.vnode.props?.[key] : target.props(key)).toEqual(value);
     expect(ignored()).toEqual([]);
   });
 
   it("follows reactive providerProps updates", async () => {
-    const [key, first, second] = vuetify ? ["variant", "tonal", "flat"] : ["severity", "danger", "info"];
+    const [key, first, second] = vuetify ? ["variant", "tonal", "flat"] : shadcn ? ["variant", "destructive", "outline"] : ["severity", "danger", "info"];
     const w = render(WButton, { props: { title: "Save", providerProps: { [key]: first } } });
     await w.setProps({ providerProps: { [key]: second } });
     expect(w.findComponent(primitive.WButton as never).props(key)).toBe(second);
@@ -229,7 +241,7 @@ describe(`providerProps (${framework})`, () => {
   it("chains native callbacks without a second portable event and blocks the model handler", async () => {
     const native = vi.fn();
     const model = vi.fn();
-    const nativeEvent = vuetify ? "onAfterEnter" : "onShow";
+    const nativeEvent = vuetify ? "onAfterEnter" : shadcn ? "onOpenAutoFocus" : "onShow";
     const w = render(WModal, {
       props: { modelValue: false, title: "Edit", closeLabel: "Close dialog", providerProps: { [nativeEvent]: native, "onUpdate:modelValue": model, persistent: false } },
     });
@@ -248,7 +260,7 @@ describe(`providerProps (${framework})`, () => {
 
   it("blocks the portable afterLeave callback so it cannot fire twice", async () => {
     const after = vi.fn();
-    const key = vuetify ? "onAfterLeave" : "onAfterHide";
+    const key = vuetify || shadcn ? "onAfterLeave" : "onAfterHide";
     render(WModal, { props: { modelValue: true, title: "Edit", providerProps: { [key]: after } } });
     await settle();
     expect(ignored().join("\n")).toContain(`'${key}'`);
@@ -256,7 +268,7 @@ describe(`providerProps (${framework})`, () => {
 
   it("keeps WDropdown disabled when providerProps tries to enable or open the menu", async () => {
     const w = render(WDropdown, {
-      props: { title: "Status", disabled: true, menuItems: [{ label: "Done", value: 1 }], providerProps: vuetify ? { disabled: false, modelValue: true } : { popup: false, model: [] } },
+      props: { title: "Status", disabled: true, menuItems: [{ label: "Done", value: 1 }], providerProps: vuetify ? { disabled: false, modelValue: true } : shadcn ? { forceMount: true, open: true } : { popup: false, model: [] } },
     });
     await w.get("button").trigger("click");
     await settle();

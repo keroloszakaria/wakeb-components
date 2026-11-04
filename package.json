@@ -1,7 +1,7 @@
 {
   "name": "wakeb-components",
   "version": "0.7.0",
-  "description": "Typed Vue 3 components with one contract across Vuetify and PrimeVue providers.",
+  "description": "Typed Vue 3 components with one contract across Vuetify, PrimeVue and shadcn-vue providers.",
   "type": "module",
   "license": "MIT",
   "sideEffects": [
@@ -29,6 +29,7 @@
     "dist",
     "README.md",
     "LICENSE",
+    "THIRD-PARTY-NOTICES.txt",
     "CHANGELOG.md"
   ],
   "engines": {
@@ -42,6 +43,7 @@
     "vuetify": "^3.13.2",
     "primevue": "^4.5.5",
     "@primeuix/themes": "^2.0.3",
+    "reka-ui": "^2.10.5",
     "vite": "^6.0.0"
   },
   "peerDependenciesMeta": {
@@ -53,6 +55,9 @@
     },
     "@primeuix/themes": {
       "optional": true
+    },
+    "reka-ui": {
+      "optional": true
     }
   },
   "devDependencies": {
@@ -63,6 +68,7 @@
     "@vue/test-utils": "^2.4.6",
     "jsdom": "26.1.0",
     "primevue": "4.5.5",
+    "reka-ui": "2.11.0",
     "sass": "^1.77.4",
     "typescript": "5.9.3",
     "vite": "6.4.5",
@@ -96,6 +102,8 @@
     "vue",
     "vuetify",
     "primevue",
+    "shadcn-vue",
+    "reka-ui",
     "components",
     "wakeb",
     "typescript",

@@ -1,0 +1,12 @@
+{
+  "name": "wakeb-peer-fixture-shadcn-current",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "wakeb-components": "file:wakeb-components.tgz",
+    "vue": "^3.5.40",
+    "@vue/server-renderer": "^3.5.40",
+    "vite": "^6.0.0",
+    "reka-ui": "^2.10.5"
+  }
+}

@@ -5,10 +5,10 @@ import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WAvatarStack, WBadge, WBadgeStack, WBaseSidebar, WLoading, WPageSkeleton, WSegmentedProgress } from "../src";
 import { intentColor, isCssColor, useColor, useSkeleton } from "../src/core/vocabulary";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /* Portable intents, color props and the skeleton grammar (SPEC R16, R23). */
-const host = () => (framework === "vuetify" ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const host = () => (framework === "vuetify" ? createVuetify() : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost);
 const render = (component: unknown, props: Record<string, unknown> = {}, plugin = wakeb()) =>
   mount(component as never, { attachTo: document.body, props, global: { plugins: [host() as never, plugin] } });
 const warnings = () => vi.mocked(console.warn).mock.calls.map(([message]) => String(message));
@@ -63,15 +63,21 @@ describe("color values", () => {
 
 describe(`WLoading color (${framework})`, () => {
   const spinner = (w: ReturnType<typeof render>) =>
-    w.get(framework === "vuetify" ? ".v-progress-circular" : ".p-progressspinner").attributes("style") ?? "";
+    w.get({ vuetify: ".v-progress-circular", primevue: ".p-progressspinner", shadcn: ".wakeb-sc-spinner" }[framework]).attributes("style") ?? "";
+  /* Each provider bridges intents to its own theme variables when no Wakeb token is set. */
+  const bridged = {
+    vuetify: { danger: "var(--wakeb-ui-danger, rgb(var(--v-theme-error)))", primary: "var(--wakeb-ui-primary, rgb(var(--v-theme-primary)))" },
+    primevue: { danger: "var(--wakeb-ui-danger, #f04438)", primary: "var(--wakeb-ui-primary, var(--p-primary-color))" },
+    shadcn: { danger: "var(--wakeb-ui-danger, var(--destructive, #f04438))", primary: "var(--wakeb-ui-primary, var(--primary, #087f8c))" },
+  }[framework];
 
   it("maps an intent to the Wakeb token over the provider theme", () => {
     const style = spinner(render(WLoading, { color: "danger" }));
-    expect(style).toContain(framework === "vuetify" ? "var(--wakeb-ui-danger, rgb(var(--v-theme-error)))" : "var(--wakeb-ui-danger, #f04438)");
+    expect(style).toContain(bridged.danger);
   });
 
   it("defaults to the primary intent", () => {
-    expect(spinner(render(WLoading))).toContain(framework === "vuetify" ? "var(--wakeb-ui-primary, rgb(var(--v-theme-primary)))" : "var(--wakeb-ui-primary, var(--p-primary-color))");
+    expect(spinner(render(WLoading))).toContain(bridged.primary);
   });
 
   it("passes a CSS color through", () => {
@@ -85,7 +91,7 @@ describe(`WLoading color (${framework})`, () => {
       expect(w.get(".v-progress-circular").classes()).toContain("text-red-darken-2");
       expect(warnings()[0]).toMatch(/^\[WAKEB_DEPRECATED_VALUE\] WLoading color 'red-darken-2'/);
     } else {
-      expect(spinner(w)).toContain("var(--wakeb-ui-primary, var(--p-primary-color))");
+      expect(spinner(w)).toContain(bridged.primary);
       expect(warnings()[0]).toMatch(/^\[WAKEB_UNKNOWN_VALUE\] WLoading color 'red-darken-2'/);
     }
   });

@@ -5,10 +5,10 @@ import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WButton, WDropdown, WLoading, WModal, type WakebComponentsOptions } from "../src";
 import { warnOnce, type WakebContext } from "../src/core/runtime";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /* Plugin defaults, built-in locale strings and theme scope (SPEC R05, R06, R17), run on each provider. */
-const host = () => (framework === "vuetify" ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const host = () => (framework === "vuetify" ? createVuetify() : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost);
 const render = (component: unknown, options: Partial<WakebComponentsOptions>, mountOptions: Record<string, unknown> = {}) =>
   mount(component as never, {
     attachTo: document.body,
@@ -147,13 +147,14 @@ describe(`theme and direction scope (${framework})`, () => {
   const openTooltip = async (options: Partial<WakebComponentsOptions>) => {
     const w = render(WButton, options, { props: { title: "Save", icon: "$close", isTooltip: true } });
     const button = w.get("button");
-    // Vuetify opens on focus; the PrimeVue directive opens on hover.
-    if (framework === "vuetify") (button.element as HTMLElement).focus();
+    // Vuetify and reka-ui (shadcn) open on focus; the PrimeVue directive opens on hover.
+    if (framework !== "primevue") (button.element as HTMLElement).focus();
     else await button.trigger("mouseenter");
     await vi.waitFor(() => expect(document.querySelector('[role="tooltip"]')).not.toBeNull());
     const tooltip = document.querySelector<HTMLElement>('[role="tooltip"]')!;
     expect(w.element.contains(tooltip)).toBe(false);
-    return tooltip;
+    // reka-ui names the tooltip through a visually hidden role="tooltip" child of the teleported surface.
+    return framework === "shadcn" ? tooltip.parentElement! : tooltip;
   };
 
   it("carries the scope into the teleported WButton tooltip", async () => {
@@ -161,15 +162,16 @@ describe(`theme and direction scope (${framework})`, () => {
     expect(tooltip.getAttribute("data-wakeb-theme")).toBe("dark");
     expect(tooltip.getAttribute("dir")).toBe("rtl");
     expect(tooltip.style.getPropertyValue("--wakeb-ui-primary")).toBe("#123456");
-    // PrimeVue's tooltip directive owns its z-index stack; only Vuetify takes the configured value.
-    if (framework === "vuetify") expect(tooltip.style.zIndex).toBe("3100");
+    // PrimeVue's tooltip directive owns its z-index stack; Vuetify and shadcn take the configured value.
+    if (framework !== "primevue") expect(tooltip.style.zIndex).toBe("3100");
     else expect(tooltip.style.display).toBe("inline-block");
   });
 
   it("adds nothing to the WButton tooltip when theme and direction are not configured", async () => {
     const tooltip = await openTooltip({});
     expect(tooltip.hasAttribute("data-wakeb-theme")).toBe(false);
-    expect(tooltip.hasAttribute("dir")).toBe(false);
+    // reka-ui always writes the direction of the host's ConfigProvider, ltr by default; Wakeb adds none.
+    expect(tooltip.getAttribute("dir")).toBe(framework === "shadcn" ? "ltr" : null);
     expect(tooltip.getAttribute("style") ?? "").not.toContain("--wakeb-ui");
   });
 

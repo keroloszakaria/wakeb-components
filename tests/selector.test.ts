@@ -100,8 +100,14 @@ describe("wakebComponents() Vite integration", () => {
     expect(config.ssr.noExternal).toEqual(["wakeb-components", "vuetify"]);
   });
 
-  it("reports the shadcn adapter as not available yet", async () => {
-    const root = project({ "plugins/wakeb-components.js": plugin("shadcn") });
-    expect((await configure(root).catch((reason) => reason)).code).toBe("WAKEB_CAPABILITY_UNSUPPORTED");
+  it("selects the shadcn adapter, which needs reka-ui and no Tailwind setup", async () => {
+    const missing = project({ "plugins/wakeb-components.js": plugin("shadcn") });
+    const error = await configure(missing).catch((reason) => reason);
+    expect(error.code).toBe("WAKEB_PROVIDER_MISSING");
+    expect(error.message).toContain("npm install reka-ui");
+    const root = project({ "plugins/wakeb-components.js": plugin("shadcn") }, ["reka-ui"]);
+    const config = await configure(root);
+    expect(config.ssr.noExternal).toEqual(["wakeb-components"]);
+    expect(config.optimizeDeps.exclude).toContain("wakeb-components");
   });
 });

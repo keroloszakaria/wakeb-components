@@ -4,14 +4,14 @@ import { mount } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WButton, WDropdown, WModal } from "../src";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /*
  * Same Vue usage, same assertions, run once per provider project (SPEC R12, M1). Only the host
  * provider install differs, and Wakeb reuses it. Queries go through roles and Wakeb classes, never
  * provider DOM, because provider markup is not part of the contract.
  */
-const host = () => (framework === "vuetify" ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const host = () => (framework === "vuetify" ? createVuetify() : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost);
 const render = (component: unknown, options: Record<string, unknown> = {}) =>
   mount(component as never, {
     attachTo: document.body,

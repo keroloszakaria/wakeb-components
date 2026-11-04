@@ -5,10 +5,10 @@ import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WButton, WDropdown, type WakebComponentsOptions, type WakebIconsOptions } from "../src";
 import { BUILTIN_ICONS, FALLBACK_ICON, NO_ICONS, resolveIcon, validateIcons } from "../src/core/icons";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /* Wakeb-owned icons and the `icons` resolver option (SPEC R15), run on each provider. */
-const host = () => (framework === "vuetify" ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const host = () => (framework === "vuetify" ? createVuetify() : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost);
 const render = (props: Record<string, unknown>, options: Partial<WakebComponentsOptions> = {}, component: unknown = WButton) =>
   mount(component as never, { attachTo: document.body, props, global: { plugins: [host() as never, wakeb(options)] } });
 const paths = (w: ReturnType<typeof render>) => w.findAll("svg path").map((path) => path.attributes("d"));
@@ -134,11 +134,11 @@ describe(`unresolved icon names (${framework})`, () => {
       expect(fallbacks[0].findAll("path").map((path) => path.attributes("d"))).toEqual([FALLBACK_ICON[0][0], FALLBACK_ICON[1]]);
       expect(w.find("i.mdi").exists()).toBe(false);
       expect(warnings()).toEqual([
-        "[WAKEB_ICON_UNRESOLVED] Icon 'mdi-check' is not resolved under the primevue provider; rendering the Wakeb fallback box. Add it to the icons.aliases or icons.resolve plugin option, or pass SVG path data or a Vue component.",
+        `[WAKEB_ICON_UNRESOLVED] Icon 'mdi-check' is not resolved under the ${framework} provider; rendering the Wakeb fallback box. Add it to the icons.aliases or icons.resolve plugin option, or pass SVG path data or a Vue component.`,
       ]);
     });
 
-    it("keeps PrimeIcons class names, the PrimeVue icon set", () => {
+    it.runIf(framework === "primevue")("keeps PrimeIcons class names, the PrimeVue icon set", () => {
       const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
       const w = render({ icon: "pi pi-check" });
       expect(w.get("i.wakeb-icon").classes()).toEqual(expect.arrayContaining(["pi", "pi-check"]));

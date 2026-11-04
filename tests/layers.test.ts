@@ -34,6 +34,18 @@ describe("layer boundaries", () => {
   it("keeps each adapter on its own provider", () => {
     expect(offenders(["src/components", "src/adapters/vuetify"], ["primevue", "shadcn"])).toEqual([]);
     expect(offenders(["src/adapters/primevue"], ["vuetify", "shadcn"])).toEqual([]);
+    expect(offenders(["src/adapters/shadcn"], ["vuetify", "primevue"])).toEqual([]);
+  });
+
+  it("keeps the shadcn adapter on vue and reka-ui only", () => {
+    // No Tailwind, class-variance-authority, clsx, tailwind-merge or icon package at runtime (SPEC R11).
+    const bare = files("src/adapters/shadcn")
+      .flatMap((file) => imports(file).map((specifier) => [file, specifier] as const))
+      .filter(([, specifier]) => !specifier.startsWith("."))
+      .filter(([, specifier]) => !/^(vue|reka-ui)$/.test(specifier))
+      .map(([file, specifier]) => `${relative(root, join(root, file))} -> ${specifier}`);
+    expect(bare).toEqual([]);
+    expect(imports("src/adapters/shadcn/WModal.vue")).toContain("reka-ui");
   });
 
   it("finds imports at all", () => {

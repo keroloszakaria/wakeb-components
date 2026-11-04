@@ -5,7 +5,7 @@ import { pathToFileURL } from "node:url";
 import { createWorkDir, FRAMEWORKS, hash, installedVersion, npm, offlineFlags, packTarball, run, sharedFiles, verifyConsumer, writeConsumerSources } from "./consumer-harness.mjs";
 
 /*
- * M1 packaging proof (SPEC R09, R10): one packed tarball, one isolated consumer per provider in the
+ * Packaging proof (SPEC R09, R10, R11): one packed tarball, one isolated consumer per provider in the
  * system temp directory. The locked minimum/current version matrix lives in check-peers.mjs.
  */
 assert(npm, "Use npm run check:package");
@@ -15,6 +15,7 @@ const packed = packTarball(work);
 const PEERS = {
   vuetify: { vuetify: "3.13.2" },
   primevue: { primevue: installedVersion("primevue"), "@primeuix/themes": installedVersion("@primeuix/themes") },
+  shadcn: { "reka-ui": installedVersion("reka-ui") },
 };
 const evidence = {};
 
@@ -43,10 +44,12 @@ for (const framework of FRAMEWORKS) {
 }
 
 // Fixture sources are identical; only the plugin file, manifest and lockfile select the provider.
-const [vuetifyDir, primevueDir] = FRAMEWORKS.map((framework) => join(work, framework));
-for (const file of sharedFiles) assert.equal(hash(join(vuetifyDir, file)), hash(join(primevueDir, file)), file);
-assert.notEqual(hash(join(vuetifyDir, "plugins/wakeb-components.js")), hash(join(primevueDir, "plugins/wakeb-components.js")));
+const [first, ...rest] = FRAMEWORKS.map((framework) => join(work, framework));
+for (const dir of rest) {
+  for (const file of sharedFiles) assert.equal(hash(join(first, file)), hash(join(dir, file)), file);
+  assert.notEqual(hash(join(first, "plugins/wakeb-components.js")), hash(join(dir, "plugins/wakeb-components.js")));
+}
 
 console.log(JSON.stringify(evidence, null, 2));
-console.log("Packed package passed: isolated Vuetify and PrimeVue consumers, typed root, browser and SSR builds, tree shaking and unconfigured diagnostics.");
+console.log("Packed package passed: isolated Vuetify, PrimeVue and shadcn-vue consumers, typed root, browser and SSR builds, tree shaking and unconfigured diagnostics.");
 console.log(`Consumer fixtures: ${work}`);

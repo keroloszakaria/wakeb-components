@@ -17,6 +17,11 @@
 | --- | --- |
 | Vuetify | `npm install wakeb-components vuetify` |
 | PrimeVue | `npm install wakeb-components primevue @primeuix/themes` |
+| shadcn-vue (تجريبي) | `npm install wakeb-components reka-ui` |
+
+لا يحتاج shadcn-vue إلى إعداد Tailwind CSS ولا إلى ملف `components.json` ولا إلى أداة shadcn-vue
+CLI. يوفّر Wakeb نسخه المعدّلة من مكونات shadcn-vue فوق `reka-ui`، مع أنماط CSS مُعدّة مسبقًا داخل
+`style.css`. راجع قسم [shadcn-vue](#shadcn-vue) أدناه.
 
 أقل إصدارات الـpeers المختبرة وأحدثها مذكورة في [الإصدارات المدعومة](./installation#الإصدارات-المدعومة).
 PrimeVue 5 غير مدعوم لأن رخصته أصبحت تجارية وتتطلب مفتاح ترخيص.
@@ -27,7 +32,7 @@ PrimeVue 5 غير مدعوم لأن رخصته أصبحت تجارية وتتط�
 import { createWakebComponents } from 'wakeb-components'
 
 export default createWakebComponents({
-  framework: 'primevue', // 'vuetify' أو 'primevue'
+  framework: 'primevue', // 'vuetify' أو 'primevue' أو 'shadcn'
 })
 ```
 
@@ -119,6 +124,11 @@ export default createWakebComponents({
 هذه الخيارات غير قابلة للنقل بين المزودات، وتُرفض مع `mode: 'reuse'`، وتُرفض أيضًا عندما يجد
 وضع `auto` نسخة مثبتة لأنها ستُتجاهل. عندما يثبّت Wakeb مكتبة Vuetify يستخدم `ssr: true`،
 وعندما يثبّت PrimeVue يستخدم preset ‏Aura.
+
+لا توجد لـshadcn-vue نسخة على مستوى التطبيق، فمكوناته ملفات مصدرية، ويوفّر Wakeb نسخه الخاصة
+منها. مع `framework: 'shadcn'` لا يضيف الوضعان `auto` و`install` إلا سياق Wakeb، ويفشل الوضع
+`reuse` بالرمز `WAKEB_HOST_PROVIDER_MISSING`. ويُرفض `providerOptions.options` بالرمز
+`WAKEB_CONFIG_INVALID`، لأنه لا يوجد ما يُضبط.
 
 ## خيارات الـplugin
 
@@ -366,6 +376,11 @@ Vuetify أيضًا وبالحجم نفسه. لاستخدام شكلك الخاص
 | `info` | `--v-theme-info` | لا يوجد | `#2e90fa` |
 | `neutral` | لا يوجد | لا يوجد | `#667085` |
 
+تحت shadcn-vue يُربط `primary` بالمتغير `--primary`، ويُربط `danger` بالمتغير `--destructive`،
+ولا ربط لبقية الـintents. يفترض هذا الربط ثيم shadcn-vue مبنيًا على Tailwind CSS v4، حيث تحمل
+المتغيرات ألوانًا كاملة مثل `oklch(…)`. أما ثيم Tailwind v3 فيخزّن قنوات HSL مجردة
+(`222 47% 11%`) وهي ليست لونًا، فاضبط عندها `theme.tokens.primary` و`theme.tokens.danger`.
+
 دون tokens يحتفظ تطبيق Vuetify بألوان ثيمه. تأخذ أحرف الصور الرمزية لونها من
 `--wakeb-avatar-text`، ثم `--wakeb-ui-on-primary`، ثم الأبيض.
 
@@ -491,6 +506,25 @@ Skeleton في Wakeb.
 - المفاتيح التي لا يعلنها الـprimitive المختار كخاصية أو حدث، ومنها مستمعو DOM العاديون مثل
   `onMouseenter`. اربطها على المكوّن نفسه.
 
+تحت shadcn-vue تكون الـprimitives نسخ Wakeb المعدّلة من مكونات shadcn-vue:
+
+| المكوّن | primitive في shadcn-vue | مفاتيح يملكها Wakeb وتُتجاهل |
+| --- | --- | --- |
+| WButton | `Button` (`variant` و`size`، إضافة إلى `Primitive` من reka-ui) | `as` و`asChild` و`disabled` و`type` و`onClick` |
+| WDropdown | `DropdownMenuContent` (reka-ui) | `forceMount` و`as` و`asChild` و`reference` و`onEscapeKeyDown` و`onCloseAutoFocus` |
+| WModal | `DialogContent` (reka-ui) | `forceMount` و`disableOutsidePointerEvents` و`as` و`asChild` و`overlayAttrs` و`onEscapeKeyDown` و`onPointerDownOutside` و`onInteractOutside` و`onCloseAutoFocus` و`onAfterLeave` |
+| WLoading | `Spinner` (أيقونة `loader-circle` من Lucide) | `size` و`color` |
+
+قيم `variant` في زر shadcn-vue ‏(`default` و`destructive` و`outline` و`secondary` و`ghost`
+و`link`) وقيم `size` ‏(`default` و`xs` و`sm` و`lg` و`icon` و`icon-xs` و`icon-sm` و`icon-lg`) قيم
+أصلية، وليست جزءًا من مفردات الأنماط في Wakeb. كل ما تفعله أنها تضيف تنسيق `data-variant`
+و`data-size` فوق `type` و`size` الخاصين بـWButton:
+
+```vue
+<!-- غير قابل للنقل: shadcn-vue فقط. -->
+<WButton title="حذف" :provider-props="{ variant: 'destructive', size: 'sm' }" />
+```
+
 **الأولوية.** على الـprimitive تغلب روابط Wakeb أولًا، ثم السمات المُمررة على المكوّن، ثم
 `providerProps`. الأحداث الأصلية التي يستخدمها Wakeb أيضًا، مثل `onShow` في النافذة، تعمل بجانب
 معالج Wakeb ولا تحل محله.
@@ -549,7 +583,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | `WAKEB_INSTALL_CONFLICT` | plugin ثانٍ لـWakeb على نفس التطبيق، أو وضع `install` مع مزود مثبت | استخدم plugin واحدًا لكل تطبيق |
 | `WAKEB_HOST_PROVIDER_MISSING` | وضع `reuse` دون مزود مثبت | ثبّت المزود قبل Wakeb |
 | `WAKEB_COMPONENT_UNSUPPORTED` | المحوّل التجريبي المختار لا يحتوي هذا المكوّن | راجع الجدول التالي |
-| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` في هذا البناء | استخدم Vuetify أو PrimeVue |
+| `WAKEB_CAPABILITY_UNSUPPORTED` | محجوز لميزة اختيارية موثقة لا يستطيع المحوّل المختار توفيرها. لا يطلقه أي محوّل في هذا البناء، فقد أصبح shadcn-vue محوّلًا تجريبيًا. | اتبع الرسالة، فهي تذكر البديل |
 
 الأخطاء من النوع `WakebError` ولها الخاصية `code`، ويُصدَّر النوع من `wakeb-components`.
 أما تحذيرات وضع التطوير (`WAKEB_DEPRECATED_VALUE` و`WAKEB_UNKNOWN_VALUE`
@@ -568,7 +602,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | WExportDropdown وWBaseSidebar وWDrawer | مدعوم | مدعوم |
 | WAvatarStack وWBadgeStack وWAccordion | مدعوم | مدعوم |
 | WTruncatedText وWTooltipBtn وWBadge وWUserBadge | مدعوم | مدعوم |
-| shadcn-vue | — | مخطط له (المرحلة M5) |
+| shadcn-vue (تجريبي) | — | WButton وWDropdown وWModal وWLoading؛ وبقية المكونات (17 مكوّنًا): `WAKEB_COMPONENT_UNSUPPORTED` |
 
 ## حدود الإصدار التجريبي
 
@@ -634,6 +668,63 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 - **قائمة WExportDropdown.** على PrimeVue تُرسم الصيغ في `Menu` من PrimeVue، وهو المسؤول عن
   الموضع والأسهم وEscape والنقر الخارجي. ويُطبَّق `menuStyle` على القائمة التي تحمل
   `role="menu"`.
+
+## shadcn-vue {#shadcn-vue}
+
+::: warning تجريبي
+يرسم محوّل shadcn-vue المكونات WButton وWDropdown وWModal وWLoading. أما بقية المكونات فتفشل
+بالرمز `WAKEB_COMPONENT_UNSUPPORTED` مع `framework: 'shadcn'`.
+:::
+
+shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملفات مصدرية تنسخها أداة shadcn-vue CLI إلى
+التطبيق، وتُنسَّق بـTailwind CSS. يوفّر Wakeb نسخه المعدّلة من مكونات Button وDropdownMenu
+وDialog وTooltip وSpinner، فلا يحتاج تطبيقك إلى الأداة ولا إلى Tailwind CSS ولا إلى نسخ shadcn-vue
+من هذه المكونات:
+
+- **الـpeer.** الـpeer الوحيد هو `reka-ui` ‏(`^2.10.5`)، وهي المكتبة غير المنسقة التي يقوم عليها
+  shadcn-vue. توفّر حصر التركيز والإغلاق وتحديد المواضع وأنماط ARIA. لا يضمّها Wakeb إلى حزمته،
+  لذا يتشارك التطبيق الذي يستخدم shadcn-vue أصلًا نسخة `reka-ui` نفسها.
+- **دون Tailwind وقت التشغيل.** تُرجمت أصناف Tailwind في المكونات المعدّلة مسبقًا إلى قواعد
+  `wakeb-sc-*` ذات بادئة خاصة داخل `style.css`. لا تحتوي هذه الأنماط على Preflight ولا على
+  إعادة ضبط عامة ولا على متغيرات `--tw-*`، فلا تتعارض مع بناء Tailwind الخاص بتطبيقك.
+- **ثيم التطبيق.** يقرأ المحوّل متغيرات ثيم shadcn-vue في تطبيقك عند وجودها: `--background`
+  و`--foreground` و`--popover` و`--popover-foreground` و`--accent` و`--accent-foreground`
+  و`--muted-foreground` و`--secondary` و`--border` و`--ring` و`--radius` و`--primary`
+  و`--destructive`. وتتقدم tokens ‏Wakeb ‏(`--wakeb-ui-*`) عليها، ولكل متغير قيمة احتياطية من
+  Wakeb، فتُرسم المكونات أيضًا في تطبيق لا يستخدم shadcn-vue.
+
+**السلوك.**
+
+- **WButton** يرسم زر shadcn-vue. يستخدم التلميح Tooltip من reka-ui، ويفتح عند مرور المؤشر وعند
+  التركيز بلوحة المفاتيح، ويشير `aria-describedby` إلى التلميح ما دام مفتوحًا.
+- **WDropdown** يرسم DropdownMenu من reka-ui مع slot ‏`activator` الخاص بك. تتنقل مفاتيح الأسهم
+  بين العناصر وتتخطى المعطّل منها، ويختار Enter أو Space العنصر، ويغلق Escape أو النقر خارج القائمة
+  القائمةَ. يعود التركيز إلى زر الفتح، إلا إذا أُغلقت القائمة لأنك نقرت في مكان آخر.
+- **WModal** يرسم Dialog من reka-ui. يحصر التركيز داخله، ويخفي بقية الصفحة عن التقنيات المساعدة
+  (`aria-hidden`)، ويُغلق بـEscape وبالنقر خارجه ما لم تُضبط `persistent`، ويعيد التركيز إلى
+  العنصر الذي كان مركّزًا قبل فتحه. ويُطلق `afterLeave` بعد انتهاء حركة الإغلاق.
+- **WLoading** يرسم Spinner من shadcn-vue (أيقونة `loader-circle` من Lucide). الأيقونة زخرفية،
+  ويحتفظ جذر WLoading بالقيمة `role="status"` وبالاسم الوصفي.
+
+**الحدود.**
+
+- **الاتجاه في الطبقات.** تكتب reka-ui السمة `dir` على محتوى التلميح والقائمة والنافذة، وتأخذ
+  قيمتها من اتجاه `ConfigProvider` في reka-ui، أو `ltr` إن لم يُضبط. اضبط الخيار `direction` في
+  Wakeb، أو غلّف التطبيق بـ`ConfigProvider` مع `dir="rtl"` للصفحات من اليمين إلى اليسار. ومواضع
+  التلميح المنطقية (`start` و`end`) تتبع `direction` في Wakeb.
+- **ربط الثيم.** يحتاج ربط `--primary` و`--destructive` إلى ثيم Tailwind CSS v4 (قيم ألوان
+  كاملة). مع ثيم Tailwind v3 اضبط tokens ‏Wakeb.
+- **الخصائص الأصلية.** تذهب `providerProps` إلى النسخ المعدّلة المذكورة في
+  [الخصائص الأصلية](#native-props)، لا إلى المكونات في مجلد `components/ui` في تطبيقك. وتعديل
+  نسخك الخاصة من shadcn-vue لا يغيّر مكونات Wakeb.
+- **الـDOM.** يتبع الـmarkup مكونات shadcn-vue ‏(`data-slot` و`data-state` و`data-variant`)، لا
+  Vuetify ولا PrimeVue، فلا تنطبق الأنماط التي تستهدف أصناف `.v-*` أو `.p-*`.
+- **الأنماط.** يحتوي `style.css` أنماط كل الـrenderers، ومنها قواعد shadcn-vue.
+
+**الترخيص.** يخضع shadcn-vue لرخصة MIT ‏(Copyright (c) 2023 unovue)، وتخضع أيقونة Lucide المضمّنة
+لرخصة ISC ‏(Copyright (c) 2026 Lucide Icons and Contributors). تحتوي الحزمة نصوص الترخيص في
+`THIRD-PARTY-NOTICES.txt`. وتخضع `reka-ui` لرخصة MIT ويثبّتها تطبيقك. احتفظ بالملف
+`THIRD-PARTY-NOTICES.txt` عند إعادة توزيع الحزمة.
 
 ## ما لا يغطيه تبديل المزود
 

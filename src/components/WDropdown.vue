@@ -5,7 +5,9 @@ import { VIcon } from "vuetify/components/VIcon";
 import { useVuetifyIcon } from "../core/icons";
 import WButton from "./WButton.vue";
 import { dropdownDefaults, useDropdown } from "../composables/dropdown";
+import { computed, mergeProps } from "vue";
 import { useWakebContext } from "../core/runtime";
+import { useProviderProps } from "../core/provider-props";
 import type { DropdownProps, DropdownItem, NavigationKey, ButtonProps } from "../types";
 const props = withDefaults(defineProps<DropdownProps>(), dropdownDefaults);
 const emits = defineEmits<{
@@ -33,11 +35,20 @@ const {
   buttonProps,
 } = useDropdown(props, emits);
 const toIcon = useVuetifyIcon();
+/* Open state, disabled/loading safety, stacking and the activator stay Wakeb-owned (SPEC R12). */
+const native = useProviderProps(context, () => props.providerProps, {
+  component: "WDropdown",
+  primitive: VMenu,
+  label: "VMenu",
+  owned: ["modelValue", "disabled", "zIndex", "activator"],
+});
+/* Native props first; the theme scope that teleported content needs still wins. */
+const menuBindings = computed(() => mergeProps(native.value, context.scope));
 </script>
 <template>
   <div>
     <!-- Teleported content carries the configured theme and direction scope. -->
-    <v-menu :disabled="disabled || isLoading" v-bind="context.scope" :z-index="context.zIndexOverlay">
+    <v-menu :disabled="disabled || isLoading" v-bind="menuBindings" :z-index="context.zIndexOverlay">
       <template v-slot:activator="{ props: activatorProps, isActive }">
         <div
           class="dropdown-activator"

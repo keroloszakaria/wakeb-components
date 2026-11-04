@@ -55,6 +55,10 @@ const open = ref(false)
 | `--wakeb-drawer-fallback` | `undefined (legacy adapter switch)` |
 | `--wakeb-drawer-close-color` | `rgb(var(--v-theme-on-surface))` |
 
+## Attribute target
+
+The drawer root (VNavigationDrawer, a `<nav>` that also carries `.wakeb-drawer`). Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 Requires a Vuetify layout provider (normally VApp); do not instantiate it outside a layout. Attrs target VNavigationDrawer, including native focus/resize/route-watcher options. It remains temporary, keeps its native scrim and touch behavior and maps end to right in LTR/left in RTL. Unlike VDialog, VNavigationDrawer does not provide Escape dismissal or dialog scroll blocking; this component preserves those native semantics. Do not infer dialog-style stacked-overlay guarantees when nesting drawers and dialogs; test your composition. Manage launch/return focus in the host. Width "50%" parses to 50px, preserving Aware behavior; use numeric/pixel widths. Content scrolls, header/footer stay outside its scroll area. Data-not-ready unmounts content; loading overlays are independent and contain no form or save logic. Aware keeps its icon button, translated slot content, theme-token aliases and per-screen drawer-panel hooks. AddEditModal, schemas, validation and permissions remain in Aware.

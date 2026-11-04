@@ -50,6 +50,10 @@ import { WBaseSidebar } from 'wakeb-components'
 | `--wakeb-sidebar-empty-color` | `#667085` |
 | `--wakeb-sidebar-fallback` | `undefined (legacy adapter switch)` |
 
+## Attribute target
+
+The root `div.wakeb-base-sidebar`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 Attrs target the outer div. The package owns no form/schema, store, translations or filter modal. Supply a native input or your form library through search and call search(payload). Aware retains GenericForm and updateSchema in its adapter. Without a search slot, the public component renders no search control. The header remains while content is replaced. Loading wins over empty/list. The default list keeps min-height 400px and max-height 60dvh, with a 340px minimum shell width; override root min-width for narrower responsive layouts. The bottom 72px fade is decorative and does not intercept pointers. Use namespaced CSS variables for gradients/body/title colors and loading/empty slots for custom states. Legacy global card-gradient/sidebar rules remain in Aware only; package styles are scoped. List item identity uses a direct field or index, and slots own item interactions.

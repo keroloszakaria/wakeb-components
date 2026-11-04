@@ -55,6 +55,10 @@ const open = ref(false)
 | `--wakeb-drawer-fallback` | `undefined (legacy adapter switch)` |
 | `--wakeb-drawer-close-color` | `rgb(var(--v-theme-on-surface))` |
 
+## وجهة السمات
+
+جذر اللوحة الجانبية (VNavigationDrawer، وهو عنصر `<nav>` يحمل أيضًا `.wakeb-drawer`). مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
+
 ## الوصول وحدود السلوك
 
 تحتاج مزود layout من Vuetify، عادة VApp؛ لا تستخدمها خارج layout. الخصائص تستهدف VNavigationDrawer بما فيها خيارات التركيز وresize ومراقبة المسار الأصلية. تظل temporary مع الخلفية واللمس الأصليين؛ end يمين في LTR ويسار في RTL. بعكس VDialog، VNavigationDrawer لا يوفر إغلاق Escape أو حجب تمرير Dialog؛ المكوّن يحتفظ بالسلوك الأصلي. لا تفترض ضمان تراص Dialog عند تداخل حاويات جانبية ونوافذ؛ اختبر التركيب. المشروع يدير التركيز عند الفتح والعودة. العرض "50%" يتحول إلى 50px للحفاظ على سلوك Aware؛ استخدم أرقامًا أو بكسل. المحتوى يتمرر والرأس والقدم خارجه. عدم جاهزية البيانات يزيل المحتوى؛ طبقة التحميل مستقلة دون حفظ أو form. Aware يحتفظ بزر الأيقونة وترجمة المحتوى وربط الثيم ونقاط تنسيق drawer-panel. AddEditModal وschema والتحقق والصلاحيات تبقى في Aware.

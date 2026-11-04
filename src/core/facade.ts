@@ -1,6 +1,7 @@
 import { camelize, defineComponent, h, inject, mergeProps, toHandlerKey, type Component, type ComponentObjectPropsOptions } from "vue";
 import { LOCALE_DEFAULTS, clone } from "./defaults";
 import { WAKEB_CONTEXT } from "./runtime";
+import { reportUnsupportedProviderProps } from "./provider-props";
 import type { WakebComponentName } from "./options";
 
 type PropOptions = Record<string, { type?: unknown; required?: boolean } | null>;
@@ -14,6 +15,12 @@ type Renderer = { props?: PropOptions; emits?: string[] | Record<string, unknown
  * Declared events are re-emitted from the wrapper, so they reach caller listeners once and stay visible
  * to devtools and test utilities. Other attributes, listeners and slots pass through unchanged; theme
  * scope attributes are merged first so the caller's class and style still win.
+ *
+ * Attribute routing (SPEC R14): the wrapper renders no element of its own. Class, style, id, role,
+ * aria-*, data-* and listeners for undeclared events reach the renderer, which binds them to the
+ * component's documented attribute target. `providerProps` is per instance and never comes from
+ * plugin defaults. A renderer without a provider primitive does not declare it; the wrapper then
+ * accepts and drops it with a development diagnostic, so it never leaks into the DOM as an attribute.
  */
 export function defineWakebFacade(name: WakebComponentName, renderer: Component) {
   const source = (renderer as Renderer).props ?? {};
@@ -25,6 +32,8 @@ export function defineWakebFacade(name: WakebComponentName, renderer: Component)
       { type: (option?.type ?? null) as null, required: option?.required ?? false, default: undefined },
     ]),
   );
+  const nativeProps = "providerProps" in props;
+  if (!nativeProps) props.providerProps = { type: null, required: false, default: undefined };
   return defineComponent({
     name,
     inheritAttrs: false,
@@ -41,6 +50,12 @@ export function defineWakebFacade(name: WakebComponentName, renderer: Component)
         const resolved: Record<string, unknown> = {};
         for (const key of Object.keys(props)) {
           const value = (input as Record<string, unknown>)[key];
+          if (key === "providerProps") {
+            // Per instance only: plugin defaults and locale strings never supply native props.
+            if (nativeProps) resolved[key] = value;
+            else if (value !== undefined) reportUnsupportedProviderProps(context, name);
+            continue;
+          }
           resolved[key] = value !== undefined ? value : fallback[key];
         }
         return h(renderer, mergeProps(context?.scope ?? {}, resolved, attrs, forward), slots);

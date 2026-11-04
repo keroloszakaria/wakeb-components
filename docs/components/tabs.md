@@ -67,6 +67,10 @@ import { WTabs } from 'wakeb-components'
 | `--wakeb-tabs-content-gap` | `32px` |
 | `--wakeb-tabs-fallback` | `undefined (legacy adapter switch)` |
 
+## Attribute target
+
+The root layout `div.wakeb-tabs`. Tabs and panels keep Wakeb's ids, roles and aria-controls/labelledby links. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation. Each tab has an id unique within the app; the selected tab references its rendered role=tabpanel wrapper (div.wakeb-tabs__panel) through aria-controls, and the panel is labelled by its tab; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content.

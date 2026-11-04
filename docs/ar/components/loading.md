@@ -21,6 +21,7 @@ import { WLoading } from 'wakeb-components'
 | `size` | `string \| number` | `50` | حجم مؤشر Vuetify. |
 | `color` | `WakebColor` | `"primary"` | لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. |
 | `label` | `string` | `"Loading"` | اسم حالة التحميل لقارئ الشاشة؛ مرر ترجمة المشروع. |
+| `providerProps` | `WakebProviderProps` | `undefined` | غير قابل للنقل. خصائص أصلية لـprimitive مؤشر التحميل (`VProgressCircular` في Vuetify و`ProgressSpinner` في PrimeVue). `color` و`size` وحالة التحميل غير المحددة و`strokeWidth` و`pt` في PrimeVue يملكها Wakeb. لا أثر له عندما يستبدل الـslot الافتراضي المؤشر. |
 
 ## Slots
 
@@ -31,6 +32,10 @@ import { WLoading } from 'wakeb-components'
 | المتغير | الافتراضي |
 | --- | --- |
 
+
+## وجهة السمات
+
+العنصر الجذري `div.loading` الذي يحمل `role="status"` على كل المزودين. تبقى role وaria-label الخاصة بـWakeb هي الغالبة. أما `providerProps` فيذهب إلى مؤشر التحميل الخاص بالمزود. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
 ## الوصول وحدود السلوك
 

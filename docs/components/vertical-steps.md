@@ -35,6 +35,10 @@ import { WVerticalSteps } from 'wakeb-components'
 | `--wakeb-steps-active-text` | `#fff` |
 | `--wakeb-steps-muted` | `#667085` |
 
+## Attribute target
+
+The root `div.steps` with `role="list"`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 Uses list/listitem roles. is_active is a visual completion flag, not interactive navigation or aria-current. The host supplies formatted date/time strings and translations. Text is escaped. Steps use positional keys and do not own selection state. Layout uses logical directions and needs no utility framework. This preserves the horizontal row layout; long content should be tested in the host’s available width.

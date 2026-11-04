@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs } from "vue";
+import { computed, mergeProps, useAttrs } from "vue";
 import { VDialog } from "vuetify/components/VDialog";
 import { VCard, VCardTitle } from "vuetify/components/VCard";
 import { VIcon } from "vuetify/components/VIcon";
@@ -8,6 +8,7 @@ import WButton from "./WButton.vue";
 import WLoading from "./WLoading.vue";
 import { modalDefaults, useDisclosure } from "../composables/disclosure";
 import { useWakebContext } from "../core/runtime";
+import { useProviderProps } from "../core/provider-props";
 import type { ModalProps } from "../types";
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<ModalProps>(), modalDefaults);
@@ -18,6 +19,16 @@ const emit = defineEmits<{
 const context = useWakebContext("WModal");
 const attrs = useAttrs();
 const { model: dialog, close } = useDisclosure(props, emit);
+/*
+ * The model, dismissal policy, width, stacking, focus containment and afterLeave stay Wakeb-owned
+ * (SPEC R12, R18). contentProps could carry roles and ARIA past the attribute policy.
+ */
+const native = useProviderProps(context, () => props.providerProps, {
+  component: "WModal",
+  primitive: VDialog,
+  label: "VDialog",
+  owned: ["modelValue", "persistent", "maxWidth", "zIndex", "activator", "onAfterLeave", "retainFocus", "captureFocus", "contentProps"],
+});
 /** The typed width prop wins; a native max-width attr applies only when width is absent (Vuetify compatibility surface). */
 const maxWidth = computed(
   () =>
@@ -46,7 +57,7 @@ const toIcon = useVuetifyIcon();
 </script>
 <template>
   <VDialog
-    v-bind="attrs"
+    v-bind="mergeProps(native, attrs)"
     v-model="dialog"
     :persistent="persistent"
     :max-width="maxWidth"

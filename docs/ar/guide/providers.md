@@ -156,6 +156,7 @@ export default createWakebComponents({
   و`activePath` و`editingNodeId`.
 - مستمعات الأحداث مثل `onClick`.
 - دوال الاستدعاء مثل `labelFormatter`.
+- `providerProps`، لأنه غير قابل للنقل ويُضبط لكل نسخة على حدة (راجع [الخصائص الأصلية](#native-props)).
 - أسماء المكونات غير المعروفة. ويرفض TypeScript أيضًا الخصائص غير المعروفة وأنواع القيم الخاطئة.
 
 تنطبق القيم الافتراضية على المكونات المستوردة من `wakeb-components`. أما المكونات التي يرسمها
@@ -395,6 +396,96 @@ Skeleton في Wakeb.
 - قيمة `cols` الفارغة تعني 12.
 - تُتجاهل القيم الأخرى مع `WAKEB_UNKNOWN_VALUE`، وتأخذ `cols` في هذه الحالة القيمة 12.
 
+## وجهة السمات {#attribute-targets}
+
+يرسل كل مكوّن `class` و`style` و`id` و`aria-*` و`data-*` ومستمعي DOM مثل `@mouseenter` إلى
+عنصر واحد فقط، وهو وجهة السمات الخاصة به. أما مستمعو الأحداث التي يعلنها المكوّن، مثل `@click`
+في WButton أو `@update:modelValue` في WModal، فهي أحداث Vue: تُطلق مرة واحدة ولا تُربط بالـDOM
+أيضًا. تُدمج `class` و`style` مع قيم Wakeb، وتتبع السمات الأخرى التي تحمل الاسم نفسه القواعد
+التالية.
+
+| المكوّن | وجهة السمات |
+| --- | --- |
+| WButton | عنصر `<button>` الأصلي على كل المزودين. أما `wrapperAttrs` فتستهدف الـdiv الخارجي للتخطيط. |
+| WDropdown | العنصر الجذري `div` على كل المزودين، وليس زر الفتح ولا القائمة المنقولة. |
+| WModal | العنصر الذي يحمل `role="dialog"` (ويحمل أيضًا `.wakeb-modal`) على كل المزودين، وهو منقول خارج المكوّن. |
+| WLoading | الجذر الذي يحمل `role="status"` على كل المزودين. |
+| WTruncatedText | عنصر `<span>` النصي الذي يفتح الـTooltip. |
+| WTooltipBtn | عنصر `<button>` الأصلي. أما `wrapperAttrs` فتستهدف الـspan الخارجي. |
+| WCarousel | جذر العرض المتتابع (`role="region"`). وكل مؤشر يستقبل `indicatorAttrs`. |
+| WDrawer | جذر اللوحة الجانبية، وهو عنصر `<nav>` يحمل أيضًا `.wakeb-drawer`. |
+| WExportDropdown | طبقة القائمة المنقولة، ولا توجد إلا أثناء فتح القائمة (للتوافق مع الإصدار الأساسي). |
+| WTree | عنصر `ul` الجذري (`role="tree"`). |
+| بقية المكونات | العنصر الجذري. يرسل WBadge القيمة `chipAttrs` إلى الـchip، ويرسل WBadgeStack القيمة `badgeAttrs` إلى كل شارة. |
+
+في WButton وWDropdown وWModal وWLoading تغلب الروابط التي يملكها Wakeb على السمات: قيمة
+`type` للزر، ومعالجة التعطيل والتحميل، والاسم الوصفي للنافذة، وقيمتا `role` و`aria-label`
+لحالة التحميل. لتغيير هذه القيم استخدم الخصائص المكتوبة (`title` و`ariaLabel` و`label`).
+ويُستثنى WButton: قيمة `aria-label` من المستخدم تسمي الزر. أما المكونات التي يرسمها Vuetify
+فقط فما زالت تستخدم دمج السمات الافتراضي في Vue، فتحل السمة القادمة من المستخدم محل سمة المكوّن
+التي تحمل الاسم نفسه؛ لا تمرر `role` أو قيم `aria-*` يضعها المكوّن أصلًا. وستنتقل إلى القواعد
+نفسها عند نقلها.
+
+تذكر صفحة كل مكوّن وجهة سماته في قسم **وجهة السمات**.
+
+## الخصائص الأصلية: `providerProps` {#native-props}
+
+::: warning غير قابل للنقل
+يستقبل `providerProps` خصائص أصلية خاصة بالمزود المختار. المفاتيح نفسها لا تعني شيئًا، أو تعني
+شيئًا آخر، تحت مزود آخر، وتبديل المزود لا يترجمها. فضّل الخصائص والـslots والسمات والمتغيرات
+القابلة للنقل، واجعل كل استخدام سهل العثور عليه.
+:::
+
+تقبل WButton وWDropdown وWModal وWLoading الخاصية `providerProps`، وهي كائن بسيط من الخصائص
+والأحداث الأصلية يمرره Wakeb إلى primitive واحد في المزود:
+
+| المكوّن | primitive في Vuetify | primitive في PrimeVue |
+| --- | --- | --- |
+| WButton | `VBtn` | `Button` |
+| WDropdown | `VMenu` | `Menu` |
+| WModal | `VDialog` | `Dialog` |
+| WLoading | `VProgressCircular` | `ProgressSpinner` |
+
+```vue
+<!-- غير قابل للنقل: Vuetify فقط. تحت PrimeVue تُتجاهل هذه المفاتيح مع تحذير. -->
+<WModal v-model="open" title="تعديل" :provider-props="{ scrollable: true, onAfterEnter: track }" />
+
+<!-- غير قابل للنقل: PrimeVue فقط. -->
+<WModal v-model="open" title="تعديل" :provider-props="{ position: 'top', onShow: track }" />
+```
+
+**ما يُتجاهل.** يحذف Wakeb هذه المفاتيح في كل بناء، ويبلّغ عن كل مفتاح مرة واحدة لكل تطبيق في
+وضع التطوير بالتحذير `WAKEB_PROVIDER_PROP_IGNORED`:
+
+- السمات القابلة للنقل: `class` و`style` و`id` و`role` و`tabindex` و`aria-*` و`data-*`،
+  وكذلك `key` و`ref`. مررها على المكوّن نفسه لتصل إلى وجهة سماته.
+- الروابط التي يملكها Wakeb: الـmodels وكل معالج `onUpdate:*`، وحماية التحميل والتعطيل، ونوع
+  العنصر، وحصر التركيز وترتيب الطبقات، والأحداث الأصلية التي تكرر حدثًا قابلًا للنقل. وتفصيلها:
+  - WButton: `disabled` و`loading` و`type` و`onClick` ومفاتيح الروابط وتغيير العنصر (`href`
+    و`to` و`tag` في Vuetify؛ و`as` و`asChild` إضافة إلى `label` و`badge` و`unstyled` و`pt`
+    في PrimeVue).
+  - WDropdown: `modelValue` و`disabled` و`zIndex` و`activator` في Vuetify؛ و`model` و`popup`
+    و`autoZIndex` و`baseZIndex` و`pt` في PrimeVue.
+  - WModal: `modelValue` و`persistent` و`maxWidth` و`zIndex` و`activator` و`onAfterLeave`
+    و`retainFocus` و`captureFocus` و`contentProps` في Vuetify؛ و`visible` و`modal`
+    و`blockScroll` و`draggable` و`closeOnEscape` و`dismissableMask` و`autoZIndex`
+    و`baseZIndex` و`pt` و`onAfterHide` في PrimeVue.
+  - WLoading: `indeterminate` و`modelValue` و`color` و`size` في Vuetify؛ و`strokeWidth`
+    و`pt` في PrimeVue.
+- المفاتيح التي لا يعلنها الـprimitive المختار كخاصية أو حدث، ومنها مستمعو DOM العاديون مثل
+  `onMouseenter`. اربطها على المكوّن نفسه.
+
+**الأولوية.** على الـprimitive تغلب روابط Wakeb أولًا، ثم السمات المُمررة على المكوّن، ثم
+`providerProps`. الأحداث الأصلية التي يستخدمها Wakeb أيضًا، مثل `onShow` في النافذة، تعمل بجانب
+معالج Wakeb ولا تحل محله.
+
+**النطاق.** `providerProps` خاص بكل نسخة. ترفضه `defaults` في الـplugin في TypeScript ووقت
+التشغيل (`WAKEB_CONFIG_INVALID`). نوعه `WakebProviderProps` ‏(`Record<string, unknown>`)، لذلك
+تبقى تعريفات الجذر محايدة تجاه المزود ولا يفحص TypeScript المفاتيح الأصلية، بل يفحصها التحقق
+وقت التشغيل مقابل الـprimitive المختار. لا يصل إلى المكونات الداخلية، مثل زر الفتح داخل
+WDropdown أو زر الإغلاق داخل WModal. ولا تقبله المكونات السبعة عشر الأخرى بعد: يرفضه TypeScript،
+ويُحذف وقت التشغيل مع التحذير نفسه.
+
 ## الأخطاء
 
 | الرمز | السبب | الحل |
@@ -410,7 +501,8 @@ Skeleton في Wakeb.
 | `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` في هذا البناء | استخدم Vuetify أو PrimeVue |
 
 الأخطاء من النوع `WakebError` ولها الخاصية `code`، ويُصدَّر النوع من `wakeb-components`.
-أما تحذيرات وضع التطوير (`WAKEB_DEPRECATED_VALUE` و`WAKEB_UNKNOWN_VALUE` و`WAKEB_ICON_UNRESOLVED`) فهي تحذيرات في
+أما تحذيرات وضع التطوير (`WAKEB_DEPRECATED_VALUE` و`WAKEB_UNKNOWN_VALUE`
+و`WAKEB_ICON_UNRESOLVED` و`WAKEB_PROVIDER_PROP_IGNORED`) فهي تحذيرات في
 الـconsole وليست أخطاء، وتُحذف من بناء الإنتاج.
 
 ## المكونات المدعومة
@@ -460,10 +552,14 @@ Skeleton في Wakeb.
 مشروعك عن:
 
 - الاستخدام المباشر لمكونات المزود، مثل `v-data-table` أو `DataTable` في PrimeVue.
+- قيم `providerProps`. مفاتيحها تخص مزودًا واحدًا، وتُتجاهل تحت مزود آخر مع التحذير
+  `WAKEB_PROVIDER_PROP_IGNORED`.
 - منافذ native مثل `chipAttrs`، أو `wrapperAttrs` بسمات خاصة بالمزود، أو خصائص أصلية مُمررة
   كسمات.
 - الأنماط التي تستهدف classes أو DOM المزود: `.v-*` و`.p-*`.
 - الـtheme وخيارات الـplugin والأيقونات والقيم الافتراضية العامة الخاصة بالمزود.
 - السمات الأصلية التي يفهمها مزود واحد فقط، مثل `max-width` في Vuetify.
 
-بحث مقترح: `rg "v-[a-z-]+|\.v-|\.p-|from 'vuetify|from 'primevue" src`.
+بحث مقترح: `rg "v-[a-z-]+|\.v-|\.p-|from 'vuetify|from 'primevue|provider-?props" src`.
+وفي وضع التطوير شغّل التطبيق على المزود الجديد وابحث في الـconsole عن
+`WAKEB_PROVIDER_PROP_IGNORED`: فهو يذكر كل مفتاح أصلي لا يقبله المزود الجديد.

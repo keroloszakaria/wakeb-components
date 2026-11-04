@@ -59,6 +59,10 @@ No custom events. Native wrapper listeners bubble normally; menu state belongs t
 | `--wakeb-badge-stack-focus` | `#087f8c` |
 | `--wakeb-badge-stack-fallback` | `not defined (legacy menu adapter switch)` |
 
+## Attribute target
+
+The root flex `div.badge-stack`. Each badge receives `badgeAttrs`; the teleported overflow menu receives neither. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 Ordinary attrs target the flex wrapper. No business/theme/icon registry is imported. WBadge variables also apply. Set menu colors through menuStyle and badgeAttrs styles/classes because Vuetify teleports the list outside the stack; the menu carries only the plugin theme scope and zIndexOverlay, and menuStyle wins over it. Image URLs render as decorative img elements; no fetch proxy or detection tint is built in. Nullish per-item overrides preserve false/empty values. max keeps Array.slice and count arithmetic for compatibility; negative, fractional or nonfinite values are unsupported configurations. Visible labels use Wakeb Utils UTF-16 truncation; the menu shows full labels. Only the menu overflow uses customOverflowBorderRadius; the static +N uses customBorderRadius. The circle icon variant also applies to the teleported overflow list. The overflow activator is not announced as a menu because the list is informational. The inherited 58px overflow selector and the legacy circle sizing rules are retained; replace through CSS as needed. Native menu button supports focus, Enter/Space and Escape via Vuetify. The legacy div tag does not provide a native tab stop.

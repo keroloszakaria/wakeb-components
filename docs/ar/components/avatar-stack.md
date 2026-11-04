@@ -47,6 +47,10 @@ import { WAvatarStack } from 'wakeb-components'
 | `--wakeb-avatar-menu-text` | `Vuetify on-surface / #101828` |
 | `--wakeb-avatar-text` | `--wakeb-ui-on-primary / #fff` |
 
+## وجهة السمات
+
+العنصر الجذري `div.avatars-stack`. قائمة الزيادة منقولة خارج المكوّن ولا تستقبلها؛ خصصها عبر `menuStyle`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
+
 ## الوصول وحدود السلوك
 
 للصور اسم مساعد كامل، وتصبح قابلة للتركيز عند تفعيل Tooltip فقط. العدد الإضافي زر فعلي عند تفعيل القائمة، يعلن aria-expanded دون aria-haspopup لأن القائمة معلوماتية فقط، ويعمل بالنقر والكيبورد والمرور من خلال Vuetify، وإلا فهو صورة نصية ثابتة. المفاتيح المكررة مسؤولية المستهلك. تُقرأ مسارات الحقول المملوكة للكائن فقط وتُعرض الأسماء كنصوص آمنة. روابط الصور تدعم http والمسار الذي يبدأ بشرطة مائلة وdata؛ التحميل يتبع المتصفح وVuetify. الحروف البديلة من أول Unicode code point لأول كلمتين. لا يحتاج i18n أو store. تخصيص القائمة المنقولة عبر menuStyle والـTooltip عبر tooltipStyle. لا تحمل القائمة والتلميحات إلا نطاق theme الخاص بالـplugin ‏(data-wakeb-theme وdir ومتغيرات --wakeb-ui-* وzIndexOverlay)، وتتقدم menuStyle وtooltipStyle عليه.

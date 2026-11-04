@@ -35,6 +35,7 @@ import { WButton } from 'wakeb-components'
 | `iconColorType` | `"danger" \| "primary" \| "success" \| "warning" \| "currentColor"` | `"currentColor"` | لون دلالي للأيقونة من متغيرات CSS المستقلة. |
 | `customIconColor` | `string` | `""` | لون صريح للأيقونة وله الأولوية. |
 | `wrapperAttrs` | `Record<string, unknown>` | `{}` | attributes صريحة لحاوية div الخارجية؛ attributes العادية تصل إلى الزر. |
+| `providerProps` | `WakebProviderProps` | `undefined` | غير قابل للنقل. خصائص وأحداث أصلية لـprimitive الزر في المزود المختار (`VBtn` في Vuetify و`Button` في PrimeVue). المفاتيح التي يملكها Wakeb (`disabled` و`loading` و`type` و`onClick` ومفاتيح الروابط وتغيير العنصر، وفي PrimeVue أيضًا `label` و`badge` و`unstyled` و`pt`) والسمات القابلة للنقل تُتجاهل مع تحذير في وضع التطوير. |
 
 ## الأحداث
 
@@ -155,6 +156,10 @@ import { WButton } from 'wakeb-components'
 | `--wakeb-button-text-color` | `#344054` |
 | `--wakeb-button-text-focus-outline` | `#087f8c` |
 | `--wakeb-button-text-hover-color` | `#344054` |
+
+## وجهة السمات
+
+عنصر `<button>` الأصلي على كل المزودين، وليس الـdiv الخارجي المخصص للتخطيط؛ استخدم `wrapperAttrs` لذلك الـdiv. تبقى معالجة type وdisabled وloading الخاصة بـWakeb هي الغالبة، و`onClick` من المستخدم هو حدث click القابل للنقل ويُرسل مرة واحدة. يصل `providerProps` إلى primitive الزر نفسه بأولوية أقل من سمات المستخدم. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
 ## الوصول وحدود السلوك
 

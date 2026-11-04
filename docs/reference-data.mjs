@@ -61,6 +61,10 @@ export default [
         "Vuetify primary / #087f5b"
       ]
     ],
+    "attrs": [
+      "The text `<span>` that activates the tooltip. Caller focus and hover listeners are composed with the tooltip's own. Wakeb owns tabindex and aria-label: it sets them for truncated text and removes them otherwise, so caller values are ignored. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "عنصر `<span>` الذي يفتح الـTooltip. تُدمج أحداث التركيز والمرور من المستخدم مع أحداث الـTooltip. يملك Wakeb قيمتي tabindex وaria-label: يضعهما للنص المختصر ويزيلهما في غير ذلك، فتُتجاهل القيم القادمة من المستخدم. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "The span receives DOM attributes and listeners. Focus/hover handlers are composed with Vuetify. Truncated labels get tabindex=0 and the full aria-label; short labels add no tab stop. Text truncation preserves Wakeb Utils behavior, including limits below 3 and UTF-16 emoji splitting. Tooltip location and delays follow Vuetify.",
       "تصل attributes والأحداث إلى span، وتُدمج أحداث التركيز مع Vuetify. النص المختصر قابل للتركيز وله aria-label كامل؛ النص القصير لا يضيف tab stop. نحافظ على سلوك Wakeb Utils: حد أقل من 3 يرجع النقاط الثلاث، وقد ينقسم emoji بسبب UTF-16. موضع Tooltip وتوقيته يتبعان Vuetify."
@@ -130,6 +134,10 @@ export default [
         "--wakeb-progress-track-border",
         "#d0d5dd"
       ]
+    ],
+    "attrs": [
+      "The root `div.segmented-progress` with `role=\"progressbar\"`. Attributes fall through with Vue's default merge, so a caller role or aria-value* replaces the component's; do not pass them (they move under Wakeb ownership when the component migrates, M3). Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.segmented-progress` الذي يحمل `role=\"progressbar\"`. تُدمج السمات بطريقة Vue الافتراضية، لذلك تحل role أو aria-value* القادمة من المستخدم محل قيم المكوّن؛ لا تمررها (ستنتقل إلى ملكية Wakeb عند نقل المكوّن في M3). مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "Uses role=progressbar and aria-valuemin/aria-valuemax/aria-valuenow. A zero value has no fill or visible label, but retains its accessible name. At 100 there is no empty track. Segments size from a zero flex basis, so the fill is value% of the track width minus the 2px gap whatever the label length. Layout follows inherited direction; animations respect reduced motion. The component has no network or state-store side effects.",
@@ -222,6 +230,10 @@ export default [
         "--wakeb-gauge-muted-color",
         "#667085"
       ]
+    ],
+    "attrs": [
+      "The root `div.semi-circle-gauge`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.semi-circle-gauge`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "SVG role=img exposes the percentage or ariaLabel; decorative center text is aria-hidden. Vue useId keeps SVG references distinct and stable across SSR requests. RTL mirrors geometry only; text remains readable. Invalid geometry is normalized; animations honor reduced motion. Size is the full gauge width; the arc is half-height.",
@@ -360,6 +372,10 @@ export default [
         "--wakeb-ui-on-primary / #fff"
       ]
     ],
+    "attrs": [
+      "The root `div.avatars-stack`. The overflow menu is teleported and does not receive them; style it with `menuStyle`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.avatars-stack`. قائمة الزيادة منقولة خارج المكوّن ولا تستقبلها؛ خصصها عبر `menuStyle`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "Visible avatars have full accessible names and gain a tab stop only when tooltips are enabled. Overflow is a real button when the menu is enabled. It exposes aria-expanded but not aria-haspopup, because the list is informational. Click, keyboard activation and hover use Vuetify. Without a menu it is a static named image. Duplicate item keys are the caller’s responsibility. Only own-property dot paths are read; names are escaped text. Image paths accept http-prefixed, slash-relative or data URLs; image fetching follows the browser and Vuetify. Fallback initials use the first Unicode code point of two words. No i18n/store instance is needed. Teleported menu variables belong in menuStyle; tooltip styling belongs in tooltipStyle. The menu and tooltips carry only the plugin theme scope (data-wakeb-theme, dir, --wakeb-ui-* variables and zIndexOverlay); menuStyle and tooltipStyle win over it.",
       "للصور اسم مساعد كامل، وتصبح قابلة للتركيز عند تفعيل Tooltip فقط. العدد الإضافي زر فعلي عند تفعيل القائمة، يعلن aria-expanded دون aria-haspopup لأن القائمة معلوماتية فقط، ويعمل بالنقر والكيبورد والمرور من خلال Vuetify، وإلا فهو صورة نصية ثابتة. المفاتيح المكررة مسؤولية المستهلك. تُقرأ مسارات الحقول المملوكة للكائن فقط وتُعرض الأسماء كنصوص آمنة. روابط الصور تدعم http والمسار الذي يبدأ بشرطة مائلة وdata؛ التحميل يتبع المتصفح وVuetify. الحروف البديلة من أول Unicode code point لأول كلمتين. لا يحتاج i18n أو store. تخصيص القائمة المنقولة عبر menuStyle والـTooltip عبر tooltipStyle. لا تحمل القائمة والتلميحات إلا نطاق theme الخاص بالـplugin ‏(data-wakeb-theme وdir ومتغيرات --wakeb-ui-* وzIndexOverlay)، وتتقدم menuStyle وtooltipStyle عليه."
@@ -395,6 +411,13 @@ export default [
         "\"Loading\"",
         "Accessible loading status; supply translated text.",
         "اسم حالة التحميل لقارئ الشاشة؛ مرر ترجمة المشروع."
+      ],
+      [
+        "providerProps",
+        "WakebProviderProps",
+        "undefined",
+        "Nonportable. Native props for the indicator primitive (Vuetify `VProgressCircular`, PrimeVue `ProgressSpinner`). `color`, `size`, the indeterminate state and PrimeVue `strokeWidth`/`pt` stay Wakeb-owned. Has no effect when the default slot replaces the indicator.",
+        "غير قابل للنقل. خصائص أصلية لـprimitive مؤشر التحميل (`VProgressCircular` في Vuetify و`ProgressSpinner` في PrimeVue). `color` و`size` وحالة التحميل غير المحددة و`strokeWidth` و`pt` في PrimeVue يملكها Wakeb. لا أثر له عندما يستبدل الـslot الافتراضي المؤشر."
       ]
     ],
     "slots": [
@@ -402,6 +425,10 @@ export default [
       "`default`: يستبدل المؤشر مع الاحتفاظ بحاوية الحالة واسمها."
     ],
     "variables": [],
+    "attrs": [
+      "The root `div.loading` with `role=\"status\"`, on every provider. Wakeb's role and aria-label win. `providerProps` goes to the indicator primitive instead. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.loading` الذي يحمل `role=\"status\"` على كل المزودين. تبقى role وaria-label الخاصة بـWakeb هي الغالبة. أما `providerProps` فيذهب إلى مؤشر التحميل الخاص بالمزود. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "The root is role=status; the default spinner is decorative and aria-hidden to avoid duplicate announcements. Centering works without utility CSS. The component has no timer, request or loading state of its own; mount/unmount it from the host. Vue/Vuetify owns indicator animation.",
       "الحاوية role=status والمؤشر الافتراضي زخرفي ومخفي عن ARIA لمنع تكرار القراءة. التوسيط يعمل دون utility CSS. لا يوجد مؤقت أو طلب شبكة أو حالة تحميل داخلية؛ المشروع يتحكم في ظهور المكون. حركة المؤشر تتبع Vuetify."
@@ -452,6 +479,10 @@ export default [
         "--wakeb-skeleton-border",
         "#eaecf0"
       ]
+    ],
+    "attrs": [
+      "The root `div.page-skeleton` with `role=\"status\"`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.page-skeleton` الذي يحمل `role=\"status\"`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to prevent duplicate announcements. Render this component only while content is loading. Row repeat is floored; missing, nonfinite, zero or negative repeats render one column. cols defaults to 12 when falsy, preserving the app contract. cols, sm, md and lg take 1–12, 'auto' or true (grow) on the Wakeb 12-column grid with fixed breakpoints sm 600px, md 960px and lg 1280px; provider breakpoint settings do not change it. Other spans are ignored (cols uses 12) with WAKEB_UNKNOWN_VALUE. Rows and columns are wakeb-grid-row and wakeb-grid-col elements, not Vuetify VRow/VCol. Item and header types use the Wakeb skeleton grammar: portable names, comma sequences and @N repetitions capped at 100. Unknown names are skipped with WAKEB_UNKNOWN_VALUE; Vuetify-only names still render under Vuetify with WAKEB_DEPRECATED_VALUE. No application CSS is required. Current specialized card bone styling targets Vuetify 3 structure.",
@@ -508,6 +539,10 @@ export default [
         "--wakeb-steps-muted",
         "#667085"
       ]
+    ],
+    "attrs": [
+      "The root `div.steps` with `role=\"list\"`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.steps` الذي يحمل `role=\"list\"`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "Uses list/listitem roles. is_active is a visual completion flag, not interactive navigation or aria-current. The host supplies formatted date/time strings and translations. Text is escaped. Steps use positional keys and do not own selection state. Layout uses logical directions and needs no utility framework. This preserves the horizontal row layout; long content should be tested in the host’s available width.",
@@ -642,6 +677,13 @@ export default [
         "{}",
         "Explicit attributes for the outer layout div; normal attrs target the button.",
         "attributes صريحة لحاوية div الخارجية؛ attributes العادية تصل إلى الزر."
+      ],
+      [
+        "providerProps",
+        "WakebProviderProps",
+        "undefined",
+        "Nonportable. Native props and listeners for the selected provider's button primitive (Vuetify `VBtn`, PrimeVue `Button`). Wakeb-owned keys (`disabled`, `loading`, `type`, `onClick`, link and element keys; on PrimeVue also `label`, `badge`, `unstyled`, `pt`) and portable attributes are ignored with a development warning.",
+        "غير قابل للنقل. خصائص وأحداث أصلية لـprimitive الزر في المزود المختار (`VBtn` في Vuetify و`Button` في PrimeVue). المفاتيح التي يملكها Wakeb (`disabled` و`loading` و`type` و`onClick` ومفاتيح الروابط وتغيير العنصر، وفي PrimeVue أيضًا `label` و`badge` و`unstyled` و`pt`) والسمات القابلة للنقل تُتجاهل مع تحذير في وضع التطوير."
       ]
     ],
     "slots": [
@@ -1078,6 +1120,10 @@ export default [
         "#344054"
       ]
     ],
+    "attrs": [
+      "The native `<button>` on every provider, not the outer layout div; use `wrapperAttrs` for that div. Wakeb's type, disabled and loading handling win, and a caller `onClick` is the portable click, emitted once. `providerProps` reaches the same button primitive below the caller attributes. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "عنصر `<button>` الأصلي على كل المزودين، وليس الـdiv الخارجي المخصص للتخطيط؛ استخدم `wrapperAttrs` لذلك الـdiv. تبقى معالجة type وdisabled وloading الخاصة بـWakeb هي الغالبة، و`onClick` من المستخدم هو حدث click القابل للنقل ويُرسل مرة واحدة. يصل `providerProps` إلى primitive الزر نفسه بأولوية أقل من سمات المستخدم. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "The native element keeps form/type, disabled state and Vuetify aria-busy behavior. Click emits its original MouseEvent once; .stop/.prevent can be used by the host. Native keyboard activation is left to the browser. Icon-only buttons need an aria-label; tooltip buttons use title as a fallback accessible name. Tooltip focus listeners are composed with consumer listeners. Loading acts like disabled for activation in standard and tooltip modes: no click event and no native submit/reset. It is still not a request lock; the host owns request state. A native loading attr also reaches VBtn and does not add the isLoading style class. Reduced-motion settings remove shared transitions. The outer div is retained for layout; wrapperAttrs does not redirect native attrs. Unknown variants/sizes are extension classes. The compatibility-only --wakeb-button-fallback switch is reserved for adapters; leave it undefined for normal defaults.",
       "الزر يحتفظ بـform/type والتعطيل وaria-busy من Vuetify. click يمرر MouseEvent الأصلي مرة واحدة ويدعم .stop/.prevent. التفعيل بالكيبورد يتبع المتصفح. زر الأيقونة يحتاج aria-label؛ زر Tooltip يستخدم title كاسم بديل. أحداث التركيز تُدمج مع أحداث Vuetify. التحميل يعمل مثل التعطيل في الوضع العادي ووضع Tooltip: لا يرسل click ولا يرسل الفورم أو يعيد ضبطه. ومع ذلك ليس قفلًا للطلبات؛ المشروع يملك حالة الطلب. attribute باسم loading يصل أيضًا إلى VBtn دون إضافة class الخاصة بـisLoading. reduced-motion يلغي transitions المشتركة. div الخارجية مخصصة للتخطيط؛ wrapperAttrs لا يغيّر وجهة attributes العادية. الأنواع والمقاسات غير المعروفة classes للتوسعة. متغير --wakeb-button-fallback مخصص للتوافق؛ اتركه غير معرف لاستخدام القيم الافتراضية."
@@ -1320,6 +1366,10 @@ export default [
         "#b54708"
       ]
     ],
+    "attrs": [
+      "The root wrapper `div`. The chip inside receives only `chipAttrs`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "الحاوية الجذرية `div`. الـchip الداخلي يستقبل `chipAttrs` فقط. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "A badge is presentational unless explicit chipAttrs make it interactive. Supply visible status text; color and dot alone are not an accessible label. Native wrapper listeners receive bubbling DOM events; there are no custom emits. Chip styles preserve the extracted outline descendant backgrounds and specialized class hooks. Custom icons belong in the icon slot. Semantic variables customize colors without app tokens. Current-color variables are implementation details; use dotColor or documented semantic tokens. The compatibility-only --wakeb-badge-fallback switch stays undefined in normal use.",
       "الشارة للعرض ما لم تجعلها chipAttrs تفاعلية. قدم نص حالة واضحًا؛ اللون والنقطة وحدهما لا يمثلان اسمًا لقارئ الشاشة. أحداث الحاوية هي أحداث DOM المتصاعدة ولا توجد emits مخصصة. التنسيق يحتفظ بخلفيات descendants للنوع outline وclasses الخاصة. ضع الأيقونات المخصصة في icon slot. الألوان الدلالية مستقلة عن tokens المشروع. متغيرات اللون الحالي داخلية؛ استخدم dotColor أو tokens الموثقة. اترك --wakeb-badge-fallback غير معرف في الاستخدام العادي."
@@ -1486,6 +1536,10 @@ export default [
         "--wakeb-accordion-title",
         "#101828"
       ]
+    ],
+    "attrs": [
+      "The root `div.accordion`. The toggle button keeps Wakeb's aria-expanded and aria-controls. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.accordion`. يحتفظ زر الفتح والطي بقيم aria-expanded وaria-controls التي يضعها Wakeb. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "The default title is a native button with aria-expanded/aria-controls; pointer clicks elsewhere on the header also toggle. Icon toggles stop propagation so one activation emits one update. Actions never toggle the panel. Custom headers must supply their own accessible control via triggerProps; stop unrelated interactive header controls from bubbling. The body uses v-show, retaining nested form state. Parent modelValue changes synchronize local state without echoing an update event; local clicks also work when a parent supplies a constant value. Vue useId is stable per application/SSR request; use unique app.config.idPrefix values for multiple independent Vue apps. Motion respects reduced-motion preferences. Indicator rotation preserves 180deg when closed and 0deg when open. The compatibility --wakeb-accordion-fallback switch is reserved for adapters.",
@@ -1685,6 +1739,10 @@ export default [
         "not defined (legacy menu adapter switch)"
       ]
     ],
+    "attrs": [
+      "The root flex `div.badge-stack`. Each badge receives `badgeAttrs`; the teleported overflow menu receives neither. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "حاوية flex الجذرية `div.badge-stack`. كل شارة تستقبل `badgeAttrs`، وقائمة الزيادة المنقولة لا تستقبل أيًّا منهما. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "Ordinary attrs target the flex wrapper. No business/theme/icon registry is imported. WBadge variables also apply. Set menu colors through menuStyle and badgeAttrs styles/classes because Vuetify teleports the list outside the stack; the menu carries only the plugin theme scope and zIndexOverlay, and menuStyle wins over it. Image URLs render as decorative img elements; no fetch proxy or detection tint is built in. Nullish per-item overrides preserve false/empty values. max keeps Array.slice and count arithmetic for compatibility; negative, fractional or nonfinite values are unsupported configurations. Visible labels use Wakeb Utils UTF-16 truncation; the menu shows full labels. Only the menu overflow uses customOverflowBorderRadius; the static +N uses customBorderRadius. The circle icon variant also applies to the teleported overflow list. The overflow activator is not announced as a menu because the list is informational. The inherited 58px overflow selector and the legacy circle sizing rules are retained; replace through CSS as needed. Native menu button supports focus, Enter/Space and Escape via Vuetify. The legacy div tag does not provide a native tab stop.",
       "الخصائص العادية تستهدف حاوية flex. لا يوجد اعتماد على بيانات العمل أو theme أو registry للأيقونات. متغيرات WBadge متاحة أيضًا. خصص ألوان القائمة عبر menuStyle وbadgeAttrs لأن Vuetify ينقلها خارج الحاوية؛ لا تحمل القائمة إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم menuStyle عليه. الصور زخرفية ولا توجد خدمة لجلبها أو تلوين خاص بنوع الاكتشاف. تخصيص العنصر يحترم false والقيم الفارغة. max يحافظ على Array.slice والحساب القديم؛ الأعداد السالبة والكسرية وغير المحدودة إعدادات غير مدعومة. التقصير بوحدات UTF-16 من Wakeb Utils. القائمة تعرض الأسماء كاملة. customOverflowBorderRadius يخص زر القائمة فقط؛ +N الثابت يستخدم customBorderRadius. شكل الأيقونة الدائري يطبق أيضًا على القائمة المنقولة، وزر الزيادة لا يُعلن كقائمة أوامر لأن القائمة معلوماتية. قواعد أحجام الزيادة والدائرة القديمة محفوظة. الزر الافتراضي يدعم التركيز وEnter/Space وEscape من Vuetify؛ div القديم لا يضيف tab stop."
@@ -1775,6 +1833,10 @@ export default [
         "--wakeb-avatar-text",
         "--wakeb-ui-on-primary / #fff"
       ]
+    ],
+    "attrs": [
+      "The root `div.wakeb-user-badge`, which is the WBadge wrapper. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.wakeb-user-badge`، وهو حاوية WBadge. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "Ordinary attrs/listeners target the WBadge wrapper. WBadge variables control the chip. HTTP-prefixed, root-relative and data URLs use VImg; other values use initials. There is no network-error initials fallback, matching the original component. Missing/empty name or an em dash uses ?, whitespace-only uses an empty initial; initials preserve charAt(0) UTF-16 behavior and use the first two words. Supply a user object with string fields; null is not supported. Avatars are decorative because the adjacent name identifies the user. Actions bubble naturally; stop propagation in the action if its parent has a click handler. No Tailwind dependency is required for the 8px initials.",
@@ -1872,6 +1934,10 @@ export default [
       "`icon`: يستقبل `{ icon }` ويستبدل VIcon. لا يوجد slot افتراضي للنص؛ استخدم WButton للأزرار النصية."
     ],
     "variables": [],
+    "attrs": [
+      "The native `<button>` (VBtn), not the outer span; use `wrapperAttrs` for the span. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "عنصر `<button>` الأصلي (VBtn)، وليس الـspan الخارجي؛ استخدم `wrapperAttrs` لذلك الـspan. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. Icon names resolve through the icons plugin option and the Wakeb built-ins first; other names need your Vuetify icon configuration. The icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport; the tooltip carries only the plugin theme scope and zIndexOverlay, and tooltipStyle wins over it. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.",
       "الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. تُحل أسماء الأيقونات أولًا عبر الخيار icons والأيقونات المدمجة، وبقية الأسماء تحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport؛ لا يحمل التلميح إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم tooltipStyle عليه. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة."
@@ -2079,6 +2145,10 @@ export default [
       "`updateTab(value: NavigationKey | undefined)` for accepted local changes only; no mount or parent-sync echo.",
       "`updateTab(value: NavigationKey | undefined)` للتغيير المحلي فقط؛ لا يُرسل عند التركيب أو مزامنة الأب."
     ],
+    "attrs": [
+      "The root layout `div.wakeb-tabs`. Tabs and panels keep Wakeb's ids, roles and aria-controls/labelledby links. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "حاوية التخطيط الجذرية `div.wakeb-tabs`. تحتفظ التبويبات واللوحات بالمعرفات والأدوار وروابط aria-controls وaria-labelledby التي يضعها Wakeb. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation. Each tab has an id unique within the app; the selected tab references its rendered role=tabpanel wrapper (div.wakeb-tabs__panel) through aria-controls, and the panel is labelled by its tab; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content.",
       "الخصائص على الحاوية. Vue وVuetify هما peers ولا تحتاج Tailwind. الارتفاع والمسافة يضيفان px؛ لا تمرر وحدات CSS. عناوين الأقسام والـheader داخل الشريط. Vuetify يوفر tablist والتركيز والأسهم. لكل تبويب id فريد داخل التطبيق، والتبويب المحدد يشير عبر aria-controls إلى لوحته المعروضة (div.wakeb-tabs__panel بدور tabpanel) واللوحة تأخذ اسمها من التبويب؛ اللوحات تُركب عند الحاجة وتحتفظ بحالة Vue بعد التركيب. selectedTab الفارغ في switcher يلغي التحديد. المزامنة تخص selectedTab وisSwitcherOnly؛ تغيير قائمة العناصر يترك سلوك المجموعة لـVuetify. الصفر في content أو notification يتبع فحص truthy القديم. customHTML يدخل كما هو عبر v-html ويجب أن يكون موثوقًا أو منقّى من المشروع؛ سياق الدالة {value,isSelected}. استخدم tab-label للبيانات غير الموثوقة. الأيقونات عبر VIcon أو slot دون تعديل shadow DOM داخل الحزمة. التبويب المصور فقط يستخدم label كاسم ARIA؛ وفر اسمًا واضحًا حتى مع المحتوى المخصص."
@@ -2247,6 +2317,10 @@ export default [
       "`node-click(node: TreeNode)` requests selection; `toggle(node: TreeNode)` requests expansion. Update activeKey/expandedKeys in the host; the tree never mutates records.",
       "`node-click(node: TreeNode)` لطلب الاختيار، و`toggle(node: TreeNode)` لطلب الفتح. حدّث activeKey وexpandedKeys في المشروع؛ الشجرة لا تعدل البيانات."
     ],
+    "attrs": [
+      "The root `ul` with `role=\"tree\"`. Nested groups do not receive them. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "عنصر `ul` الجذري الذي يحمل `role=\"tree\"`. المجموعات الفرعية لا تستقبلها. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "Root attrs target ul. Data must be acyclic with globally unique string/number keys; only loaded children are considered. Field keys are direct properties, not dotted paths. activeKey uses strict identity; editingNodeId also supports string equivalence. Root computes active ancestors; nonroot groups use activePath. Collapsing unmounts descendant DOM through v-if and transition, so keep editable drafts in host state. Arrow Up/Down traverse visible nodes; Home/End move to bounds; expand/collapse arrows reverse in RTL; Enter/Space request selection. Expansion remains controlled. Nested controls keep their own keys. There is one roving tab target per tree; when a row disappears the target moves to its nearest visible ancestor, otherwise the previous visible row, and DOM focus follows only when focus was inside the tree. No typeahead, virtualization, drag/drop, checkbox selection or remote loading is built in. Default labels propagate to every level. Empty named slots use Vue fallback content, including branch toggles. Motion respects reduced-motion preferences.",
       "الخصائص تستهدف ul. البيانات دون دورات وبمفاتيح نصية أو رقمية فريدة في الشجرة، والأبناء المحمّلون فقط هم المعروضون. مفاتيح الحقول مباشرة دون dotted paths. activeKey يقارن بدقة وeditingNodeId يدعم تمثيل المفتاح النصي. الجذر يستنتج مسار العنصر؛ المجموعة الداخلية تستخدم activePath. الإغلاق يزيل DOM الأبناء عبر v-if؛ احفظ مسودات التعديل في حالة المشروع. أعلى/أسفل للتنقل وHome/End للحدود وأسهم الفروع تنعكس في RTL وEnter/Space لطلب الاختيار. الفتح يظل بتحكم الأب. عناصر التحكم الداخلية تحتفظ بمفاتيحها. يوجد هدف Tab واحد لكل شجرة وعند اختفاء العنصر ينتقل لأقرب أب ظاهر أو للعنصر الظاهر السابق، والتركيز الفعلي ينتقل فقط لو كان داخل الشجرة. لا يوجد typeahead أو virtualization أو سحب أو checkboxes أو تحميل بعيد. الأسماء الافتراضية تظهر بكل المستويات؛ slots الفارغة تستخدم بديل Vue، بما فيها أزرار الفروع. الحركة تحترم reduced-motion."
@@ -2402,6 +2476,13 @@ export default [
         "undefined",
         "Styles/variables directly on the teleported list.",
         "أنماط ومتغيرات على القائمة المنقولة خارج الحاوية."
+      ],
+      [
+        "providerProps",
+        "WakebProviderProps",
+        "undefined",
+        "Nonportable. Native props and listeners for the menu primitive (Vuetify `VMenu`, PrimeVue `Menu`). Open state, `disabled`, stacking and the activator stay Wakeb-owned; on PrimeVue also `model`, `popup` and `pt`. Ignored keys produce a development warning.",
+        "غير قابل للنقل. خصائص وأحداث أصلية لـprimitive القائمة (`VMenu` في Vuetify و`Menu` في PrimeVue). حالة الفتح و`disabled` وترتيب الطبقات وزر الفتح يملكها Wakeb، وفي PrimeVue أيضًا `model` و`popup` و`pt`. المفاتيح المتجاهلة تُنتج تحذيرًا في وضع التطوير."
       ]
     ],
     "slots": [
@@ -2437,6 +2518,10 @@ export default [
     "events": [
       "`selectedItem(item: DropdownItem)` then `update:modelValue(value: NavigationKey)` on an enabled option click, once each; selection updates afterwards.",
       "`selectedItem(item: DropdownItem)` ثم `update:modelValue(value: NavigationKey)` عند نقر عنصر متاح، مرة لكل حدث؛ تتحدث الحالة بعدهما."
+    ],
+    "attrs": [
+      "The root `div` on every provider: not the activator button and not the teleported menu. Style the menu with `menuStyle`; the activator slot receives its own props. `providerProps` goes to the menu primitive. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div` على كل المزودين، وليس زر الفتح ولا القائمة المنقولة. خصص القائمة عبر `menuStyle`، ويستقبل slot الـactivator خصائصه الخاصة. أما `providerProps` فيذهب إلى primitive القائمة. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "Attrs target the outer div. VMenu/VList own click-away, Escape and keyboard movement; the WButton activator uses action=button. No i18n/router instance is imported. Format title: label through labelFormatter as one string, matching the legacy composite-label contract. modelValue synchronization runs when the value or menuItems change, so replaced records refresh the label; null clears the selection and undefined leaves an uncontrolled selection unchanged. Initial showSelected falls back to title or the first label without marking it active. An exact value match always wins; label matching is only a fallback; zero is supported. Raw CSS colors work on option icons/text; activator text accepts semantic keys and var()/hex values, preserving the old contract. Semantic WButton icon colors have their own WButton variables. Bind colors to menuStyle or colorMap for teleported lists. Rows use role=menuitem inside a role=menu list. With isLinks each enabled row is itself an anchor using href or a string to; disabled or loading rows have no href and set aria-disabled. Route objects require an item-label slot. Clicking an enabled row emits selection. Disabled/loading suppress normal menu interaction.",
@@ -2558,6 +2643,10 @@ export default [
       "`update:modelValue(index: number)` once for an actual local index change; syncing the same valid parent value is silent.",
       "`update:modelValue(index: number)` مرة عند تغيير الفهرس محليًا؛ مزامنة قيمة الأب الصالحة لا تكرر الحدث."
     ],
+    "attrs": [
+      "The carousel root (VCarousel, `role=\"region\"`). The indicator container is a second root node and does not receive them; each indicator receives `indicatorAttrs`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "جذر العرض المتتابع (VCarousel الذي يحمل `role=\"region\"`). حاوية المؤشرات عقدة جذرية ثانية لا تستقبلها، وكل مؤشر يستقبل `indicatorAttrs`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "The component keeps two root nodes, without a layout wrapper. Put it in a positioned parent because custom indicators are absolutely positioned 2rem above its bottom. Ordinary attrs target VCarousel. Native delimiters stay hidden; showIndicators controls the custom dots. Custom indicators are type=button, have accessible names/current state, and support Arrow Left/Right (reversed in RTL), Home/End and normal Enter/Space. Arrow slots retain Vuetify keyboard behavior. Slides render through Vuetify lazy items. Use finite indices in range and positive intervals. Autoplay uses Vuetify scheduling; it does not automatically pause on pointer hover or keyboard focus. The demo starts paused and exposes a cycle control. Use cycle=false for static/reduced-motion experiences; the indicator animation respects reduced motion, while slide transitions are Vuetify attrs. Labels and URLs/content come from the host. Aware keeps the original inverted hideDelimiters=true meaning through its adapter and retains the legacy missing indicator type. Aware disables the enhanced indicator keys/focus styling to retain its original behavior.",
       "المكوّن يحتفظ بجذرين دون حاوية إضافية. ضعه داخل أب position:relative لأن المؤشرات موضوعة absolute على بعد 2rem من أسفله. الخصائص العادية تستهدف VCarousel. مؤشرات Vuetify الأصلية مخفية، وshowIndicators يتحكم في المؤشرات المخصصة. المؤشرات العامة type=button ولها أسماء وحالة حالية وتدعم اليمين واليسار مع عكس RTL وHome/End وEnter/Space. أزرار السابق والتالي تحتفظ بسلوك Vuetify. الشرائح تُركب عند الحاجة. استخدم فهارس محدودة ضمن النطاق وفواصل زمنية موجبة. التشغيل التلقائي من Vuetify ولا يتوقف تلقائيًا عند hover أو التركيز؛ المثال يبدأ متوقفًا ويوفر تحكمًا في cycle. استخدم cycle=false للتجارب الثابتة أو قليلة الحركة؛ حركة المؤشرات تحترم reduced-motion وانتقالات الشرائح من خصائص Vuetify. المحتوى من المشروع. Aware يحتفظ بعكس معنى hideDelimiters=true وبسلوك type القديم للمؤشرات. Aware يعطل مفاتيح المؤشرات وتنسيق التركيز الإضافيين للاحتفاظ بالسلوك الأصلي."
@@ -2623,6 +2712,10 @@ export default [
     "events": [
       "`select(value: string)` once for an enabled format. No file is generated or downloaded by the component.",
       "`select(value: string)` مرة لاختيار صيغة متاحة. المكوّن لا يولد ملفًا ولا ينزله."
+    ],
+    "attrs": [
+      "Baseline compatibility: the root is VMenu, so ordinary attrs reach the teleported menu overlay, which exists only while the menu is open. They do not reach the activator button; use the activator slot for that. This may change when the component migrates (M4). Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "للتوافق مع الإصدار الأساسي: الجذر هو VMenu، لذلك تصل السمات العادية إلى طبقة القائمة المنقولة، وهي موجودة فقط أثناء فتح القائمة. لا تصل إلى زر الفتح؛ استخدم slot الـactivator لذلك. قد يتغير هذا عند نقل المكوّن (M4). مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "The root is VMenu, preserving its attrs/teleport contract. Default formats are PDF/pdf and Excel/xlsx with English labels; supply localized records. Inline SVG fallbacks need no icon font; optional format.icon resolves through the icons plugin option and the Wakeb built-ins, then the host Vuetify icon configuration. Loading disables the public default activator and menu; custom activators receive buttonProps and may preserve their existing loading contract. Permission checks, export state, network requests, MIME handling and download services stay in the host. Use the activator slot for directives; the package has no permission prop or auth dependency. menuStyle targets the actual teleported list and wins over the plugin theme scope and zIndexOverlay that the menu carries. VMenu/VList provide outside-click, Escape and keyboard behavior; rows use role=menuitem in a role=menu list and disabled formats set aria-disabled. The default native action is button, and its default height is 44px.",
@@ -2756,6 +2849,10 @@ export default [
       "`search(payload: unknown)` only when a search/content slot calls its search callback; `filterClick()` and `filterCancel()` for controls. No records or schemas are mutated.",
       "`search(payload: unknown)` عندما يستدعي slot البحث دالة search؛ و`filterClick()` و`filterCancel()` للأزرار. لا تتغير العناصر أو schemas داخل المكوّن."
     ],
+    "attrs": [
+      "The root `div.wakeb-base-sidebar`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الجذري `div.wakeb-base-sidebar`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+    ],
     "limits": [
       "Attrs target the outer div. The package owns no form/schema, store, translations or filter modal. Supply a native input or your form library through search and call search(payload). Aware retains GenericForm and updateSchema in its adapter. Without a search slot, the public component renders no search control. The header remains while content is replaced. Loading wins over empty/list. The default list keeps min-height 400px and max-height 60dvh, with a 340px minimum shell width; override root min-width for narrower responsive layouts. The bottom 72px fade is decorative and does not intercept pointers. Use namespaced CSS variables for gradients/body/title colors and loading/empty slots for custom states. Legacy global card-gradient/sidebar rules remain in Aware only; package styles are scoped. List item identity uses a direct field or index, and slots own item interactions.",
       "الخصائص على div الخارجي. الحزمة لا تملك form أو schema أو store أو ترجمة أو نافذة فلتر. وفر input أو مكتبة الفورم في search واستدعِ search(payload). Aware يحتفظ بـGenericForm وupdateSchema في adapter. دون search لا يظهر بحث افتراضي. يبقى الـheader عند استبدال المحتوى. التحميل له أولوية على الحالة الفارغة والقائمة. القائمة تحتفظ بحد أدنى 400px وأقصى 60dvh والحاوية بحد أدنى 340px؛ استبدل min-width للتصميم الأضيق. التلاشي السفلي 72px زخرفي ولا يمنع النقر. خصص الألوان عبر CSS والتحميل والحالة الفارغة عبر slots. أنماط card-gradient العامة القديمة تبقى في Aware فقط، وأنماط الحزمة scoped. هوية العنصر من حقل مباشر أو الفهرس وslot يملك التفاعل معه."
@@ -2869,6 +2966,13 @@ export default [
         "\"Dialog\"",
         "Fallback dialog name when title is empty.",
         "اسم بديل للنافذة عند غياب العنوان."
+      ],
+      [
+        "providerProps",
+        "WakebProviderProps",
+        "undefined",
+        "Nonportable. Native props and listeners for the dialog primitive (Vuetify `VDialog`, PrimeVue `Dialog`). The model, dismissal policy, width, stacking, focus containment, scroll lock, `afterLeave` callbacks, `contentProps` and `pt` stay Wakeb-owned. Other native callbacks run alongside Wakeb's own. Ignored keys produce a development warning.",
+        "غير قابل للنقل. خصائص وأحداث أصلية لـprimitive النافذة (`VDialog` في Vuetify و`Dialog` في PrimeVue). الـmodel وسياسة الإغلاق والعرض وترتيب الطبقات وحصر التركيز وقفل التمرير وأحداث `afterLeave` و`contentProps` و`pt` يملكها Wakeb. الأحداث الأصلية الأخرى تعمل بجانب معالجات Wakeb. المفاتيح المتجاهلة تُنتج تحذيرًا في وضع التطوير."
       ]
     ],
     "variables": [
@@ -2928,6 +3032,10 @@ export default [
     "slots": [
       "`activator {props,isActive}`: bind props to the launch button to retain native focus return. `header {close}` replaces the entire header. `title`, `header-icon`, `header-decoration`, `header-actions` compose the default header. `close-button {close,label}` replaces its button. `content` falls back to `default`; `actions` supplies the footer. `loading {label}` replaces content; `loading-overlay {label}` replaces the independent overlay.",
       "`activator {props,isActive}`: اربط props بزر الفتح لإعادة التركيز أصليًا. `header {close}` يستبدل الرأس بالكامل. `title` و`header-icon` و`header-decoration` و`header-actions` لتركيب الرأس الافتراضي. `close-button {close,label}` يستبدل زر الإغلاق. `content` وبديله `default` للمحتوى؛ `actions` للقدم. `loading {label}` بديل المحتوى؛ `loading-overlay {label}` لطبقة تحميل مستقلة."
+    ],
+    "attrs": [
+      "The element with `role=\"dialog\"`, which also carries `.wakeb-modal`, on every provider. It is teleported, so it exists only while the dialog is rendered. Wakeb's accessible name (`title`, then `ariaLabel`) wins over a caller `aria-label`. `providerProps` goes to the dialog primitive. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "العنصر الذي يحمل `role=\"dialog\"`، ويحمل أيضًا `.wakeb-modal`، على كل المزودين. هذا العنصر منقول خارج المكوّن، فلا يوجد إلا أثناء رسم النافذة. الاسم الذي يضعه Wakeb (`title` ثم `ariaLabel`) يغلب `aria-label` من المستخدم. أما `providerProps` فيذهب إلى primitive النافذة. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "Attrs target VDialog; its native transition, scrim, scrollStrategy and focus behavior remain available. Persistent defaults true, so Escape/outside clicks do not close it. Native focus capture/trap, scroll blocking and overlay stacking are delegated to Vuetify. Use the activator slot for focus return; programmatic launchers own restoration if no activator exists. Mount within your Vuetify application. Header slots are trusted Vue content: no raw SVG injection is built into the package. Aware retains its raw header decoration, SvgIcon, translated close button and legacy title/header visibility through header replacement; customAction maps to !showActions. Data-not-ready content is unmounted, not merely hidden. loading is presentation only; the host decides whether close/save is allowed and owns submission/permissions. The shared default loading overlay covers the card; Aware retains its existing loader markup through a slot. A description alone renders the default header. width wins over a native max-width attr, which applies only when width is absent. Modal radius is 4px, matching Vuetify dialog cards.",
@@ -3072,6 +3180,10 @@ export default [
     "slots": [
       "`title`, `header-actions`, `close-button {close,label}`, `content`, `default`, `actions`, `loading {label}` and `loading-overlay {label}`. content and default render in sequence; footer exists only when actions is supplied.",
       "`title` و`header-actions` و`close-button {close,label}` و`content` و`default` و`actions` و`loading {label}` و`loading-overlay {label}`. content وdefault يظهران بالتتابع؛ القدم تظهر فقط عند توفير actions."
+    ],
+    "attrs": [
+      "The drawer root (VNavigationDrawer, a `<nav>` that also carries `.wakeb-drawer`). Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
+      "جذر اللوحة الجانبية (VNavigationDrawer، وهو عنصر `<nav>` يحمل أيضًا `.wakeb-drawer`). مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
       "Requires a Vuetify layout provider (normally VApp); do not instantiate it outside a layout. Attrs target VNavigationDrawer, including native focus/resize/route-watcher options. It remains temporary, keeps its native scrim and touch behavior and maps end to right in LTR/left in RTL. Unlike VDialog, VNavigationDrawer does not provide Escape dismissal or dialog scroll blocking; this component preserves those native semantics. Do not infer dialog-style stacked-overlay guarantees when nesting drawers and dialogs; test your composition. Manage launch/return focus in the host. Width \"50%\" parses to 50px, preserving Aware behavior; use numeric/pixel widths. Content scrolls, header/footer stay outside its scroll area. Data-not-ready unmounts content; loading overlays are independent and contain no form or save logic. Aware keeps its icon button, translated slot content, theme-token aliases and per-screen drawer-panel hooks. AddEditModal, schemas, validation and permissions remain in Aware.",

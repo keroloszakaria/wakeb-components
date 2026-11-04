@@ -21,6 +21,7 @@ import { WLoading } from 'wakeb-components'
 | `size` | `string \| number` | `50` | Vuetify spinner size. |
 | `color` | `WakebColor` | `"primary"` | Spinner color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. |
 | `label` | `string` | `"Loading"` | Accessible loading status; supply translated text. |
+| `providerProps` | `WakebProviderProps` | `undefined` | Nonportable. Native props for the indicator primitive (Vuetify `VProgressCircular`, PrimeVue `ProgressSpinner`). `color`, `size`, the indeterminate state and PrimeVue `strokeWidth`/`pt` stay Wakeb-owned. Has no effect when the default slot replaces the indicator. |
 
 ## Slots
 
@@ -31,6 +32,10 @@ import { WLoading } from 'wakeb-components'
 | Variable | Default |
 | --- | --- |
 
+
+## Attribute target
+
+The root `div.loading` with `role="status"`, on every provider. Wakeb's role and aria-label win. `providerProps` goes to the indicator primitive instead. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
 ## Accessibility and limits
 

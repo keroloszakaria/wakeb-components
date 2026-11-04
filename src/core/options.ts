@@ -51,9 +51,12 @@ type ControlledProp =
 /** Keys whose values are callbacks; plugin defaults cannot hold them. */
 type CallbackProp<P> = { [K in keyof P]-?: NonNullable<P[K]> extends (...args: never[]) => unknown ? K : never }[keyof P];
 
-/** Plugin-wide component defaults: props only, shallow, with data, model and callback props excluded. */
+/**
+ * Plugin-wide component defaults: props only, shallow, with data, model and callback props excluded.
+ * `providerProps` is excluded too: native escape hatches are set per instance (SPEC R12).
+ */
 export type WakebDefaults = {
-  [C in WakebComponentName]?: Partial<Omit<WakebComponentProps[C], ControlledProp | CallbackProp<WakebComponentProps[C]>>>;
+  [C in WakebComponentName]?: Partial<Omit<WakebComponentProps[C], ControlledProp | CallbackProp<WakebComponentProps[C]> | "providerProps">>;
 };
 
 /** Semantic tokens written to `--wakeb-ui-*` variables (kebab-case keys). */

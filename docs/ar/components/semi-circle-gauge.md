@@ -41,6 +41,10 @@ import { WSemiCircleGauge } from 'wakeb-components'
 | `--wakeb-gauge-text-color` | `currentColor` |
 | `--wakeb-gauge-muted-color` | `#667085` |
 
+## وجهة السمات
+
+العنصر الجذري `div.semi-circle-gauge`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
+
 ## الوصول وحدود السلوك
 
 يقرأ قارئ الشاشة النسبة أو ariaLabel عبر SVG بدور img، ويُخفى النص الزخرفي المكرر عن ARIA. Vue useId يمنع تداخل عرّافات SVG ويدعم SSR. ينعكس الرسم في RTL ولا ينعكس النص. تُصحح الأبعاد غير الصالحة، وتُحترم reduced motion. size هو العرض الكامل، وارتفاع القوس نصفه.

@@ -30,6 +30,12 @@ export type WakebSkeletonName =
 export type WakebBadgeType =
   | "success" | "success-transparent" | "primary" | "primarybtn" | "danger" | "danger-transparent" | "warning" | "info"
   | "transparent" | "dark" | "tertiary" | "outline" | "outline-secondary" | "check" | "uncheck";
+/**
+ * Native props and listeners for the selected provider's primitive (SPEC R12). Not portable: the keys
+ * belong to whichever provider the build selected. Wakeb-owned bindings, portable attributes
+ * (class, style, id, role, aria-*, data-*) and keys the primitive does not declare are ignored.
+ */
+export type WakebProviderProps = Record<string, unknown>;
 export interface TruncatedTextProps {
   label?: string;
   length?: number;
@@ -57,7 +63,7 @@ export interface AvatarStackProps {
   menuStyle?: CSSProperties;
   tooltipStyle?: CSSProperties;
 }
-export interface LoadingProps { size?: string | number; color?: WakebColor; label?: string; }
+export interface LoadingProps { size?: string | number; color?: WakebColor; label?: string; providerProps?: WakebProviderProps; }
 export interface SkeletonItem {
   type?: string;
   width?: string | number;
@@ -112,6 +118,7 @@ export interface ButtonProps {
   iconColorType?: "danger" | "primary" | "success" | "warning" | "currentColor";
   customIconColor?: string;
   wrapperAttrs?: Record<string, unknown>;
+  providerProps?: WakebProviderProps;
 }
 /** Portable style variants (SPEC R23), rendered on every provider. */
 export type WakebVariant = "soft" | "solid" | "outline" | "ghost";
@@ -290,6 +297,7 @@ export interface DropdownProps {
   labelFormatter?: (label: string | undefined) => string;
   colorMap?: Record<string, string>;
   menuStyle?: CSSProperties;
+  providerProps?: WakebProviderProps;
 }
 
 export interface CarouselProps {
@@ -343,6 +351,7 @@ export interface ModalProps {
   closeLabel?: string;
   loadingLabel?: string;
   ariaLabel?: string;
+  providerProps?: WakebProviderProps;
 }
 export interface DrawerProps {
   modelValue?: boolean;

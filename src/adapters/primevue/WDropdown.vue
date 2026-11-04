@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed, ref, useId } from "vue";
+import { computed, mergeProps, ref, useId } from "vue";
 import Menu from "primevue/menu";
 import WButton from "./WButton.vue";
 import WakebIcon from "../../icons/WakebIcon";
 import { dropdownDefaults, useDropdown } from "../../composables/dropdown";
 import { useWakebContext } from "../../core/runtime";
+import { useProviderProps } from "../../core/provider-props";
 import type { DropdownProps, DropdownItem, NavigationKey, ButtonProps } from "../../types";
 defineOptions({ name: "WDropdown" });
 const props = withDefaults(defineProps<DropdownProps>(), dropdownDefaults);
@@ -33,6 +34,15 @@ const {
   buttonProps,
 } = useDropdown(props, emits);
 
+/* Items, popup mode, the menu id that aria-controls names, and stacking stay Wakeb-owned (SPEC R12). */
+const native = useProviderProps(context, () => props.providerProps, {
+  component: "WDropdown",
+  primitive: Menu,
+  label: "Menu",
+  owned: ["model", "popup", "autoZIndex", "baseZIndex", "pt", "ptOptions"],
+});
+/* Native props first; the theme scope that teleported content needs still wins. */
+const menuBindings = computed(() => mergeProps(native.value, context.scope));
 const menu = ref<InstanceType<typeof Menu>>();
 const menuId = `wakeb-dropdown-${useId()}`;
 const isActive = ref(false);
@@ -75,7 +85,7 @@ const activatorProps = computed(() => ({
       :model="model"
       popup
       class="wakeb-pv-dropdown"
-      v-bind="context.scope"
+      v-bind="menuBindings"
       :style="[menuStyle, context.zIndexOverlay === undefined ? undefined : { zIndex: context.zIndexOverlay }]"
       :auto-z-index="context.zIndexOverlay === undefined"
       @hide="isActive = false"

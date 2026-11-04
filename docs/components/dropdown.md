@@ -38,6 +38,7 @@ import { WDropdown } from 'wakeb-components'
 | `labelFormatter` | `(label: string \| undefined) => string` | `label => label ?? ""` | Host formatter/translator for activator and items. |
 | `colorMap` | `Record<string, string>` | `undefined` | Override semantic success/danger/warning/primary/info colors. |
 | `menuStyle` | `CSSProperties` | `undefined` | Styles/variables directly on the teleported list. |
+| `providerProps` | `WakebProviderProps` | `undefined` | Nonportable. Native props and listeners for the menu primitive (Vuetify `VMenu`, PrimeVue `Menu`). Open state, `disabled`, stacking and the activator stay Wakeb-owned; on PrimeVue also `model`, `popup` and `pt`. Ignored keys produce a development warning. |
 
 ## Events
 
@@ -57,6 +58,10 @@ import { WDropdown } from 'wakeb-components'
 | `--wakeb-dropdown-color-primary` | `#087f8c` |
 | `--wakeb-dropdown-color-info` | `#2e90fa` |
 | `--wakeb-dropdown-activator-color` | `computed inline from selected color` |
+
+## Attribute target
+
+The root `div` on every provider: not the activator button and not the teleported menu. Style the menu with `menuStyle`; the activator slot receives its own props. `providerProps` goes to the menu primitive. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
 ## Accessibility and limits
 

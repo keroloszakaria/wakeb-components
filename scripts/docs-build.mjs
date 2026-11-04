@@ -25,6 +25,8 @@ for (const entry of reference) {
   const shared = (pattern, dir, ext) => [...component.matchAll(pattern)].map(([, name]) => readFileSync(join(root, "src", dir, name + ext), "utf8"));
   const source = [component, ...shared(/@use "\.\.\/styles\/([\w-]+)"/g, "styles", ".scss"), ...shared(/from "\.\.\/composables\/([\w-]+)"/g, "composables", ".ts")].join("\n");
   for (const [variable] of entry.variables) for (const token of variable.match(/--[a-z0-9-]+/g) ?? []) assert.ok(source.includes(token), `${entry.name} documents ${token} but never consumes it`);
+  // Every facade documents where class, style, id, aria-*, data-* and DOM listeners land (SPEC R14).
+  assert.ok(entry.attrs?.[0] && entry.attrs?.[1], `${entry.name} documents its attribute target in both languages`);
   for (const [prefix, lang] of [["",0],["ar/",1]]) {
     const title = lang ? ["الاستخدام","المدخلات","Slots","متغيرات CSS","الوصول وحدود السلوك","جرّب بنفسك"] : ["Usage","Props","Slots","CSS variables","Accessibility and limits","Try it"];
     const rows = entry.props.map(([n,t,d,en,ar])=>`| \`${n}\` | \`${t.replaceAll("|","\\|")}\` | \`${d}\` | ${lang ? ar : en} |`).join("\n");
@@ -60,6 +62,10 @@ ${entry.slots[lang]}
 | ${lang ? "المتغير | الافتراضي" : "Variable | Default"} |
 | --- | --- |
 ${cssRows}
+
+## ${lang ? "وجهة السمات" : "Attribute target"}
+
+${entry.attrs[lang]}
 
 ## ${title[4]}
 

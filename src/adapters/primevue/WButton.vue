@@ -6,6 +6,7 @@ import { usePrimeVue } from "primevue/config";
 import WakebIcon from "../../icons/WakebIcon";
 import { buttonDefaults, useButton } from "../../composables/button";
 import { useWakebContext } from "../../core/runtime";
+import { useProviderProps } from "../../core/provider-props";
 import type { ButtonProps, IconSlotProps } from "../../types";
 defineOptions({ name: "WButton", inheritAttrs: false });
 const props = withDefaults(defineProps<ButtonProps>(), buttonDefaults);
@@ -20,6 +21,16 @@ defineSlots<{
 const vPvTooltip = Tooltip;
 const context = useWakebContext("WButton");
 const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttrs } = useButton(props, emit);
+/*
+ * Element type, loading/disabled safety, the portable click and the accessible name stay Wakeb-owned:
+ * PrimeVue derives aria-label from label and badge. unstyled and pt would bypass Wakeb styling and attrs.
+ */
+const native = useProviderProps(context, () => props.providerProps, {
+  component: "WButton",
+  primitive: Button,
+  label: "Button",
+  owned: ["disabled", "loading", "type", "unstyled", "onClick", "as", "asChild", "label", "badge", "pt", "ptOptions"],
+});
 /* PrimeVue tooltip sides are physical; Wakeb sides are logical. */
 /* PrimeVue reads the side from an object argument: v-tooltip:[{ position }]. */
 const tooltipSide = computed(() => {
@@ -46,7 +57,7 @@ const tooltipValue = computed(() => {
     <Button
       v-pv-tooltip:[tooltipSide]="tooltipValue"
       unstyled
-      v-bind="actualAttrs()"
+      v-bind="actualAttrs({}, native)"
       :class="[classes, 'wakeb-pv-button']"
       :disabled="disabled"
       :type="action"

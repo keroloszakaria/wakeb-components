@@ -5,6 +5,7 @@ import { VIcon } from "vuetify/components/VIcon";
 import { useVuetifyIcon } from "../core/icons";
 import { buttonDefaults, useButton } from "../composables/button";
 import { useWakebContext } from "../core/runtime";
+import { useProviderProps } from "../core/provider-props";
 import type { ButtonProps, IconSlotProps } from "../types";
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<ButtonProps>(), buttonDefaults);
@@ -18,13 +19,20 @@ defineSlots<{
 const context = useWakebContext("WButton");
 const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttrs } = useButton(props, emit);
 const toIcon = useVuetifyIcon();
+/* Element type, loading/disabled safety and the portable click stay Wakeb-owned (SPEC R12, R13). */
+const native = useProviderProps(context, () => props.providerProps, {
+  component: "WButton",
+  primitive: VBtn,
+  label: "VBtn",
+  owned: ["disabled", "loading", "type", "onClick", "href", "to", "tag", "replace", "exact"],
+});
 </script>
 <template>
   <div v-bind="wrapperAttrs">
     <VTooltip v-if="isTooltip" v-bind="context.scope" :z-index="context.zIndexOverlay" :location="location" :text="title">
       <template #activator="{ props: tooltipProps }">
         <VBtn
-          v-bind="actualAttrs(tooltipProps)"
+          v-bind="actualAttrs(tooltipProps, native)"
           :class="classes"
           :disabled="disabled"
           :loading="isLoading"
@@ -49,7 +57,7 @@ const toIcon = useVuetifyIcon();
       :disabled="disabled"
       :loading="isLoading"
       :type="action"
-      v-bind="actualAttrs()"
+      v-bind="actualAttrs({}, native)"
       @click="onClick"
     >
       <template v-if="title !== ''">

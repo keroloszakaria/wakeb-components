@@ -35,6 +35,10 @@ import { WTruncatedText } from 'wakeb-components'
 | --- | --- |
 | `--wakeb-text-focus-color` | `Vuetify primary / #087f5b` |
 
+## Attribute target
+
+The text `<span>` that activates the tooltip. Caller focus and hover listeners are composed with the tooltip's own. Wakeb owns tabindex and aria-label: it sets them for truncated text and removes them otherwise, so caller values are ignored. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 The span receives DOM attributes and listeners. Focus/hover handlers are composed with Vuetify. Truncated labels get tabindex=0 and the full aria-label; short labels add no tab stop. Text truncation preserves Wakeb Utils behavior, including limits below 3 and UTF-16 emoji splitting. Tooltip location and delays follow Vuetify.

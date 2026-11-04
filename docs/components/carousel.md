@@ -47,6 +47,10 @@ import { WCarousel } from 'wakeb-components'
 | `--wakeb-carousel-focus` | `#087f8c` |
 | `--wakeb-carousel-fallback` | `undefined (legacy adapter switch)` |
 
+## Attribute target
+
+The carousel root (VCarousel, `role="region"`). The indicator container is a second root node and does not receive them; each indicator receives `indicatorAttrs`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 The component keeps two root nodes, without a layout wrapper. Put it in a positioned parent because custom indicators are absolutely positioned 2rem above its bottom. Ordinary attrs target VCarousel. Native delimiters stay hidden; showIndicators controls the custom dots. Custom indicators are type=button, have accessible names/current state, and support Arrow Left/Right (reversed in RTL), Home/End and normal Enter/Space. Arrow slots retain Vuetify keyboard behavior. Slides render through Vuetify lazy items. Use finite indices in range and positive intervals. Autoplay uses Vuetify scheduling; it does not automatically pause on pointer hover or keyboard focus. The demo starts paused and exposes a cycle control. Use cycle=false for static/reduced-motion experiences; the indicator animation respects reduced motion, while slide transitions are Vuetify attrs. Labels and URLs/content come from the host. Aware keeps the original inverted hideDelimiters=true meaning through its adapter and retains the legacy missing indicator type. Aware disables the enhanced indicator keys/focus styling to retain its original behavior.

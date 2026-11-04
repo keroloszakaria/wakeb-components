@@ -37,6 +37,10 @@ import { WSegmentedProgress } from 'wakeb-components'
 | `--wakeb-progress-track-background` | `#f2f4f7` |
 | `--wakeb-progress-track-border` | `#d0d5dd` |
 
+## Attribute target
+
+The root `div.segmented-progress` with `role="progressbar"`. Attributes fall through with Vue's default merge, so a caller role or aria-value* replaces the component's; do not pass them (they move under Wakeb ownership when the component migrates, M3). Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 Uses role=progressbar and aria-valuemin/aria-valuemax/aria-valuenow. A zero value has no fill or visible label, but retains its accessible name. At 100 there is no empty track. Segments size from a zero flex basis, so the fill is value% of the track width minus the 2px gap whatever the label length. Layout follows inherited direction; animations respect reduced motion. The component has no network or state-store side effects.

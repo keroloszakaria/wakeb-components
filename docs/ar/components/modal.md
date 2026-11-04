@@ -35,6 +35,7 @@ const open = ref(false)
 | `titleClass` | `ComponentClass` | `""` | كلاسات العنوان الافتراضي. |
 | `headerIcon` | `SharedIcon` | `""` | اسم أيقونة أو بيانات مسار SVG أو مكوّن اختياري (المزودات > الأيقونات)؛ ويمكن استبداله بـheader-icon. |
 | `ariaLabel` | `string` | `"Dialog"` | اسم بديل للنافذة عند غياب العنوان. |
+| `providerProps` | `WakebProviderProps` | `undefined` | غير قابل للنقل. خصائص وأحداث أصلية لـprimitive النافذة (`VDialog` في Vuetify و`Dialog` في PrimeVue). الـmodel وسياسة الإغلاق والعرض وترتيب الطبقات وحصر التركيز وقفل التمرير وأحداث `afterLeave` و`contentProps` و`pt` يملكها Wakeb. الأحداث الأصلية الأخرى تعمل بجانب معالجات Wakeb. المفاتيح المتجاهلة تُنتج تحذيرًا في وضع التطوير. |
 
 ## الأحداث
 
@@ -60,6 +61,10 @@ const open = ref(false)
 | `--wakeb-modal-fallback` | `undefined (legacy adapter switch)` |
 | `--wakeb-modal-close-color` | `rgb(var(--v-theme-on-surface))` |
 | `--wakeb-modal-icon-color` | `#087f8c` |
+
+## وجهة السمات
+
+العنصر الذي يحمل `role="dialog"`، ويحمل أيضًا `.wakeb-modal`، على كل المزودين. هذا العنصر منقول خارج المكوّن، فلا يوجد إلا أثناء رسم النافذة. الاسم الذي يضعه Wakeb (`title` ثم `ariaLabel`) يغلب `aria-label` من المستخدم. أما `providerProps` فيذهب إلى primitive النافذة. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
 ## الوصول وحدود السلوك
 

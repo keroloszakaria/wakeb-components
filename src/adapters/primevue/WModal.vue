@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from "vue";
+import { computed, mergeProps, nextTick, ref } from "vue";
 import Dialog from "primevue/dialog";
 import WButton from "./WButton.vue";
 import WLoading from "./WLoading.vue";
 import WakebIcon from "../../icons/WakebIcon";
 import { modalDefaults, useDisclosure } from "../../composables/disclosure";
 import { useWakebContext } from "../../core/runtime";
+import { useProviderProps } from "../../core/provider-props";
 import type { ModalProps } from "../../types";
 defineOptions({ name: "WModal", inheritAttrs: false });
 const props = withDefaults(defineProps<ModalProps>(), modalDefaults);
@@ -29,6 +30,16 @@ defineSlots<{
 }>();
 const context = useWakebContext("WModal");
 const { model: dialog, close } = useDisclosure(props, emit);
+/*
+ * The model, modality, dismissal policy, scroll lock, stacking and afterLeave stay Wakeb-owned
+ * (SPEC R12, R18). pt could carry roles and ARIA past the attribute policy.
+ */
+const native = useProviderProps(context, () => props.providerProps, {
+  component: "WModal",
+  primitive: Dialog,
+  label: "Dialog",
+  owned: ["visible", "modal", "blockScroll", "draggable", "closeOnEscape", "dismissableMask", "autoZIndex", "baseZIndex", "pt", "ptOptions", "onAfterHide"],
+});
 const activatorProps = computed(() => ({
   "aria-haspopup": "dialog",
   "aria-expanded": String(dialog.value),
@@ -64,7 +75,7 @@ const focusDialog = () =>
     :auto-z-index="context.zIndexOverlay === undefined"
     :pt="context.zIndexOverlay === undefined ? undefined : { mask: { style: { zIndex: context.zIndexOverlay } } }"
     :style="{ width: '100%', maxWidth: size(width) }"
-    v-bind="$attrs"
+    v-bind="mergeProps(native, $attrs)"
     class="wakeb-modal wakeb-pv-modal"
     :dir="context.direction"
     :aria-label="title || ariaLabel"

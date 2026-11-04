@@ -37,6 +37,10 @@ import { WSegmentedProgress } from 'wakeb-components'
 | `--wakeb-progress-track-background` | `#f2f4f7` |
 | `--wakeb-progress-track-border` | `#d0d5dd` |
 
+## وجهة السمات
+
+العنصر الجذري `div.segmented-progress` الذي يحمل `role="progressbar"`. تُدمج السمات بطريقة Vue الافتراضية، لذلك تحل role أو aria-value* القادمة من المستخدم محل قيم المكوّن؛ لا تمررها (ستنتقل إلى ملكية Wakeb عند نقل المكوّن في M3). مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
+
 ## الوصول وحدود السلوك
 
 يستخدم role=progressbar وحدود وقيمة ARIA. عند صفر لا يظهر جزء ممتلئ أو label مرئي، ويظل الاسم متاحًا لقارئ الشاشة. عند 100 يختفي الجزء الفارغ. الأجزاء تبدأ من flex basis صفر، فالجزء الممتلئ يساوي value% من عرض الشريط بعد خصم مسافة 2px مهما كان طول النص. الاتجاه موروث، والحركة تحترم reduced motion. لا توجد طلبات شبكة أو حالة مخزنة داخله.

@@ -94,3 +94,16 @@ const unknownIconOption = createWakebComponents({ framework: 'vuetify', icons: {
 // @ts-expect-error a path opacity is a number
 const badOpacity: import('wakeb-components').WakebSvgIcon = [['M0 0h24v24H0z', '0.2']];
 void [iconPaths, iconOptions, withIcons, iconButton, bareResolver, stringAlias, stringResolver, unknownIconOption, badOpacity];
+// Native escape hatch (SPEC R12): a provider-neutral record on adapter-backed components, set per instance only.
+const nativeButton: InstanceType<typeof WButton>['$props'] = { title: 'Save', providerProps: { variant: 'tonal', severity: 'danger' } };
+const nativeModal: import('wakeb-components').ModalProps = { providerProps: { scrollable: true } };
+const nativeRecord: import('wakeb-components').WakebProviderProps = { location: 'end' };
+const nativeDropdown: import('wakeb-components').DropdownProps = { providerProps: nativeRecord };
+const nativeLoading: import('wakeb-components').LoadingProps = { providerProps: { width: 6 } };
+// @ts-expect-error providerProps is a record of native props, not a string
+const nativeString: ButtonProps = { providerProps: 'variant=tonal' };
+// @ts-expect-error components without a provider primitive have no providerProps
+const nativeBadge: BadgeProps = { providerProps: {} };
+// @ts-expect-error providerProps is per instance and never a plugin default
+const nativeDefault = createWakebComponents({ framework: 'vuetify', defaults: { WButton: { providerProps: { variant: 'tonal' } } } });
+void [nativeButton, nativeModal, nativeDropdown, nativeLoading, nativeString, nativeBadge, nativeDefault];

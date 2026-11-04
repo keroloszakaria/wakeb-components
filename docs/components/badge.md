@@ -72,6 +72,10 @@ import { WBadge } from 'wakeb-components'
 | `--wakeb-badge-warning-dot` | `#f79009` |
 | `--wakeb-badge-warning-text` | `#b54708` |
 
+## Attribute target
+
+The root wrapper `div`. The chip inside receives only `chipAttrs`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 A badge is presentational unless explicit chipAttrs make it interactive. Supply visible status text; color and dot alone are not an accessible label. Native wrapper listeners receive bubbling DOM events; there are no custom emits. Chip styles preserve the extracted outline descendant backgrounds and specialized class hooks. Custom icons belong in the icon slot. Semantic variables customize colors without app tokens. Current-color variables are implementation details; use dotColor or documented semantic tokens. The compatibility-only --wakeb-badge-fallback switch stays undefined in normal use.

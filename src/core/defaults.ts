@@ -67,6 +67,8 @@ export function validateDefaults(defaults: unknown): WakebDefaults {
       const path = `defaults.${component}.${prop}`;
       if ((CONTROLLED_PROPS as readonly string[]).includes(prop))
         throw invalid(`${path} is data or model state, which belongs to each instance. Pass it on the component instead.`);
+      if (prop === "providerProps")
+        throw invalid(`${path} holds native provider props, which are nonportable and belong to each instance. Pass providerProps on the component.`);
       if (/^on[A-Z]/.test(prop)) throw invalid(`${path} is an event listener; defaults hold props only. Bind it on the component.`);
       if (typeof value === "function")
         throw invalid(`${path} is a callback; callbacks such as label formatters stay on the component instance.`);

@@ -161,6 +161,7 @@ it. Each instance gets its own copy, and changing the source object after
   `activePath` and `editingNodeId`.
 - Event listeners such as `onClick`.
 - Callbacks such as `labelFormatter`.
+- `providerProps`, which is nonportable and set per instance (see [Native props](#native-props)).
 - Unknown component names. TypeScript also rejects unknown props and wrong value types.
 
 Defaults apply to components imported from `wakeb-components`. Components that Wakeb renders
@@ -401,6 +402,97 @@ grammar.
 - A falsy `cols` means 12.
 - Other spans are ignored, with `WAKEB_UNKNOWN_VALUE`; for `cols` this means 12.
 
+## Attribute targets {#attribute-targets}
+
+Each component sends `class`, `style`, `id`, `aria-*`, `data-*` and DOM listeners such as
+`@mouseenter` to exactly one element, its attribute target. Listeners for events a component
+declares, such as WButton `@click` or WModal `@update:modelValue`, are Vue events: they fire
+once and never also bind to the DOM. `class` and `style` merge with Wakeb's own; other
+attributes with the same name follow the rules below.
+
+| Component | Attribute target |
+| --- | --- |
+| WButton | The native `<button>` on every provider. `wrapperAttrs` targets the outer layout div. |
+| WDropdown | The root `div` on every provider, not the activator and not the teleported menu. |
+| WModal | The `role="dialog"` element (also `.wakeb-modal`) on every provider. It is teleported. |
+| WLoading | The `role="status"` root on every provider. |
+| WTruncatedText | The text `<span>` that opens the tooltip. |
+| WTooltipBtn | The native `<button>`. `wrapperAttrs` targets the outer span. |
+| WCarousel | The carousel root (`role="region"`). Each indicator takes `indicatorAttrs`. |
+| WDrawer | The drawer root, a `<nav>` that also carries `.wakeb-drawer`. |
+| WExportDropdown | The teleported menu overlay, present only while open (baseline compatibility). |
+| WTree | The root `ul` (`role="tree"`). |
+| The other components | Their root element. WBadge sends `chipAttrs` to the chip; WBadgeStack sends `badgeAttrs` to each badge. |
+
+Wakeb-owned bindings win over attributes on WButton, WDropdown, WModal and WLoading: the
+button `type`, disabled and loading handling, the dialog's accessible name, and the status
+`role` and `aria-label`. To rename these, use the typed props (`title`, `ariaLabel`, `label`).
+WButton is the exception: a caller `aria-label` names the button. Components that only
+Vuetify renders still use Vue's default attribute merge, so a caller attribute with the same
+name replaces the component's; do not pass a `role` or `aria-*` value that the component
+already sets. They move to the same rules when they migrate.
+
+Each component page lists its attribute target under **Attribute target**.
+
+## Native props: `providerProps` {#native-props}
+
+::: warning Nonportable
+`providerProps` takes native props of the selected provider. The same keys mean nothing, or
+something else, under another provider. Switching providers does not translate them. Prefer
+portable props, slots, attributes and tokens, and keep each use easy to find.
+:::
+
+WButton, WDropdown, WModal and WLoading accept `providerProps`, a plain object of native props
+and listeners that Wakeb passes to one provider primitive:
+
+| Component | Vuetify primitive | PrimeVue primitive |
+| --- | --- | --- |
+| WButton | `VBtn` | `Button` |
+| WDropdown | `VMenu` | `Menu` |
+| WModal | `VDialog` | `Dialog` |
+| WLoading | `VProgressCircular` | `ProgressSpinner` |
+
+```vue
+<!-- Nonportable: Vuetify only. Under PrimeVue these keys are ignored with a warning. -->
+<WModal v-model="open" title="Edit" :provider-props="{ scrollable: true, onAfterEnter: track }" />
+
+<!-- Nonportable: PrimeVue only. -->
+<WModal v-model="open" title="Edit" :provider-props="{ position: 'top', onShow: track }" />
+```
+
+**What is ignored.** Wakeb drops these keys in every build. In development it also reports
+each one once per app with the `WAKEB_PROVIDER_PROP_IGNORED` warning:
+
+- Portable attributes: `class`, `style`, `id`, `role`, `tabindex`, `aria-*`, `data-*`, and
+  `key` and `ref`. Pass them on the component itself; they reach its attribute target.
+- Wakeb-owned bindings: models and every `onUpdate:*` handler, loading and disabled safety,
+  the element type, focus containment and stacking, and native callbacks that duplicate a
+  portable event. Per component:
+  - WButton: `disabled`, `loading`, `type`, `onClick`, and link or element keys (`href`, `to`,
+    `tag` on Vuetify; `as`, `asChild`, plus `label`, `badge`, `unstyled` and `pt` on PrimeVue).
+  - WDropdown: `modelValue`, `disabled`, `zIndex` and `activator` on Vuetify; `model`,
+    `popup`, `autoZIndex`, `baseZIndex` and `pt` on PrimeVue.
+  - WModal: `modelValue`, `persistent`, `maxWidth`, `zIndex`, `activator`, `onAfterLeave`,
+    `retainFocus`, `captureFocus` and `contentProps` on Vuetify; `visible`, `modal`, `blockScroll`,
+    `draggable`, `closeOnEscape`, `dismissableMask`, `autoZIndex`, `baseZIndex`, `pt` and
+    `onAfterHide` on PrimeVue.
+  - WLoading: `indeterminate`, `modelValue`, `color` and `size` on Vuetify; `strokeWidth` and
+    `pt` on PrimeVue.
+- Keys that the selected primitive does not declare as a prop or event, including plain DOM
+  listeners such as `onMouseenter`. Bind those on the component instead.
+
+**Precedence.** On the primitive, Wakeb's own bindings win, then attributes passed on the
+component, then `providerProps`. Native listeners that Wakeb also uses, such as the dialog's
+`onShow`, run alongside Wakeb's handler; they never replace it.
+
+**Scope.** `providerProps` is per instance. Plugin `defaults` reject it, in TypeScript and at
+runtime (`WAKEB_CONFIG_INVALID`). It is typed as `WakebProviderProps`
+(`Record<string, unknown>`), so root declarations stay provider-neutral and TypeScript does not
+check native keys; the runtime check against the selected primitive does. Internal
+compositions, such as the activator inside WDropdown or the close button inside WModal, do
+not receive it. The other 17 components do not accept it yet: TypeScript rejects it, and at
+runtime it is dropped with the same warning.
+
 ## Errors
 
 | Code | Cause | Fix |
@@ -416,7 +508,8 @@ grammar.
 | `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` in this build | Use Vuetify or PrimeVue |
 
 Errors are `WakebError` instances with a `code` property, exported from `wakeb-components`.
-Development warnings (`WAKEB_DEPRECATED_VALUE`, `WAKEB_UNKNOWN_VALUE`, `WAKEB_ICON_UNRESOLVED`) are console warnings, not
+Development warnings (`WAKEB_DEPRECATED_VALUE`, `WAKEB_UNKNOWN_VALUE`,
+`WAKEB_ICON_UNRESOLVED`, `WAKEB_PROVIDER_PROP_IGNORED`) are console warnings, not
 errors, and production builds drop them.
 
 ## Capability matrix
@@ -471,9 +564,13 @@ Switching providers changes how Wakeb components render. It does not migrate the
 app. Before switching, search your project for:
 
 - Direct use of provider components, for example `v-data-table` or PrimeVue `DataTable`.
+- `providerProps` values. Their keys belong to one provider; under another provider they are
+  ignored with `WAKEB_PROVIDER_PROP_IGNORED`.
 - Native escape hatches such as `chipAttrs`, `wrapperAttrs` with provider attributes, or native props passed as attributes.
 - CSS that targets provider classes or DOM: `.v-*`, `.p-*`.
 - Your provider's own theme, plugin options, icon sets and global defaults.
 - Native attributes that only one provider understands, such as Vuetify's `max-width`.
 
-Suggested search: `rg "v-[a-z-]+|\.v-|\.p-|from 'vuetify|from 'primevue" src`.
+Suggested search: `rg "v-[a-z-]+|\.v-|\.p-|from 'vuetify|from 'primevue|provider-?props" src`.
+In development, run the app on the new provider and look for `WAKEB_PROVIDER_PROP_IGNORED`
+in the console: it lists each native key that the new provider does not accept.

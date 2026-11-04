@@ -56,6 +56,10 @@ import { WTree } from 'wakeb-components'
 | `--wakeb-tree-focus` | `#087f8c` |
 | `--wakeb-tree-fallback` | `undefined (legacy adapter switch)` |
 
+## Attribute target
+
+The root `ul` with `role="tree"`. Nested groups do not receive them. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 Root attrs target ul. Data must be acyclic with globally unique string/number keys; only loaded children are considered. Field keys are direct properties, not dotted paths. activeKey uses strict identity; editingNodeId also supports string equivalence. Root computes active ancestors; nonroot groups use activePath. Collapsing unmounts descendant DOM through v-if and transition, so keep editable drafts in host state. Arrow Up/Down traverse visible nodes; Home/End move to bounds; expand/collapse arrows reverse in RTL; Enter/Space request selection. Expansion remains controlled. Nested controls keep their own keys. There is one roving tab target per tree; when a row disappears the target moves to its nearest visible ancestor, otherwise the previous visible row, and DOM focus follows only when focus was inside the tree. No typeahead, virtualization, drag/drop, checkbox selection or remote loading is built in. Default labels propagate to every level. Empty named slots use Vue fallback content, including branch toggles. Motion respects reduced-motion preferences.

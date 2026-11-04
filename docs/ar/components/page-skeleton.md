@@ -33,6 +33,10 @@ import { WPageSkeleton } from 'wakeb-components'
 | `--wakeb-skeleton-surface` | `#fff` |
 | `--wakeb-skeleton-border` | `#eaecf0` |
 
+## وجهة السمات
+
+العنصر الجذري `div.page-skeleton` الذي يحمل `role="status"`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
+
 ## الوصول وحدود السلوك
 
 يستخدم حالة واحدة باسم role=status وaria-busy=true مع إخفاء الصفوف الزخرفية عن ARIA لمنع تكرار القراءة؛ اعرضه أثناء التحميل فقط. repeat يُقرب لأسفل؛ القيم المفقودة وغير المحدودة والصفر والسالب تنتج عمودًا واحدًا. cols الافتراضي 12 للقيم الفارغة وفق العقد السابق. تقبل cols وsm وmd وlg القيم من 1 إلى 12 أو 'auto' أو true (تمدد) على شبكة Wakeb ذات الأعمدة الاثني عشر، ونقاط توقفها ثابتة: sm عند 600px وmd عند 960px وlg عند 1280px، ولا تغيّرها إعدادات المزوّد. القيم الأخرى تُتجاهل (وتأخذ cols القيمة 12) مع WAKEB_UNKNOWN_VALUE. الصفوف والأعمدة عناصر wakeb-grid-row وwakeb-grid-col، وليست VRow/VCol من Vuetify. type يتبع صيغة Skeleton في Wakeb: أسماء قابلة للنقل وتسلسلات بالفواصل وتكرار @N بحد أقصى 100. تُتجاهل الأسماء غير المعروفة مع WAKEB_UNKNOWN_VALUE، وتبقى أسماء Vuetify الخاصة تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. لا يحتاج CSS خاص بالمشروع. تخصيص عظام card يستهدف بنية Vuetify 3.

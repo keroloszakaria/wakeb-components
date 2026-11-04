@@ -42,6 +42,10 @@ No custom events. Native listeners target the outer badge wrapper.
 | `--wakeb-user-badge-initials-size` | `8px` |
 | `--wakeb-avatar-text` | `--wakeb-ui-on-primary / #fff` |
 
+## Attribute target
+
+The root `div.wakeb-user-badge`, which is the WBadge wrapper. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 Ordinary attrs/listeners target the WBadge wrapper. WBadge variables control the chip. HTTP-prefixed, root-relative and data URLs use VImg; other values use initials. There is no network-error initials fallback, matching the original component. Missing/empty name or an em dash uses ?, whitespace-only uses an empty initial; initials preserve charAt(0) UTF-16 behavior and use the first two words. Supply a user object with string fields; null is not supported. Avatars are decorative because the adjacent name identifies the user. Actions bubble naturally; stop propagation in the action if its parent has a click handler. No Tailwind dependency is required for the 8px initials.

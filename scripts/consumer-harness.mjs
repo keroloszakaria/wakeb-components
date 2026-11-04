@@ -93,7 +93,9 @@ export async function verifyConsumer(dir, framework) {
   };
   const full = await browserBuild("browser.js", "browser-dist");
   // Development warnings sit behind process.env.NODE_ENV, so a production bundle drops their text (SPEC R07).
-  assert(!/WAKEB_(DEPRECATED_VALUE|UNKNOWN_VALUE|ICON_UNRESOLVED)/.test(full.js), `${framework} production bundle keeps development warning text`);
+  assert(!/WAKEB_(DEPRECATED_VALUE|UNKNOWN_VALUE|ICON_UNRESOLVED|PROVIDER_PROP_IGNORED)/.test(full.js), `${framework} production bundle keeps development warning text`);
+  // providerProps filtering still runs in production; only its diagnostics are dropped.
+  assert(/providerProps/.test(full.js), `${framework} production bundle lost the providerProps filter`);
   // Wakeb-owned icons (SPEC R15): built-in chevron and the fallback box ship without an icon font.
   assert(full.js.includes("M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"), `${framework} bundle contains the built-in $expand icon`);
   if (framework !== "vuetify") assert(full.js.includes("M3,3H21V21H3V3M5,5V19H19V5H5Z"), `${framework} bundle contains the icon fallback box`);

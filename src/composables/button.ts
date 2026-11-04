@@ -32,7 +32,7 @@ const ICON_COLORS = {
 const ICON_PIXELS: Record<string, number> = { xs: 16, sm: 20, md: 24, lg: 32, xl: 40 };
 
 /** Provider-neutral WButton behavior: classes, icon presentation, activation rules and attrs. */
-export function useButton(props: Required<Omit<ButtonProps, "icon">> & ButtonProps, emit: (event: "click", value: MouseEvent) => void) {
+export function useButton(props: Required<Omit<ButtonProps, "icon" | "providerProps">> & ButtonProps, emit: (event: "click", value: MouseEvent) => void) {
   const attrs = useAttrs();
   const classes = computed(() => [
     "btn",
@@ -60,7 +60,8 @@ export function useButton(props: Required<Omit<ButtonProps, "icon">> & ButtonPro
     }
     emit("click", event);
   };
-  const actualAttrs = (tooltip: Record<string, unknown> = {}) =>
-    mergeProps(tooltip, props.isTooltip && !attrs["aria-label"] ? { "aria-label": props.title || undefined } : {}, attrs);
+  /** Native provider props first, so tooltip bindings, the fallback name and caller attrs win over them. */
+  const actualAttrs = (tooltip: Record<string, unknown> = {}, native: Record<string, unknown> = {}) =>
+    mergeProps(native, tooltip, props.isTooltip && !attrs["aria-label"] ? { "aria-label": props.title || undefined } : {}, attrs);
   return { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttrs };
 }

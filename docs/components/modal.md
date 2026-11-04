@@ -35,6 +35,7 @@ const open = ref(false)
 | `titleClass` | `ComponentClass` | `""` | Classes on the default title. |
 | `headerIcon` | `SharedIcon` | `""` | Optional icon name, SVG path data or component (Providers > Icons); header-icon can replace it. |
 | `ariaLabel` | `string` | `"Dialog"` | Fallback dialog name when title is empty. |
+| `providerProps` | `WakebProviderProps` | `undefined` | Nonportable. Native props and listeners for the dialog primitive (Vuetify `VDialog`, PrimeVue `Dialog`). The model, dismissal policy, width, stacking, focus containment, scroll lock, `afterLeave` callbacks, `contentProps` and `pt` stay Wakeb-owned. Other native callbacks run alongside Wakeb's own. Ignored keys produce a development warning. |
 
 ## Events
 
@@ -60,6 +61,10 @@ const open = ref(false)
 | `--wakeb-modal-fallback` | `undefined (legacy adapter switch)` |
 | `--wakeb-modal-close-color` | `rgb(var(--v-theme-on-surface))` |
 | `--wakeb-modal-icon-color` | `#087f8c` |
+
+## Attribute target
+
+The element with `role="dialog"`, which also carries `.wakeb-modal`, on every provider. It is teleported, so it exists only while the dialog is rendered. Wakeb's accessible name (`title`, then `ariaLabel`) wins over a caller `aria-label`. `providerProps` goes to the dialog primitive. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
 ## Accessibility and limits
 

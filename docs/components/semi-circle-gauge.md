@@ -41,6 +41,10 @@ import { WSemiCircleGauge } from 'wakeb-components'
 | `--wakeb-gauge-text-color` | `currentColor` |
 | `--wakeb-gauge-muted-color` | `#667085` |
 
+## Attribute target
+
+The root `div.semi-circle-gauge`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
 ## Accessibility and limits
 
 SVG role=img exposes the percentage or ariaLabel; decorative center text is aria-hidden. Vue useId keeps SVG references distinct and stable across SSR requests. RTL mirrors geometry only; text remains readable. Invalid geometry is normalized; animations honor reduced motion. Size is the full gauge width; the arc is half-height.

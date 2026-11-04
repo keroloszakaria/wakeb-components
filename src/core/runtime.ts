@@ -31,7 +31,7 @@ export interface WakebContext {
 
 export const WAKEB_CONTEXT: InjectionKey<WakebContext> = Symbol.for("wakeb-components:context");
 
-export type WakebWarningCode = "WAKEB_DEPRECATED_VALUE" | "WAKEB_UNKNOWN_VALUE" | "WAKEB_ICON_UNRESOLVED";
+export type WakebWarningCode = "WAKEB_DEPRECATED_VALUE" | "WAKEB_UNKNOWN_VALUE" | "WAKEB_ICON_UNRESOLVED" | "WAKEB_PROVIDER_PROP_IGNORED";
 
 /**
  * Reports a development warning once per app and key. Call it behind

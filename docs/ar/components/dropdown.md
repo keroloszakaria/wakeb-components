@@ -38,6 +38,7 @@ import { WDropdown } from 'wakeb-components'
 | `labelFormatter` | `(label: string \| undefined) => string` | `label => label ?? ""` | دالة التنسيق أو الترجمة من المشروع للزر والعناصر. |
 | `colorMap` | `Record<string, string>` | `undefined` | استبدال الألوان الدلالية success وdanger وwarning وprimary وinfo. |
 | `menuStyle` | `CSSProperties` | `undefined` | أنماط ومتغيرات على القائمة المنقولة خارج الحاوية. |
+| `providerProps` | `WakebProviderProps` | `undefined` | غير قابل للنقل. خصائص وأحداث أصلية لـprimitive القائمة (`VMenu` في Vuetify و`Menu` في PrimeVue). حالة الفتح و`disabled` وترتيب الطبقات وزر الفتح يملكها Wakeb، وفي PrimeVue أيضًا `model` و`popup` و`pt`. المفاتيح المتجاهلة تُنتج تحذيرًا في وضع التطوير. |
 
 ## الأحداث
 
@@ -57,6 +58,10 @@ import { WDropdown } from 'wakeb-components'
 | `--wakeb-dropdown-color-primary` | `#087f8c` |
 | `--wakeb-dropdown-color-info` | `#2e90fa` |
 | `--wakeb-dropdown-activator-color` | `computed inline from selected color` |
+
+## وجهة السمات
+
+العنصر الجذري `div` على كل المزودين، وليس زر الفتح ولا القائمة المنقولة. خصص القائمة عبر `menuStyle`، ويستقبل slot الـactivator خصائصه الخاصة. أما `providerProps` فيذهب إلى primitive القائمة. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
 ## الوصول وحدود السلوك
 

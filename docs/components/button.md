@@ -35,6 +35,7 @@ import { WButton } from 'wakeb-components'
 | `iconColorType` | `"danger" \| "primary" \| "success" \| "warning" \| "currentColor"` | `"currentColor"` | Semantic icon role, resolved through namespaced CSS variables. |
 | `customIconColor` | `string` | `""` | Explicit icon color; takes precedence over the role. |
 | `wrapperAttrs` | `Record<string, unknown>` | `{}` | Explicit attributes for the outer layout div; normal attrs target the button. |
+| `providerProps` | `WakebProviderProps` | `undefined` | Nonportable. Native props and listeners for the selected provider's button primitive (Vuetify `VBtn`, PrimeVue `Button`). Wakeb-owned keys (`disabled`, `loading`, `type`, `onClick`, link and element keys; on PrimeVue also `label`, `badge`, `unstyled`, `pt`) and portable attributes are ignored with a development warning. |
 
 ## Events
 
@@ -155,6 +156,10 @@ import { WButton } from 'wakeb-components'
 | `--wakeb-button-text-color` | `#344054` |
 | `--wakeb-button-text-focus-outline` | `#087f8c` |
 | `--wakeb-button-text-hover-color` | `#344054` |
+
+## Attribute target
+
+The native `<button>` on every provider, not the outer layout div; use `wrapperAttrs` for that div. Wakeb's type, disabled and loading handling win, and a caller `onClick` is the portable click, emitted once. `providerProps` reaches the same button primitive below the caller attributes. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
 ## Accessibility and limits
 

@@ -4,23 +4,25 @@ import { VBtn } from "vuetify/components/VBtn";
 import { VIcon } from "vuetify/components/VIcon";
 import { VTooltip } from "vuetify/components/VTooltip";
 import type { TooltipBtnProps, SharedIcon } from "../types";
+import { VUETIFY_VARIANTS, useVariant } from "../core/vocabulary";
 defineOptions({ inheritAttrs: false });
 withDefaults(defineProps<TooltipBtnProps>(), {
   text: "",
   btnIcon: false,
-  variant: "text",
+  variant: "ghost",
   location: "bottom",
   openDelay: 200,
   contentClass: "v-app-tooltip-btn__content",
 });
 defineSlots<{ icon?(props: { icon: SharedIcon | undefined }): unknown }>();
 const attrs = useAttrs();
+const toVariant = useVariant("WTooltipBtn");
 </script>
 <template>
   <span class="v-app-tooltip-btn d-inline-block" v-bind="wrapperAttrs">
     <VBtn
       :aria-label="ariaLabel === undefined ? text || undefined : ariaLabel"
-      :variant="variant"
+      :variant="VUETIFY_VARIANTS[toVariant(variant, 'variant', 'ghost')]"
       v-bind="attrs"
       :icon="!!btnIcon"
     >

@@ -27,7 +27,7 @@ import { WBadge } from 'wakeb-components'
 | `customBorderRadius` | `string` | `""` | قيمة CSS صريحة لنصف القطر. |
 | `customPadding` | `string` | `""` | padding صريح وارتفاع تلقائي ومسافة محتوى أصغر. |
 | `dotColor` | `string` | `""` | لون CSS صريح للنقطة. |
-| `variant` | `"default" \| "flat" \| "text" \| "elevated" \| "tonal" \| "outlined" \| "plain"` | `"default"` | default يتحول إلى tonal في Vuetify. |
+| `variant` | `WakebVariant \| WakebDeprecatedVariant` | `"soft"` | النمط القابل للنقل: soft أو solid أو outline أو ghost. الأسماء القديمة (default وtonal وflat وelevated وoutlined وtext وplain) ما زالت تعمل مع تحذير في وضع التطوير. |
 | `iconSize` | `string \| number` | `"xs"` | xs/sm/md/lg/xl تعني 16/20/24/32/40px. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | موضع الأيقونة والـactions قبل أو بعد المحتوى. |
 | `chipAttrs` | `Record<string, unknown>` | `{}` | attributes صريحة لـVChip؛ العادية تصل للحاوية الخارجية. |

@@ -82,6 +82,10 @@ export interface ButtonProps {
   customIconColor?: string;
   wrapperAttrs?: Record<string, unknown>;
 }
+/** Portable style variants (SPEC R23), rendered on every provider. */
+export type WakebVariant = "soft" | "solid" | "outline" | "ghost";
+/** Baseline variant names, accepted with a development warning until the next major release. */
+export type WakebDeprecatedVariant = "default" | "tonal" | "flat" | "elevated" | "outlined" | "text" | "plain";
 export interface BadgeProps {
   label?: string;
   classList?: ComponentClass;
@@ -92,7 +96,7 @@ export interface BadgeProps {
   customBorderRadius?: string;
   customPadding?: string;
   dotColor?: string;
-  variant?: "default" | "flat" | "text" | "elevated" | "tonal" | "outlined" | "plain";
+  variant?: WakebVariant | WakebDeprecatedVariant;
   iconSize?: string | number;
   iconPosition?: "before" | "after";
   chipAttrs?: Record<string, unknown>;
@@ -179,7 +183,7 @@ export interface TooltipBtnProps {
   text?: string;
   ariaLabel?: string | null;
   btnIcon?: boolean;
-  variant?: "text" | "flat" | "elevated" | "tonal" | "outlined" | "plain";
+  variant?: WakebVariant | WakebDeprecatedVariant;
   location?: "top" | "bottom" | "start" | "end";
   openDelay?: string | number;
   contentClass?: string;

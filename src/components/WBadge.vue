@@ -12,7 +12,7 @@
       :style="chipStyle"
       label
       small
-      :variant="variant === 'default' ? 'tonal' : variant"
+      :variant="VUETIFY_VARIANTS[toVariant(variant, 'variant', 'soft')]"
     >
       <template v-if="iconPosition === 'before'">
         <slot name="icon" :icon="icon" :size="iconSize">
@@ -39,6 +39,7 @@ import { VChip } from "vuetify/components/VChip";
 import { VIcon } from "vuetify/components/VIcon";
 import type { CSSProperties } from "vue";
 import type { BadgeProps, SharedIcon } from "../types";
+import { VUETIFY_VARIANTS, useVariant } from "../core/vocabulary";
 const props = withDefaults(defineProps<BadgeProps>(), {
   label: "",
   classList: "",
@@ -49,11 +50,12 @@ const props = withDefaults(defineProps<BadgeProps>(), {
   customBorderRadius: "",
   customPadding: "",
   dotColor: "",
-  variant: "default",
+  variant: "soft",
   iconSize: "xs",
   iconPosition: "before",
   chipAttrs: () => ({}),
 });
+const toVariant = useVariant("WBadge");
 defineSlots<{
   icon(props: { icon: SharedIcon; size: string | number }): unknown;
   actions(): unknown;

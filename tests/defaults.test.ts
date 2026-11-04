@@ -188,3 +188,25 @@ describe("development warnings", () => {
     warn.mockRestore();
   });
 });
+
+describe(`SSR request isolation (${framework})`, () => {
+  it("renders concurrent requests with their own defaults, locale and theme", async () => {
+    const { createSSRApp } = await import("vue");
+    const { renderToString } = await import("vue/server-renderer");
+    const request = (primary: string, size: string, locale: "en" | "ar") =>
+      renderToString(
+        createSSRApp(() => [h(WButton, { title: "Go" }), h(WLoading)])
+          .use(host() as never)
+          .use(wakeb({ locale, defaults: { WButton: { size } }, theme: { tokens: { primary } } })),
+      );
+    const [first, second] = await Promise.all([request("#111111", "sm", "en"), request("#222222", "xl", "ar")]);
+    expect(first).toContain("--wakeb-ui-primary:#111111");
+    expect(first).toContain("btn--sm");
+    expect(first).toContain('aria-label="Loading"');
+    expect(first).not.toContain("#222222");
+    expect(second).toContain("--wakeb-ui-primary:#222222");
+    expect(second).toContain("btn--xl");
+    expect(second).toContain('aria-label="جارٍ التحميل"');
+    expect(second).not.toContain("#111111");
+  });
+});

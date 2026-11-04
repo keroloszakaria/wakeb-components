@@ -69,10 +69,13 @@ for (const [framework, peers] of Object.entries(PROVIDERS)) {
     const modules = new Set();
     writeFileSync(join(dir, `${outDir}.html`), `<div id="app"></div><script type="module" src="/${entry}"></script>\n`);
     await vite.build({ root: dir, configFile: false, logLevel: "warn", plugins: [wakebComponents(), collector(modules)], build: { outDir, rollupOptions: { input: join(dir, `${outDir}.html`) } } });
-    const css = readdirSync(join(dir, outDir, "assets")).filter((file) => file.endsWith(".css")).map((file) => readFileSync(join(dir, outDir, "assets", file), "utf8")).join("\n");
-    return { modules: [...modules], css };
+    const assets = (ext) => readdirSync(join(dir, outDir, "assets")).filter((file) => file.endsWith(ext)).map((file) => readFileSync(join(dir, outDir, "assets", file), "utf8")).join("\n");
+    return { modules: [...modules], css: assets(".css"), js: assets(".js") };
   };
   const full = await browserBuild("browser.js", "browser-dist");
+  // Development warnings sit behind process.env.NODE_ENV, so a production bundle drops their text (SPEC R07).
+  assert(!/WAKEB_(DEPRECATED|UNKNOWN)_VALUE/.test(full.js), `${framework} production bundle keeps development warning text`);
+  if (framework === "vuetify") assert(full.modules.some((id) => /adapters\/vuetify\/WBadge\.js$/.test(id)), "vuetify bundle renders WBadge, which warns in development");
   const button = await browserBuild("button-only.js", "button-dist");
 
   await vite.build({ root: dir, configFile: false, logLevel: "warn", plugins: [wakebComponents()], build: { ssr: join(dir, "server.js"), outDir: "ssr-dist" } });

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { useVariant } from "../core/vocabulary";
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
@@ -18,7 +19,7 @@ const props = withDefaults(defineProps<BadgeStackProps>(), {
   truncateLength: 12,
   showOverflowMenu: false,
   badgeType: "transparent",
-  badgeVariant: "default",
+  badgeVariant: "soft",
   badgeBorderRadius: "md",
   customBorderRadius: "sm",
   badgePadding: "",
@@ -46,6 +47,9 @@ defineSlots<{
     overflow: boolean;
   }): unknown;
 }>();
+// Normalized here so deprecation warnings name the stack prop the caller used.
+const toVariant = useVariant("WBadgeStack");
+const stackVariant = computed(() => toVariant(props.badgeVariant, "badgeVariant", "soft"));
 const items = computed(() => (Array.isArray(props.items) ? props.items : []));
 const visibleItems = computed(() => items.value.slice(0, props.max));
 const overflowItems = computed(() => items.value.slice(props.max));
@@ -67,7 +71,7 @@ const iconWrapStyle = (item: BadgeStackItem) => {
 };
 const resolveBadgeProps = (item: BadgeStackItem): BadgeProps => ({
   type: item.type ?? props.badgeType,
-  variant: item.variant ?? props.badgeVariant,
+  variant: item.variant === undefined ? stackVariant.value : toVariant(item.variant, "items[].variant", stackVariant.value),
   borderRadius: item.borderRadius ?? props.badgeBorderRadius,
   customBorderRadius: item.customBorderRadius ?? props.customBorderRadius,
   customPadding: item.customPadding ?? props.badgePadding,
@@ -160,7 +164,7 @@ const truncate = (text: string | undefined) =>
             v-bind="badgeAttrs"
             :label="`+${overflowCount}`"
             :type="badgeType"
-            :variant="badgeVariant"
+            :variant="stackVariant"
             :border-radius="badgeBorderRadius"
             :custom-border-radius="customOverflowBorderRadius"
             class-list="badge-stack__overflow"
@@ -237,7 +241,7 @@ const truncate = (text: string | undefined) =>
       v-bind="badgeAttrs"
       :label="`+${overflowCount}`"
       :type="badgeType"
-      :variant="badgeVariant"
+      :variant="stackVariant"
       :border-radius="badgeBorderRadius"
       :custom-border-radius="customBorderRadius"
       class-list="badge-stack__overflow"

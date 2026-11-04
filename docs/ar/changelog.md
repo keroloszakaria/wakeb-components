@@ -11,6 +11,7 @@
 - لم يعد `SharedIcon` يشير إلى أنواع Vuetify.
 - قيم `defaults` لكل مكوّن في الـplugin، تتقدم عليها الخصائص الممررة، وتُرفض فيها خصائص البيانات والـmodel ودوال الاستدعاء.
 - نصوص مدمجة بالعربية مع `locale: 'ar'`، والخيار `direction`، والخيار `theme` مع `mode` ومتغيرات `--wakeb-ui-*` المقتصرة على كل تطبيق وطبقاته.
+- تغيير غير متوافق: تستخدم WBadge وWTooltipBtn وWBadgeStack قيم `variant` القابلة للنقل `soft` و`solid` و`outline` و`ghost`. الأسماء القديمة تعمل مع تحذير `WAKEB_DEPRECATED_VALUE` في وضع التطوير، ويفقد `elevated` الارتفاع ويفقد `plain` مظهره الباهت.
 
 ## غير منشور (0.7.x)
 

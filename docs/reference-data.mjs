@@ -1159,10 +1159,10 @@ export default [
       ],
       [
         "variant",
-        "\"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\"",
-        "\"default\"",
-        "default maps to Vuetify tonal.",
-        "default يتحول إلى tonal في Vuetify."
+        "WakebVariant | WakebDeprecatedVariant",
+        "\"soft\"",
+        "Portable style: soft, solid, outline or ghost. Baseline names (default, tonal, flat, elevated, outlined, text, plain) still work and warn in development.",
+        "النمط القابل للنقل: soft أو solid أو outline أو ghost. الأسماء القديمة (default وtonal وflat وelevated وoutlined وtext وplain) ما زالت تعمل مع تحذير في وضع التطوير."
       ],
       [
         "iconSize",
@@ -1533,9 +1533,9 @@ export default [
       [
         "badgeVariant",
         "BadgeProps[\"variant\"]",
-        "\"default\"",
-        "Default chip variant; default maps to tonal.",
-        "شكل الشارة؛ default يتحول إلى tonal."
+        "\"soft\"",
+        "Style of every badge and of the +N badge; an item variant overrides it per row. Baseline names warn in development.",
+        "نمط كل الشارات وشارة +N، ويتقدم عليه variant الخاص بكل عنصر. الأسماء القديمة تعطي تحذيرًا في وضع التطوير."
       ],
       [
         "badgeBorderRadius",
@@ -1810,10 +1810,10 @@ export default [
       ],
       [
         "variant",
-        "\"text\" | \"flat\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\"",
-        "\"text\"",
-        "Vuetify button variant.",
-        "شكل زر Vuetify."
+        "WakebVariant | WakebDeprecatedVariant",
+        "\"ghost\"",
+        "Portable style: soft, solid, outline or ghost. Baseline names (text, flat, elevated, tonal, outlined, plain) still work and warn in development.",
+        "النمط القابل للنقل: soft أو solid أو outline أو ghost. الأسماء القديمة (text وflat وelevated وtonal وoutlined وplain) ما زالت تعمل مع تحذير في وضع التطوير."
       ],
       [
         "location",
@@ -1857,8 +1857,8 @@ export default [
     ],
     "variables": [],
     "limits": [
-      "VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults match the original text variant, bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. VIcon requires your Vuetify icon configuration; the icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.",
-      "الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات مطابقة للأصل: text وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. VIcon يحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة."
+      "VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. VIcon requires your Vuetify icon configuration; the icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.",
+      "الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. VIcon يحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة."
     ],
     "example": "<WTooltipBtn text=\"Save changes\" icon=\"$complete\" btn-icon aria-label=\"Save changes\" @click=\"() => {}\" />",
     "playground": "IdentityPlayground",

@@ -12,9 +12,11 @@ Status: in progress on `feat/m1-selector-packaging`, after M1 (`307d4d4`). This 
 | Theme and direction context; overlay scope (R05, R17, R19) | `theme.mode`, validated `theme.tokens` mapped to `--wakeb-ui-*`, and `direction`. Together they form a frozen per-app scope (`style`, `data-wakeb-theme`, `dir`). The scope is merged before caller attrs on every facade root, and bound on WDropdown menu content. WModal content already receives it through its attrs. `zIndexOverlay` maps to provider overlay stacking. Nothing is added when nothing is configured. | Root, teleported-menu, caller-precedence, two-app isolation and malformed-token tests; browser check on the packed PrimeVue consumer (dark, `rtl`, Arabic, z-index 3000) |
 | Stable semantic tokens (R17) | WButton, WDropdown and WModal consume the tokens through existing component-variable fallback chains. Component variables still win. Dark-mode values live in `src/styles/tokens.css`. | `npm run check` docs token scan; browser computed styles |
 | Development warnings (R07) | `warnOnce` reports once per app and key. The call sites must sit behind `process.env.NODE_ENV !== "production"`. | Unit test |
+| R23 variant vocabulary | `WakebVariant` (`soft`, `solid`, `outline`, `ghost`) and `WakebDeprecatedVariant` are public types. `useVariant` is the one shared normalizer: it maps baseline aliases, reports `WAKEB_DEPRECATED_VALUE` and falls back to the component default with `WAKEB_UNKNOWN_VALUE`. It is wired into WBadge `variant`, WTooltipBtn `variant`, and WBadgeStack `badgeVariant` and item `variant`. Vuetify rendering goes through the draft `VUETIFY_VARIANTS` table. | `tests/vocabulary.test.ts`. `npm run check` asserts the Vuetify production bundle contains WBadge but no warning text. A browser check on the Vuetify dev server showed each warning once. |
+| SSR request isolation (R19) | No new code; contexts were already per app. | Concurrent `renderToString` requests with different defaults, locale and theme on both providers |
 | Layer boundaries (R08, R10) | `tests/layers.test.ts` scans imports. Core, composables, icons, styles, build, types and the root never import a provider, and each adapter imports only its own provider. | Test |
 
-Suite: 261 tests in two Vitest projects. `npm run check` passes, including both packed consumers. Bundle module counts are unchanged from M1, and the WButton-only bundles still contain no dialog or menu modules.
+Suite: 280 tests in two Vitest projects. `npm run check` passes, including both packed consumers. Full bundles have 171 modules on Vuetify (one more than M1, the vocabulary module) and 178 on PrimeVue. WButton-only bundles have 95 and 139 and still contain no dialog or menu modules.
 
 ## Decisions taken during M2
 
@@ -25,10 +27,9 @@ Suite: 261 tests in two Vitest projects. `npm run check` passes, including both 
 
 ## Remaining for M2 exit
 
-1. **R23 vocabulary.** Add the portable `variant`, intent and color types and one shared alias normalizer. Wire `WAKEB_DEPRECATED_VALUE` into WBadge, WTooltipBtn and WBadgeStack. Prove in a packed production bundle that the warning text is stripped. This overlaps the M3 batch B migration.
+1. **R23 intents and colors.** Add the portable intent type and the color-prop rule: intent name or CSS color. Under Vuetify, its palette names are accepted with a warning; other providers fail validation. Apply this to WBadge `type`, `color`, `avatarColor` and `iconColor`, and to WBaseSidebar `skeletonType` with the R16 grammar. The variant mapping tables become final once the visual contract tests exist (M3).
 2. **Neutral contract declarations.** Facade types still come from the Vuetify renderer declarations, though those declarations no longer reference Vuetify types. Separate contract files and compile-time tests for event and slot payloads are still to do.
 3. **`providerProps` and attribute routing.** Add the escape hatch with selected-provider validation. Document the attribute target of each facade.
 4. **Icons resolver (R15).** Add the name resolver, a deterministic fallback and a development diagnostic.
 5. **Overlay scope everywhere.** Extend scope to tooltips, the WAvatarStack and WBadgeStack menus, and WDrawer as those components migrate (M3/M4).
-6. **SSR request isolation test.** Two concurrent server renders with different defaults and themes.
-7. **Peer version matrix.** Test the minimum versions of each advertised peer range in locked fixtures.
+6. **Peer version matrix.** Test the minimum versions of each advertised peer range in locked fixtures.

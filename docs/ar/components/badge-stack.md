@@ -23,7 +23,7 @@ import { WBadgeStack } from 'wakeb-components'
 | `truncateLength` | `number` | `12` | طول الاسم الظاهر شامل النقاط؛ أسماء قائمة الزيادة كاملة. |
 | `showOverflowMenu` | `boolean` | `false` | تفعيل قائمة Vuetify عند hover أو النقر أو الكيبورد على +N. |
 | `badgeType` | `string` | `"transparent"` | نوع WBadge الافتراضي. |
-| `badgeVariant` | `BadgeProps["variant"]` | `"default"` | شكل الشارة؛ default يتحول إلى tonal. |
+| `badgeVariant` | `BadgeProps["variant"]` | `"soft"` | نمط كل الشارات وشارة +N، ويتقدم عليه variant الخاص بكل عنصر. الأسماء القديمة تعطي تحذيرًا في وضع التطوير. |
 | `badgeBorderRadius` | `string` | `"md"` | نصف القطر الافتراضي. |
 | `customBorderRadius` | `string` | `"sm"` | القيمة القديمة تمر كما هي؛ استخدم طول CSS صالحًا في المشاريع الجديدة. |
 | `badgePadding` | `string` | `""` | حشو الشارة المخصص. |

@@ -27,7 +27,7 @@ import { WBadge } from 'wakeb-components'
 | `customBorderRadius` | `string` | `""` | Explicit CSS border radius. |
 | `customPadding` | `string` | `""` | Explicit padding, auto height and tighter content gap. |
 | `dotColor` | `string` | `""` | Explicit CSS dot color. |
-| `variant` | `"default" \| "flat" \| "text" \| "elevated" \| "tonal" \| "outlined" \| "plain"` | `"default"` | default maps to Vuetify tonal. |
+| `variant` | `WakebVariant \| WakebDeprecatedVariant` | `"soft"` | Portable style: soft, solid, outline or ghost. Baseline names (default, tonal, flat, elevated, outlined, text, plain) still work and warn in development. |
 | `iconSize` | `string \| number` | `"xs"` | xs/sm/md/lg/xl map to 16/20/24/32/40px. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | Place icon and actions before or after the content. |
 | `chipAttrs` | `Record<string, unknown>` | `{}` | Explicit attrs for VChip; normal attrs belong to the wrapper. |

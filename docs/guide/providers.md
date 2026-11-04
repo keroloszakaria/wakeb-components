@@ -206,6 +206,40 @@ Options apply when the plugin is installed; later changes need normal CSS overri
 The `icons` option is not available yet. Passing it fails with
 `WAKEB_CAPABILITY_UNSUPPORTED`.
 
+## Style vocabulary
+
+Props that choose a visual style accept Wakeb values only, so the same value works on every
+provider. The first portable set is `variant` on WBadge and WTooltipBtn, and `badgeVariant` and
+item `variant` on WBadgeStack:
+
+| Value | Meaning | Vuetify rendering |
+| --- | --- | --- |
+| `soft` | Tinted background (WBadge default) | `tonal` |
+| `solid` | Filled background | `flat` |
+| `outline` | Border, no fill | `outlined` |
+| `ghost` | Text only (WTooltipBtn default) | `text` |
+
+The Vuetify column is a draft mapping for Vuetify 3.13. It may change once the visual contract
+tests exist, while the Wakeb values stay the same.
+
+The baseline names still work until the next major release. In development, each one logs
+`WAKEB_DEPRECATED_VALUE` once per app, component, prop and value:
+
+| Old value | Use instead | Note |
+| --- | --- | --- |
+| `default`, `tonal` | `soft` | `default` already rendered as `tonal` |
+| `flat` | `solid` | |
+| `elevated` | `solid` | Elevation is not portable; add a CSS shadow |
+| `outlined` | `outline` | |
+| `text`, `plain` | `ghost` | The faded `plain` look is not kept |
+
+An unknown value falls back to the component default and logs `WAKEB_UNKNOWN_VALUE` in
+development. Production builds drop both warnings: the code sits behind
+`process.env.NODE_ENV`, which Vite replaces.
+
+Intent names and color props (`type`, `color`) are not portable yet. They still accept
+Vuetify theme names.
+
 ## Errors
 
 | Code | Cause | Fix |
@@ -221,6 +255,8 @@ The `icons` option is not available yet. Passing it fails with
 | `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` or the `icons` option in this build | Use Vuetify or PrimeVue; pass icons on props |
 
 Errors are `WakebError` instances with a `code` property, exported from `wakeb-components`.
+Development warnings (`WAKEB_DEPRECATED_VALUE`, `WAKEB_UNKNOWN_VALUE`) are console warnings, not
+errors, and production builds drop them.
 
 ## Capability matrix
 

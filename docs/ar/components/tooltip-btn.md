@@ -22,7 +22,7 @@ import { WTooltipBtn } from 'wakeb-components'
 | `text` | `string` | `""` | نص Tooltip مترجم مسبقًا؛ القيمة الفارغة تلغيه. |
 | `ariaLabel` | `string \| null` | `undefined` | اسم مقروء صريح للزر؛ البديل text. |
 | `btnIcon` | `boolean` | `false` | تفعيل شكل زر الأيقونة في Vuetify. |
-| `variant` | `"text" \| "flat" \| "elevated" \| "tonal" \| "outlined" \| "plain"` | `"text"` | شكل زر Vuetify. |
+| `variant` | `WakebVariant \| WakebDeprecatedVariant` | `"ghost"` | النمط القابل للنقل: soft أو solid أو outline أو ghost. الأسماء القديمة (text وflat وelevated وtonal وoutlined وplain) ما زالت تعمل مع تحذير في وضع التطوير. |
 | `location` | `"top" \| "bottom" \| "start" \| "end"` | `"bottom"` | موضع Tooltip. |
 | `openDelay` | `string \| number` | `200` | تأخير فتح Tooltip بالمللي ثانية. |
 | `contentClass` | `string` | `"v-app-tooltip-btn__content"` | class على Tooltip overlay. |
@@ -45,7 +45,7 @@ import { WTooltipBtn } from 'wakeb-components'
 
 ## الوصول وحدود السلوك
 
-الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات مطابقة للأصل: text وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. VIcon يحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة.
+الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. VIcon يحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة.
 
 ## جرّب بنفسك
 

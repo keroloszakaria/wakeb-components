@@ -23,7 +23,7 @@ import { WBadgeStack } from 'wakeb-components'
 | `truncateLength` | `number` | `12` | Visible label length including the three-dot suffix. Overflow labels stay full. |
 | `showOverflowMenu` | `boolean` | `false` | Enable a real hover/click/keyboard Vuetify menu on +N. |
 | `badgeType` | `string` | `"transparent"` | Default WBadge semantic type. |
-| `badgeVariant` | `BadgeProps["variant"]` | `"default"` | Default chip variant; default maps to tonal. |
+| `badgeVariant` | `BadgeProps["variant"]` | `"soft"` | Style of every badge and of the +N badge; an item variant overrides it per row. Baseline names warn in development. |
 | `badgeBorderRadius` | `string` | `"md"` | Default preset radius. |
 | `customBorderRadius` | `string` | `"sm"` | Legacy custom radius passed verbatim; use a CSS length for new code. |
 | `badgePadding` | `string` | `""` | Default custom chip padding. |

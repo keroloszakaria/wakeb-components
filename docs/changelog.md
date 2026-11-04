@@ -11,6 +11,7 @@ Breaking: root imports now need a plugin file and `wakebComponents()` from `wake
 - `SharedIcon` no longer references Vuetify types.
 - Plugin `defaults` per component, with explicit props winning and data, model and callback props rejected.
 - `locale: 'ar'` built-in labels, `direction`, and `theme` with `mode` and `--wakeb-ui-*` tokens scoped to each app and its overlays.
+- Breaking: WBadge, WTooltipBtn and WBadgeStack variants use the portable `soft`, `solid`, `outline` and `ghost` values. Baseline names keep working with a `WAKEB_DEPRECATED_VALUE` development warning; `elevated` loses its elevation and `plain` its faded look.
 
 ## Unreleased (0.7.x)
 

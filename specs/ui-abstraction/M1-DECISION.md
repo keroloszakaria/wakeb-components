@@ -21,7 +21,7 @@ The core runtime is its own entry, `_internal/core.js`. It holds the injection k
 
 ## Tested versions
 
-From locked, isolated consumers installed outside the repository: Vue 3.5.x (the repository lock), Vite 6.4.5, Vuetify 3.13.2 in the consumer (3.13.7 in development), PrimeVue 4.5.5 and `@primeuix/themes` 2.0.3. All are declared as `peerDependencies`. Vuetify, PrimeVue, the themes package and Vite are optional peers.
+From locked, isolated consumers installed outside the repository: Vue 3.5.x (the repository lock), Vite 6.4.5, Vuetify 3.13.2 in the consumer (3.13.7 in development), PrimeVue 4.5.5 and `@primeuix/themes` 2.0.3. All are declared as `peerDependencies`. Vuetify, PrimeVue and the themes package are optional peers. (M2 update: Vite became a required peer because provider selection only works through `wakebComponents()`, and the `vue` range became `^3.5.40` because the emitted declarations need the `DefineComponent` element type parameter; see the locked peer matrix in `tests/fixtures/peers`.)
 
 PrimeVue 5 is excluded by an owner decision on 2026-11-03. Version 5.x moved from MIT to the commercial PrimeUI license, which requires a license key and an OEM license for redistribution inside component libraries.
 

@@ -7,6 +7,14 @@ Use Node 22.14+ and `npm ci`, then run `npm run check`.
 - An isolated packed consumer with type checks, a browser build and a Vite server render.
 - Bilingual VitePress build; every public prop must have a reference row.
 
+`npm run check:peers` runs the locked peer version matrix in `tests/fixtures/peers`
+(minimum and newest in-range Vue, Vite and provider versions, installed with `npm ci`).
+It takes about three minutes and needs the npm registry or a warm npm cache, so
+`npm run check` does not run it. Instead the docs build fails when the fixtures,
+`results.json` and the supported-versions tables disagree. The Jervis DevOps pipeline
+MUST run `npm run check:peers` before a release. After changing a peer range, run
+`npm run check:peers -- --update` and commit the refreshed fixtures, results and docs.
+
 Keep Vue/Vuetify external and application aliases/stores out of library code.
 New APIs need both-language documentation and behavior tests. Test meaningful
 interactions rather than snapshots of the implementation.

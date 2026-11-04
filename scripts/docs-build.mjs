@@ -6,8 +6,11 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import reference from "../docs/reference-data.mjs";
+import { assertMatrixInSync } from "./peer-matrix.mjs";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const { name, version } = JSON.parse(readFileSync(join(root,"package.json"),"utf8"));
+// Supported-versions tables, peer fixtures and their recorded npm run check:peers results must agree.
+assertMatrixInSync();
 const types = ts.createSourceFile("types.ts", readFileSync(join(root,"src/types.ts"),"utf8"), ts.ScriptTarget.Latest, true);
 const interfaces = Object.fromEntries(types.statements.filter(ts.isInterfaceDeclaration).map(item => [item.name.text, item.members.map(member => member.name?.getText(types))]));
 for (const locale of ["", "ar/"]) {

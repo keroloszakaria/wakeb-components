@@ -18,9 +18,9 @@ one file, and your bundle then contains only that provider's renderers.
 | Vuetify | `npm install wakeb-components vuetify` |
 | PrimeVue | `npm install wakeb-components primevue @primeuix/themes` |
 
-Tested peer versions: Vue 3.5, Vite 6.4, Vuetify 3.13 (3.13.2 in the packed consumer),
-PrimeVue 4.5.5 with `@primeuix/themes` 2.0.3. PrimeVue 5 is not supported: it moved to a
-commercial license that requires a license key.
+The minimum and newest tested peer versions are listed in
+[Supported versions](./installation#supported-versions). PrimeVue 5 is not supported: it moved to
+a commercial license that requires a license key.
 
 2. Create `plugins/wakeb-components.js` next to `vite.config.js`:
 

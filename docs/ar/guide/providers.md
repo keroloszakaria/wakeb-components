@@ -18,9 +18,8 @@
 | Vuetify | `npm install wakeb-components vuetify` |
 | PrimeVue | `npm install wakeb-components primevue @primeuix/themes` |
 
-الإصدارات المختبرة: Vue 3.5 وVite 6.4 وVuetify 3.13 (‏3.13.2 في اختبار الحزمة المعبأة)
-وPrimeVue 4.5.5 مع `@primeuix/themes` 2.0.3. PrimeVue 5 غير مدعوم لأن رخصته أصبحت تجارية
-وتتطلب مفتاح ترخيص.
+أقل إصدارات الـpeers المختبرة وأحدثها مذكورة في [الإصدارات المدعومة](./installation#الإصدارات-المدعومة).
+PrimeVue 5 غير مدعوم لأن رخصته أصبحت تجارية وتتطلب مفتاح ترخيص.
 
 2. أنشئ الملف `plugins/wakeb-components.js` بجوار `vite.config.js`:
 

@@ -1,0 +1,42 @@
+{
+  "cells": {
+    "vuetify-min": {
+      "versions": {
+        "vue": "3.5.40",
+        "vite": "6.0.0",
+        "vuetify": "3.13.2",
+        "@vue/server-renderer": "3.5.40"
+      },
+      "result": "pass"
+    },
+    "vuetify-current": {
+      "versions": {
+        "vue": "3.5.44",
+        "vite": "6.4.5",
+        "vuetify": "3.13.7",
+        "@vue/server-renderer": "3.5.44"
+      },
+      "result": "pass"
+    },
+    "primevue-min": {
+      "versions": {
+        "vue": "3.5.40",
+        "vite": "6.0.0",
+        "primevue": "4.5.5",
+        "@primeuix/themes": "2.0.3",
+        "@vue/server-renderer": "3.5.40"
+      },
+      "result": "pass"
+    },
+    "primevue-current": {
+      "versions": {
+        "vue": "3.5.44",
+        "vite": "6.4.5",
+        "primevue": "4.5.5",
+        "@primeuix/themes": "2.0.3",
+        "@vue/server-renderer": "3.5.44"
+      },
+      "result": "pass"
+    }
+  }
+}

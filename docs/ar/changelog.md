@@ -7,7 +7,7 @@
 - إضافة `createWakebComponents({ framework })` وتكامل البناء `wakeb-components/vite` ورموز أخطاء `WakebError` وبيانات `capabilities`.
 - يقرأ تكامل البناء قيمة framework من ملف الـplugin دون تشغيله، ولا يضم إلا renderers المزود المختار. الصيغ غير المدعومة تفشل برسالة واضحة.
 - أوضاع المزود `auto` و`reuse` و`install` تعيد استخدام نسخة Vuetify أو PrimeVue في التطبيق دون تغيير الـtheme أو القيم الافتراضية.
-- محوّل PrimeVue 4 تجريبي لـWButton وWDropdown وWModal وWLoading، وبقية المكونات تعلن `WAKEB_COMPONENT_UNSUPPORTED`.
+- محوّل PrimeVue 4 تجريبي، بدأ بـWButton وWDropdown وWModal وWLoading (ويغطي الآن المكونات الـ21 كلها، انظر أدناه).
 - لم يعد `SharedIcon` يشير إلى أنواع Vuetify.
 - قيم `defaults` لكل مكوّن في الـplugin، تتقدم عليها الخصائص الممررة، وتُرفض فيها خصائص البيانات والـmodel ودوال الاستدعاء.
 - نصوص مدمجة بالعربية مع `locale: 'ar'`، والخيار `direction`، والخيار `theme` مع `mode` ومتغيرات `--wakeb-ui-*` المقتصرة على كل تطبيق وطبقاته.
@@ -20,6 +20,15 @@
 - أيقونات مملوكة لـWakeb: خيار `icons` في الـplugin (`aliases` و`resolve`) خاص بكل تطبيق، وأيقونات SVG مدمجة للأسهم والإغلاق والتحميل والإتمام ومربعات الاختيار وأزرار الراديو، ومربع بديل مع تحذير التطوير `WAKEB_ICON_UNRESOLVED` خارج Vuetify. تحت Vuetify تبقى الأسماء الأخرى تُرسم عبر `VIcon`، أما `$expand` و`$collapse` فأصبحا يستخدمان أيقونة Wakeb.
 - منفذ `providerProps` غير القابل للنقل في WButton وWDropdown وWModal وWLoading يمرر الخصائص الأصلية إلى primitive المزود المختار، وتُحذف المفاتيح التي يملكها Wakeb مع تحذير التطوير `WAKEB_PROVIDER_PROP_IGNORED`. توثّق صفحة كل مكوّن وجهة سماته، ويحتفظ WLoading الآن بـ`role="status"` واسمه الوصفي.
 - تغيير غير متوافق: أصبح نطاق peer لـ`vue` هو `^3.5.40` لأن التعريفات المولّدة تحتاجه، وأصبح `vite` peer إلزاميًا. يشغّل `npm run check:peers` مصفوفة إصدارات الـpeers المقفلة؛ راجع «الإصدارات المدعومة» في دليل التثبيت.
+- أنواع المكونات العامة تأتي من عقود محايدة للمزود (`*Emits` و`*Slots` و`WakebComponent` و`WakebFacade`). يُفحص كل renderer مقابل عقده، ويرفض المستهلك المُحزَّم حمولات الأحداث والـslots الخاطئة تحت `tsc --strict` و`vue-tsc`.
+- renderers لـPrimeVue لكل المكونات الـ21. تستخدم WTabs وWTree وWCarousel markup يملكه Wakeb، وتستخدم البقية primitives من PrimeVue. السلوك المشترك في composables محايدة للمزود، وتعمل مجموعة اختبارات عقد وSSR واحدة على كل المزودات.
+- لا يحتاج WDrawer على PrimeVue إلى layout حاضن: يحصر التركيز، ويُغلق بـEscape وبالنقر خارجه ما لم يكن `persistent`، ويمنع تمرير الصفحة، ويعيد التركيز إلى زر الفتح، ويأخذ `zIndexOverlay`. أما على Vuetify فلم يتغير وما زال يحتاج `VApp` أو `VLayout`.
+- تلميحات PrimeVue، ومنها تلميح WButton، تفتح عند التركيز بلوحة المفاتيح وعند مرور المؤشر، وترتبط بعنصرها عبر `aria-describedby`.
+- مزود shadcn-vue التجريبي (`framework: 'shadcn'`) للمكونات WButton وWLoading وWDropdown وWModal فوق الـpeer الاختياري `reka-ui` ‏(`^2.10.5`)، مع CSS مُعدّ مسبقًا ذي بادئة خاصة، دون إعداد Tailwind ولا إعادة ضبط عامة، ومع ملف إشعارات الأطراف الثالثة. وأُضيفت خلايا shadcn-vue إلى مصفوفة الـpeers.
+- تغيير غير متوافق: يملك Wakeb التشغيل التلقائي في WCarousel على كل المزودات؛ يتوقف عند مرور المؤشر أو التركيز أو إخفاء الصفحة أو تفضيل تقليل الحركة، وينظف مؤقته عند الإزالة.
+- لوحة WAccordion التي لها عنوان أصبحت `region` مسماة.
+- أصبحت `customHTML` في عناصر WTabs مهجورة: ما زالت تُرسم، وتكتب `WAKEB_DEPRECATED_VALUE` مرة واحدة لكل تطبيق. استخدم الـslot ‏`tab-label`.
+- التوثيق: دليل انتقال من 0.7 مع قائمة تحقق، ودليل تبديل المزود (بما فيه ما لا يغطيه التبديل وأوضاع نسخة المزود)، وذكر حدود التبديل في صفحة التثبيت.
 
 ## غير منشور (0.7.x)
 

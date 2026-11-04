@@ -12,7 +12,8 @@ const root = join(__dirname, "..");
 const read = (file: string) => readFileSync(join(root, file), "utf8");
 const renderers = (dir: string) =>
   readdirSync(join(root, dir))
-    .filter((file) => file.endsWith(".vue"))
+    // Internal helpers (files not named W*) are private parts of a renderer, not renderers.
+    .filter((file) => /^W\w+\.vue$/.test(file))
     .map((file) => `${dir}/${file}`);
 
 describe("neutral contracts", () => {

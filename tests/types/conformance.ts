@@ -43,7 +43,6 @@ import type PrimeVueWCarousel from "../../src/adapters/primevue/WCarousel.vue";
 import type PrimeVueWExportDropdown from "../../src/adapters/primevue/WExportDropdown.vue";
 import type PrimeVueWBaseSidebar from "../../src/adapters/primevue/WBaseSidebar.vue";
 import type PrimeVueWDrawer from "../../src/adapters/primevue/WDrawer.vue";
-import type PrimeVueSkeletonSequence from "../../src/adapters/primevue/SkeletonSequence.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -112,7 +111,6 @@ interface PrimeVue {
   WExportDropdown: typeof PrimeVueWExportDropdown;
   WBaseSidebar: typeof PrimeVueWBaseSidebar;
   WDrawer: typeof PrimeVueWDrawer;
-  SkeletonSequence: typeof PrimeVueSkeletonSequence;
 }
 
 /** The Vuetify renderer set is complete: every public component has one. */

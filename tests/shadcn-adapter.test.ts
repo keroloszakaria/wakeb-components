@@ -129,6 +129,16 @@ describe("shadcn WModal focus, dismissal and afterLeave", () => {
     expect(dialog()).not.toBeNull();
   });
 
+  it("stays open on a non-cancelable Escape when persistent", async () => {
+    const { open, w } = view({ title: "Edit", persistent: true });
+    w.get(".opener").element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await vi.waitFor(() => expect(dialog()).not.toBeNull());
+    dialog()!.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: false }));
+    await settle();
+    expect(open.value).toBe(true);
+    expect(dialog()).not.toBeNull();
+  });
+
   it("does not emit afterLeave when an open dialog is torn down", async () => {
     const afterLeave = vi.fn();
     const w = render(WModal, { props: { modelValue: true, title: "Edit", onAfterLeave: afterLeave } });

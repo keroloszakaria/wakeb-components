@@ -75,9 +75,16 @@ const onCloseAutoFocus = (event: Event) => {
   opener = null;
   if (target instanceof HTMLElement && target.isConnected) target.focus({ preventScroll: true });
 };
-/* persistent maps to both dismissal paths, like the other providers. */
+/*
+ * persistent maps to both dismissal paths, like the other providers. reka-ui dismisses unless the
+ * event is cancelled, and a non-cancelable Escape cannot be, so a persistent dialog also ignores
+ * reka-ui's close request; the model and the Wakeb close button still close it.
+ */
 const keepOpen = (event: Event) => {
   if (props.persistent) event.preventDefault();
+};
+const onOpenChange = (open: boolean) => {
+  if (open || !props.persistent) dialog.value = open;
 };
 /* afterLeave fires when the closed content unmounts, after reka-ui's exit animation, not on teardown. */
 let tearingDown = false;
@@ -91,7 +98,7 @@ const onContentUnmounted = () => {
 <template>
   <slot name="activator" :props="activatorProps" :is-active="dialog" />
   <!-- reka-ui owns the overlay, focus trap, Escape key, outside inertness and scroll lock. -->
-  <DialogRoot v-model:open="dialog" modal>
+  <DialogRoot :open="dialog" modal @update:open="onOpenChange">
     <DialogContent
       v-bind="mergeProps(native, stacking, $attrs)"
       :overlay-attrs="overlayAttrs"

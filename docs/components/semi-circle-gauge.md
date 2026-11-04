@@ -47,7 +47,7 @@ The root `div.semi-circle-gauge`. Listeners for declared Wakeb events go through
 
 ## Accessibility and limits
 
-SVG role=img exposes the percentage or ariaLabel; decorative center text is aria-hidden. Vue useId keeps SVG references distinct and stable across SSR requests. RTL mirrors geometry only; text remains readable. Invalid geometry is normalized; animations honor reduced motion. Size is the full gauge width; the arc is half-height.
+SVG role=img exposes the percentage or ariaLabel; decorative center text is aria-hidden. Vue useId keeps SVG references distinct and stable across SSR requests. RTL mirrors geometry only; text remains readable. Invalid geometry is normalized; animations honor reduced motion. Size is the full gauge width; the arc is half-height. PrimeVue renders the same Wakeb SVG and CSS as Vuetify (PrimeVue Knob is an input, so it is not used); the DOM, IDs and tokens are identical on both providers.
 
 ## Try it
 

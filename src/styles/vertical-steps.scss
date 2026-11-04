@@ -1,0 +1,12 @@
+/* WVerticalSteps styles shared by every provider renderer; each SFC scopes them. */
+.steps { display:flex; flex-direction:column; gap:50px; align-items:flex-start; }
+.steps__row { display:flex; align-items:center; gap:8px; }
+.steps__row:not(:first-child) :deep(.icon) { position:relative; }
+.steps__row:not(:first-child) :deep(.icon)::before { content:''; position:absolute; inset-inline-start:50%; top:-52px; width:1px; height:60px; background:var(--wakeb-steps-accent, #087f8c); z-index:-1; }
+.steps :deep(.icon) { flex-shrink:0; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid var(--wakeb-steps-accent, #087f8c); background:var(--wakeb-steps-surface, #f9fafb); font-weight:500; font-size:14px; color:var(--wakeb-steps-text, currentColor); }
+.steps :deep(.icon.active) { background:var(--wakeb-steps-accent, #087f8c); color:var(--wakeb-steps-active-text, #fff); }
+h2 { font-weight:500; font-size:1rem; color:var(--wakeb-steps-text, currentColor); }
+.steps__details { display:flex; align-items:center; gap:20px; }
+.detail { display:flex; align-items:center; gap:8px; }
+.detail :deep(svg), .detail > span { color:var(--wakeb-steps-muted, #667085); }
+.detail p { font-size:14px; color:var(--wakeb-steps-text, currentColor); }

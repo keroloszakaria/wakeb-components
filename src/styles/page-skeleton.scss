@@ -1,0 +1,49 @@
+/* WPageSkeleton layout and block variants shared by every provider renderer; each SFC scopes them. */
+.page-skeleton {
+  display: flex;
+}
+
+.skeleton-block {
+  overflow: hidden;
+  border-radius: 12px;
+
+  &--card {
+    background: var(--wakeb-skeleton-surface, #fff);
+    border: 1px solid var(--wakeb-skeleton-border, #eaecf0);
+    padding: 12px;
+  }
+
+  &--chart {
+    background: var(--wakeb-skeleton-surface, #fff);
+    border: 1px solid var(--wakeb-skeleton-border, #eaecf0);
+    padding: 24px;
+    border-radius: 16px;
+  }
+
+  &--form {
+    background: var(--wakeb-skeleton-surface, #fff);
+    border: 1px solid var(--wakeb-skeleton-border, #eaecf0);
+    padding: 24px;
+    border-radius: 20px;
+  }
+
+  &--tabs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  &--table {
+    background: var(--wakeb-skeleton-surface, #fff);
+    border: 1px solid var(--wakeb-skeleton-border, #eaecf0);
+    border-radius: 16px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+}

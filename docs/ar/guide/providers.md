@@ -426,6 +426,10 @@ Skeleton في Wakeb.
 التي تحمل الاسم نفسه؛ لا تمرر `role` أو قيم `aria-*` يضعها المكوّن أصلًا. وستنتقل إلى القواعد
 نفسها عند نقلها.
 
+تتبع WSegmentedProgress وWVerticalSteps وWPageSkeleton هذه القواعد على المزودين: تبقى قيم
+`role` و`aria-value*` و`aria-busy` ملكًا لـWakeb. وقيمة `aria-label` من المستخدم هي الخاصية
+المكتوبة `ariaLabel` في WSegmentedProgress؛ أما في WVerticalSteps وWPageSkeleton فاستخدم `label`.
+
 تذكر صفحة كل مكوّن وجهة سماته في قسم **وجهة السمات**.
 
 ## الخصائص الأصلية: `providerProps` {#native-props}
@@ -512,7 +516,8 @@ WDropdown أو زر الإغلاق داخل WModal. ولا تقبله المكو
 | المكوّن | Vuetify | PrimeVue (تجريبي) |
 | --- | --- | --- |
 | WButton وWDropdown وWModal وWLoading | مدعوم | مدعوم |
-| بقية المكونات (17 مكوّنًا) | مدعوم | ليس بعد: `WAKEB_COMPONENT_UNSUPPORTED` |
+| WSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton | مدعوم | مدعوم |
+| بقية المكونات | مدعوم | ليس بعد: `WAKEB_COMPONENT_UNSUPPORTED` |
 | shadcn-vue | — | مخطط له (المرحلة M5) |
 
 ## حدود الإصدار التجريبي
@@ -541,6 +546,11 @@ WDropdown أو زر الإغلاق داخل WModal. ولا تقبله المكو
   يحدد موضع الخلفية المعتمة أيضًا.
 - **مستخدمو المتغيرات.** تستخدم WButton وWDropdown وWModal هذه المتغيرات، وتحتفظ بقية المكونات
   بمتغيراتها الخاصة حتى يتم نقلها. والمتغيرات الموجودة على الطبقة متاحة لأنماطك الخاصة بمحتواها.
+- **التقدم والمؤشر والخطوات وهيكل الصفحة على PrimeVue.** ترسم WSegmentedProgress
+  وWSemiCircleGauge وWVerticalSteps الـmarkup والـCSS نفسيهما من Wakeb على المزودين. وتحتفظ
+  WPageSkeleton بالشبكة والصيغة نفسيهما، لكنها ترسم كل اسم Skeleton بأشكال عظام من Wakeb فوق
+  `Skeleton` من PrimeVue (دون أنماطه) بدلًا من `VSkeletonLoader` في Vuetify، فتكون أحجام العظام
+  متقاربة وليست متطابقة. وتُتجاهل أسماء Skeleton الخاصة بـVuetify تحت PrimeVue.
 - **غلاف المكوّن.** كل مكوّن مستورد من الجذر غلاف رقيق حول renderer المزود. أدوات الاختبار
   التي تبحث عن المكونات بالاسم، مثل `findAllComponents(WTabs)`، تجد الغلاف والـrenderer معًا.
 - **الأنماط.** ما زال `style.css` يحتوي أنماط كل الـrenderers، وتقسيمه حسب المزود مخطط له.

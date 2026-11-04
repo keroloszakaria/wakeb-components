@@ -1,5 +1,5 @@
 <template>
-  <div class="page-skeleton" :class="`flex-${direction}`" :style="{ flexDirection: direction }" role="status" :aria-label="label" aria-busy="true">
+  <div v-bind="$attrs" class="page-skeleton" :class="`flex-${direction}`" :style="{ flexDirection: direction }" role="status" :aria-label="label" aria-busy="true">
     <!-- Rows -->
     <template v-for="(row, rowIndex) in config" :key="rowIndex">
       <div class="wakeb-grid-row" :class="row.rowClass" aria-hidden="true">
@@ -46,71 +46,29 @@ import { VSkeletonLoader } from "vuetify/components/VSkeletonLoader";
 import type { PageSkeletonProps } from "../types";
 import { useSkeleton } from "../core/vocabulary";
 import { useSkeletonGrid } from "../core/grid";
+import { pageSkeletonDefaults, repeatCount } from "../composables/skeleton";
 import "../styles/grid.css";
+/* Caller attrs bind first, so the status role, name and busy state stay Wakeb-owned (SPEC R14). */
+defineOptions({ inheritAttrs: false });
+/* Vuetify keeps its own skeleton names during the deprecation window (WAKEB_DEPRECATED_VALUE). */
 const toSkeleton = useSkeleton("WPageSkeleton", true);
 const gridClasses = useSkeletonGrid("WPageSkeleton");
-withDefaults(defineProps<PageSkeletonProps>(), { direction: "column", label: "Loading content" });
-const repeatCount = (value?: number) => value != null && Number.isFinite(value) && value > 0 ? Math.floor(value) || 1 : 1;
+withDefaults(defineProps<PageSkeletonProps>(), pageSkeletonDefaults);
 </script>
 <style lang="scss" scoped>
-.page-skeleton {
-  display: flex;
-}
+@use "../styles/page-skeleton";
 
-.skeleton-block {
-  overflow: hidden;
-  border-radius: 12px;
-
-  &--card {
-    background: var(--wakeb-skeleton-surface, #fff);
-    border: 1px solid var(--wakeb-skeleton-border, #eaecf0);
-    padding: 12px;
-
-    :deep(.v-skeleton-loader__bone.v-skeleton-loader__list-item-avatar-two-line) {
-      height: 155px;
-      flex-direction: row-reverse;
-      padding-inline-start: 20px;
-    }
-
-    :deep(.v-skeleton-loader__bone.v-skeleton-loader__list-item-avatar-three-line) {
-      height: 155px;
-      flex-direction: row-reverse;
-      padding-inline-start: 20px;
-    }
+.skeleton-block--card {
+  :deep(.v-skeleton-loader__bone.v-skeleton-loader__list-item-avatar-two-line) {
+    height: 155px;
+    flex-direction: row-reverse;
+    padding-inline-start: 20px;
   }
 
-  &--chart {
-    background: var(--wakeb-skeleton-surface, #fff);
-    border: 1px solid var(--wakeb-skeleton-border, #eaecf0);
-    padding: 24px;
-    border-radius: 16px;
-  }
-
-  &--form {
-    background: var(--wakeb-skeleton-surface, #fff);
-    border: 1px solid var(--wakeb-skeleton-border, #eaecf0);
-    padding: 24px;
-    border-radius: 20px;
-  }
-
-  &--tabs {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 0;
-  }
-
-  &--table {
-    background: var(--wakeb-skeleton-surface, #fff);
-    border: 1px solid var(--wakeb-skeleton-border, #eaecf0);
-    border-radius: 16px;
-  }
-
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
+  :deep(.v-skeleton-loader__bone.v-skeleton-loader__list-item-avatar-three-line) {
+    height: 155px;
+    flex-direction: row-reverse;
+    padding-inline-start: 20px;
   }
 }
 

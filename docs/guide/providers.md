@@ -432,6 +432,10 @@ Vuetify renders still use Vue's default attribute merge, so a caller attribute w
 name replaces the component's; do not pass a `role` or `aria-*` value that the component
 already sets. They move to the same rules when they migrate.
 
+WSegmentedProgress, WVerticalSteps and WPageSkeleton follow these rules on both providers: their
+`role`, `aria-value*` and `aria-busy` stay Wakeb-owned. A caller `aria-label` is the typed
+`ariaLabel` prop on WSegmentedProgress; on WVerticalSteps and WPageSkeleton use `label`.
+
 Each component page lists its attribute target under **Attribute target**.
 
 ## Native props: `providerProps` {#native-props}
@@ -519,7 +523,8 @@ errors, and production builds drop them.
 | Component | Vuetify | PrimeVue (alpha) |
 | --- | --- | --- |
 | WButton, WDropdown, WModal, WLoading | Yes | Yes |
-| The other 17 components | Yes | Not yet: `WAKEB_COMPONENT_UNSUPPORTED` |
+| WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WPageSkeleton | Yes | Yes |
+| The other components | Yes | Not yet: `WAKEB_COMPONENT_UNSUPPORTED` |
 | shadcn-vue | — | Planned (milestone M5) |
 
 ## Limits of this alpha
@@ -550,6 +555,11 @@ errors, and production builds drop them.
 - **Token consumers.** The tokens are consumed by WButton, WDropdown and WModal; the other
   components keep their own variables until they migrate. The variables on an overlay are
   available to your own CSS for that overlay content.
+- **Progress, gauge, steps and page skeleton on PrimeVue.** WSegmentedProgress,
+  WSemiCircleGauge and WVerticalSteps render the same Wakeb markup and CSS on both providers.
+  WPageSkeleton keeps the same grid and grammar, but draws each skeleton name with Wakeb bone
+  shapes on PrimeVue `Skeleton` (unstyled) instead of Vuetify `VSkeletonLoader`, so bone sizes
+  are close, not identical. Vuetify-only skeleton names are skipped under PrimeVue.
 - **Component wrapper.** Each root import is a thin wrapper around the provider renderer.
   Test utilities that look components up by name, such as `findAllComponents(WTabs)`, match
   both the wrapper and the renderer.

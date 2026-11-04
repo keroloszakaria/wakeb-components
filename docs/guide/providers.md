@@ -797,6 +797,10 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
   inert while it is open.
 - **Tooltip links on the server.** reka-ui adds `aria-describedby` only while a tooltip is open,
   so server-rendered WTruncatedText and WTooltipBtn have none (Vuetify and PrimeVue render the id).
+- **Tooltips close on scroll.** reka-ui closes an open tooltip when a container of its trigger
+  scrolls. If moving keyboard focus to a trigger scrolls the page to bring it into view, the
+  tooltip opens and then closes; focus it again, or hover it, to see the text. Vuetify and PrimeVue
+  keep the tooltip open.
 - **Hover.** Tooltips and overflow lists also open on plain `mouseenter`, so they work without
   pointer events; reka-ui's grace area decides when a hover-opened tooltip closes.
 

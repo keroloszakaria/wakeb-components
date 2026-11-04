@@ -28,10 +28,9 @@ When you change `framework` in the plugin file and install the new provider's pe
 - Your bundle contains only the selected provider's renderers. Changing `framework` restarts the
   dev server; providers are never swapped while the app runs.
 
-Vuetify and PrimeVue render all 21 components. Under `framework: 'shadcn'`, the alpha adapter
-renders the components listed in the capability matrix; any other component fails with
-`WAKEB_COMPONENT_UNSUPPORTED`. Check the [capability matrix](./providers#capability-matrix), or
-read `wakeb.capabilities.components` at runtime, before you switch.
+Vuetify, PrimeVue and the shadcn-vue alpha adapter all render the 21 components. Read
+`wakeb.capabilities.components` at runtime, or the [capability matrix](./providers#capability-matrix),
+to confirm coverage for the version you install.
 
 Visual parity is not promised. Markup, class names, animations and transitions differ between
 providers; the [limits of this alpha](./providers#limits-of-this-alpha) list the known

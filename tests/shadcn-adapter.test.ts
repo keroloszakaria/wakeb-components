@@ -3,7 +3,7 @@ import { defineComponent, h, nextTick, ref } from "vue";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { WButton, WCarousel, WDrawer, WDropdown, WExportDropdown, WLoading, WModal, WTabs, WTree } from "../src";
+import { WAvatarStack, WButton, WCarousel, WDrawer, WDropdown, WExportDropdown, WLoading, WModal, WTabs, WTooltipBtn, WTree, WTruncatedText } from "../src";
 import TooltipContent from "../src/adapters/shadcn/ui/TooltipContent.vue";
 import { shadcnHost, wakeb } from "./wakeb";
 
@@ -317,6 +317,64 @@ describe("shadcn WButton tooltip and native looks", () => {
     const w = render(WButton, { props: { icon: "pi pi-check" } });
     expect(w.find(".wakeb-icon--fallback").exists()).toBe(true);
     expect(w.find("i.pi").exists()).toBe(false);
+  });
+});
+
+describe("shadcn tooltips and overflow popovers: keyboard and focus", () => {
+  const tooltip = () => document.querySelector<HTMLElement>('[role="tooltip"]');
+
+  it("closes a WTooltipBtn tooltip on Escape and keeps focus on the button", async () => {
+    const w = render(WTooltipBtn, { props: { text: "Help", icon: "$close", openDelay: 0, location: "start" } }, wakeb({ direction: "rtl" }));
+    const button = w.get("button").element as HTMLButtonElement;
+    button.focus();
+    await vi.waitFor(() => expect(tooltip()?.textContent).toBe("Help"));
+    expect(button.getAttribute("aria-describedby")).toBe(tooltip()!.id);
+    expect(w.findComponent(TooltipContent).props("side")).toBe("right");
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    await vi.waitFor(() => expect(tooltip()).toBeNull());
+    expect(document.activeElement).toBe(button);
+    expect(button.hasAttribute("aria-describedby")).toBe(false);
+  });
+
+  it("waits for openDelay on mouse hover and cancels when the pointer leaves first", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      const w = render(WTooltipBtn, { props: { text: "Slow", openDelay: 300 } });
+      const button = w.get("button").element;
+      button.dispatchEvent(new MouseEvent("mouseenter"));
+      vi.advanceTimersByTime(100);
+      button.dispatchEvent(new MouseEvent("mouseleave"));
+      vi.advanceTimersByTime(400);
+      await settle();
+      expect(tooltip()).toBeNull();
+      button.dispatchEvent(new MouseEvent("mouseenter"));
+      vi.advanceTimersByTime(350);
+      await vi.waitFor(() => expect(tooltip()?.textContent).toBe("Slow"));
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("keeps a caller aria-describedby on truncated text while its tooltip is open", async () => {
+    const w = render(WTruncatedText, { props: { label: "A long label to shorten", length: 6 }, attrs: { "aria-describedby": "caller-help" } });
+    const text = w.get(".truncated-text").element as HTMLElement;
+    text.focus();
+    await vi.waitFor(() => expect(tooltip()).not.toBeNull());
+    expect(text.getAttribute("aria-describedby")).toBe("caller-help");
+  });
+
+  it("does not move focus into the avatar overflow popover and closes it on Escape", async () => {
+    const w = render(WAvatarStack, { props: { items: [{ name: "Ada" }, { name: "Grace" }], max: 1, showOverflowMenu: true, overflowLabel: "More" } });
+    const button = w.get('button[aria-label="More"]').element as HTMLButtonElement;
+    button.focus();
+    await vi.waitFor(() => expect(document.querySelector(".overflow-menu-list")).not.toBeNull());
+    await settle();
+    expect(document.activeElement).toBe(button);
+    expect(document.querySelector(".wakeb-sc-popover")?.getAttribute("aria-modal")).toBe("false");
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape" }));
+    await vi.waitFor(() => expect(document.querySelector(".overflow-menu-list")).toBeNull());
+    expect(button.getAttribute("aria-expanded")).toBe("false");
+    expect(document.activeElement).toBe(button);
   });
 });
 

@@ -4,7 +4,7 @@ import { enableAutoUnmount, mount, type VueWrapper } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WBadge, WButton, WTooltipBtn, WTruncatedText, WUserBadge, type WakebComponentsOptions } from "../src";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /*
  * Shared contract for WTruncatedText, WTooltipBtn, WBadge and WUserBadge (SPEC R12, R14, R17, R18, R23),
@@ -12,7 +12,8 @@ import { framework, wakeb } from "./wakeb";
  * provider-specific data are the R23 native mapping tables, which is what they document.
  */
 const vuetify = framework === "vuetify";
-const host = () => (vuetify ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const shadcn = framework === "shadcn";
+const host = () => (vuetify ? createVuetify() : shadcn ? shadcnHost : ([PrimeVue, { theme: "none" }] as const));
 const render = (component: unknown, options: Record<string, unknown> = {}, plugin: Partial<WakebComponentsOptions> = {}) =>
   mount(component as never, {
     attachTo: document.body,
@@ -55,7 +56,9 @@ const tooltipWith = async (w: VueWrapper, text: string, visible = true) => {
 };
 const noTooltip = () => expect(shown()).toEqual([]);
 /** The teleported element that carries the theme scope: the tooltip or one of its ancestors. */
-const scopeOf = (tooltip: HTMLElement) => tooltip.closest<HTMLElement>("[data-wakeb-theme]") ?? tooltip;
+const scopeOf = (tooltip: HTMLElement) =>
+  // reka-ui renders role="tooltip" as a visually hidden copy inside the teleported tooltip root.
+  shadcn ? tooltip.closest<HTMLElement>(".wakeb-sc-tooltip")! : (tooltip.closest<HTMLElement>("[data-wakeb-theme]") ?? tooltip);
 const focus = async (element: Element) => {
   (element as HTMLElement).focus();
   await nextTick();
@@ -170,7 +173,8 @@ describe(`WTruncatedText contract (${framework})`, () => {
     await focus(w.get(".truncated-text").element);
     const tooltip = await tooltipWith(w, "A long unscoped label");
     expect(document.querySelector("[data-wakeb-theme]")).toBeNull();
-    expect(tooltip.closest("[dir]")).toBeNull();
+    // reka-ui writes its ConfigProvider direction (default ltr) on popper content (M5-DECISION deviation).
+    expect(tooltip.closest("[dir]")?.getAttribute("dir") ?? null).toBe(shadcn ? "ltr" : null);
   });
 });
 
@@ -511,7 +515,7 @@ describe(`WUserBadge contract (${framework})`, () => {
       expect(avatar.classes()).toContain("bg-deep-purple");
       expect(warnings()[0]).toMatch(/^\[WAKEB_DEPRECATED_VALUE\] WUserBadge avatarColor 'deep-purple'/);
     } else {
-      expect(avatar.attributes("style")).toContain("var(--wakeb-ui-primary, var(--p-primary-color))");
+      expect(avatar.attributes("style")).toContain(shadcn ? "var(--wakeb-ui-primary, var(--primary, #087f8c))" : "var(--wakeb-ui-primary, var(--p-primary-color))");
       expect(warnings()[0]).toMatch(/^\[WAKEB_UNKNOWN_VALUE\] WUserBadge avatarColor 'deep-purple'/);
     }
   });

@@ -20,7 +20,7 @@ export default defineConfig({
     projects: [
       project("vuetify", ["tests/**/*.test.ts"], ["tests/primevue-adapter.test.ts", "tests/shadcn-adapter.test.ts"]),
       project("primevue", ["tests/contract.test.ts", "tests/defaults.test.ts", "tests/colors.test.ts", "tests/plugin.test.ts", "tests/icons.test.ts", "tests/primevue-adapter.test.ts", "tests/provider-props.test.ts", "tests/contract-display.test.ts", "tests/navigation-contract.test.ts", "tests/navigation-ssr.test.ts", "tests/compositions-contract.test.ts", "tests/stacks-contract.test.ts", "tests/stacks-ssr.test.ts", "tests/badge-tooltip-*.test.ts"]),
-      project("shadcn", ["tests/contract.test.ts", "tests/defaults.test.ts", "tests/colors.test.ts", "tests/plugin.test.ts", "tests/icons.test.ts", "tests/provider-props.test.ts", "tests/navigation-contract.test.ts", "tests/navigation-ssr.test.ts", "tests/shadcn-adapter.test.ts", "tests/contract-display.test.ts", "tests/accordion-shadcn.test.ts", "tests/accordion-shadcn-ssr.test.ts", "tests/compositions-contract.test.ts"]),
+      project("shadcn", ["tests/contract.test.ts", "tests/defaults.test.ts", "tests/colors.test.ts", "tests/plugin.test.ts", "tests/icons.test.ts", "tests/provider-props.test.ts", "tests/navigation-contract.test.ts", "tests/navigation-ssr.test.ts", "tests/shadcn-adapter.test.ts", "tests/contract-display.test.ts", "tests/accordion-shadcn.test.ts", "tests/accordion-shadcn-ssr.test.ts", "tests/compositions-contract.test.ts", "tests/badge-tooltip-contract.test.ts", "tests/badge-tooltip-ssr.test.ts", "tests/stacks-contract.test.ts", "tests/stacks-ssr.test.ts"]),
     ],
   },
 });

@@ -4,7 +4,8 @@ import { enableAutoUnmount, mount, type VueWrapper } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WAccordion, WAvatarStack, WBadgeStack, type WakebComponentsOptions } from "../src";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
+import { SUPPORTED } from "../src/adapters/manifest";
 
 /*
  * Shared contract for WAvatarStack, WBadgeStack and WAccordion (SPEC R12–R14, R17, R18, R23), run once
@@ -12,7 +13,8 @@ import { framework, wakeb } from "./wakeb";
  * the teleported overlay root, because the scope lands on whatever element the provider teleports.
  */
 const vuetify = framework === "vuetify";
-const host = () => (vuetify ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const shadcn = framework === "shadcn";
+const host = () => (vuetify ? createVuetify() : shadcn ? shadcnHost : ([PrimeVue, { theme: "none" }] as const));
 /* Overlays need real transitions to mount teleported content; the accordion keeps the default stub so v-show settles at once. */
 const render = (component: unknown, options: Record<string, unknown> = {}, plugin: Partial<WakebComponentsOptions> = {}, transitions = false) =>
   mount(component as never, {
@@ -29,9 +31,14 @@ enableAutoUnmount(afterEach);
 
 /** The overflow list and the element the provider teleports (scope target). */
 const overflowList = () => document.querySelector<HTMLElement>(".overflow-menu-list");
-const overlayRoot = (content: HTMLElement) => content.closest<HTMLElement>(vuetify ? ".v-overlay" : ".wakeb-pv-overflow")!;
+const overlayRoot = (content: HTMLElement) => content.closest<HTMLElement>(vuetify ? ".v-overlay" : shadcn ? ".wakeb-sc-popover" : ".wakeb-pv-overflow")!;
 /** Tooltip content (caller style target) and its overlay root (scope target). */
 const tooltipParts = () => {
+  if (shadcn) {
+    // reka-ui: the scope sits on the teleported tooltip root; tooltipStyle on the text inside it.
+    const overlay = document.querySelector<HTMLElement>('[role="tooltip"]')?.closest<HTMLElement>(".wakeb-sc-tooltip");
+    return overlay ? { content: overlay.querySelector<HTMLElement>(".wakeb-sc-tooltip-text")!, overlay } : undefined;
+  }
   const content = document.querySelector<HTMLElement>(vuetify ? ".v-tooltip .v-overlay__content" : '[role="tooltip"]');
   return content ? { content, overlay: vuetify ? content.closest<HTMLElement>(".v-overlay")! : content } : undefined;
 };
@@ -137,7 +144,7 @@ describe(`WAvatarStack contract (${framework})`, () => {
     if (vuetify) {
       expect(warnings()).toEqual([expect.stringMatching(/^\[WAKEB_DEPRECATED_VALUE\] WAvatarStack avatarColor 'deep-purple'/)]);
     } else {
-      expect(named.attributes("style")).toContain("var(--wakeb-ui-primary, var(--p-primary-color))");
+      expect(named.attributes("style")).toContain(shadcn ? "var(--wakeb-ui-primary, var(--primary, #087f8c))" : "var(--wakeb-ui-primary, var(--p-primary-color))");
       expect(warnings()).toEqual([expect.stringMatching(/^\[WAKEB_UNKNOWN_VALUE\] WAvatarStack avatarColor 'deep-purple'/)]);
     }
   });
@@ -279,7 +286,8 @@ describe(`overflow and tooltip scope (${framework})`, () => {
     const w = render(component, { props });
     const { overlay } = await openMenu(w);
     expect(overlay.hasAttribute("data-wakeb-theme")).toBe(false);
-    expect(overlay.hasAttribute("dir")).toBe(false);
+    // reka-ui writes its ConfigProvider direction (default ltr) on popper content (M5-DECISION deviation).
+    expect(overlay.getAttribute("dir")).toBe(shadcn ? "ltr" : null);
     expect(overlay.getAttribute("style") ?? "").not.toContain("--wakeb-ui");
     expect(overlay.style.zIndex).not.toBe("3100");
   });
@@ -297,7 +305,7 @@ describe(`overflow and tooltip scope (${framework})`, () => {
   });
 });
 
-describe(`WAccordion contract (${framework})`, () => {
+describe.runIf(SUPPORTED[framework].includes("WAccordion"))(`WAccordion contract (${framework})`, () => {
   it("keeps internal toggling with a constant modelValue and emits one update per header click", async () => {
     const w = render(WAccordion, { props: { title: "Details", modelValue: true }, slots: { default: "Body" } }, {}, true);
     await w.get(".accordion__header").trigger("click");
@@ -392,8 +400,8 @@ describe(`WAccordion contract (${framework})`, () => {
   });
 });
 
-/* PrimeVue has no open-on-hover menu, so the adapter composes Popover with Wakeb opening rules. */
-describe.runIf(!vuetify)("PrimeVue overflow popup interaction", () => {
+/* PrimeVue and reka-ui have no open-on-hover menu, so each adapter composes a Popover with Wakeb opening rules. */
+describe.runIf(!vuetify)(`${framework} overflow popup interaction`, () => {
   const badges = { items: [{ label: "Admin" }, { label: "Member" }], showOverflowMenu: true, overflowLabel: "More roles" };
   const avatars = { items: [{ name: "Ada Lovelace" }, { name: "Grace Hopper" }], max: 1, showOverflowMenu: true, overflowLabel: "More people" };
   const closed = () => vi.waitFor(() => expect(overflowList()).toBeNull());
@@ -410,7 +418,8 @@ describe.runIf(!vuetify)("PrimeVue overflow popup interaction", () => {
     expect(button.attributes("aria-controls")).toBeUndefined();
     await button.trigger("click");
     await opened();
-    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", key: "Escape" }));
+    // A real key press bubbles to window, where reka-ui listens; PrimeVue listens on document.
+    document.dispatchEvent(new KeyboardEvent("keydown", { code: "Escape", key: "Escape", bubbles: true }));
     await closed();
     expect(button.attributes("aria-expanded")).toBe("false");
   });

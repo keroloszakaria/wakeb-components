@@ -610,7 +610,7 @@ errors, and production builds drop them.
 | WExportDropdown, WBaseSidebar, WDrawer | Yes | Yes |
 | WAvatarStack, WBadgeStack, WAccordion | Yes | Yes |
 | WTruncatedText, WTooltipBtn, WBadge, WUserBadge | Yes | Yes |
-| shadcn-vue (alpha) | — | WButton, WDropdown, WModal, WLoading, WExportDropdown, WBaseSidebar, WDrawer; WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps (native Wakeb markup); WPageSkeleton (shadcn-vue Skeleton bones on the Wakeb grid); WAccordion (Wakeb disclosure, shadcn-vue Button indicators); the other components: `WAKEB_COMPONENT_UNSUPPORTED` |
+| shadcn-vue (alpha) | — | All 21 components. WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WBadge and WUserBadge use native Wakeb markup; WPageSkeleton uses shadcn-vue Skeleton bones on the Wakeb grid; WAccordion is a Wakeb disclosure with shadcn-vue Button indicators; the rest use shadcn-vue primitives on reka-ui |
 
 ## Limits of this alpha
 
@@ -685,15 +685,12 @@ errors, and production builds drop them.
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning Alpha
-The shadcn-vue adapter renders WButton, WDropdown, WModal, WLoading, WExportDropdown, WBaseSidebar,
-WDrawer, WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps,
-WPageSkeleton and WAccordion. Every other component fails with `WAKEB_COMPONENT_UNSUPPORTED` under
-`framework: 'shadcn'`.
+The shadcn-vue adapter renders all 21 components under `framework: 'shadcn'`.
 :::
 
 shadcn-vue is not an npm component library. Its components are source files that the
 shadcn-vue CLI copies into an app, styled with Tailwind CSS. Wakeb ships its own adapted copies
-of the Button, DropdownMenu, Dialog, Sheet, Skeleton, Tooltip and Spinner components, so your app does not need
+of the Button, DropdownMenu, Dialog, Popover, Sheet, Skeleton, Tooltip and Spinner components, so your app does not need
 the CLI, Tailwind CSS or the shadcn-vue copies of those components:
 
 - **Peer.** The only peer is `reka-ui` (`^2.10.5`), the headless library under shadcn-vue. It
@@ -756,6 +753,21 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
   host. The physical side follows Wakeb's `direction` option (`end` is the right side in
   left-to-right pages and the left side in right-to-left pages). `zIndexOverlay` reaches both the
   overlay and the panel; `transparentOverlay` keeps the overlay, so the page stays blocked.
+- **WTruncatedText, WTooltipBtn and the WAvatarStack avatars** use reka-ui Tooltip, like WButton.
+  The tooltip opens on keyboard focus and on hover (`openDelay` applies to hover), closes on blur
+  and Escape, and stays open while the pointer is over it. While it is open, the trigger's
+  `aria-describedby` points to it; a caller `aria-describedby` wins. The tooltip root takes the
+  theme scope and `zIndexOverlay`; `tooltipStyle` styles the text inside it. WTooltipBtn renders
+  the shadcn-vue Button without a native `variant`, so the portable variants are painted by
+  Wakeb CSS (`wakeb-tooltip-btn--*`).
+- **WBadge and WUserBadge** render Wakeb markup (`data-slot="badge"`, `data-slot="avatar"`) painted
+  by the shared Wakeb badge CSS, as on PrimeVue. Provider color names fall back to `primary` with
+  `WAKEB_UNKNOWN_VALUE`. Avatars are plain decorative images, so they also render on the server.
+- **WAvatarStack and WBadgeStack overflow lists** render in reka-ui Popover with the Vuetify
+  opening rules: hover always; WAvatarStack also opens on focus and keeps the list open on click;
+  the WBadgeStack button toggles it on click. Escape and a press outside close it. The popover is
+  informational: it never takes focus, is `aria-modal="false"`, and the activator's
+  `aria-controls` points to the list.
 
 **Limits.**
 
@@ -783,6 +795,10 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
   `close` comes from the close button.
 - **WExportDropdown.** The menu is non-modal, like the other providers: the page behind it is not
   inert while it is open.
+- **Tooltip links on the server.** reka-ui adds `aria-describedby` only while a tooltip is open,
+  so server-rendered WTruncatedText and WTooltipBtn have none (Vuetify and PrimeVue render the id).
+- **Hover.** Tooltips and overflow lists also open on plain `mouseenter`, so they work without
+  pointer events; reka-ui's grace area decides when a hover-opened tooltip closes.
 
 **License.** shadcn-vue is MIT licensed (Copyright (c) 2023 unovue), and the inlined Lucide
 icon is ISC licensed (Copyright (c) 2026 Lucide Icons and Contributors). The package includes

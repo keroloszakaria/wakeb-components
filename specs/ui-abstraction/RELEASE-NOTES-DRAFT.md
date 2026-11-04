@@ -36,11 +36,12 @@ Upgrading needs the migration guide. Root imports alone no longer work.
 - **PrimeVue 4 adapter for all 21 components.** WTabs, WTree and WCarousel use Wakeb-owned markup; the other components use PrimeVue primitives.
   - PrimeVue WDrawer needs no layout host. It traps focus, closes on Escape and outside click unless `persistent`, and takes `zIndexOverlay`.
   - PrimeVue tooltips open on focus as well as hover.
-- **shadcn-vue adapter (alpha) for 15 components** on the optional `reka-ui` peer (`^2.10.5`). It ships precompiled, namespaced CSS, with no Tailwind setup, no global reset and with third-party notices. The supported components are:
+- **shadcn-vue adapter (alpha) for all 21 components** on the optional `reka-ui` peer (`^2.10.5`). It ships precompiled, namespaced CSS, with no Tailwind setup, no global reset and with third-party notices. The supported components are:
   - WButton, WLoading, WDropdown, WModal
   - WTabs, WTree, WCarousel
   - WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WPageSkeleton, WAccordion
   - WExportDropdown, WBaseSidebar, WDrawer
+  - WTruncatedText, WTooltipBtn, WBadge, WUserBadge, WAvatarStack, WBadgeStack
 - **App-scoped plugin options.**
   - `defaults` for each component.
   - Arabic built-in labels.
@@ -55,8 +56,6 @@ Upgrading needs the migration guide. Root imports alone no longer work.
 
 ## Known limits
 
-- **shadcn-vue is incomplete.**
-  > **IN PROGRESS (parallel track) — the single place in this file to flip:** WTruncatedText, WTooltipBtn, WBadge, WUserBadge, WAvatarStack and WBadgeStack. Under `framework: 'shadcn'` they currently render `WAKEB_COMPONENT_UNSUPPORTED`. When they land, move them into the shadcn feature bullet above and change "15" to "21".
 - **No real-browser verification has been recorded.**
   - M3–M5 keyboard, focus, positioning and visual parity have no browser evidence.
   - Server-to-client hydration has no browser evidence.
@@ -99,7 +98,6 @@ The reasons:
 
 - **The change is breaking.** Under semver 0.x, a minor bump is the conventional breaking release, and a prerelease suffix keeps `^0.7.0` ranges from resolving to it.
 - **1.0.0 promises a stable API across providers, and the SPEC definition of done is not met.**
-  - shadcn-vue covers 15 of 21 components.
   - No real-browser or hydration suites have run.
   - No Jervis DevOps evidence is recorded.
   - Calling this `1.0.0-alpha.0` would anchor the 1.0 line before the owner decisions above are settled. Any of them could change public types again.

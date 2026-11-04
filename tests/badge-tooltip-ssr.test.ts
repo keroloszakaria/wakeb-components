@@ -11,7 +11,7 @@ import { framework, wakeb } from "./wakeb";
 const renderPage = (root: () => unknown) => {
   const app = createSSRApp({ render: root as never });
   if (framework === "vuetify") app.use(createVuetify({ ssr: true }));
-  else app.use(PrimeVue, { theme: "none" });
+  else if (framework === "primevue") app.use(PrimeVue, { theme: "none" });
   app.use(wakeb({ theme: { mode: "dark" }, direction: "rtl" }));
   return renderToString(app);
 };
@@ -48,8 +48,9 @@ describe(`SSR (${framework})`, () => {
     const tree = () => h("div", [h(WTooltipBtn, { text: "Help" }), h(WTruncatedText, { label: "A label that is long", length: 6 })]);
     const ids = (html: string) => [...html.matchAll(/aria-describedby="([^"]+)"/g)].map((match) => match[1]);
     const first = ids(await renderPage(tree));
-    // Vuetify links the WTooltipBtn tooltip on the client only (activator="parent").
-    expect(first).toHaveLength(framework === "vuetify" ? 1 : 2);
+    // Vuetify links the WTooltipBtn tooltip on the client only (activator="parent"); reka-ui (shadcn) adds
+    // aria-describedby only while a tooltip is open, so closed server output has none.
+    expect(first).toHaveLength({ vuetify: 1, primevue: 2, shadcn: 0 }[framework]);
     expect(ids(await renderPage(tree))).toEqual(first);
   });
 });

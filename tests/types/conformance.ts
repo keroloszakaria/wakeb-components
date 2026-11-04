@@ -65,6 +65,12 @@ import type ShadcnWAccordion from "../../src/adapters/shadcn/WAccordion.vue";
 import type ShadcnWExportDropdown from "../../src/adapters/shadcn/WExportDropdown.vue";
 import type ShadcnWBaseSidebar from "../../src/adapters/shadcn/WBaseSidebar.vue";
 import type ShadcnWDrawer from "../../src/adapters/shadcn/WDrawer.vue";
+import type ShadcnWTruncatedText from "../../src/adapters/shadcn/WTruncatedText.vue";
+import type ShadcnWTooltipBtn from "../../src/adapters/shadcn/WTooltipBtn.vue";
+import type ShadcnWBadge from "../../src/adapters/shadcn/WBadge.vue";
+import type ShadcnWUserBadge from "../../src/adapters/shadcn/WUserBadge.vue";
+import type ShadcnWAvatarStack from "../../src/adapters/shadcn/WAvatarStack.vue";
+import type ShadcnWBadgeStack from "../../src/adapters/shadcn/WBadgeStack.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -157,6 +163,12 @@ interface Shadcn {
   WExportDropdown: typeof ShadcnWExportDropdown;
   WBaseSidebar: typeof ShadcnWBaseSidebar;
   WDrawer: typeof ShadcnWDrawer;
+  WTruncatedText: typeof ShadcnWTruncatedText;
+  WTooltipBtn: typeof ShadcnWTooltipBtn;
+  WBadge: typeof ShadcnWBadge;
+  WUserBadge: typeof ShadcnWUserBadge;
+  WAvatarStack: typeof ShadcnWAvatarStack;
+  WBadgeStack: typeof ShadcnWBadgeStack;
 }
 
 /** The Vuetify renderer set is complete: every public component has one. */

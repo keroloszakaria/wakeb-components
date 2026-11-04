@@ -602,7 +602,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | WExportDropdown وWBaseSidebar وWDrawer | مدعوم | مدعوم |
 | WAvatarStack وWBadgeStack وWAccordion | مدعوم | مدعوم |
 | WTruncatedText وWTooltipBtn وWBadge وWUserBadge | مدعوم | مدعوم |
-| shadcn-vue (تجريبي) | — | WButton وWDropdown وWModal وWLoading وWExportDropdown وWBaseSidebar وWDrawer؛ وWTabs وWTree وWCarousel وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps (markup أصلي من Wakeb)؛ وWPageSkeleton (عظام Skeleton من shadcn-vue على شبكة Wakeb)؛ وWAccordion (إفصاح من Wakeb بمؤشرات زر shadcn-vue)؛ وبقية المكونات: `WAKEB_COMPONENT_UNSUPPORTED` |
+| shadcn-vue (تجريبي) | — | المكونات الـ21 كلها. تستخدم WTabs وWTree وWCarousel وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWBadge وWUserBadge markup أصليًا من Wakeb؛ ويستخدم WPageSkeleton عظام Skeleton من shadcn-vue على شبكة Wakeb؛ وWAccordion إفصاح من Wakeb بمؤشرات زر shadcn-vue؛ وتستخدم البقية primitives من shadcn-vue فوق reka-ui |
 
 ## حدود الإصدار التجريبي
 
@@ -672,14 +672,12 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning تجريبي
-يرسم محوّل shadcn-vue المكونات WButton وWDropdown وWModal وWLoading وWExportDropdown وWBaseSidebar
-وWDrawer وWTabs وWTree وWCarousel وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton
-وWAccordion. أما بقية المكونات فتفشل بالرمز `WAKEB_COMPONENT_UNSUPPORTED` مع `framework: 'shadcn'`.
+يرسم محوّل shadcn-vue المكونات الـ21 كلها مع `framework: 'shadcn'`.
 :::
 
 shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملفات مصدرية تنسخها أداة shadcn-vue CLI إلى
 التطبيق، وتُنسَّق بـTailwind CSS. يوفّر Wakeb نسخه المعدّلة من مكونات Button وDropdownMenu
-وDialog وSheet وSkeleton وTooltip وSpinner، فلا يحتاج تطبيقك إلى الأداة ولا إلى Tailwind CSS ولا إلى نسخ shadcn-vue
+وDialog وPopover وSheet وSkeleton وTooltip وSpinner، فلا يحتاج تطبيقك إلى الأداة ولا إلى Tailwind CSS ولا إلى نسخ shadcn-vue
 من هذه المكونات:
 
 - **الـpeer.** الـpeer الوحيد هو `reka-ui` ‏(`^2.10.5`)، وهي المكتبة غير المنسقة التي يقوم عليها
@@ -741,6 +739,19 @@ shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملف�
   الفعلي الخيار `direction` في Wakeb (`end` هو الجانب الأيمن في الصفحات من اليسار إلى اليمين،
   والأيسر في الصفحات من اليمين إلى اليسار). تصل `zIndexOverlay` إلى الطبقة الخلفية وإلى اللوحة معًا،
   ويُبقي `transparentOverlay` الطبقة الخلفية، فتبقى الصفحة محجوبة.
+- **WTruncatedText وWTooltipBtn وصور WAvatarStack** تستخدم Tooltip من reka-ui كما في WButton.
+  يفتح التلميح عند التركيز بلوحة المفاتيح وعند مرور المؤشر (وتنطبق `openDelay` على مرور المؤشر)،
+  ويُغلق عند فقدان التركيز وبـEscape، ويبقى مفتوحًا ما دام المؤشر فوقه. وما دام مفتوحًا يشير
+  `aria-describedby` في العنصر المُشغِّل إليه، وتتقدم قيمة `aria-describedby` القادمة من المستخدم.
+  يحمل جذر التلميح نطاق الثيم و`zIndexOverlay`، وتنسّق `tooltipStyle` النص داخله. ويرسم WTooltipBtn
+  زر shadcn-vue دون `variant` أصلي، فترسم أنماط Wakeb ‏(`wakeb-tooltip-btn--*`) الأنواع القابلة للنقل.
+- **WBadge وWUserBadge** يرسمان markup من Wakeb ‏(`data-slot="badge"` و`data-slot="avatar"`)
+  تنسّقه أنماط الشارة المشتركة في Wakeb كما في PrimeVue. وترجع أسماء ألوان المزوّد إلى `primary`
+  مع `WAKEB_UNKNOWN_VALUE`. والصور الرمزية صور زخرفية عادية، فتُرسم على الخادم أيضًا.
+- **قوائم الفائض في WAvatarStack وWBadgeStack** تُرسم داخل Popover من reka-ui بقواعد الفتح نفسها
+  في Vuetify: تفتح دائمًا عند مرور المؤشر، ويفتحها WAvatarStack أيضًا عند التركيز ويبقيها مفتوحة
+  عند النقر، ويبدّلها زر WBadgeStack بالنقر. ويغلقها Escape أو الضغط خارجها. الـPopover للعرض
+  فقط: لا يأخذ التركيز أبدًا، وقيمته `aria-modal="false"`، ويشير `aria-controls` في زر الفتح إلى القائمة.
 
 **الحدود.**
 
@@ -768,6 +779,10 @@ shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملف�
   فيأتي من زر الإغلاق.
 - **WExportDropdown.** القائمة غير modal كما في المزوّدين الآخرين، فلا تصبح الصفحة خلفها خاملة أثناء
   فتحها.
+- **ربط التلميح على الخادم.** لا تضيف reka-ui السمة `aria-describedby` إلا ما دام التلميح مفتوحًا،
+  لذا لا يحملها WTruncatedText ولا WTooltipBtn في مخرجات الخادم (بينما يرسم Vuetify وPrimeVue المعرّف).
+- **مرور المؤشر.** تفتح التلميحات وقوائم الفائض أيضًا مع حدث `mouseenter` العادي، فتعمل دون
+  أحداث pointer، وتحدد منطقة السماح في reka-ui متى يُغلق التلميح الذي فُتح بمرور المؤشر.
 
 **الترخيص.** يخضع shadcn-vue لرخصة MIT ‏(Copyright (c) 2023 unovue)، وتخضع أيقونة Lucide المضمّنة
 لرخصة ISC ‏(Copyright (c) 2026 Lucide Icons and Contributors). تحتوي الحزمة نصوص الترخيص في

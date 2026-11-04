@@ -6,12 +6,13 @@ import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WAccordion, WAvatarStack, WBadgeStack } from "../src";
 import { framework, wakeb } from "./wakeb";
+import { SUPPORTED } from "../src/adapters/manifest";
 
 /* Server rendering without browser globals (SPEC R19), on each provider project. */
 const renderPage = (view: () => unknown) => {
   const app = createSSRApp({ render: view });
   if (framework === "vuetify") app.use(createVuetify({ ssr: true }));
-  else app.use(PrimeVue, { theme: "none" });
+  else if (framework === "primevue") app.use(PrimeVue, { theme: "none" });
   return renderToString(app.use(wakeb()));
 };
 
@@ -39,7 +40,7 @@ describe(`stack and accordion SSR (${framework})`, () => {
     expect(html).not.toContain("Member");
   });
 
-  it("keeps accordion panel ids distinct and deterministic", async () => {
+  it.runIf(SUPPORTED[framework].includes("WAccordion"))("keeps accordion panel ids distinct and deterministic", async () => {
     const view = () => h("div", [h(WAccordion, { title: "One" }), h(WAccordion, { title: "Two", modelValue: true }, () => h("input", { value: "Draft" }))]);
     const html = await renderPage(view);
     const ids = [...html.matchAll(/id="(wakeb-accordion-[^"]+)"/g)].map((match) => match[1]);

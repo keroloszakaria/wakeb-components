@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 1,
+  "baseline": "0.7.0",
+  "notation": {
+    "WExportDropdown.formats": {
+      "cell": "PDF / XLSX",
+      "value": [
+        {
+          "label": "Export as PDF",
+          "value": "pdf"
+        },
+        {
+          "label": "Export as Excel",
+          "value": "xlsx"
+        }
+      ],
+      "source": "dcb7551:src/components/WExportDropdown.vue"
+    }
+  },
+  "breaking": [
+    {
+      "id": "WAccordion.default.iconColor",
+      "from": "\"\"",
+      "to": "undefined",
+      "reason": "The declared default moved from \"\" to undefined because \"\" is not a WakebColor. The renderer resolves undefined to the same empty fallback, so nothing renders differently.",
+      "migration": "docs/guide/migration.md#colors",
+      "gap": "Not observable at runtime; the guide does not mention the declared default."
+    },
+    {
+      "id": "WAccordion.prop.iconColor.type",
+      "from": "string",
+      "to": "WakebColor",
+      "changes": [
+        "(self): string -> WakebColor"
+      ],
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WAccordion.slot.toggleIcon.payload",
+      "from": "IconSlotProps",
+      "to": "IconSlotProps",
+      "changes": [
+        "icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] -> string | WakebIconDefinition"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WAvatarStack.prop.avatarColor.type",
+      "from": "string",
+      "to": "WakebColor",
+      "changes": [
+        "(self): string -> WakebColor"
+      ],
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WBadge.default.dotColor",
+      "from": "\"\"",
+      "to": "undefined",
+      "reason": "The declared default moved from \"\" to undefined because \"\" is not a WakebColor. The renderer resolves undefined to the same empty fallback, so nothing renders differently.",
+      "migration": "docs/guide/migration.md#colors",
+      "gap": "Not observable at runtime; the guide does not mention the declared default."
+    },
+    {
+      "id": "WBadge.default.variant",
+      "from": "\"default\"",
+      "to": "\"soft\"",
+      "reason": "The default is the portable variant soft, which replaces the 0.7 default/tonal alias and renders the same tonal look.",
+      "migration": "docs/guide/migration.md#variants"
+    },
+    {
+      "id": "WBadge.prop.dotColor.type",
+      "from": "string",
+      "to": "WakebColor",
+      "changes": [
+        "(self): string -> WakebColor"
+      ],
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WBadge.prop.type.type",
+      "from": "string",
+      "to": "WakebBadgeType",
+      "changes": [
+        "(self): string -> WakebBadgeType"
+      ],
+      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23); any other string is rejected by TypeScript and only accepted at runtime under Vuetify as a deprecated color alias.",
+      "migration": "docs/guide/migration.md#badge-type"
+    },
+    {
+      "id": "WBadge.slot.icon.payload",
+      "from": "{icon: SharedIcon; size: string | number}",
+      "to": "{icon: SharedIcon; size: string | number}",
+      "changes": [
+        "icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] -> string | WakebIconDefinition"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WBadgeStack.default.badgeVariant",
+      "from": "\"default\"",
+      "to": "\"soft\"",
+      "reason": "The default is the portable variant soft, which replaces the 0.7 default/tonal alias and renders the same tonal look.",
+      "migration": "docs/guide/migration.md#variants"
+    },
+    {
+      "id": "WBadgeStack.default.dotColor",
+      "from": "\"\"",
+      "to": "undefined",
+      "reason": "The declared default moved from \"\" to undefined because \"\" is not a WakebColor. The renderer resolves undefined to the same empty fallback, so nothing renders differently.",
+      "migration": "docs/guide/migration.md#colors",
+      "gap": "Not observable at runtime; the guide does not mention the declared default."
+    },
+    {
+      "id": "WBadgeStack.prop.badgeType.type",
+      "from": "string",
+      "to": "WakebBadgeType",
+      "changes": [
+        "(self): string -> WakebBadgeType"
+      ],
+      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23); any other string is rejected by TypeScript and only accepted at runtime under Vuetify as a deprecated color alias.",
+      "migration": "docs/guide/migration.md#badge-type"
+    },
+    {
+      "id": "WBadgeStack.prop.dotColor.type",
+      "from": "string",
+      "to": "WakebColor",
+      "changes": [
+        "(self): string -> WakebColor"
+      ],
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WBadgeStack.prop.items.type",
+      "from": "readonly BadgeStackItem[]",
+      "to": "readonly BadgeStackItem[]",
+      "changes": [
+        "[].badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "[].color: string | undefined -> WakebColor | undefined",
+        "[].dotColor: string | undefined -> WakebColor | undefined",
+        "[].type: string | undefined -> WakebBadgeType | undefined",
+        "[].variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
+      ],
+      "reason": "Stack item color and dotColor are WakebColor and item type is WakebBadgeType (SPEC R23); TypeScript rejects provider color names and other badge types. Item variant and badgeIcon only widened, so they accept every 0.7 value.",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WBadgeStack.slot.badgeIcon.payload",
+      "from": "{item: BadgeStackItem; icon: SharedIcon | undefined; size: string | number}",
+      "to": "{item: BadgeStackItem; icon: SharedIcon | undefined; size: string | number}",
+      "changes": [
+        "icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "item.color: string | undefined -> WakebColor | undefined",
+        "item.dotColor: string | undefined -> WakebColor | undefined",
+        "item.type: string | undefined -> WakebBadgeType | undefined",
+        "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
+      ],
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor, item type is WakebBadgeType (SPEC R23), and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item variant only widened.",
+      "migration": "docs/guide/migration.md#colors",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WBadgeStack.slot.icon.payload",
+      "from": "BadgeStackIconSlotProps",
+      "to": "BadgeStackIconSlotProps",
+      "changes": [
+        "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "item.color: string | undefined -> WakebColor | undefined",
+        "item.dotColor: string | undefined -> WakebColor | undefined",
+        "item.type: string | undefined -> WakebBadgeType | undefined",
+        "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
+      ],
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor, item type is WakebBadgeType (SPEC R23), and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item variant only widened.",
+      "migration": "docs/guide/migration.md#colors",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WBadgeStack.slot.label.payload",
+      "from": "{item: BadgeStackItem; text: string; overflow: boolean}",
+      "to": "{item: BadgeStackItem; text: string; overflow: boolean}",
+      "changes": [
+        "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "item.color: string | undefined -> WakebColor | undefined",
+        "item.dotColor: string | undefined -> WakebColor | undefined",
+        "item.type: string | undefined -> WakebBadgeType | undefined",
+        "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
+      ],
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor, item type is WakebBadgeType (SPEC R23), and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item variant only widened.",
+      "migration": "docs/guide/migration.md#colors",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WButton.slot.dropdown.payload",
+      "from": "IconSlotProps",
+      "to": "IconSlotProps",
+      "changes": [
+        "icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] -> string | WakebIconDefinition"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WButton.slot.icon.payload",
+      "from": "IconSlotProps",
+      "to": "IconSlotProps",
+      "changes": [
+        "icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] -> string | WakebIconDefinition"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WDropdown.emit.selectedItem.payload",
+      "from": "[item: DropdownItem]",
+      "to": "[item: DropdownItem]",
+      "changes": [
+        "[0].icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WDropdown.slot.activator.payload",
+      "from": "{props: Record<string, unknown>; isActive: boolean; buttonProps: ButtonProps}",
+      "to": "{props: Record<string, unknown>; isActive: boolean; buttonProps: ButtonProps}",
+      "changes": [
+        "buttonProps.icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "buttonProps.providerProps: (absent) -> WakebProviderProps | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WDropdown.slot.item-icon.payload",
+      "from": "{item: DropdownItem; color: string}",
+      "to": "{item: DropdownItem; color: string}",
+      "changes": [
+        "item.icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WDropdown.slot.item-label.payload",
+      "from": "{item: DropdownItem; text: string}",
+      "to": "{item: DropdownItem; text: string}",
+      "changes": [
+        "item.icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WExportDropdown.slot.activator.payload",
+      "from": "{props: Record<string, unknown>; buttonProps: ButtonProps}",
+      "to": "{props: Record<string, unknown>; buttonProps: ButtonProps}",
+      "changes": [
+        "buttonProps.icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "buttonProps.providerProps: (absent) -> WakebProviderProps | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WExportDropdown.slot.format-icon.payload",
+      "from": "{format: ExportFormat; index: number}",
+      "to": "{format: ExportFormat; index: number}",
+      "changes": [
+        "format.icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WExportDropdown.slot.format-label.payload",
+      "from": "{format: ExportFormat; index: number}",
+      "to": "{format: ExportFormat; index: number}",
+      "changes": [
+        "format.icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WLoading.prop.color.type",
+      "from": "string",
+      "to": "WakebColor",
+      "changes": [
+        "(self): string -> WakebColor"
+      ],
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WSegmentedProgress.prop.color.type",
+      "from": "string",
+      "to": "WakebColor",
+      "changes": [
+        "(self): string -> WakebColor"
+      ],
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WTabs.prop.tabs.type",
+      "from": "readonly TabItem[]",
+      "to": "readonly TabItem[]",
+      "changes": [
+        "[].customHTML: string | ((item: TabItem, context: TabContext) => string) | undefined -> string | ((item: TabItem, context: TabContext) => string) | undefined",
+        "[].icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "[].itemClassList: ComponentClass | ((item: TabItem, index: number, context: TabContext) => ComponentClass) | undefined -> ComponentClass | ((item: TabItem, index: number, context: TabContext) => ComponentClass) | undefined"
+      ],
+      "reason": "TabItem.icon is the provider-neutral SharedIcon (SPEC R15). Tab items still accept every 0.7 icon value, but item callbacks (customHTML, itemClassList) receive the new TabItem, so a callback typed against the 0.7 icon shape no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WTabs.slot.tab-icon.payload",
+      "from": "{tabItem: TabItem; index: number; size: string | number}",
+      "to": "{tabItem: TabItem; index: number; size: string | number}",
+      "changes": [
+        "tabItem.customHTML: string | ((item: TabItem, context: TabContext) => string) | undefined -> string | ((item: TabItem, context: TabContext) => string) | undefined",
+        "tabItem.icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "tabItem.itemClassList: ComponentClass | ((item: TabItem, index: number, context: TabContext) => ComponentClass) | undefined -> ComponentClass | ((item: TabItem, index: number, context: TabContext) => ComponentClass) | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WTabs.slot.tab-label.payload",
+      "from": "{tabItem: TabItem; index: number}",
+      "to": "{tabItem: TabItem; index: number}",
+      "changes": [
+        "tabItem.customHTML: string | ((item: TabItem, context: TabContext) => string) | undefined -> string | ((item: TabItem, context: TabContext) => string) | undefined",
+        "tabItem.icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
+        "tabItem.itemClassList: ComponentClass | ((item: TabItem, index: number, context: TabContext) => ComponentClass) | undefined -> ComponentClass | ((item: TabItem, index: number, context: TabContext) => ComponentClass) | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WTooltipBtn.default.variant",
+      "from": "\"text\"",
+      "to": "\"ghost\"",
+      "reason": "The default is the portable variant ghost, which replaces the 0.7 text variant; the faded plain look is not kept.",
+      "migration": "docs/guide/migration.md#variants"
+    },
+    {
+      "id": "WTooltipBtn.slot.icon.payload",
+      "from": "{icon: SharedIcon | undefined}",
+      "to": "{icon: SharedIcon | undefined}",
+      "changes": [
+        "icon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined"
+      ],
+      "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
+      "migration": "docs/guide/migration.md#behavior-changes",
+      "gap": "docs/guide/migration.md does not state the SharedIcon type change (Vuetify JSXComponent replaced by WakebIconComponent, readonly SVG path data); it only covers built-in icon rendering and typed payloads in general."
+    },
+    {
+      "id": "WUserBadge.prop.avatarColor.type",
+      "from": "string",
+      "to": "WakebColor",
+      "changes": [
+        "(self): string -> WakebColor"
+      ],
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WUserBadge.prop.type.type",
+      "from": "string",
+      "to": "WakebBadgeType",
+      "changes": [
+        "(self): string -> WakebBadgeType"
+      ],
+      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23); any other string is rejected by TypeScript and only accepted at runtime under Vuetify as a deprecated color alias.",
+      "migration": "docs/guide/migration.md#badge-type"
+    }
+  ]
+}

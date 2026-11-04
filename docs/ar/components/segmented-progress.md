@@ -43,7 +43,7 @@ import { WSegmentedProgress } from 'wakeb-components'
 
 ## الوصول وحدود السلوك
 
-يستخدم role=progressbar وحدود وقيمة ARIA. عند صفر لا يظهر جزء ممتلئ أو label مرئي، ويظل الاسم متاحًا لقارئ الشاشة. عند 100 يختفي الجزء الفارغ. الأجزاء تبدأ من flex basis صفر، فالجزء الممتلئ يساوي value% من عرض الشريط بعد خصم مسافة 2px مهما كان طول النص. الاتجاه موروث، والحركة تحترم reduced motion. لا توجد طلبات شبكة أو حالة مخزنة داخله. يرسم PrimeVue الـmarkup والـCSS نفسيهما من Wakeb كما في Vuetify (دون ProgressBar من PrimeVue)، فيتطابق الـDOM وبيانات الـslot والـtokens على المزودين.
+يستخدم role=progressbar وحدود وقيمة ARIA. عند صفر لا يظهر جزء ممتلئ أو label مرئي، ويظل الاسم متاحًا لقارئ الشاشة. عند 100 يختفي الجزء الفارغ. الأجزاء تبدأ من flex basis صفر، فالجزء الممتلئ يساوي value% من عرض الشريط بعد خصم مسافة 2px مهما كان طول النص. الاتجاه موروث، والحركة تحترم reduced motion. لا توجد طلبات شبكة أو حالة مخزنة داخله. يرسم PrimeVue الـmarkup والـCSS نفسيهما من Wakeb كما في Vuetify (دون ProgressBar من PrimeVue)، فيتطابق الـDOM وبيانات الـslot والـtokens على المزودين. في shadcn-vue يُرسم الـmarkup وأنماط CSS نفسها من Wakeb (لا يملك Progress في shadcn-vue مسارًا مقسّمًا ولا slot للنص)، فالـDOM وقيم الـslot والـtokens متطابقة.
 
 ## جرّب بنفسك
 

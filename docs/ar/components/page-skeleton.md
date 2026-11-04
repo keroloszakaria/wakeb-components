@@ -60,7 +60,7 @@ import { WPageSkeleton } from 'wakeb-components'
 | `list-item-avatar-three-line` | دائرة 40px وثلاثة أسطر |
 | `table` | عنوان وخمسة صفوف من ست خلايا وسطر تذييل |
 | `table-row` | ست خلايا |
-| `card` | كتلة صورة بارتفاع 150px وعنوان |
+| `card` | كتلة صورة بارتفاع 150px وعنوان | في shadcn-vue تطابق القواعد والشبكة وأشكال العظام ما في PrimeVue؛ وكل عظمة هي Skeleton من shadcn-vue (data-slot="skeleton" مع aria-hidden)، تنبض بـ--accent و--radius بدل موجة Wakeb، ويتوقف النبض مع reduced motion.
 
 ## جرّب بنفسك
 

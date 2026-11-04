@@ -47,7 +47,7 @@ import { WSemiCircleGauge } from 'wakeb-components'
 
 ## الوصول وحدود السلوك
 
-يقرأ قارئ الشاشة النسبة أو ariaLabel عبر SVG بدور img، ويُخفى النص الزخرفي المكرر عن ARIA. Vue useId يمنع تداخل عرّافات SVG ويدعم SSR. ينعكس الرسم في RTL ولا ينعكس النص. تُصحح الأبعاد غير الصالحة، وتُحترم reduced motion. size هو العرض الكامل، وارتفاع القوس نصفه. يرسم PrimeVue نفس SVG وCSS من Wakeb كما في Vuetify (لا يُستخدم Knob من PrimeVue لأنه حقل إدخال)، فيتطابق الـDOM والعرّافات والـtokens على المزودين.
+يقرأ قارئ الشاشة النسبة أو ariaLabel عبر SVG بدور img، ويُخفى النص الزخرفي المكرر عن ARIA. Vue useId يمنع تداخل عرّافات SVG ويدعم SSR. ينعكس الرسم في RTL ولا ينعكس النص. تُصحح الأبعاد غير الصالحة، وتُحترم reduced motion. size هو العرض الكامل، وارتفاع القوس نصفه. يرسم PrimeVue نفس SVG وCSS من Wakeb كما في Vuetify (لا يُستخدم Knob من PrimeVue لأنه حقل إدخال)، فيتطابق الـDOM والعرّافات والـtokens على المزودين. في shadcn-vue يُرسم ملف SVG نفسه من Wakeb بالهندسة نفسها؛ لا يملك shadcn-vue ولا reka-ui مقياسًا للقراءة فقط.
 
 ## جرّب بنفسك
 

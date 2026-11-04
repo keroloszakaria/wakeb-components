@@ -57,6 +57,11 @@ import type ShadcnWModal from "../../src/adapters/shadcn/WModal.vue";
 import type ShadcnWTabs from "../../src/adapters/shadcn/WTabs.vue";
 import type ShadcnWTree from "../../src/adapters/shadcn/WTree.vue";
 import type ShadcnWCarousel from "../../src/adapters/shadcn/WCarousel.vue";
+import type ShadcnWSegmentedProgress from "../../src/adapters/shadcn/WSegmentedProgress.vue";
+import type ShadcnWSemiCircleGauge from "../../src/adapters/shadcn/WSemiCircleGauge.vue";
+import type ShadcnWVerticalSteps from "../../src/adapters/shadcn/WVerticalSteps.vue";
+import type ShadcnWPageSkeleton from "../../src/adapters/shadcn/WPageSkeleton.vue";
+import type ShadcnWAccordion from "../../src/adapters/shadcn/WAccordion.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -141,6 +146,11 @@ interface Shadcn {
   WTabs: typeof ShadcnWTabs;
   WTree: typeof ShadcnWTree;
   WCarousel: typeof ShadcnWCarousel;
+  WSegmentedProgress: typeof ShadcnWSegmentedProgress;
+  WSemiCircleGauge: typeof ShadcnWSemiCircleGauge;
+  WVerticalSteps: typeof ShadcnWVerticalSteps;
+  WPageSkeleton: typeof ShadcnWPageSkeleton;
+  WAccordion: typeof ShadcnWAccordion;
 }
 
 /** The Vuetify renderer set is complete: every public component has one. */

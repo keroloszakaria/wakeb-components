@@ -610,7 +610,7 @@ errors, and production builds drop them.
 | WExportDropdown, WBaseSidebar, WDrawer | Yes | Yes |
 | WAvatarStack, WBadgeStack, WAccordion | Yes | Yes |
 | WTruncatedText, WTooltipBtn, WBadge, WUserBadge | Yes | Yes |
-| shadcn-vue (alpha) | — | WButton, WDropdown, WModal, WLoading; WTabs, WTree, WCarousel (native Wakeb markup); the other 14 components: `WAKEB_COMPONENT_UNSUPPORTED` |
+| shadcn-vue (alpha) | — | WButton, WDropdown, WModal, WLoading; WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps (native Wakeb markup); WPageSkeleton (shadcn-vue Skeleton bones on the Wakeb grid); WAccordion (Wakeb disclosure, shadcn-vue Button indicators); the other components: `WAKEB_COMPONENT_UNSUPPORTED` |
 
 ## Limits of this alpha
 
@@ -685,13 +685,14 @@ errors, and production builds drop them.
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning Alpha
-The shadcn-vue adapter renders WButton, WDropdown, WModal, WLoading, WTabs, WTree and WCarousel.
-Every other component fails with `WAKEB_COMPONENT_UNSUPPORTED` under `framework: 'shadcn'`.
+The shadcn-vue adapter renders WButton, WDropdown, WModal, WLoading, WTabs, WTree, WCarousel,
+WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WPageSkeleton and WAccordion. Every other
+component fails with `WAKEB_COMPONENT_UNSUPPORTED` under `framework: 'shadcn'`.
 :::
 
 shadcn-vue is not an npm component library. Its components are source files that the
 shadcn-vue CLI copies into an app, styled with Tailwind CSS. Wakeb ships its own adapted copies
-of the Button, DropdownMenu, Dialog, Tooltip and Spinner components, so your app does not need
+of the Button, DropdownMenu, Dialog, Tooltip, Spinner and Skeleton components, so your app does not need
 the CLI, Tailwind CSS or the shadcn-vue copies of those components:
 
 - **Peer.** The only peer is `reka-ui` (`^2.10.5`), the headless library under shadcn-vue. It
@@ -728,6 +729,16 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
   and stays mounted. WCarousel keeps the Wakeb autoplay timer, which pauses on hover, on focus
   inside the carousel or its indicators, while the document is hidden, and when the user
   prefers reduced motion. The WTree branch toggle is the shadcn-vue WButton.
+- **WSegmentedProgress, WSemiCircleGauge and WVerticalSteps** render the same Wakeb markup and CSS
+  as on Vuetify and PrimeVue. The shadcn-vue Progress draws a single indicator without a segmented
+  track or label slot, and the shadcn-vue Stepper is an interactive wizard, so neither is used.
+- **WPageSkeleton** uses the Wakeb skeleton grammar, bone shapes and grid, as on PrimeVue. Each bone
+  is the shadcn-vue Skeleton: it pulses, reads `--accent` and `--radius`, and is hidden from
+  assistive technology. Under `prefers-reduced-motion` the pulse stops.
+- **WAccordion** is a Wakeb disclosure. The title is a native button with `aria-expanded` and
+  `aria-controls`; the indicators are WButton (the shadcn-vue Button); the panel is a region named
+  by `title` when a title is set. A closed panel stays mounted, so nested state is kept. reka-ui
+  Collapsible is not used, because it unmounts a closed panel unless it is force-mounted.
 
 **Limits.**
 
@@ -748,6 +759,8 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
   swipe gestures. They have no provider primitive, so `providerProps` is dropped with a
   `WAKEB_PROVIDER_PROP_IGNORED` warning in development.
 - **Styles.** `style.css` contains the CSS of every renderer, including the shadcn-vue rules.
+- **Skeleton look.** shadcn-vue WPageSkeleton bones pulse with the shadcn-vue look; Vuetify and
+  PrimeVue bones use a wave. The grid, shapes, sizes and ARIA are the same.
 
 **License.** shadcn-vue is MIT licensed (Copyright (c) 2023 unovue), and the inlined Lucide
 icon is ISC licensed (Copyright (c) 2026 Lucide Icons and Contributors). The package includes

@@ -43,7 +43,7 @@ The root `div.segmented-progress` with `role="progressbar"` on every provider. `
 
 ## Accessibility and limits
 
-Uses role=progressbar and aria-valuemin/aria-valuemax/aria-valuenow. A zero value has no fill or visible label, but retains its accessible name. At 100 there is no empty track. Segments size from a zero flex basis, so the fill is value% of the track width minus the 2px gap whatever the label length. Layout follows inherited direction; animations respect reduced motion. The component has no network or state-store side effects. PrimeVue renders the same Wakeb markup and CSS as Vuetify (no PrimeVue ProgressBar), so the DOM, slot payload and tokens are identical on both providers.
+Uses role=progressbar and aria-valuemin/aria-valuemax/aria-valuenow. A zero value has no fill or visible label, but retains its accessible name. At 100 there is no empty track. Segments size from a zero flex basis, so the fill is value% of the track width minus the 2px gap whatever the label length. Layout follows inherited direction; animations respect reduced motion. The component has no network or state-store side effects. PrimeVue renders the same Wakeb markup and CSS as Vuetify (no PrimeVue ProgressBar), so the DOM, slot payload and tokens are identical on both providers. Under shadcn-vue the same Wakeb markup and CSS render (the shadcn-vue Progress has no segmented track or label slot), so the DOM, slot payload and tokens are identical.
 
 ## Try it
 

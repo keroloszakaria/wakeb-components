@@ -6,14 +6,15 @@ import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WPageSkeleton, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, type WakebComponentsOptions } from "../src";
 import { SKELETON_NAMES } from "../src/core/vocabulary";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /*
  * M3 Batch A shared contract: WSegmentedProgress, WSemiCircleGauge, WVerticalSteps and WPageSkeleton.
  * Same usage and assertions on each provider project (SPEC R12, R14, R16, R17, R18, R19). Queries go
  * through roles and Wakeb classes, never provider DOM.
  */
-const host = (ssr = false) => (framework === "vuetify" ? createVuetify({ ssr }) : ([PrimeVue, { theme: "none" }] as const));
+const host = (ssr = false) =>
+  framework === "vuetify" ? createVuetify({ ssr }) : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost;
 const render = (component: unknown, options: Record<string, unknown> = {}, plugin: Partial<WakebComponentsOptions> = {}) =>
   mount(component as never, { attachTo: document.body, global: { plugins: [host() as never, wakeb(plugin)] }, ...options });
 const warnings = () => vi.mocked(console.warn).mock.calls.map(([message]) => String(message));
@@ -204,7 +205,7 @@ describe(`WPageSkeleton contract (${framework})`, () => {
     );
   });
 
-  it.runIf(framework === "primevue")("draws every portable name with Wakeb bones and caps repeats at 100", () => {
+  it.runIf(framework !== "vuetify")("draws every portable name with Wakeb bones and caps repeats at 100", () => {
     vi.spyOn(console, "warn").mockImplementation(() => {});
     const w = render(WPageSkeleton, { props: { config: [{ items: SKELETON_NAMES.map((type) => ({ type })) }, { items: [{ type: "chip@500", width: 200, height: "3rem", class: "mine" }] }] } });
     for (const name of SKELETON_NAMES) {
@@ -217,6 +218,14 @@ describe(`WPageSkeleton contract (${framework})`, () => {
     const item = w.get(".wakeb-skeleton.mine").element as HTMLElement;
     expect([item.style.width, item.style.height]).toEqual(["200px", "3rem"]);
     expect(w.findAll(".wakeb-skeleton__bone").every((bone) => bone.attributes("aria-hidden") === "true")).toBe(true);
+  });
+
+  it.runIf(framework === "shadcn")("draws each bone with the shadcn-vue Skeleton copy", () => {
+    const w = render(WPageSkeleton, { props: { config: [{ items: [{ type: "list-item-avatar" }] }] } });
+    const bones = w.findAll(".wakeb-skeleton__bone");
+    expect(bones.length).toBeGreaterThan(1);
+    expect(bones.every((bone) => bone.attributes("data-slot") === "skeleton" && bone.classes().includes("wakeb-sc-skeleton"))).toBe(true);
+    expect((w.get(".wakeb-skeleton__bone--circle").element as HTMLElement).style.borderRadius).toBe("50%");
   });
 });
 

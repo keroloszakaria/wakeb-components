@@ -60,7 +60,7 @@ Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to 
 | `list-item-avatar-three-line` | 40px circle and three lines |
 | `table` | Heading, five rows of six cells and a footer line |
 | `table-row` | Six cells |
-| `card` | 150px image block and a heading |
+| `card` | 150px image block and a heading | Under shadcn-vue the grammar, grid and bone shapes match PrimeVue; each bone is the shadcn-vue Skeleton (data-slot="skeleton", aria-hidden), which pulses with --accent and --radius instead of the Wakeb wave and stops under reduced motion.
 
 ## Try it
 

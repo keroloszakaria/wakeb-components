@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (framework alpha)
+## 0.8.0-alpha.0 (unreleased framework prerelease)
 
 - Breaking: root imports need a plugin file and `wakebComponents()` from `wakeb-components/vite`.
 - Add `createWakebComponents`, static provider selection, host provider reuse modes, `WakebError` codes and a PrimeVue 4 alpha adapter for WButton, WDropdown, WModal and WLoading.

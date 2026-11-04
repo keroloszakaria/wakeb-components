@@ -1,8 +1,9 @@
 # Installation
 
-::: tip Provider abstraction (unreleased)
-The next major release adds Vuetify and PrimeVue providers behind one API. It needs a plugin
-file and a one-time Vite integration. See [Providers and setup](./providers).
+::: tip Provider abstraction: 0.8.0-alpha.0 (not yet published)
+The 0.8.0-alpha.0 prerelease adds Vuetify, PrimeVue and shadcn-vue providers behind one API. It
+needs a plugin file and a one-time Vite integration. See [Providers and setup](./providers) and
+[Migration from 0.7](./migration). Until it is published, this page installs the 0.7.0 release.
 :::
 
 Install the public npm package in a Vue 3.5 + Vuetify 3.13.2+ project:
@@ -41,8 +42,9 @@ import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge } from 'wakeb-comp
 
 Vue and Vuetify are external peers; Wakeb Utils 0.1.1 is resolved from npm.
 The package is ESM for Vue bundlers. Development uses Node 22.14+.
-For offline use, copy <a href="/downloads/wakeb-components-0.7.0.tgz" download>the archive</a>
-into your project and install that file. Commit the manifest and lockfile together.
+To try the 0.8.0-alpha.0 prerelease offline, copy
+<a href="/downloads/wakeb-components-0.8.0-alpha.0.tgz" download>its archive</a> into your project and
+install that file, then follow [Providers and setup](./providers). Commit the manifest and lockfile together.
 
 ## Supported versions
 

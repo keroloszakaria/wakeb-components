@@ -32,6 +32,6 @@ features:
 
 <CompositionPlayground />
 
-Version 0.7.0 is published on npm. Follow [installation](/guide/installation).
+Version 0.7.0 is published on npm. The 0.8.0-alpha.0 prerelease with Vuetify, PrimeVue and shadcn-vue providers is not published yet. Follow [installation](/guide/installation).
 
 <OverlayPlayground />

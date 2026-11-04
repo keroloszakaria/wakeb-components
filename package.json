@@ -1,6 +1,6 @@
 {
   "name": "wakeb-components",
-  "version": "0.7.0",
+  "version": "0.8.0-alpha.0",
   "description": "Typed Vue 3 components with one contract across Vuetify, PrimeVue and shadcn-vue providers.",
   "type": "module",
   "license": "MIT",

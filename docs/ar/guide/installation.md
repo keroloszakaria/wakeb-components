@@ -1,8 +1,9 @@
 # التثبيت
 
-::: tip طبقة المزودات (غير منشورة)
-يضيف الإصدار الرئيسي القادم مزودَي Vuetify وPrimeVue خلف واجهة واحدة، ويتطلب ملف plugin
-وتكاملًا واحدًا مع Vite. راجع [المزودات والإعداد](./providers).
+::: tip طبقة المزودات: الإصدار 0.8.0-alpha.0 (غير منشور بعد)
+يضيف الإصدار التجريبي 0.8.0-alpha.0 مزودات Vuetify وPrimeVue وshadcn-vue خلف واجهة واحدة، ويتطلب
+ملف plugin وتكاملًا واحدًا مع Vite. راجع [المزودات والإعداد](./providers) و[الانتقال من 0.7](./migration).
+وإلى أن يُنشر، تثبّت هذه الصفحة الإصدار 0.7.0.
 :::
 
 ثبّت الحزمة العامة من npm داخل مشروع Vue 3.5 وVuetify 3.13.2+:
@@ -40,8 +41,9 @@ import { WTruncatedText, WSegmentedProgress, WSemiCircleGauge } from 'wakeb-comp
 ```
 
 Vue وVuetify هما peers، وWakeb Utils 0.1.1 يُثبت من npm. الحزمة ESM لمشاريع
-Vue التي تستخدم bundler. التطوير على Node22.14+. للعمل دون اتصال، احفظ
-<a href="/downloads/wakeb-components-0.7.0.tgz" download>الأرشيف</a> داخل المشروع وثبّته محليًا.
+Vue التي تستخدم bundler. التطوير على Node22.14+. لتجربة الإصدار
+التجريبي 0.8.0-alpha.0 دون اتصال، احفظ <a href="/downloads/wakeb-components-0.8.0-alpha.0.tgz" download>أرشيفه</a>
+داخل المشروع وثبّته محليًا، ثم اتبع [المزودات والإعداد](./providers).
 احفظ package.json وملف القفل معًا.
 
 ## الإصدارات المدعومة

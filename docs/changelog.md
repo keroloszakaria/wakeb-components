@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (framework alpha)
+## 0.8.0-alpha.0 (unreleased framework prerelease)
 
 Breaking: root imports now need a plugin file and `wakebComponents()` from `wakeb-components/vite`. Stay on 0.7.x for Vuetify-only use without build integration.
 

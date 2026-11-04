@@ -32,6 +32,6 @@ features:
 
 <CompositionPlayground />
 
-الإصدار 0.7.0 منشور على npm. راجع [دليل التثبيت](/ar/guide/installation).
+الإصدار 0.7.0 منشور على npm، أما الإصدار التجريبي 0.8.0-alpha.0 بمزودات Vuetify وPrimeVue وshadcn-vue فلم يُنشر بعد. راجع [دليل التثبيت](/ar/guide/installation).
 
 <OverlayPlayground />

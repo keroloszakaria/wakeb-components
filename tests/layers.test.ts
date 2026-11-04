@@ -28,7 +28,7 @@ const offenders = (dirs: string[], forbidden: (keyof typeof PROVIDERS)[]) =>
 
 describe("layer boundaries", () => {
   it("keeps provider imports out of portable layers", () => {
-    expect(offenders(["src/core", "src/composables", "src/icons", "src/styles", "src/build", "src/types.ts", "src/index.ts"], ["vuetify", "primevue", "shadcn"])).toEqual([]);
+    expect(offenders(["src/core", "src/composables", "src/icons", "src/styles", "src/build", "src/types.ts", "src/contracts.ts", "src/index.ts"], ["vuetify", "primevue", "shadcn"])).toEqual([]);
   });
 
   it("keeps each adapter on its own provider", () => {

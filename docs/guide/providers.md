@@ -497,6 +497,42 @@ compositions, such as the activator inside WDropdown or the close button inside 
 not receive it. The other 17 components do not accept it yet: TypeScript rejects it, and at
 runtime it is dropped with the same warning.
 
+## Typed contracts {#typed-contracts}
+
+The TypeScript type of every root component comes from a provider-neutral contract, not from a
+renderer. Props, event payloads, slot payloads and `v-model` bindings are therefore the same
+whichever provider you select, and no Vuetify or PrimeVue type appears in the declarations.
+
+| Type | What it describes |
+| --- | --- |
+| `ButtonProps`, `ModalProps` and the other `*Props` | Props, listed on [Data models](/guide/data-models) |
+| `ButtonEmits`, `ModalEmits` and the other `*Emits` | Each event name mapped to its payload tuple, for the ten components that emit events |
+| `ButtonSlots`, `ModalSlots` and the other `*Slots` | Each slot and its payload, for every component; `PageSkeletonSlots` is empty |
+| `WakebComponentEmits`, `WakebComponentSlots` | The same maps keyed by component name, like `WakebComponentProps` |
+| `WakebComponent<'WButton'>` | The public component type of one facade |
+| `WakebFacade<Props, Emits, Slots>` | The helper that builds a component type from the three contracts |
+| `AccordionTriggerProps` | The attributes and click handler the WAccordion `header` slot gives your toggle |
+
+```ts
+import type { ModalEmits, TreeSlots, WakebComponentEmits } from 'wakeb-components'
+
+type NodeLevel = Parameters<NonNullable<TreeSlots['node']>>[0]['level'] // number
+const onModel = (...[open]: ModalEmits['update:modelValue']) => console.log(open) // boolean
+type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: DropdownItem]
+```
+
+Templates checked with `vue-tsc` infer slot payloads and handler types from these contracts, so
+`#close-button="{ label }"` on WModal gives a `string`, and `@node-click` on WTree expects a
+handler that takes a `TreeNode`.
+
+Each provider renderer is type-checked against its contract, and the build fails if a
+renderer declares a prop, event payload or slot payload that differs. The packed package is
+checked the same way under `tsc --strict` and `vue-tsc`, with only one provider installed.
+
+**Limit.** WTabs panel slots are named after each tab key, so they are typed with an index
+signature whose payload is `any`. They receive no payload; `tab-label` and `tab-icon` are
+typed exactly.
+
 ## Errors
 
 | Code | Cause | Fix |

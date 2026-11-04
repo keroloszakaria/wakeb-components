@@ -107,3 +107,62 @@ const nativeBadge: BadgeProps = { providerProps: {} };
 // @ts-expect-error providerProps is per instance and never a plugin default
 const nativeDefault = createWakebComponents({ framework: 'vuetify', defaults: { WButton: { providerProps: { variant: 'tonal' } } } });
 void [nativeButton, nativeModal, nativeDropdown, nativeLoading, nativeString, nativeBadge, nativeDefault];
+// Neutral contracts (SPEC R01, R14): exact event payloads on every component that emits, and slot payloads.
+type PropsOf<C extends abstract new (...args: any) => any> = InstanceType<C>['$props'];
+const accordionModel: PropsOf<typeof WAccordion> = { 'onUpdate:modelValue': (open: boolean) => void open };
+// @ts-expect-error the accordion model is a boolean
+const badAccordionModel: PropsOf<typeof WAccordion> = { 'onUpdate:modelValue': (open: string) => void open };
+// @ts-expect-error tab updates carry a navigation key or undefined, not an object
+const badTabEvent: PropsOf<typeof WTabs> = { tabs: [], onUpdateTab: (value: { slot: string }) => void value };
+const treeEvents: PropsOf<typeof WTree> = { 'onNode-click': (node: import('wakeb-components').TreeNode) => void node.id, onToggle: (node: import('wakeb-components').TreeNode) => void node.children };
+// @ts-expect-error node-click receives the clicked node
+const badTreeClick: PropsOf<typeof WTree> = { 'onNode-click': (key: number) => void key };
+// @ts-expect-error toggle receives the node, not its expanded state
+const badTreeToggle: PropsOf<typeof WTree> = { onToggle: (expanded: boolean) => void expanded };
+const dropdownEvents: PropsOf<typeof WDropdown> = { onSelectedItem: (item: import('wakeb-components').DropdownItem) => void item.label, 'onUpdate:modelValue': (value: string | number) => void value };
+// @ts-expect-error selectedItem receives the whole item
+const badDropdownItem: PropsOf<typeof WDropdown> = { onSelectedItem: (label: string) => void label };
+// @ts-expect-error the dropdown model is a navigation key, which may be a number
+const badDropdownModel: PropsOf<typeof WDropdown> = { 'onUpdate:modelValue': (value: string) => void value };
+const carouselModel: PropsOf<typeof WCarousel> = { 'onUpdate:modelValue': (index: number) => void index };
+// @ts-expect-error the carousel model is a slide index
+const badCarouselModel: PropsOf<typeof WCarousel> = { 'onUpdate:modelValue': (slide: string) => void slide };
+const exportEvent: PropsOf<typeof WExportDropdown> = { onSelect: (value: string) => void value };
+// @ts-expect-error select receives the format value, not the format object
+const badExportEvent: PropsOf<typeof WExportDropdown> = { onSelect: (format: import('wakeb-components').ExportFormat) => void format };
+const sidebarEvents: PropsOf<typeof WBaseSidebar> = { title: 'People', onSearch: (payload: unknown) => void payload, onFilterClick: () => undefined, onFilterCancel: () => undefined };
+// @ts-expect-error the search payload is unknown and must be narrowed by the caller
+const badSidebarSearch: PropsOf<typeof WBaseSidebar> = { title: 'People', onSearch: (payload: string) => void payload };
+// @ts-expect-error filterClick has no payload
+const badSidebarFilter: PropsOf<typeof WBaseSidebar> = { title: 'People', onFilterClick: (value: string) => void value };
+const modalEvents: PropsOf<typeof WModal> = { 'onUpdate:modelValue': (open: boolean) => void open, onAfterLeave: () => undefined };
+// @ts-expect-error the modal model is a boolean
+const badModalModel: PropsOf<typeof WModal> = { 'onUpdate:modelValue': (open: number) => void open };
+// @ts-expect-error afterLeave has no payload
+const badModalLeave: PropsOf<typeof WModal> = { onAfterLeave: (event: Event) => void event };
+const drawerEvents: PropsOf<typeof WDrawer> = { 'onUpdate:modelValue': (open: boolean) => void open, onClose: () => undefined };
+// @ts-expect-error the drawer model is a boolean
+const badDrawerModel: PropsOf<typeof WDrawer> = { 'onUpdate:modelValue': (open: string) => void open };
+const emitted: import('wakeb-components').WakebComponentEmits['WTree']['node-click'] = [{ id: 1 }];
+// @ts-expect-error event maps hold payload tuples
+const badEmitted: import('wakeb-components').ButtonEmits['click'] = [new Event('click')];
+void [accordionModel, badAccordionModel, badTabEvent, treeEvents, badTreeClick, badTreeToggle, dropdownEvents, badDropdownItem, badDropdownModel, carouselModel, badCarouselModel, exportEvent, badExportEvent, sidebarEvents, badSidebarSearch, badSidebarFilter, modalEvents, badModalModel, badModalLeave, drawerEvents, badDrawerModel, emitted, badEmitted];
+// Slot payloads come from the facade instance type, without Vue's generic slot record.
+type SlotsOf<C extends abstract new (...args: any) => any> = InstanceType<C>['$slots'] extends import('vue').Slots & infer Own ? Own : never;
+type SlotPayload<C extends abstract new (...args: any) => any, K extends keyof SlotsOf<C>> = NonNullable<SlotsOf<C>[K]> extends (...args: infer A) => any ? A[0] : never;
+const closeSlot: SlotPayload<typeof WModal, 'close-button'> = { close: () => undefined, label: 'Close' };
+// @ts-expect-error the close-button label is a string
+const badCloseSlot: SlotPayload<typeof WModal, 'close-button'> = { close: () => undefined, label: 1 };
+const headerSlot: SlotPayload<typeof WAccordion, 'header'> = { open: true, toggle: () => undefined, triggerProps: { type: 'button', 'aria-expanded': true, 'aria-controls': 'panel', 'aria-label': 'Toggle', onClick: (event: MouseEvent) => event.stopPropagation() } };
+// @ts-expect-error the accordion trigger is always a native button
+const badHeaderSlot: SlotPayload<typeof WAccordion, 'header'> = { open: true, toggle: () => undefined, triggerProps: { type: 'submit', 'aria-expanded': true, 'aria-controls': 'panel', 'aria-label': 'Toggle', onClick: () => undefined } };
+const toggleSlot: SlotPayload<typeof WTree, 'toggle-trailing'> = { node: { id: 1 }, level: 0, expanded: false, hasChildren: true, toggle: () => undefined };
+// @ts-expect-error tree levels are numbers
+const badToggleSlot: SlotPayload<typeof WTree, 'toggle-trailing'> = { node: { id: 1 }, level: '0', expanded: false, hasChildren: true, toggle: () => undefined };
+const buttonIconSlot: SlotPayload<typeof WButton, 'icon'> = { icon: '$expand', size: 20, color: 'currentColor', maxWidth: '100%' };
+const tabLabelSlot: SlotPayload<typeof WTabs, 'tab-label'> = { tabItem: { slot: 'one', label: 'One' }, index: 0 };
+const exportLabelSlot: SlotPayload<typeof WExportDropdown, 'format-label'> = { format: { label: 'CSV', value: 'csv' }, index: 0 };
+const neutralSlots: import('wakeb-components').ModalSlots = {} as SlotsOf<typeof WModal>;
+// @ts-expect-error WButton has no activator slot
+const missingSlot: SlotPayload<typeof WButton, 'activator'> = {};
+void [closeSlot, badCloseSlot, headerSlot, badHeaderSlot, toggleSlot, badToggleSlot, buttonIconSlot, tabLabelSlot, exportLabelSlot, neutralSlots, missingSlot];

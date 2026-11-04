@@ -80,7 +80,15 @@ export async function verifyConsumer(dir, framework) {
   for (const name of PROVIDER_PEERS[other]) assert(!existsSync(join(dir, "node_modules", name)), `${framework} consumer must not install ${name}`);
 
   // Root declarations type-check with only this provider present, without skipping library checks.
-  run([join(root, "node_modules/typescript/bin/tsc"), "--noEmit", "--strict", "--target", "ES2022", "--module", "ESNext", "--moduleResolution", "Bundler", "--lib", "ES2022,DOM", "consumer.ts"], dir);
+  const compilerFlags = ["--noEmit", "--strict", "--target", "ES2022", "--module", "ESNext", "--moduleResolution", "Bundler", "--lib", "ES2022,DOM"];
+  run([join(root, "node_modules/typescript/bin/tsc"), ...compilerFlags, "consumer.ts"], dir);
+  // Portable declarations name no renderer file and no provider package (SPEC R05, R10).
+  for (const file of ["index.d.ts", "contracts.d.ts", "types.d.ts", "core/options.d.ts"]) {
+    const text = readFileSync(join(dir, "node_modules/wakeb-components/dist", file), "utf8");
+    assert(!/(?:from|import\()\s*["'](?:\.{1,2}\/(?:components|adapters)\/|vuetify|primevue|@primevue|@primeuix)/.test(text), `${file} references a renderer or provider`);
+  }
+  // Template slot payloads and handler types as vue-tsc infers them from the facades (SPEC R14).
+  run([join(root, "node_modules/vue-tsc/bin/vue-tsc.js"), ...compilerFlags, "Templates.vue"], dir);
 
   const vite = await import(pathToFileURL(join(dir, "node_modules/vite/dist/node/index.js")).href);
   const { wakebComponents } = await import(pathToFileURL(join(dir, "node_modules/wakeb-components/dist/vite.js")).href);

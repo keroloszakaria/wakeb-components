@@ -1,6 +1,7 @@
 /*
  * Each public component is a typed facade over the renderer that wakebComponents() selects at build
- * time. The Vuetify renderer declaration is the M1 reference contract; other adapters must match it.
+ * time. Its public type comes from the provider-neutral contracts in ./contracts, never from a renderer
+ * file; tests/types/conformance.ts checks that every renderer matches those contracts.
  */
 import WTruncatedTextRenderer from "wakeb-components/_internal/selected/WTruncatedText";
 import WSegmentedProgressRenderer from "wakeb-components/_internal/selected/WSegmentedProgress";
@@ -25,48 +26,28 @@ import WModalRenderer from "wakeb-components/_internal/selected/WModal";
 import WDrawerRenderer from "wakeb-components/_internal/selected/WDrawer";
 import { defineWakebFacade } from "./core/facade";
 import "./styles/tokens.css";
-import type WTruncatedTextContract from "./components/WTruncatedText.vue";
-import type WSegmentedProgressContract from "./components/WSegmentedProgress.vue";
-import type WSemiCircleGaugeContract from "./components/WSemiCircleGauge.vue";
-import type WAvatarStackContract from "./components/WAvatarStack.vue";
-import type WLoadingContract from "./components/WLoading.vue";
-import type WPageSkeletonContract from "./components/WPageSkeleton.vue";
-import type WVerticalStepsContract from "./components/WVerticalSteps.vue";
-import type WButtonContract from "./components/WButton.vue";
-import type WBadgeContract from "./components/WBadge.vue";
-import type WAccordionContract from "./components/WAccordion.vue";
-import type WBadgeStackContract from "./components/WBadgeStack.vue";
-import type WUserBadgeContract from "./components/WUserBadge.vue";
-import type WTooltipBtnContract from "./components/WTooltipBtn.vue";
-import type WTabsContract from "./components/WTabs.vue";
-import type WTreeContract from "./components/WTree.vue";
-import type WDropdownContract from "./components/WDropdown.vue";
-import type WCarouselContract from "./components/WCarousel.vue";
-import type WExportDropdownContract from "./components/WExportDropdown.vue";
-import type WBaseSidebarContract from "./components/WBaseSidebar.vue";
-import type WModalContract from "./components/WModal.vue";
-import type WDrawerContract from "./components/WDrawer.vue";
-export const WTruncatedText = /* @__PURE__ */ defineWakebFacade("WTruncatedText", WTruncatedTextRenderer) as unknown as typeof WTruncatedTextContract;
-export const WSegmentedProgress = /* @__PURE__ */ defineWakebFacade("WSegmentedProgress", WSegmentedProgressRenderer) as unknown as typeof WSegmentedProgressContract;
-export const WSemiCircleGauge = /* @__PURE__ */ defineWakebFacade("WSemiCircleGauge", WSemiCircleGaugeRenderer) as unknown as typeof WSemiCircleGaugeContract;
-export const WAvatarStack = /* @__PURE__ */ defineWakebFacade("WAvatarStack", WAvatarStackRenderer) as unknown as typeof WAvatarStackContract;
-export const WLoading = /* @__PURE__ */ defineWakebFacade("WLoading", WLoadingRenderer) as unknown as typeof WLoadingContract;
-export const WPageSkeleton = /* @__PURE__ */ defineWakebFacade("WPageSkeleton", WPageSkeletonRenderer) as unknown as typeof WPageSkeletonContract;
-export const WVerticalSteps = /* @__PURE__ */ defineWakebFacade("WVerticalSteps", WVerticalStepsRenderer) as unknown as typeof WVerticalStepsContract;
-export const WButton = /* @__PURE__ */ defineWakebFacade("WButton", WButtonRenderer) as unknown as typeof WButtonContract;
-export const WBadge = /* @__PURE__ */ defineWakebFacade("WBadge", WBadgeRenderer) as unknown as typeof WBadgeContract;
-export const WAccordion = /* @__PURE__ */ defineWakebFacade("WAccordion", WAccordionRenderer) as unknown as typeof WAccordionContract;
-export const WBadgeStack = /* @__PURE__ */ defineWakebFacade("WBadgeStack", WBadgeStackRenderer) as unknown as typeof WBadgeStackContract;
-export const WUserBadge = /* @__PURE__ */ defineWakebFacade("WUserBadge", WUserBadgeRenderer) as unknown as typeof WUserBadgeContract;
-export const WTooltipBtn = /* @__PURE__ */ defineWakebFacade("WTooltipBtn", WTooltipBtnRenderer) as unknown as typeof WTooltipBtnContract;
-export const WTabs = /* @__PURE__ */ defineWakebFacade("WTabs", WTabsRenderer) as unknown as typeof WTabsContract;
-export const WTree = /* @__PURE__ */ defineWakebFacade("WTree", WTreeRenderer) as unknown as typeof WTreeContract;
-export const WDropdown = /* @__PURE__ */ defineWakebFacade("WDropdown", WDropdownRenderer) as unknown as typeof WDropdownContract;
-export const WCarousel = /* @__PURE__ */ defineWakebFacade("WCarousel", WCarouselRenderer) as unknown as typeof WCarouselContract;
-export const WExportDropdown = /* @__PURE__ */ defineWakebFacade("WExportDropdown", WExportDropdownRenderer) as unknown as typeof WExportDropdownContract;
-export const WBaseSidebar = /* @__PURE__ */ defineWakebFacade("WBaseSidebar", WBaseSidebarRenderer) as unknown as typeof WBaseSidebarContract;
-export const WModal = /* @__PURE__ */ defineWakebFacade("WModal", WModalRenderer) as unknown as typeof WModalContract;
-export const WDrawer = /* @__PURE__ */ defineWakebFacade("WDrawer", WDrawerRenderer) as unknown as typeof WDrawerContract;
+import type { WakebComponent } from "./contracts";
+export const WTruncatedText = /* @__PURE__ */ defineWakebFacade("WTruncatedText", WTruncatedTextRenderer) as unknown as WakebComponent<"WTruncatedText">;
+export const WSegmentedProgress = /* @__PURE__ */ defineWakebFacade("WSegmentedProgress", WSegmentedProgressRenderer) as unknown as WakebComponent<"WSegmentedProgress">;
+export const WSemiCircleGauge = /* @__PURE__ */ defineWakebFacade("WSemiCircleGauge", WSemiCircleGaugeRenderer) as unknown as WakebComponent<"WSemiCircleGauge">;
+export const WAvatarStack = /* @__PURE__ */ defineWakebFacade("WAvatarStack", WAvatarStackRenderer) as unknown as WakebComponent<"WAvatarStack">;
+export const WLoading = /* @__PURE__ */ defineWakebFacade("WLoading", WLoadingRenderer) as unknown as WakebComponent<"WLoading">;
+export const WPageSkeleton = /* @__PURE__ */ defineWakebFacade("WPageSkeleton", WPageSkeletonRenderer) as unknown as WakebComponent<"WPageSkeleton">;
+export const WVerticalSteps = /* @__PURE__ */ defineWakebFacade("WVerticalSteps", WVerticalStepsRenderer) as unknown as WakebComponent<"WVerticalSteps">;
+export const WButton = /* @__PURE__ */ defineWakebFacade("WButton", WButtonRenderer) as unknown as WakebComponent<"WButton">;
+export const WBadge = /* @__PURE__ */ defineWakebFacade("WBadge", WBadgeRenderer) as unknown as WakebComponent<"WBadge">;
+export const WAccordion = /* @__PURE__ */ defineWakebFacade("WAccordion", WAccordionRenderer) as unknown as WakebComponent<"WAccordion">;
+export const WBadgeStack = /* @__PURE__ */ defineWakebFacade("WBadgeStack", WBadgeStackRenderer) as unknown as WakebComponent<"WBadgeStack">;
+export const WUserBadge = /* @__PURE__ */ defineWakebFacade("WUserBadge", WUserBadgeRenderer) as unknown as WakebComponent<"WUserBadge">;
+export const WTooltipBtn = /* @__PURE__ */ defineWakebFacade("WTooltipBtn", WTooltipBtnRenderer) as unknown as WakebComponent<"WTooltipBtn">;
+export const WTabs = /* @__PURE__ */ defineWakebFacade("WTabs", WTabsRenderer) as unknown as WakebComponent<"WTabs">;
+export const WTree = /* @__PURE__ */ defineWakebFacade("WTree", WTreeRenderer) as unknown as WakebComponent<"WTree">;
+export const WDropdown = /* @__PURE__ */ defineWakebFacade("WDropdown", WDropdownRenderer) as unknown as WakebComponent<"WDropdown">;
+export const WCarousel = /* @__PURE__ */ defineWakebFacade("WCarousel", WCarouselRenderer) as unknown as WakebComponent<"WCarousel">;
+export const WExportDropdown = /* @__PURE__ */ defineWakebFacade("WExportDropdown", WExportDropdownRenderer) as unknown as WakebComponent<"WExportDropdown">;
+export const WBaseSidebar = /* @__PURE__ */ defineWakebFacade("WBaseSidebar", WBaseSidebarRenderer) as unknown as WakebComponent<"WBaseSidebar">;
+export const WModal = /* @__PURE__ */ defineWakebFacade("WModal", WModalRenderer) as unknown as WakebComponent<"WModal">;
+export const WDrawer = /* @__PURE__ */ defineWakebFacade("WDrawer", WDrawerRenderer) as unknown as WakebComponent<"WDrawer">;
 
 export type { TruncatedTextProps, SegmentedProgressProps, SemiCircleGaugeProps } from "./types";
 export type { AvatarStackProps, LoadingProps, SkeletonItem, SkeletonRow, PageSkeletonProps, VerticalStep, VerticalStepsProps } from "./types";
@@ -75,6 +56,10 @@ export type { BadgeStackItem, BadgeStackProps, BadgeStackIconSlotProps, BadgeUse
 export type { NavigationKey, TabContext, TabItem, TabsProps, TreeNode, TreeToggleSlotProps, TreeProps, DropdownItem, DropdownProps } from "./types";
 export type { CarouselProps, ExportFormat, ExportDropdownProps, SidebarItem, BaseSidebarProps } from "./types";
 export type { ModalProps, DrawerProps } from "./types";
+export type { WakebFacade, WakebComponent, WakebComponentEmits, WakebComponentSlots, AccordionTriggerProps } from "./contracts";
+export type { AccordionEmits, ButtonEmits, TabsEmits, TreeEmits, DropdownEmits, CarouselEmits, ExportDropdownEmits, BaseSidebarEmits, ModalEmits, DrawerEmits } from "./contracts";
+export type { TruncatedTextSlots, SegmentedProgressSlots, SemiCircleGaugeSlots, AvatarStackSlots, LoadingSlots, PageSkeletonSlots, VerticalStepsSlots, ButtonSlots, BadgeSlots, AccordionSlots, BadgeStackSlots } from "./contracts";
+export type { UserBadgeSlots, TooltipBtnSlots, TabsSlots, TreeSlots, DropdownSlots, CarouselSlots, ExportDropdownSlots, BaseSidebarSlots, ModalSlots, DrawerSlots } from "./contracts";
 export { createWakebComponents } from "./core/plugin";
 export { WakebError } from "./core/errors";
 export type { WakebErrorCode } from "./core/errors";

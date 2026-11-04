@@ -490,6 +490,41 @@ Skeleton في Wakeb.
 WDropdown أو زر الإغلاق داخل WModal. ولا تقبله المكونات السبعة عشر الأخرى بعد: يرفضه TypeScript،
 ويُحذف وقت التشغيل مع التحذير نفسه.
 
+## العقود المكتوبة بالأنواع {#typed-contracts}
+
+يأتي نوع TypeScript لكل مكوّن جذري من عقد محايد تجاه المزود، لا من أي renderer. لذلك تبقى
+الخصائص وحمولات الأحداث وحمولات الـslots وروابط `v-model` واحدة أيًّا كان المزود المختار، ولا
+يظهر أي نوع من Vuetify أو PrimeVue في ملفات التصريحات.
+
+| النوع | ما يصفه |
+| --- | --- |
+| `ButtonProps` و`ModalProps` وبقية أنواع `*Props` | الخصائص، وهي مدرجة في [نماذج البيانات](/ar/guide/data-models) |
+| `ButtonEmits` و`ModalEmits` وبقية أنواع `*Emits` | اسم كل حدث مع tuple الحمولة الخاصة به، للمكونات العشرة التي تُطلق أحداثًا |
+| `ButtonSlots` و`ModalSlots` وبقية أنواع `*Slots` | كل slot وحمولته، لجميع المكونات؛ والنوع `PageSkeletonSlots` فارغ |
+| `WakebComponentEmits` و`WakebComponentSlots` | الخرائط نفسها مفهرسة باسم المكوّن، على غرار `WakebComponentProps` |
+| `WakebComponent<'WButton'>` | نوع المكوّن العام لواجهة واحدة |
+| `WakebFacade<Props, Emits, Slots>` | النوع المساعد الذي يبني نوع المكوّن من العقود الثلاثة |
+| `AccordionTriggerProps` | السمات ومعالج النقر التي يمررها slot ‏`header` في WAccordion إلى زر التبديل الخاص بك |
+
+```ts
+import type { ModalEmits, TreeSlots, WakebComponentEmits } from 'wakeb-components'
+
+type NodeLevel = Parameters<NonNullable<TreeSlots['node']>>[0]['level'] // number
+const onModel = (...[open]: ModalEmits['update:modelValue']) => console.log(open) // boolean
+type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: DropdownItem]
+```
+
+تستنتج القوالب التي يفحصها `vue-tsc` حمولات الـslots وأنواع المعالجات من هذه العقود؛ فيعطي
+`#close-button="{ label }"` في WModal قيمة من النوع `string`، ويتوقع `@node-click` في WTree
+معالجًا يستقبل `TreeNode`.
+
+يُفحص كل renderer لكل مزود مقابل عقده، ويفشل البناء إذا صرّح renderer بخاصية أو حمولة حدث أو
+حمولة slot مختلفة. وتُفحص الحزمة المعبأة بالطريقة نفسها باستخدام `tsc --strict` و`vue-tsc`، مع
+تثبيت مزود واحد فقط.
+
+**حد معروف.** تحمل slots الألواح في WTabs اسم مفتاح كل تبويب، لذا تُكتب بتوقيع فهرس حمولته
+`any`. وهي لا تتلقى أي حمولة، أما `tab-label` و`tab-icon` فأنواعهما دقيقة.
+
 ## الأخطاء
 
 | الرمز | السبب | الحل |

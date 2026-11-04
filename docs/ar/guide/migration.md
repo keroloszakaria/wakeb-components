@@ -42,7 +42,7 @@
 6. استبدل القيم المهجورة بقيم قابلة للنقل: الـvariants والألوان وأنواع الشارة وأسماء Skeleton
    ([القيم المهجورة](#deprecated-values)).
 7. شغّل `vue-tsc` أو `tsc --strict`، وعالج أخطاء الأنواع الخاصة بأسماء ألوان المزود وأنواع الشارة
-   والـpayloads الخاطئة للأحداث والـslots ([العقود المكتوبة بالأنواع](#typed-contracts)).
+   والـpayloads الخاطئة للأحداث والـslots ([العقود المكتوبة بالأنواع](./providers#typed-contracts)).
 8. راجع [تغييرات السلوك](#behavior-changes) في WLoading والأيقونات وWCarousel وWAccordion، وحدّث
    الاختبارات التي كانت تعتمد على السلوك القديم.
 9. ابنِ نسخة الإنتاج وشغّل اختباراتك. تُحذف تحذيرات التطوير من حزمة الإنتاج، أما الأخطاء فتبقى.
@@ -214,6 +214,10 @@ WBadgeStack، و`iconColor` في WAccordion.
 
 لا ينطبق ذلك على `iconColor` و`color` العناصر في WDropdown؛ فهي تحتفظ بمفاتيح `colorMap` الخاصة بها.
 
+صارت القيمة الافتراضية المعلنة لـ`iconColor` في WAccordion و`dotColor` في WBadge وWBadgeStack هي
+`undefined` بدل `""`، لأن `""` ليست `WakebColor`. لا يتغير شيء في العرض؛ يظهر الفرق فقط للكود الذي
+يقرأ القيمة الافتراضية من تعريف المكوّن.
+
 ### نوع الشارة `type`
 
 الخاصية `type` في WBadge (وكذلك `type` العناصر في WBadgeStack و`type` في WUserBadge) مفتاح نمط من
@@ -285,6 +289,18 @@ Wakeb، نوعه `WakebBadgeType`، وترسمه CSS الخاصة بـWakeb:
 <WModal v-model="open" title="تعديل" :provider-props="{ scrollable: true }" />
 ```
 :::
+
+## أنواع الأيقونات {#icon-types}
+
+لم يعد `SharedIcon` يشير إلى Vuetify. الأيقونة الآن اسم نصي، أو بيانات مسار SVG ‏(`WakebSvgIcon`،
+وأصبحت `readonly`)، أو مكوّن Vue ‏(`WakebIconComponent`)؛ وحُذف النوع `JSXComponent` الخاص بـVuetify.
+
+- **خصائص الأيقونات** تقبل كل قيم 0.7، فلا يلزم أي تغيير عند تمرير الأيقونات.
+- **حمولات الـslots والأحداث التي تحمل أيقونة** (`IconSlotProps.icon`، والحدث `selectedItem` في
+  WDropdown، وslots الأيقونة والعنوان في WButton وWBadge وWBadgeStack وWTooltipBtn وWDropdown
+  وWExportDropdown وWTabs وWAccordion) تحمل الآن النوع المحايد. الكود الذي يعامل هذه الأيقونة
+  كـ`JSXComponent` من Vuetify، أو يعدّل مصفوفة مسار SVG مباشرة، لم يعد يجتاز فحص الأنواع. انسخ
+  المصفوفة قبل تعديلها، واعرض الأيقونة عبر خصائص الـslot نفسها بدل الاعتماد على داخليات Vuetify.
 
 ## ما لم يتغير بعد
 

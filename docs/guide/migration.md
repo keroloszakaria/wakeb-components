@@ -43,7 +43,7 @@ Work through these steps in order. Each step links to the section that explains 
 6. Replace deprecated values with portable ones: variants, colors, badge types and skeleton
    names ([Deprecated values](#deprecated-values)).
 7. Run `vue-tsc` or `tsc --strict`. Fix the type errors for provider color names, badge types
-   and wrong event or slot payloads ([Typed contracts](#typed-contracts)).
+   and wrong event or slot payloads ([Typed contracts](./providers#typed-contracts)).
 8. Review the [behavior changes](#behavior-changes) for WLoading, icons, WCarousel and
    WAccordion, and update tests that relied on the old behavior.
 9. Build for production and run your test suite. Development warnings are removed from the
@@ -221,6 +221,10 @@ A color prop now takes a Wakeb intent or a CSS color:
 
 WDropdown `iconColor` and item `color` are not covered; they keep their own `colorMap` keys.
 
+The declared default of WAccordion `iconColor`, WBadge `dotColor` and WBadgeStack `dotColor` is
+now `undefined` instead of `""`, because `""` is not a `WakebColor`. Nothing renders differently;
+only code that reads the default from the component definition sees the change.
+
 ### Badge `type`
 
 WBadge `type` (also WBadgeStack item `type` and WUserBadge `type`) is a Wakeb style key,
@@ -297,6 +301,19 @@ provider's primitive. They are **nonportable**: under another provider the keys 
 <WModal v-model="open" title="Edit" :provider-props="{ scrollable: true }" />
 ```
 :::
+
+## Icon types {#icon-types}
+
+`SharedIcon` no longer references Vuetify. An icon is a name string, SVG path data
+(`WakebSvgIcon`, now `readonly`), or a Vue component (`WakebIconComponent`); the Vuetify
+`JSXComponent` member is gone.
+
+- **Icon props** accept every 0.7 value, so passing icons needs no change.
+- **Icon slot and event payloads** (`IconSlotProps.icon`, WDropdown `selectedItem`, the icon and
+  label slots of WButton, WBadge, WBadgeStack, WTooltipBtn, WDropdown, WExportDropdown, WTabs and
+  WAccordion) now carry the neutral type. Code that treats such an icon as a Vuetify
+  `JSXComponent`, or mutates its SVG path array, no longer type-checks. Copy the array before
+  changing it, and render the icon through the slot's own props instead of Vuetify internals.
 
 ## Not changed yet
 

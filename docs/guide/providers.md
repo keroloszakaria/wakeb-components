@@ -184,7 +184,8 @@ direction.
 | Token | Variable | Used by |
 | --- | --- | --- |
 | `primary` | `--wakeb-ui-primary` | WButton primary background, WDropdown `primary` color |
-| `onPrimary` | `--wakeb-ui-on-primary` | WButton primary text |
+| `onPrimary` | `--wakeb-ui-on-primary` | WButton primary text, avatar initials, solid WBadge text |
+| `secondary`, `success`, `warning`, `danger`, `info`, `neutral` | `--wakeb-ui-<intent>` | Color props set to that intent |
 | `surface` | `--wakeb-ui-surface` | WModal background |
 | `onSurface` | `--wakeb-ui-on-surface` | WModal title |
 | `muted` | `--wakeb-ui-muted` | WModal description |
@@ -237,8 +238,75 @@ An unknown value falls back to the component default and logs `WAKEB_UNKNOWN_VAL
 development. Production builds drop both warnings: the code sits behind
 `process.env.NODE_ENV`, which Vite replaces.
 
-Intent names and color props (`type`, `color`) are not portable yet. They still accept
-Vuetify theme names.
+### Intents and colors
+
+Color props take a Wakeb intent or a CSS color. The type `WakebColor` rejects anything else at
+compile time:
+
+- Intents: `primary`, `secondary`, `success`, `warning`, `danger`, `info`, `neutral`.
+- CSS colors: `#hex`, `rgb()`, `rgba()`, `hsl()`, `hsla()`, `hwb()`, `lab()`, `lch()`, `oklab()`,
+  `oklch()`, `color()`, `color-mix()`, `var(--…)` (with or without a fallback), `transparent` and
+  `currentColor`.
+
+Bare names such as `red` or `error` are not portable, because Vuetify reads them as its own
+theme or palette names.
+
+The rule covers these props:
+
+- WLoading `color`
+- WAvatarStack and WUserBadge `avatarColor`
+- WSegmentedProgress `color`
+- WBadge `dotColor`
+- WBadgeStack `dotColor`, item `color` and item `dotColor`
+- WAccordion `iconColor`
+
+WDropdown `iconColor` and item `color` keep their own `colorMap` keys.
+
+An intent resolves in this order: its token (`--wakeb-ui-danger`, for example), then the
+selected provider's theme color, then a Wakeb fallback:
+
+| Intent | Vuetify bridge | PrimeVue bridge | Fallback |
+| --- | --- | --- | --- |
+| `primary` | `--v-theme-primary` | `--p-primary-color` | `#087f8c` |
+| `secondary` | `--v-theme-secondary` | none | `#475467` |
+| `success` | `--v-theme-success` | none | `#12b76a` |
+| `warning` | `--v-theme-warning` | none | `#f79009` |
+| `danger` | `--v-theme-error` | none | `#f04438` |
+| `info` | `--v-theme-info` | none | `#2e90fa` |
+| `neutral` | none | none | `#667085` |
+
+Without tokens, a Vuetify app keeps its theme colors. Avatar initials use `--wakeb-avatar-text`,
+then `--wakeb-ui-on-primary`, then white.
+
+Provider color names follow the deprecation policy. Under Vuetify they still render as before
+and log `WAKEB_DEPRECATED_VALUE` in development. Under other providers they fall back to the
+prop default and log `WAKEB_UNKNOWN_VALUE`.
+
+WBadge `type` is a Wakeb style key (`WakebBadgeType`) painted by Wakeb CSS. It is no longer
+sent to Vuetify as a chip `color`, so the chip text and icon follow the badge's text color. A
+type outside the list is treated as a Vuetify color name and gets the same deprecation
+handling. `variant="solid"` fills the badge with the type's strong color, which you can
+override with `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`.
+
+### Skeleton names
+
+WBaseSidebar `skeletonType`, and WPageSkeleton item and header `type`, use the Wakeb skeleton
+grammar.
+
+**Names:** `text`, `paragraph`, `heading`, `avatar`, `image`, `button`, `chip`, `list-item`,
+`list-item-avatar`, `list-item-two-line`, `list-item-three-line`, `list-item-avatar-two-line`,
+`list-item-avatar-three-line`, `table`, `table-row` and `card`.
+
+**Syntax:**
+- Separate names with commas.
+- Any name can take a positive `@N` repetition, for example `list-item@3`.
+- Repetitions are capped at 100 per item.
+- An empty value renders `text`.
+
+**Invalid values:**
+- Unknown names, `@0` and malformed parts are skipped, with `WAKEB_UNKNOWN_VALUE` in development.
+- The other Vuetify 3.13 names (`article`, `actions`, `sentences` and others) still render
+  under Vuetify, with `WAKEB_DEPRECATED_VALUE`.
 
 ## Errors
 

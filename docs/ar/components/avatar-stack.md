@@ -21,7 +21,7 @@ import { WAvatarStack } from 'wakeb-components'
 | `items` | `readonly unknown[]` | `[]` | العناصر؛ القيم المفقودة أو غير الصالحة تستخدم النص البديل. |
 | `max` | `number` | `3` | العدد الظاهر؛ يُقرب لأسفل ويُحصر عند صفر. القيم غير المحدودة تستخدم 3. |
 | `size` | `string \| number` | `32` | حجم الصورة عبر Vuetify. |
-| `avatarColor` | `string` | `"primary"` | خلفية الحروف والعدد الإضافي؛ الصور تستخدم primary. |
+| `avatarColor` | `WakebColor` | `"primary"` | خلفية الحروف والعدد الإضافي والصور. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. لون الحروف من --wakeb-avatar-text. |
 | `showOverflowMenu` | `boolean` | `false` | عرض باقي المستخدمين في قائمة Vuetify. |
 | `showTooltip` | `boolean` | `true` | تفعيل Tooltip بالتركيز أو المرور على المستخدمين الظاهرين. |
 | `itemKey` | `string` | `"id"` | مسار بالنقاط لمفتاح نصي أو رقمي؛ البديل index. |
@@ -45,6 +45,7 @@ import { WAvatarStack } from 'wakeb-components'
 | `--wakeb-avatar-focus` | `Vuetify primary / #087f8c` |
 | `--wakeb-avatar-menu-surface` | `Vuetify surface / white` |
 | `--wakeb-avatar-menu-text` | `Vuetify on-surface / #101828` |
+| `--wakeb-avatar-text` | `--wakeb-ui-on-primary / #fff` |
 
 ## الوصول وحدود السلوك
 

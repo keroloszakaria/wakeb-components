@@ -20,13 +20,13 @@ import { WBadge } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `label` | `string` | `""` | Escaped fallback content. |
 | `classList` | `ComponentClass` | `""` | Classes on the chip. |
-| `type` | `string` | `"primary"` | primary/success/danger/warning/info/outline/outline-secondary/transparent/dark/tertiary/success-transparent/danger-transparent; custom classes are allowed. |
+| `type` | `WakebBadgeType` | `"primary"` | Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names: they still render under Vuetify with WAKEB_DEPRECATED_VALUE. |
 | `icon` | `SharedIcon` | `""` | Vuetify icon value or icon-slot value. |
 | `isDot` | `boolean` | `false` | Show the decorative dot before content. |
 | `borderRadius` | `string` | `"md"` | sm selects 8px; md/default preserves the 24px chip radius. |
 | `customBorderRadius` | `string` | `""` | Explicit CSS border radius. |
 | `customPadding` | `string` | `""` | Explicit padding, auto height and tighter content gap. |
-| `dotColor` | `string` | `""` | Explicit CSS dot color. |
+| `dotColor` | `WakebColor` | `undefined` | Dot color override. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. |
 | `variant` | `WakebVariant \| WakebDeprecatedVariant` | `"soft"` | Portable style: soft, solid, outline or ghost. Baseline names (default, tonal, flat, elevated, outlined, text, plain) still work and warn in development. |
 | `iconSize` | `string \| number` | `"xs"` | xs/sm/md/lg/xl map to 16/20/24/32/40px. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | Place icon and actions before or after the content. |
@@ -53,6 +53,8 @@ import { WBadge } from 'wakeb-components'
 | `--wakeb-badge-info-text` | `#026aa2` |
 | `--wakeb-badge-neutral-bg` | `#f2f4f7` |
 | `--wakeb-badge-neutral-text` | `#667085` |
+| `--wakeb-badge-solid-bg` | `type dot color / --wakeb-ui-primary` |
+| `--wakeb-badge-solid-text` | `--wakeb-ui-on-primary / #fff` |
 | `--wakeb-badge-outline-border` | `#d0d5dd` |
 | `--wakeb-badge-outline-secondary-border` | `#d0d5dd` |
 | `--wakeb-badge-outline-secondary-text` | `#667085` |

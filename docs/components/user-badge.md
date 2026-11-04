@@ -19,13 +19,13 @@ import { WUserBadge } from 'wakeb-components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `user` | `BadgeUser` | `{}` | Presentational name/avatar record; data is escaped text. |
-| `type` | `string` | `"outline"` | WBadge semantic type. |
+| `type` | `WakebBadgeType` | `"outline"` | WBadge style key. |
 | `borderRadius` | `string` | `"md"` | Badge radius preset. |
 | `icon` | `SharedIcon` | `""` | Legacy WBadge icon prop; avatar slot replaces the glyph. |
 | `iconSize` | `string \| number` | `"xs"` | Legacy WBadge glyph size; avatarSize controls the actual avatar. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | Avatar position relative to content. |
 | `avatarSize` | `string \| number` | `16` | Vuetify avatar size. |
-| `avatarColor` | `string` | `"primary"` | Vuetify initials avatar color. |
+| `avatarColor` | `WakebColor` | `"primary"` | Initials avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. |
 
 ## Events
 
@@ -40,6 +40,7 @@ No custom events. Native listeners target the outer badge wrapper.
 | Variable | Default |
 | --- | --- |
 | `--wakeb-user-badge-initials-size` | `8px` |
+| `--wakeb-avatar-text` | `--wakeb-ui-on-primary / #fff` |
 
 ## Accessibility and limits
 

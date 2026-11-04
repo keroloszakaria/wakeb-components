@@ -21,7 +21,7 @@ import { WAvatarStack } from 'wakeb-components'
 | `items` | `readonly unknown[]` | `[]` | Entries; null or malformed entries use fallback labels. |
 | `max` | `number` | `3` | Visible count; finite values are floored and clamped to zero, NaN/infinity use 3. |
 | `size` | `string \| number` | `32` | Vuetify avatar size. |
-| `avatarColor` | `string` | `"primary"` | Initials and overflow background; image avatars retain primary. |
+| `avatarColor` | `WakebColor` | `"primary"` | Initials, overflow and image-avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Initials use --wakeb-avatar-text. |
 | `showOverflowMenu` | `boolean` | `false` | Show remaining users in a Vuetify menu. |
 | `showTooltip` | `boolean` | `true` | Enable focus/hover tooltips for visible users. |
 | `itemKey` | `string` | `"id"` | Dot path for a string/number key; index fallback. |
@@ -45,6 +45,7 @@ import { WAvatarStack } from 'wakeb-components'
 | `--wakeb-avatar-focus` | `Vuetify primary / #087f8c` |
 | `--wakeb-avatar-menu-surface` | `Vuetify surface / white` |
 | `--wakeb-avatar-menu-text` | `Vuetify on-surface / #101828` |
+| `--wakeb-avatar-text` | `--wakeb-ui-on-primary / #fff` |
 
 ## Accessibility and limits
 

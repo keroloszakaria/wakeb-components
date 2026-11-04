@@ -12,6 +12,9 @@ Breaking: root imports now need a plugin file and `wakebComponents()` from `wake
 - Plugin `defaults` per component, with explicit props winning and data, model and callback props rejected.
 - `locale: 'ar'` built-in labels, `direction`, and `theme` with `mode` and `--wakeb-ui-*` tokens scoped to each app and its overlays.
 - Breaking: WBadge, WTooltipBtn and WBadgeStack variants use the portable `soft`, `solid`, `outline` and `ghost` values. Baseline names keep working with a `WAKEB_DEPRECATED_VALUE` development warning; `elevated` loses its elevation and `plain` its faded look.
+- Breaking: color props take a Wakeb intent or a CSS color (`WakebColor`). Intents resolve through `--wakeb-ui-*` tokens and then the provider theme, so an unconfigured Vuetify app keeps its colors. Vuetify color names still render under Vuetify with a `WAKEB_DEPRECATED_VALUE` warning.
+- Breaking: WBadge `type` is painted by Wakeb CSS only and no longer sent to Vuetify as a chip color; `solid` fills with the type color. New intent theme tokens and the `--wakeb-avatar-text`, `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text` variables.
+- Breaking: WBaseSidebar `skeletonType` and WPageSkeleton types follow the Wakeb skeleton grammar. Repetitions are capped at 100 and unknown names are skipped with `WAKEB_UNKNOWN_VALUE`.
 
 ## Unreleased (0.7.x)
 

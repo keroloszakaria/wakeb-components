@@ -8,6 +8,28 @@ import type { ButtonProps, BadgeProps, AccordionProps, IconSlotProps, AvatarStac
 
 ```ts
 import type { CSSProperties } from "vue";
+/** Portable intents (SPEC R23), mapped to `--wakeb-ui-*` tokens on every provider. */
+export type WakebIntent = "primary" | "secondary" | "success" | "warning" | "danger" | "info" | "neutral";
+/**
+ * A portable color: a Wakeb intent or a CSS color value. Provider theme and palette names (for
+ * example Vuetify `error` or `red-darken-2`) are not portable.
+ */
+export type WakebColor =
+  | WakebIntent
+  | `#${string}`
+  | `rgb(${string})` | `rgba(${string})` | `hsl(${string})` | `hsla(${string})` | `hwb(${string})`
+  | `lab(${string})` | `lch(${string})` | `oklab(${string})` | `oklch(${string})` | `color(${string})` | `color-mix(${string})`
+  | `var(--${string})`
+  | "transparent" | "currentColor";
+/** Portable skeleton names (SPEC R16). Skeleton props take a comma-separated list of these, each optionally `@N`. */
+export type WakebSkeletonName =
+  | "text" | "paragraph" | "heading" | "avatar" | "image" | "button" | "chip" | "list-item" | "list-item-avatar"
+  | "list-item-two-line" | "list-item-three-line" | "list-item-avatar-two-line" | "list-item-avatar-three-line"
+  | "table" | "table-row" | "card";
+/** WBadge style keys, rendered by Wakeb CSS on every provider (frozen in M0). */
+export type WakebBadgeType =
+  | "success" | "success-transparent" | "primary" | "primarybtn" | "danger" | "danger-transparent" | "warning" | "info"
+  | "transparent" | "dark" | "tertiary" | "outline" | "outline-secondary" | "check" | "uncheck";
 export interface TruncatedTextProps {
   label?: string;
   length?: number;
@@ -16,7 +38,7 @@ export interface TruncatedTextProps {
   contentClass?: string;
   tooltipStyle?: CSSProperties;
 }
-export interface SegmentedProgressProps { value?: number; label?: string; color?: string; ariaLabel?: string; }
+export interface SegmentedProgressProps { value?: number; label?: string; color?: WakebColor; ariaLabel?: string; }
 export interface SemiCircleGaugeProps { value?: number; size?: number; thickness?: number; label?: string; subLabel?: string; ariaLabel?: string; }
 
 /** Stack entries may use arbitrary nested fields; labels are rendered as escaped text. */
@@ -24,7 +46,7 @@ export interface AvatarStackProps {
   items?: readonly unknown[];
   max?: number;
   size?: string | number;
-  avatarColor?: string;
+  avatarColor?: WakebColor;
   showOverflowMenu?: boolean;
   showTooltip?: boolean;
   itemKey?: string;
@@ -35,7 +57,7 @@ export interface AvatarStackProps {
   menuStyle?: CSSProperties;
   tooltipStyle?: CSSProperties;
 }
-export interface LoadingProps { size?: string | number; color?: string; label?: string; }
+export interface LoadingProps { size?: string | number; color?: WakebColor; label?: string; }
 export interface SkeletonItem {
   type?: string;
   width?: string | number;
@@ -89,13 +111,13 @@ export type WakebDeprecatedVariant = "default" | "tonal" | "flat" | "elevated" |
 export interface BadgeProps {
   label?: string;
   classList?: ComponentClass;
-  type?: string;
+  type?: WakebBadgeType;
   icon?: SharedIcon;
   isDot?: boolean;
   borderRadius?: string;
   customBorderRadius?: string;
   customPadding?: string;
-  dotColor?: string;
+  dotColor?: WakebColor;
   variant?: WakebVariant | WakebDeprecatedVariant;
   iconSize?: string | number;
   iconPosition?: "before" | "after";
@@ -109,7 +131,7 @@ export interface AccordionProps {
   noBorder?: boolean;
   beforeIcon?: boolean;
   afterIcon?: boolean;
-  iconColor?: string;
+  iconColor?: WakebColor;
   iconSize?: string | number;
   maxIconWidth?: string | number;
   headerTitleClassList?: ComponentClass;
@@ -124,13 +146,13 @@ export interface BadgeStackItem {
   id?: string | number;
   label?: string;
   icon?: string;
-  color?: string;
-  type?: string;
+  color?: WakebColor;
+  type?: WakebBadgeType;
   variant?: BadgeProps["variant"];
   borderRadius?: string;
   customBorderRadius?: string;
   customPadding?: string;
-  dotColor?: string;
+  dotColor?: WakebColor;
   isDot?: boolean;
   classList?: ComponentClass;
   badgeIcon?: SharedIcon;
@@ -142,12 +164,12 @@ export interface BadgeStackProps {
   max?: number;
   truncateLength?: number;
   showOverflowMenu?: boolean;
-  badgeType?: string;
+  badgeType?: WakebBadgeType;
   badgeVariant?: BadgeProps["variant"];
   badgeBorderRadius?: string;
   customBorderRadius?: string;
   badgePadding?: string;
-  dotColor?: string;
+  dotColor?: WakebColor;
   badgeClassList?: ComponentClass;
   isDot?: boolean;
   iconSize?: string | number;
@@ -170,13 +192,13 @@ export interface BadgeStackIconSlotProps {
 export interface BadgeUser { name?: string; avatar?: string; }
 export interface UserBadgeProps {
   user?: BadgeUser;
-  type?: string;
+  type?: WakebBadgeType;
   borderRadius?: string;
   icon?: SharedIcon;
   iconSize?: string | number;
   iconPosition?: "before" | "after";
   avatarSize?: string | number;
-  avatarColor?: string;
+  avatarColor?: WakebColor;
 }
 export interface TooltipBtnProps {
   icon?: SharedIcon;

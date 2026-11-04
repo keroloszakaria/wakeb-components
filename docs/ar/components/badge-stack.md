@@ -27,7 +27,7 @@ import { WBadgeStack } from 'wakeb-components'
 | `badgeBorderRadius` | `string` | `"md"` | نصف القطر الافتراضي. |
 | `customBorderRadius` | `string` | `"sm"` | القيمة القديمة تمر كما هي؛ استخدم طول CSS صالحًا في المشاريع الجديدة. |
 | `badgePadding` | `string` | `""` | حشو الشارة المخصص. |
-| `dotColor` | `string` | `""` | لون النقطة الافتراضي. |
+| `dotColor` | `WakebColor` | `undefined` | لون النقطة الافتراضي. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. تتبع color وdotColor في العناصر القاعدة نفسها. |
 | `badgeClassList` | `ComponentClass` | `""` | classes على كل chip. |
 | `isDot` | `boolean` | `false` | إظهار نقطة الحالة افتراضيًا. |
 | `iconSize` | `string \| number` | `"xs"` | حجم glyph؛ أبعاد الصور تحددها أنماط المجموعة. |

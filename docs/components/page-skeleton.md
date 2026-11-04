@@ -35,7 +35,7 @@ No slots; compose rows with config, header/items, classes and Vuetify grid break
 
 ## Accessibility and limits
 
-Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to prevent duplicate announcements. Render this component only while content is loading. Row repeat is floored; missing, nonfinite, zero or negative repeats render one column. cols defaults to 12 when falsy, preserving the app contract; sm/md/lg follow Vuetify. Skeleton type strings are Vuetify types, including its comma/multiplier syntax. No application CSS is required. Current specialized card bone styling targets Vuetify 3 structure.
+Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to prevent duplicate announcements. Render this component only while content is loading. Row repeat is floored; missing, nonfinite, zero or negative repeats render one column. cols defaults to 12 when falsy, preserving the app contract; sm/md/lg follow Vuetify. Item and header types use the Wakeb skeleton grammar: portable names, comma sequences and @N repetitions capped at 100. Unknown names are skipped with WAKEB_UNKNOWN_VALUE; Vuetify-only names still render under Vuetify with WAKEB_DEPRECATED_VALUE. No application CSS is required. Current specialized card bone styling targets Vuetify 3 structure.
 
 ## Try it
 

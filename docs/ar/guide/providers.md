@@ -178,7 +178,8 @@ Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فت
 | الـtoken | المتغير | يستخدمه |
 | --- | --- | --- |
 | `primary` | `--wakeb-ui-primary` | خلفية WButton الأساسية، ولون `primary` في WDropdown |
-| `onPrimary` | `--wakeb-ui-on-primary` | نص WButton الأساسي |
+| `onPrimary` | `--wakeb-ui-on-primary` | نص WButton الأساسي، وأحرف الصور الرمزية، ونص WBadge الممتلئ |
+| `secondary` و`success` و`warning` و`danger` و`info` و`neutral` | `--wakeb-ui-<intent>` | خصائص الألوان المضبوطة على هذا الـintent |
 | `surface` | `--wakeb-ui-surface` | خلفية WModal |
 | `onSurface` | `--wakeb-ui-on-surface` | عنوان WModal |
 | `muted` | `--wakeb-ui-muted` | وصف WModal |
@@ -230,8 +231,75 @@ Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فت
 التطوير. ويُحذف التحذيران من بناء الإنتاج، لأن الكود محاط بشرط `process.env.NODE_ENV` الذي
 يستبدله Vite.
 
-أسماء الأغراض وخصائص الألوان (`type` و`color`) ليست قابلة للنقل بعد، وما زالت تقبل أسماء ألوان
-theme في Vuetify.
+### الـintents والألوان
+
+تقبل خصائص الألوان intent من Wakeb أو لون CSS، ويرفض النوع `WakebColor` أي قيمة أخرى أثناء
+الترجمة:
+
+- الـintents: ‏`primary` و`secondary` و`success` و`warning` و`danger` و`info` و`neutral`.
+- ألوان CSS: ‏`#hex` و`rgb()` و`rgba()` و`hsl()` و`hsla()` و`hwb()` و`lab()` و`lch()` و`oklab()`
+  و`oklch()` و`color()` و`color-mix()` و`var(--…)` (مع قيمة احتياطية أو بدونها)، و`transparent`
+  و`currentColor`.
+
+الأسماء المجردة مثل `red` أو `error` غير قابلة للنقل، لأن Vuetify يقرؤها أسماءً من ثيمه أو من
+لوحة ألوانه.
+
+تشمل القاعدة هذه الخصائص:
+
+- `color` في WLoading
+- `avatarColor` في WAvatarStack وWUserBadge
+- `color` في WSegmentedProgress
+- `dotColor` في WBadge
+- `dotColor` في WBadgeStack، و`color` و`dotColor` في عناصره
+- `iconColor` في WAccordion
+
+يحتفظ `iconColor` و`color` العنصر في WDropdown بمفاتيح `colorMap` الخاصة به.
+
+يُحسب الـintent بهذا الترتيب: الـtoken الخاص به (مثل `--wakeb-ui-danger`)، ثم لون ثيم المزوّد
+المختار، ثم قيمة احتياطية من Wakeb:
+
+| الـintent | الربط في Vuetify | الربط في PrimeVue | القيمة الاحتياطية |
+| --- | --- | --- | --- |
+| `primary` | `--v-theme-primary` | `--p-primary-color` | `#087f8c` |
+| `secondary` | `--v-theme-secondary` | لا يوجد | `#475467` |
+| `success` | `--v-theme-success` | لا يوجد | `#12b76a` |
+| `warning` | `--v-theme-warning` | لا يوجد | `#f79009` |
+| `danger` | `--v-theme-error` | لا يوجد | `#f04438` |
+| `info` | `--v-theme-info` | لا يوجد | `#2e90fa` |
+| `neutral` | لا يوجد | لا يوجد | `#667085` |
+
+دون tokens يحتفظ تطبيق Vuetify بألوان ثيمه. تأخذ أحرف الصور الرمزية لونها من
+`--wakeb-avatar-text`، ثم `--wakeb-ui-on-primary`، ثم الأبيض.
+
+تتبع أسماء ألوان المزوّد سياسة الإهمال. تحت Vuetify تبقى تُرسم كما كانت، وتسجّل
+`WAKEB_DEPRECATED_VALUE` في وضع التطوير. أما تحت المزودات الأخرى فترجع إلى القيمة الافتراضية
+للخاصية، وتسجّل `WAKEB_UNKNOWN_VALUE`.
+
+`type` في WBadge مفتاح نمط من Wakeb (`WakebBadgeType`) ترسمه Wakeb CSS، ولم يعد يُرسل إلى
+Vuetify بوصفه `color` للشارة. لذلك يتبع نص الشارة وأيقونتها لون نص الشارة. والنوع غير الموجود في
+القائمة يُعامل كاسم لون من Vuetify، ويخضع لمعالجة الإهمال نفسها. ويملأ `variant="solid"` الشارة
+باللون القوي لنوعها، ويمكن تغييره عبر `--wakeb-badge-solid-bg` و`--wakeb-badge-solid-text`.
+
+### أسماء الـSkeleton
+
+يستخدم `skeletonType` في WBaseSidebar، و`type` في عناصر WPageSkeleton وترويساتها، صيغة
+Skeleton في Wakeb.
+
+**الأسماء:** ‏`text` و`paragraph` و`heading` و`avatar` و`image` و`button` و`chip` و`list-item`
+و`list-item-avatar` و`list-item-two-line` و`list-item-three-line` و`list-item-avatar-two-line`
+و`list-item-avatar-three-line` و`table` و`table-row` و`card`.
+
+**الصيغة:**
+- تفصل الفواصل بين الأسماء.
+- يمكن أن يتبع أي اسم تكرار موجب بالشكل `@N`، مثل `list-item@3`.
+- الحد الأقصى للتكرار 100 لكل عنصر.
+- القيمة الفارغة تعرض `text`.
+
+**القيم غير الصالحة:**
+- تُتجاهل الأسماء غير المعروفة و`@0` والأجزاء غير الصحيحة، مع `WAKEB_UNKNOWN_VALUE` في وضع
+  التطوير.
+- أما بقية أسماء Vuetify 3.13 (`article` و`actions` و`sentences` وغيرها) فتبقى تعمل تحت
+  Vuetify مع `WAKEB_DEPRECATED_VALUE`.
 
 ## الأخطاء
 

@@ -2,6 +2,7 @@
 import { computed, ref, useId, watch } from "vue";
 import WButton from "./WButton.vue";
 import type { AccordionProps, IconSlotProps } from "../types";
+import { useColor } from "../core/vocabulary";
 const props = withDefaults(defineProps<AccordionProps>(), {
   title: "",
   modelValue: false,
@@ -10,7 +11,6 @@ const props = withDefaults(defineProps<AccordionProps>(), {
   noBorder: false,
   beforeIcon: false,
   afterIcon: false,
-  iconColor: "",
   iconSize: "sm",
   maxIconWidth: "100%",
   headerTitleClassList: "",
@@ -20,6 +20,8 @@ const props = withDefaults(defineProps<AccordionProps>(), {
   toggleLabel: "",
   contentId: "",
 });
+const toColor = useColor("WAccordion");
+const iconCss = computed(() => toColor(props.iconColor, "iconColor", "").css);
 const emit = defineEmits<{ "update:modelValue": [value: boolean] }>();
 const isOpen = ref(props.modelValue);
 watch(
@@ -77,7 +79,7 @@ defineSlots<{
           :icon="icon"
           type="icon"
           :icon-size="iconSize"
-          :custom-icon-color="iconColor"
+          :custom-icon-color="iconCss"
           :class-list="[
             'accordion__toggle',
             { 'accordion__toggle--open': isOpen },
@@ -110,7 +112,7 @@ defineSlots<{
           :icon="icon"
           type="icon"
           :icon-size="iconSize"
-          :custom-icon-color="iconColor"
+          :custom-icon-color="iconCss"
           :class-list="[
             'accordion__toggle',
             { 'accordion__toggle--open': isOpen },

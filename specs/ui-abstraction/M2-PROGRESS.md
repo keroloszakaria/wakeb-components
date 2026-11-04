@@ -13,10 +13,12 @@ Status: in progress on `feat/m1-selector-packaging`, after M1 (`307d4d4`). This 
 | Stable semantic tokens (R17) | WButton, WDropdown and WModal consume the tokens through existing component-variable fallback chains. Component variables still win. Dark-mode values live in `src/styles/tokens.css`. | `npm run check` docs token scan; browser computed styles |
 | Development warnings (R07) | `warnOnce` reports once per app and key. The call sites must sit behind `process.env.NODE_ENV !== "production"`. | Unit test |
 | R23 variant vocabulary | `WakebVariant` (`soft`, `solid`, `outline`, `ghost`) and `WakebDeprecatedVariant` are public types. `useVariant` is the one shared normalizer: it maps baseline aliases, reports `WAKEB_DEPRECATED_VALUE` and falls back to the component default with `WAKEB_UNKNOWN_VALUE`. It is wired into WBadge `variant`, WTooltipBtn `variant`, and WBadgeStack `badgeVariant` and item `variant`. Vuetify rendering goes through the draft `VUETIFY_VARIANTS` table. | `tests/vocabulary.test.ts`. `npm run check` asserts the Vuetify production bundle contains WBadge but no warning text. A browser check on the Vuetify dev server showed each warning once. |
+| R23 intents and color props | `WakebIntent` and `WakebColor` (intent or CSS color syntax) are public types. `useColor` resolves an intent to `var(--wakeb-ui-<intent>, <provider bridge or Wakeb fallback>)`; the Vuetify bridge reads `--v-theme-*`, so unconfigured Vuetify apps keep their colors. Vuetify names stay renderable under Vuetify with `WAKEB_DEPRECATED_VALUE`; other providers fall back with `WAKEB_UNKNOWN_VALUE`. Applied to WLoading `color` (both providers), WAvatarStack and WUserBadge `avatarColor`, WSegmentedProgress `color`, WBadge and WBadgeStack `dotColor`, WBadgeStack item `color`, and WAccordion `iconColor`. WBadge `type` is `WakebBadgeType`, painted by Wakeb CSS only. It is no longer sent to Vuetify as a color, except for non-Wakeb values during the deprecation window. Intent theme tokens are added. | `tests/colors.test.ts` (WLoading on both providers). `@ts-expect-error` cases for `error`, `red-darken-2` and badge type `teal` in both packed consumers. |
+| R16 skeleton grammar | `useSkeleton` accepts the 16 portable names, comma sequences and `@N` capped at 100, with `text` as the default. Unknown or malformed parts are skipped with `WAKEB_UNKNOWN_VALUE`. Other Vuetify 3.13 names render under Vuetify with `WAKEB_DEPRECATED_VALUE`. Applied to WBaseSidebar `skeletonType` and WPageSkeleton item and header `type`. Grid breakpoints are not part of this step. | `tests/colors.test.ts` |
 | SSR request isolation (R19) | No new code; contexts were already per app. | Concurrent `renderToString` requests with different defaults, locale and theme on both providers |
 | Layer boundaries (R08, R10) | `tests/layers.test.ts` scans imports. Core, composables, icons, styles, build, types and the root never import a provider, and each adapter imports only its own provider. | Test |
 
-Suite: 280 tests in two Vitest projects. `npm run check` passes, including both packed consumers. Full bundles have 171 modules on Vuetify (one more than M1, the vocabulary module) and 178 on PrimeVue. WButton-only bundles have 95 and 139 and still contain no dialog or menu modules.
+Suite: 355 tests in two Vitest projects, with 7 skipped where a case applies to one provider only. `npm run check` passes, including both packed consumers. Full bundles have 171 modules on Vuetify and 179 on PrimeVue; PrimeVue WLoading now uses the vocabulary module. WButton-only bundles have 95 and 139 and still contain no dialog or menu modules.
 
 ## Decisions taken during M2
 
@@ -27,7 +29,10 @@ Suite: 280 tests in two Vitest projects. `npm run check` passes, including both 
 
 ## Remaining for M2 exit
 
-1. **R23 intents and colors.** Add the portable intent type and the color-prop rule: intent name or CSS color. Under Vuetify, its palette names are accepted with a warning; other providers fail validation. Apply this to WBadge `type`, `color`, `avatarColor` and `iconColor`, and to WBaseSidebar `skeletonType` with the R16 grammar. The variant mapping tables become final once the visual contract tests exist (M3).
+1. **R23 and R16 follow-ups.**
+   - The variant and intent mapping tables become final once the visual contract tests exist (M3).
+   - R16 grid breakpoints (sm 600, md 960, lg 1280) still follow Vuetify.
+   - WDropdown `colorMap` keys remain open strings.
 2. **Neutral contract declarations.** Facade types still come from the Vuetify renderer declarations, though those declarations no longer reference Vuetify types. Separate contract files and compile-time tests for event and slot payloads are still to do.
 3. **`providerProps` and attribute routing.** Add the escape hatch with selected-provider validation. Document the attribute target of each facade.
 4. **Icons resolver (R15).** Add the name resolver, a deterministic fallback and a development diagnostic.

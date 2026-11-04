@@ -2,10 +2,11 @@
 import { computed } from "vue";
 import ProgressSpinner from "primevue/progressspinner";
 import type { LoadingProps } from "../../types";
+import { PRIMEVUE_INTENTS, useColor } from "../../core/vocabulary";
 defineOptions({ name: "WLoading" });
 const props = withDefaults(defineProps<LoadingProps>(), { size: 50, color: "primary", label: "Loading" });
-/* "primary" is the 0.7 theme-name default; any other value is used as a CSS color (SPEC R23 draft). */
-const stroke = computed(() => (props.color === "primary" ? "var(--p-primary-color)" : props.color));
+const toColor = useColor("WLoading", PRIMEVUE_INTENTS);
+const stroke = computed(() => toColor(props.color, "color", "primary").css);
 const dimension = computed(() => (typeof props.size === "number" ? `${props.size}px` : props.size));
 </script>
 <template>

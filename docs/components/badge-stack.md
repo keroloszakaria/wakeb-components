@@ -27,7 +27,7 @@ import { WBadgeStack } from 'wakeb-components'
 | `badgeBorderRadius` | `string` | `"md"` | Default preset radius. |
 | `customBorderRadius` | `string` | `"sm"` | Legacy custom radius passed verbatim; use a CSS length for new code. |
 | `badgePadding` | `string` | `""` | Default custom chip padding. |
-| `dotColor` | `string` | `""` | Default dot color. |
+| `dotColor` | `WakebColor` | `undefined` | Default dot color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Item color and dotColor follow the same rule. |
 | `badgeClassList` | `ComponentClass` | `""` | Classes applied to each chip. |
 | `isDot` | `boolean` | `false` | Default status dot visibility. |
 | `iconSize` | `string \| number` | `"xs"` | Default badge glyph size; image dimensions use the stack stylesheet. |

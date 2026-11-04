@@ -25,7 +25,7 @@ import { WAccordion } from 'wakeb-components'
 | `noBorder` | `boolean` | `false` | Remove outer border and radius. |
 | `beforeIcon` | `boolean` | `false` | Show a toggle before the title. |
 | `afterIcon` | `boolean` | `false` | Show a toggle after the title. |
-| `iconColor` | `string` | `""` | Explicit indicator color. |
+| `iconColor` | `WakebColor` | `undefined` | Indicator color override. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. |
 | `iconSize` | `string \| number` | `"sm"` | Indicator icon size. |
 | `maxIconWidth` | `string \| number` | `"100%"` | Indicator maximum width. |
 | `headerTitleClassList` | `ComponentClass` | `""` | Classes on the default title trigger. |

@@ -60,6 +60,13 @@ export type WakebDefaults = {
 export interface WakebThemeTokens {
   primary?: string;
   onPrimary?: string;
+  /** Intent colors (SPEC R23). `primary` above is also the primary intent. */
+  secondary?: string;
+  success?: string;
+  warning?: string;
+  danger?: string;
+  info?: string;
+  neutral?: string;
   surface?: string;
   onSurface?: string;
   muted?: string;

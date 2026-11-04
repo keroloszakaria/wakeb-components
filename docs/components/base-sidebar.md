@@ -21,7 +21,7 @@ import { WBaseSidebar } from 'wakeb-components'
 | `title` | `string` | `required` | Already translated heading. |
 | `loading` | `boolean` | `false` | Loading state takes precedence over empty/items. |
 | `items` | `readonly SidebarItem[]` | `[]` | Presentational item records. |
-| `skeletonType` | `string` | `"list-item-two-line, list-item-two-line, list-item-two-line"` | Vuetify skeleton type. |
+| `skeletonType` | `string` | `"list-item-two-line, list-item-two-line, list-item-two-line"` | Wakeb skeleton grammar: comma-separated portable names, each optionally @N (capped at 100). |
 | `hasFilter` | `boolean` | `true` | Render default filter controls. |
 | `isFiltered` | `boolean` | `false` | Render the default cancel control. |
 | `skeletonWidth` | `string \| number` | `"360px"` | Vuetify skeleton width. |

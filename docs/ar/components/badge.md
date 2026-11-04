@@ -20,13 +20,13 @@ import { WBadge } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `label` | `string` | `""` | النص الافتراضي الآمن. |
 | `classList` | `ComponentClass` | `""` | classes على الشارة. |
-| `type` | `string` | `"primary"` | أنواع primary/success/danger/warning/info/outline/outline-secondary/transparent/dark/tertiary/success-transparent/danger-transparent مع دعم classes مخصصة. |
+| `type` | `WakebBadgeType` | `"primary"` | مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة، وما زالت تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. |
 | `icon` | `SharedIcon` | `""` | أيقونة Vuetify أو قيمة icon slot. |
 | `isDot` | `boolean` | `false` | عرض النقطة الزخرفية قبل المحتوى. |
 | `borderRadius` | `string` | `"md"` | sm يختار 8px؛ md والافتراضي يحتفظان بنصف قطر 24px. |
 | `customBorderRadius` | `string` | `""` | قيمة CSS صريحة لنصف القطر. |
 | `customPadding` | `string` | `""` | padding صريح وارتفاع تلقائي ومسافة محتوى أصغر. |
-| `dotColor` | `string` | `""` | لون CSS صريح للنقطة. |
+| `dotColor` | `WakebColor` | `undefined` | لون النقطة. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. |
 | `variant` | `WakebVariant \| WakebDeprecatedVariant` | `"soft"` | النمط القابل للنقل: soft أو solid أو outline أو ghost. الأسماء القديمة (default وtonal وflat وelevated وoutlined وtext وplain) ما زالت تعمل مع تحذير في وضع التطوير. |
 | `iconSize` | `string \| number` | `"xs"` | xs/sm/md/lg/xl تعني 16/20/24/32/40px. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | موضع الأيقونة والـactions قبل أو بعد المحتوى. |
@@ -53,6 +53,8 @@ import { WBadge } from 'wakeb-components'
 | `--wakeb-badge-info-text` | `#026aa2` |
 | `--wakeb-badge-neutral-bg` | `#f2f4f7` |
 | `--wakeb-badge-neutral-text` | `#667085` |
+| `--wakeb-badge-solid-bg` | `type dot color / --wakeb-ui-primary` |
+| `--wakeb-badge-solid-text` | `--wakeb-ui-on-primary / #fff` |
 | `--wakeb-badge-outline-border` | `#d0d5dd` |
 | `--wakeb-badge-outline-secondary-border` | `#d0d5dd` |
 | `--wakeb-badge-outline-secondary-text` | `#667085` |

@@ -92,10 +92,10 @@ export default [
       ],
       [
         "color",
-        "string",
+        "WakebColor",
         "var(--wakeb-progress-color, #12b76a)",
-        "Any CSS color, including a CSS variable.",
-        "أي لون CSS، بما فيه متغير CSS."
+        "Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Other values fall back to the default.",
+        "intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. القيم الأخرى ترجع إلى القيمة الافتراضية."
       ],
       [
         "ariaLabel",
@@ -261,10 +261,10 @@ export default [
       ],
       [
         "avatarColor",
-        "string",
+        "WakebColor",
         "\"primary\"",
-        "Initials and overflow background; image avatars retain primary.",
-        "خلفية الحروف والعدد الإضافي؛ الصور تستخدم primary."
+        "Initials, overflow and image-avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Initials use --wakeb-avatar-text.",
+        "خلفية الحروف والعدد الإضافي والصور. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. لون الحروف من --wakeb-avatar-text."
       ],
       [
         "showOverflowMenu",
@@ -354,6 +354,10 @@ export default [
       [
         "--wakeb-avatar-menu-text",
         "Vuetify on-surface / #101828"
+      ],
+      [
+        "--wakeb-avatar-text",
+        "--wakeb-ui-on-primary / #fff"
       ]
     ],
     "limits": [
@@ -380,10 +384,10 @@ export default [
       ],
       [
         "color",
-        "string",
+        "WakebColor",
         "\"primary\"",
-        "Vuetify theme key or CSS color.",
-        "لون CSS أو اسم لون في ثيم Vuetify."
+        "Spinner color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color.",
+        "لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS."
       ],
       [
         "label",
@@ -450,8 +454,8 @@ export default [
       ]
     ],
     "limits": [
-      "Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to prevent duplicate announcements. Render this component only while content is loading. Row repeat is floored; missing, nonfinite, zero or negative repeats render one column. cols defaults to 12 when falsy, preserving the app contract; sm/md/lg follow Vuetify. Skeleton type strings are Vuetify types, including its comma/multiplier syntax. No application CSS is required. Current specialized card bone styling targets Vuetify 3 structure.",
-      "يستخدم حالة واحدة باسم role=status وaria-busy=true مع إخفاء الصفوف الزخرفية عن ARIA لمنع تكرار القراءة؛ اعرضه أثناء التحميل فقط. repeat يُقرب لأسفل؛ القيم المفقودة وغير المحدودة والصفر والسالب تنتج عمودًا واحدًا. cols الافتراضي 12 للقيم الفارغة وفق العقد السابق، وsm/md/lg تتبع Vuetify. type يدعم صيغة أنواع Skeleton في Vuetify بما فيها الفواصل والتكرار. لا يحتاج CSS خاص بالمشروع. تخصيص عظام card يستهدف بنية Vuetify 3."
+      "Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to prevent duplicate announcements. Render this component only while content is loading. Row repeat is floored; missing, nonfinite, zero or negative repeats render one column. cols defaults to 12 when falsy, preserving the app contract; sm/md/lg follow Vuetify. Item and header types use the Wakeb skeleton grammar: portable names, comma sequences and @N repetitions capped at 100. Unknown names are skipped with WAKEB_UNKNOWN_VALUE; Vuetify-only names still render under Vuetify with WAKEB_DEPRECATED_VALUE. No application CSS is required. Current specialized card bone styling targets Vuetify 3 structure.",
+      "يستخدم حالة واحدة باسم role=status وaria-busy=true مع إخفاء الصفوف الزخرفية عن ARIA لمنع تكرار القراءة؛ اعرضه أثناء التحميل فقط. repeat يُقرب لأسفل؛ القيم المفقودة وغير المحدودة والصفر والسالب تنتج عمودًا واحدًا. cols الافتراضي 12 للقيم الفارغة وفق العقد السابق، وsm/md/lg تتبع Vuetify. type يتبع صيغة Skeleton في Wakeb: أسماء قابلة للنقل وتسلسلات بالفواصل وتكرار @N بحد أقصى 100. تُتجاهل الأسماء غير المعروفة مع WAKEB_UNKNOWN_VALUE، وتبقى أسماء Vuetify الخاصة تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. لا يحتاج CSS خاص بالمشروع. تخصيص عظام card يستهدف بنية Vuetify 3."
     ],
     "example": "<WPageSkeleton :config=\"[{ repeat: 2, cols: 12, md: 6, variant: 'card', items: [{ type: 'text' }, { type: 'paragraph' }] }]\" label=\"Loading report\" />"
   },
@@ -1110,10 +1114,10 @@ export default [
       ],
       [
         "type",
-        "string",
+        "WakebBadgeType",
         "\"primary\"",
-        "primary/success/danger/warning/info/outline/outline-secondary/transparent/dark/tertiary/success-transparent/danger-transparent; custom classes are allowed.",
-        "أنواع primary/success/danger/warning/info/outline/outline-secondary/transparent/dark/tertiary/success-transparent/danger-transparent مع دعم classes مخصصة."
+        "Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names: they still render under Vuetify with WAKEB_DEPRECATED_VALUE.",
+        "مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة، وما زالت تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE."
       ],
       [
         "icon",
@@ -1152,10 +1156,10 @@ export default [
       ],
       [
         "dotColor",
-        "string",
-        "\"\"",
-        "Explicit CSS dot color.",
-        "لون CSS صريح للنقطة."
+        "WakebColor",
+        "undefined",
+        "Dot color override. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color.",
+        "لون النقطة. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS."
       ],
       [
         "variant",
@@ -1242,6 +1246,14 @@ export default [
       [
         "--wakeb-badge-neutral-text",
         "#667085"
+      ],
+      [
+        "--wakeb-badge-solid-bg",
+        "type dot color / --wakeb-ui-primary"
+      ],
+      [
+        "--wakeb-badge-solid-text",
+        "--wakeb-ui-on-primary / #fff"
       ],
       [
         "--wakeb-badge-outline-border",
@@ -1375,10 +1387,10 @@ export default [
       ],
       [
         "iconColor",
-        "string",
-        "\"\"",
-        "Explicit indicator color.",
-        "لون صريح للمؤشر."
+        "WakebColor",
+        "undefined",
+        "Indicator color override. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color.",
+        "لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS."
       ],
       [
         "iconSize",
@@ -1560,10 +1572,10 @@ export default [
       ],
       [
         "dotColor",
-        "string",
-        "\"\"",
-        "Default dot color.",
-        "لون النقطة الافتراضي."
+        "WakebColor",
+        "undefined",
+        "Default dot color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Item color and dotColor follow the same rule.",
+        "لون النقطة الافتراضي. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. تتبع color وdotColor في العناصر القاعدة نفسها."
       ],
       [
         "badgeClassList",
@@ -1702,10 +1714,10 @@ export default [
       ],
       [
         "type",
-        "string",
+        "WakebBadgeType",
         "\"outline\"",
-        "WBadge semantic type.",
-        "نوع WBadge."
+        "WBadge style key.",
+        "مفتاح نمط WBadge."
       ],
       [
         "borderRadius",
@@ -1744,10 +1756,10 @@ export default [
       ],
       [
         "avatarColor",
-        "string",
+        "WakebColor",
         "\"primary\"",
-        "Vuetify initials avatar color.",
-        "لون حاوية الأحرف في Vuetify."
+        "Initials avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color.",
+        "خلفية حاوية الأحرف. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS."
       ]
     ],
     "slots": [
@@ -1758,6 +1770,10 @@ export default [
       [
         "--wakeb-user-badge-initials-size",
         "8px"
+      ],
+      [
+        "--wakeb-avatar-text",
+        "--wakeb-ui-on-primary / #fff"
       ]
     ],
     "limits": [
@@ -2649,8 +2665,8 @@ export default [
         "skeletonType",
         "string",
         "\"list-item-two-line, list-item-two-line, list-item-two-line\"",
-        "Vuetify skeleton type.",
-        "نوع Skeleton في Vuetify."
+        "Wakeb skeleton grammar: comma-separated portable names, each optionally @N (capped at 100).",
+        "صيغة Skeleton في Wakeb: أسماء قابلة للنقل تفصلها فواصل، ويمكن أن يتبع كل اسم @N (بحد أقصى 100)."
       ],
       [
         "hasFilter",

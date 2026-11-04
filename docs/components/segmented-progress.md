@@ -20,7 +20,7 @@ import { WSegmentedProgress } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `value` | `number` | `0` | Percentage, normalized to 0–100; NaN becomes 0. |
 | `label` | `string` | `""` | Visible label within the filled segment. |
-| `color` | `string` | `var(--wakeb-progress-color, #12b76a)` | Any CSS color, including a CSS variable. |
+| `color` | `WakebColor` | `var(--wakeb-progress-color, #12b76a)` | Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Other values fall back to the default. |
 | `ariaLabel` | `string` | `""` | Accessible name; defaults to label, then the percentage. |
 
 ## Slots

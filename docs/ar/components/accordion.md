@@ -25,7 +25,7 @@ import { WAccordion } from 'wakeb-components'
 | `noBorder` | `boolean` | `false` | إزالة الحد الخارجي ونصف القطر. |
 | `beforeIcon` | `boolean` | `false` | عرض زر فتح قبل العنوان. |
 | `afterIcon` | `boolean` | `false` | عرض زر فتح بعد العنوان. |
-| `iconColor` | `string` | `""` | لون صريح للمؤشر. |
+| `iconColor` | `WakebColor` | `undefined` | لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. |
 | `iconSize` | `string \| number` | `"sm"` | حجم أيقونة المؤشر. |
 | `maxIconWidth` | `string \| number` | `"100%"` | أقصى عرض للمؤشر. |
 | `headerTitleClassList` | `ComponentClass` | `""` | classes على زر العنوان الافتراضي. |

@@ -21,7 +21,7 @@ import { WBaseSidebar } from 'wakeb-components'
 | `title` | `string` | `required` | العنوان مترجم مسبقًا. |
 | `loading` | `boolean` | `false` | التحميل له أولوية على القائمة والحالة الفارغة. |
 | `items` | `readonly SidebarItem[]` | `[]` | عناصر العرض. |
-| `skeletonType` | `string` | `"list-item-two-line, list-item-two-line, list-item-two-line"` | نوع Skeleton في Vuetify. |
+| `skeletonType` | `string` | `"list-item-two-line, list-item-two-line, list-item-two-line"` | صيغة Skeleton في Wakeb: أسماء قابلة للنقل تفصلها فواصل، ويمكن أن يتبع كل اسم @N (بحد أقصى 100). |
 | `hasFilter` | `boolean` | `true` | إظهار أزرار الفلترة الافتراضية. |
 | `isFiltered` | `boolean` | `false` | إظهار زر إلغاء الفلتر. |
 | `skeletonWidth` | `string \| number` | `"360px"` | عرض Skeleton. |

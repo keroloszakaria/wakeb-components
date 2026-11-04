@@ -10,7 +10,7 @@
     <div
       v-if="normalizedValue > 0"
       class="segmented-progress__fill"
-      :style="{ flex: `${normalizedValue} 1 0%`, backgroundColor: color }"
+      :style="{ flex: `${normalizedValue} 1 0%`, backgroundColor: fillColor }"
     >
       <span v-if="label || $slots.default"><slot :value="normalizedValue" :label="label">{{ label }}</slot></span>
     </div>
@@ -25,8 +25,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { SegmentedProgressProps } from "../types";
+import { useColor } from "../core/vocabulary";
 const props = withDefaults(defineProps<SegmentedProgressProps>(), { value: 0, label: "", color: "var(--wakeb-progress-color, #12b76a)", ariaLabel: "" });
 defineSlots<{ default?(props: { value: number; label: string }): unknown }>();
+const toColor = useColor("WSegmentedProgress");
+const fillColor = computed(() => toColor(props.color, "color", "var(--wakeb-progress-color, #12b76a)").css);
 const normalizedValue = computed(() => Math.min(100, Math.max(0, Number(props.value) || 0)));
 </script>
 

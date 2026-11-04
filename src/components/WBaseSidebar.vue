@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { VSkeletonLoader } from "vuetify/components/VSkeletonLoader";
 import WButton from "./WButton.vue";
+import { computed } from "vue";
 import type { BaseSidebarProps, SidebarItem, NavigationKey } from "../types";
+import { useSkeleton } from "../core/vocabulary";
 const props = withDefaults(defineProps<BaseSidebarProps>(), {
   loading: false,
   items: () => [],
@@ -14,6 +16,8 @@ const props = withDefaults(defineProps<BaseSidebarProps>(), {
   cancelLabel: "Cancel",
   emptyLabel: "No data",
 });
+const toSkeleton = useSkeleton("WBaseSidebar", true);
+const skeleton = computed(() => toSkeleton(props.skeletonType, "skeletonType"));
 const emit = defineEmits<{
   search: [payload: unknown];
   filterClick: [];
@@ -82,9 +86,9 @@ const keyOf = (item: SidebarItem, index: number) =>
             <slot
               v-if="loading"
               name="loading"
-              :type="skeletonType"
+              :type="skeleton"
               :width="skeletonWidth"
-              ><VSkeletonLoader :type="skeletonType" :width="skeletonWidth"
+              ><VSkeletonLoader :type="skeleton" :width="skeletonWidth"
             /></slot>
             <slot v-else-if="!items.length" name="empty" :label="emptyLabel"
               ><p

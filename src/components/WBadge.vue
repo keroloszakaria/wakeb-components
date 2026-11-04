@@ -2,9 +2,10 @@
   <div>
     <VChip
       v-bind="chipAttrs"
-      :color="type"
+      :color="nativeColor"
       :class="[
         type,
+        `wakeb-badge--${portableVariant}`,
         classList,
         `border-radius-${borderRadius}`,
         { 'badge--custom-padding': customPadding },
@@ -12,7 +13,7 @@
       :style="chipStyle"
       label
       small
-      :variant="VUETIFY_VARIANTS[toVariant(variant, 'variant', 'soft')]"
+      :variant="VUETIFY_VARIANTS[portableVariant]"
     >
       <template v-if="iconPosition === 'before'">
         <slot name="icon" :icon="icon" :size="iconSize">
@@ -34,12 +35,13 @@
   </div>
 </template>
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, inject } from "vue";
 import { VChip } from "vuetify/components/VChip";
 import { VIcon } from "vuetify/components/VIcon";
 import type { CSSProperties } from "vue";
 import type { BadgeProps, SharedIcon } from "../types";
-import { VUETIFY_VARIANTS, useVariant } from "../core/vocabulary";
+import { BADGE_TYPES, VUETIFY_VARIANTS, useColor, useVariant } from "../core/vocabulary";
+import { WAKEB_CONTEXT, warnOnce } from "../core/runtime";
 const props = withDefaults(defineProps<BadgeProps>(), {
   label: "",
   classList: "",
@@ -49,13 +51,26 @@ const props = withDefaults(defineProps<BadgeProps>(), {
   borderRadius: "md",
   customBorderRadius: "",
   customPadding: "",
-  dotColor: "",
   variant: "soft",
   iconSize: "xs",
   iconPosition: "before",
   chipAttrs: () => ({}),
 });
 const toVariant = useVariant("WBadge");
+const portableVariant = computed(() => toVariant(props.variant, "variant", "soft"));
+const toColor = useColor("WBadge");
+const dot = computed(() => toColor(props.dotColor, "dotColor", "").css);
+const context = inject(WAKEB_CONTEXT, null);
+/*
+ * Wakeb types are painted by Wakeb CSS only. Any other type is a Vuetify theme or palette name from
+ * the 0.7 contract, still forwarded as the chip color during the deprecation window (SPEC R23).
+ */
+const nativeColor = computed(() => {
+  if ((BADGE_TYPES as readonly string[]).includes(props.type)) return undefined;
+  if (process.env.NODE_ENV !== "production")
+    warnOnce(context, "WAKEB_DEPRECATED_VALUE", `WBadge.type.${props.type}`, `WBadge type '${props.type}' is not a Wakeb badge type; it is passed to Vuetify as a color name, which is not portable. Use one of: ${BADGE_TYPES.join(", ")}. Provider names are removed in the next major release.`);
+  return props.type;
+});
 defineSlots<{
   icon(props: { icon: SharedIcon; size: string | number }): unknown;
   actions(): unknown;
@@ -74,10 +89,10 @@ const chipStyle = computed<CSSProperties>(() => ({
   ...(props.customPadding
     ? { padding: props.customPadding, height: "auto" }
     : {}),
-  ...(props.dotColor ? { "--wakeb-badge-current-dot": props.dotColor } : {}),
+  ...(dot.value ? { "--wakeb-badge-current-dot": dot.value } : {}),
 }));
 const dotStyle = computed(() =>
-  props.dotColor ? { backgroundColor: props.dotColor } : undefined,
+  dot.value ? { backgroundColor: dot.value } : undefined,
 );
 </script>
 <style lang="scss" scoped>
@@ -325,6 +340,21 @@ const dotStyle = computed(() =>
     );
     border-radius: 24px;
     background-color: var(--wakeb-badge-current-bg);
+    /* Wakeb-owned text color; icons and the tonal underlay follow it instead of a Vuetify theme color. */
+    color: var(--wakeb-badge-current-text, currentColor);
+
+    /* solid: filled with the type's strong color (SPEC R23 visual policy). */
+    &.wakeb-badge--solid {
+      background-color: var(
+        --wakeb-badge-solid-bg,
+        var(--wakeb-badge-current-dot, var(--wakeb-ui-primary, #087f8c))
+      ) !important;
+      color: var(--wakeb-badge-solid-text, var(--wakeb-ui-on-primary, #fff)) !important;
+
+      .v-chip__content span {
+        color: inherit;
+      }
+    }
     padding: 0;
     height: 24px;
 

@@ -19,7 +19,7 @@ import { WLoading } from 'wakeb-components'
 | المعامل | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `size` | `string \| number` | `50` | حجم مؤشر Vuetify. |
-| `color` | `string` | `"primary"` | لون CSS أو اسم لون في ثيم Vuetify. |
+| `color` | `WakebColor` | `"primary"` | لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. |
 | `label` | `string` | `"Loading"` | اسم حالة التحميل لقارئ الشاشة؛ مرر ترجمة المشروع. |
 
 ## Slots

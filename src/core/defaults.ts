@@ -80,6 +80,12 @@ export function validateDefaults(defaults: unknown): WakebDefaults {
 const TOKEN_KINDS: Record<keyof WakebThemeTokens, "color" | "length" | "font" | "integer"> = {
   primary: "color",
   onPrimary: "color",
+  secondary: "color",
+  success: "color",
+  warning: "color",
+  danger: "color",
+  info: "color",
+  neutral: "color",
   surface: "color",
   onSurface: "color",
   muted: "color",

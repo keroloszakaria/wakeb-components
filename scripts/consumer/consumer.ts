@@ -67,3 +67,14 @@ const textZIndex = createWakebComponents({ framework: 'vuetify', theme: { tokens
 // @ts-expect-error theme mode is light or dark
 const dimMode = createWakebComponents({ framework: 'vuetify', theme: { mode: 'dim' } });
 void [configured, modelDefault, dataDefault, callbackDefault, wrongDefault, unknownComponent, unknownProp, textZIndex, dimMode];
+// Portable intents and color props (SPEC R23): intents and CSS colors only, never provider names.
+const colors: import('wakeb-components').WakebColor[] = ['primary', 'neutral', '#0a7', 'rgb(0 0 0)', 'var(--brand, #000)', 'transparent'];
+const loading: import('wakeb-components').LoadingProps = { color: 'danger' };
+// @ts-expect-error Vuetify theme names are not portable colors
+const badLoading: import('wakeb-components').LoadingProps = { color: 'error' };
+// @ts-expect-error Vuetify palette names are not portable colors
+const badAvatar: AvatarStackProps = { avatarColor: 'red-darken-2' };
+// @ts-expect-error badge types are Wakeb style keys, not provider colors
+const badBadge: BadgeProps = { type: 'teal' };
+const intentTheme = createWakebComponents({ framework: 'vuetify', theme: { tokens: { success: '#12b76a', neutral: 'var(--gray)' } } });
+void [colors, loading, badLoading, badAvatar, badBadge, intentTheme];

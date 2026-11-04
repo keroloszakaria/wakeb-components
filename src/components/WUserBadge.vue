@@ -4,6 +4,7 @@ import { VAvatar } from "vuetify/components/VAvatar";
 import { VImg } from "vuetify/components/VImg";
 import WBadge from "./WBadge.vue";
 import type { UserBadgeProps, BadgeUser } from "../types";
+import { VUETIFY_INTENTS, useColor, vuetifyFill } from "../core/vocabulary";
 const props = withDefaults(defineProps<UserBadgeProps>(), {
   user: () => ({}),
   type: "outline",
@@ -14,6 +15,8 @@ const props = withDefaults(defineProps<UserBadgeProps>(), {
   avatarSize: 16,
   avatarColor: "primary",
 });
+const toColor = useColor("WUserBadge", VUETIFY_INTENTS, true);
+const fill = computed(() => vuetifyFill(toColor(props.avatarColor, "avatarColor", "primary"), "var(--wakeb-avatar-text, var(--wakeb-ui-on-primary, #fff))"));
 const avatar = computed(() => {
   const value = props.user.avatar;
   return typeof value === "string" &&
@@ -62,7 +65,7 @@ defineSlots<{
         ><VAvatar
           v-else
           :size="avatarSize"
-          :color="avatarColor"
+          v-bind="fill"
           class="wakeb-user-badge__initials text-[8px]!"
           >{{ initials }}</VAvatar
         ></slot

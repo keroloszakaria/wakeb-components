@@ -12,6 +12,9 @@
 - قيم `defaults` لكل مكوّن في الـplugin، تتقدم عليها الخصائص الممررة، وتُرفض فيها خصائص البيانات والـmodel ودوال الاستدعاء.
 - نصوص مدمجة بالعربية مع `locale: 'ar'`، والخيار `direction`، والخيار `theme` مع `mode` ومتغيرات `--wakeb-ui-*` المقتصرة على كل تطبيق وطبقاته.
 - تغيير غير متوافق: تستخدم WBadge وWTooltipBtn وWBadgeStack قيم `variant` القابلة للنقل `soft` و`solid` و`outline` و`ghost`. الأسماء القديمة تعمل مع تحذير `WAKEB_DEPRECATED_VALUE` في وضع التطوير، ويفقد `elevated` الارتفاع ويفقد `plain` مظهره الباهت.
+- تغيير غير متوافق: تقبل خصائص الألوان intent من Wakeb أو لون CSS (`WakebColor`). يُحسب الـintent عبر tokens ‏`--wakeb-ui-*` ثم ثيم المزوّد، فيحتفظ تطبيق Vuetify غير المضبوط بألوانه. وتبقى أسماء ألوان Vuetify تعمل تحت Vuetify مع تحذير `WAKEB_DEPRECATED_VALUE`.
+- تغيير غير متوافق: ترسم Wakeb CSS وحدها `type` في WBadge، ولم يعد يُرسل إلى Vuetify كلون للشارة، ويملأ `solid` الشارة بلون النوع. أُضيفت tokens للـintents والمتغيرات `--wakeb-avatar-text` و`--wakeb-badge-solid-bg` و`--wakeb-badge-solid-text`.
+- تغيير غير متوافق: يتبع `skeletonType` في WBaseSidebar وأنواع WPageSkeleton صيغة Skeleton في Wakeb. الحد الأقصى للتكرار 100، وتُتجاهل الأسماء غير المعروفة مع `WAKEB_UNKNOWN_VALUE`.
 
 ## غير منشور (0.7.x)
 

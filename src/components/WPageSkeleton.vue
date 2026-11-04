@@ -24,7 +24,7 @@
               <VSkeletonLoader
                 v-for="(h, hIdx) in row.header"
                 :key="hIdx"
-                :type="h.type"
+                :type="toSkeleton(h.type, 'config[].header[].type')"
                 :width="h.width"
                 :height="h.height"
               />
@@ -33,7 +33,7 @@
             <VSkeletonLoader
               v-for="(item, itemIdx) in row.items"
               :key="itemIdx"
-              :type="item.type"
+              :type="toSkeleton(item.type, 'config[].items[].type')"
               :width="item.width"
               :height="item.height"
               :class="item.class"
@@ -49,6 +49,8 @@
 import { VRow, VCol } from "vuetify/components/VGrid";
 import { VSkeletonLoader } from "vuetify/components/VSkeletonLoader";
 import type { PageSkeletonProps } from "../types";
+import { useSkeleton } from "../core/vocabulary";
+const toSkeleton = useSkeleton("WPageSkeleton", true);
 withDefaults(defineProps<PageSkeletonProps>(), { direction: "column", label: "Loading content" });
 const repeatCount = (value?: number) => value != null && Number.isFinite(value) && value > 0 ? Math.floor(value) || 1 : 1;
 </script>

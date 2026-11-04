@@ -6,6 +6,9 @@
 - Add `createWakebComponents`, static provider selection, host provider reuse modes, `WakebError` codes and a PrimeVue 4 alpha adapter for WButton, WDropdown, WModal and WLoading.
 - Add plugin `defaults`, Arabic built-in labels, `direction`, and `theme` mode and `--wakeb-ui-*` tokens scoped per app and overlay.
 - Breaking: portable WBadge, WTooltipBtn and WBadgeStack variants (`soft`, `solid`, `outline`, `ghost`); baseline names map to them with a `WAKEB_DEPRECATED_VALUE` development warning stripped from production builds.
+- Breaking: color props take a Wakeb intent (`primary`, `secondary`, `success`, `warning`, `danger`, `info`, `neutral`) or a CSS color (`WakebColor`); intents resolve through `--wakeb-ui-*` tokens, then the provider theme. Vuetify color names still render under Vuetify with `WAKEB_DEPRECATED_VALUE`.
+- Breaking: WBadge `type` is no longer forwarded to Vuetify as a chip color; Wakeb CSS paints it, and `solid` fills with the type color. Add intent theme tokens and `--wakeb-avatar-text`, `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`.
+- Breaking: WBaseSidebar `skeletonType` and WPageSkeleton types use the Wakeb skeleton grammar with `@N` repetitions capped at 100; unknown names are skipped with `WAKEB_UNKNOWN_VALUE`.
 
 ## Unreleased (0.7.x)
 

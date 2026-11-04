@@ -20,7 +20,7 @@ import { WSegmentedProgress } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `value` | `number` | `0` | النسبة؛ تُحصر بين 0 و100 وتصبح NaN صفرًا. |
 | `label` | `string` | `""` | النص الظاهر داخل الجزء الممتلئ. |
-| `color` | `string` | `var(--wakeb-progress-color, #12b76a)` | أي لون CSS، بما فيه متغير CSS. |
+| `color` | `WakebColor` | `var(--wakeb-progress-color, #12b76a)` | intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. القيم الأخرى ترجع إلى القيمة الافتراضية. |
 | `ariaLabel` | `string` | `""` | اسم لقارئ الشاشة؛ الافتراضي label ثم النسبة. |
 
 ## Slots

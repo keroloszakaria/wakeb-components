@@ -19,13 +19,13 @@ import { WUserBadge } from 'wakeb-components'
 | المعامل | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `user` | `BadgeUser` | `{}` | بيانات العرض للاسم والصورة؛ الاسم نص آمن. |
-| `type` | `string` | `"outline"` | نوع WBadge. |
+| `type` | `WakebBadgeType` | `"outline"` | مفتاح نمط WBadge. |
 | `borderRadius` | `string` | `"md"` | نصف قطر الشارة. |
 | `icon` | `SharedIcon` | `""` | خاصية الأيقونة القديمة؛ الصورة تستبدل glyph. |
 | `iconSize` | `string \| number` | `"xs"` | حجم glyph القديم؛ avatarSize يتحكم في الصورة. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | موضع الصورة بالنسبة للمحتوى. |
 | `avatarSize` | `string \| number` | `16` | حجم صورة Vuetify. |
-| `avatarColor` | `string` | `"primary"` | لون حاوية الأحرف في Vuetify. |
+| `avatarColor` | `WakebColor` | `"primary"` | خلفية حاوية الأحرف. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. |
 
 ## الأحداث
 
@@ -40,6 +40,7 @@ import { WUserBadge } from 'wakeb-components'
 | المتغير | الافتراضي |
 | --- | --- |
 | `--wakeb-user-badge-initials-size` | `8px` |
+| `--wakeb-avatar-text` | `--wakeb-ui-on-primary / #fff` |
 
 ## الوصول وحدود السلوك
 

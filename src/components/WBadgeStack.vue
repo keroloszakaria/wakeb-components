@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { useVariant } from "../core/vocabulary";
+import { useColor, useVariant } from "../core/vocabulary";
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
@@ -12,6 +12,7 @@ import type {
   BadgeStackIconSlotProps,
   BadgeProps,
   SharedIcon,
+  WakebColor,
 } from "../types";
 const props = withDefaults(defineProps<BadgeStackProps>(), {
   items: () => [],
@@ -23,7 +24,6 @@ const props = withDefaults(defineProps<BadgeStackProps>(), {
   badgeBorderRadius: "md",
   customBorderRadius: "sm",
   badgePadding: "",
-  dotColor: "",
   badgeClassList: "",
   isDot: false,
   iconSize: "xs",
@@ -50,6 +50,8 @@ defineSlots<{
 // Normalized here so deprecation warnings name the stack prop the caller used.
 const toVariant = useVariant("WBadgeStack");
 const stackVariant = computed(() => toVariant(props.badgeVariant, "badgeVariant", "soft"));
+const toColor = useColor("WBadgeStack");
+const stackDot = computed(() => toColor(props.dotColor, "dotColor", "").css);
 const items = computed(() => (Array.isArray(props.items) ? props.items : []));
 const visibleItems = computed(() => items.value.slice(0, props.max));
 const overflowItems = computed(() => items.value.slice(props.max));
@@ -57,8 +59,7 @@ const overflowCount = computed(() =>
   Math.max(items.value.length - props.max, 0),
 );
 const iconWrapStyle = (item: BadgeStackItem) => {
-  const color =
-    item.color || "var(--wakeb-badge-stack-icon-background, #087f8c)";
+  const color = toColor(item.color, "items[].color", "var(--wakeb-badge-stack-icon-background, #087f8c)").css;
   const percent = Math.round(
     Math.min(Math.max(Number(props.iconBackgroundOpacity) || 0, 0), 1) * 100,
   );
@@ -75,7 +76,7 @@ const resolveBadgeProps = (item: BadgeStackItem): BadgeProps => ({
   borderRadius: item.borderRadius ?? props.badgeBorderRadius,
   customBorderRadius: item.customBorderRadius ?? props.customBorderRadius,
   customPadding: item.customPadding ?? props.badgePadding,
-  dotColor: item.dotColor ?? props.dotColor,
+  dotColor: (item.dotColor === undefined ? stackDot.value : toColor(item.dotColor, "items[].dotColor", stackDot.value as WakebColor | "").css) as WakebColor,
   isDot: item.isDot ?? props.isDot,
   classList: item.classList ?? props.badgeClassList,
   icon: item.badgeIcon,

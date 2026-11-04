@@ -19,7 +19,7 @@ import { WLoading } from 'wakeb-components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | `string \| number` | `50` | Vuetify spinner size. |
-| `color` | `string` | `"primary"` | Vuetify theme key or CSS color. |
+| `color` | `WakebColor` | `"primary"` | Spinner color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. |
 | `label` | `string` | `"Loading"` | Accessible loading status; supply translated text. |
 
 ## Slots

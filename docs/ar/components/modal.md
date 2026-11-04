@@ -33,7 +33,7 @@ const open = ref(false)
 | `description` | `string` | `""` | وصف اختياري في الرأس الافتراضي. |
 | `showActions` | `boolean` | `true` | إظهار منطقة إجراءات VCard بما فيها القدم الفارغة. |
 | `titleClass` | `ComponentClass` | `""` | كلاسات العنوان الافتراضي. |
-| `headerIcon` | `SharedIcon` | `""` | أيقونة Vuetify من المشروع؛ استخدم header-icon لـSVG. |
+| `headerIcon` | `SharedIcon` | `""` | اسم أيقونة أو بيانات مسار SVG أو مكوّن اختياري (المزودات > الأيقونات)؛ ويمكن استبداله بـheader-icon. |
 | `ariaLabel` | `string` | `"Dialog"` | اسم بديل للنافذة عند غياب العنوان. |
 
 ## الأحداث

@@ -18,7 +18,7 @@ import { WTooltipBtn } from 'wakeb-components'
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `icon` | `SharedIcon` | `undefined` | Vuetify icon; replace with the icon slot for custom SVGs. |
+| `icon` | `SharedIcon` | `undefined` | Icon name, SVG path data or component (Providers > Icons); the icon slot can replace it. |
 | `text` | `string` | `""` | Already translated tooltip text; empty disables the tooltip. |
 | `ariaLabel` | `string \| null` | `undefined` | Explicit accessible button name; fallback text. |
 | `btnIcon` | `boolean` | `false` | Enable the native Vuetify icon-button layout. |
@@ -45,7 +45,7 @@ No custom events. Native click/keyboard/form attrs are forwarded to VBtn without
 
 ## Accessibility and limits
 
-VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. VIcon requires your Vuetify icon configuration; the icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport; the tooltip carries only the plugin theme scope and zIndexOverlay, and tooltipStyle wins over it. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.
+VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. Icon names resolve through the icons plugin option and the Wakeb built-ins first; other names need your Vuetify icon configuration. The icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport; the tooltip carries only the plugin theme scope and zIndexOverlay, and tooltipStyle wins over it. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.
 
 ## Try it
 

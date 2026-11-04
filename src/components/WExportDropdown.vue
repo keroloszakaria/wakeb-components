@@ -2,6 +2,7 @@
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem, VListItemTitle } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
+import { useVuetifyIcon } from "../core/icons";
 import WButton from "./WButton.vue";
 import { useWakebContext } from "../core/runtime";
 import type { ExportDropdownProps, ExportFormat, ButtonProps } from "../types";
@@ -37,6 +38,7 @@ function select(format: ExportFormat) {
   if (props.disabled || props.isLoading || format.disabled) return;
   emit("select", format.value);
 }
+const toIcon = useVuetifyIcon();
 </script>
 <template>
   <!-- The root VMenu already receives the theme scope as attrs; only its stacking is set here. -->
@@ -70,7 +72,7 @@ function select(format: ExportFormat) {
       >
         <template #prepend
           ><slot name="format-icon" :format="format" :index="index"
-            ><VIcon v-if="format.icon" :icon="format.icon" :size="16" /><svg
+            ><VIcon v-if="format.icon" :icon="toIcon(format.icon)" :size="16" /><svg
               v-else
               width="16"
               height="16"

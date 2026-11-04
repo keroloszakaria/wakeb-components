@@ -198,7 +198,95 @@ Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فت
 الثانوي والحدود إلى قيم داكنة. لا يتبع Wakeb إعداد `prefers-color-scheme` ولا يحفظ الوضع.
 تُطبَّق الخيارات عند تثبيت الـplugin، والتغييرات اللاحقة تتم عبر CSS عادي.
 
-الخيار `icons` غير متاح بعد، وتمريره يفشل بالخطأ `WAKEB_CAPABILITY_UNSUPPORTED`.
+### الأيقونات
+
+تقبل خصائص الأيقونات (`icon` و`badgeIcon` و`headerIcon` و`expandIcon` و`collapseIcon`، و`icon`
+في عناصر القوائم وصيغ التصدير) قيمة من النوع `SharedIcon`، وهي واحدة مما يلي:
+
+- **اسم** مثل `'$close'` أو `'brand-logo'`، ويُحل بالترتيب الموضح أدناه.
+- **بيانات مسار SVG** (`WakebSvgIcon`): مصفوفة من نصوص المسارات أو أزواج `[path, opacity]`
+  على مساحة 24×24، مثل `['M7 10l5 5 5-5z']`. والنص الذي يبدأ بـ`svg:` يُقرأ مسارًا واحدًا، مثل
+  `'svg:M7 10l5 5 5-5z'`، وبذلك تبقى مدخلات SVG الحالية في Vuetify تعمل.
+- **مكوّن Vue** يُرسم كما هو.
+
+ويسجّل الخيار `icons` أسماءً خاصة بهذا التطبيق:
+
+```js
+import { h } from 'vue'
+import BrandLogo from './BrandLogo.vue'
+
+export default createWakebComponents({
+  framework: 'primevue',
+  icons: {
+    aliases: {
+      'brand-logo': BrandLogo,
+      $close: ['M6 6l12 12M18 6L6 18'],
+    },
+    resolve: (name) => (name.startsWith('app-') ? appIcons[name.slice(4)] : undefined),
+  },
+})
+```
+
+| الحقل | النوع | المعنى |
+| --- | --- | --- |
+| `aliases` | `Record<string, WakebIconDefinition>` | أسماء مربوطة ببيانات مسار SVG أو بمكوّن |
+| `resolve` | `(name: string) => WakebIconDefinition \| undefined` | يُستدعى للأسماء غير الموجودة في `aliases`؛ أعد `undefined` لمتابعة الحل |
+
+النوع `WakebIconDefinition` إما بيانات مسار SVG أو مكوّن Vue. لا يُقبل النص قيمةً محلولة، فلا
+يمكن أن يشير اسم إلى اسم آخر أو إلى HTML، ولا يرسم Wakeb الأيقونات من نصوص HTML أبدًا. ولا
+تحتوي بيانات المسار إلا أوامر مسارات SVG والأرقام. وتُنسخ `aliases` عند إنشاء الـplugin، فلا
+يؤثر تعديل الكائن الأصلي بعد ذلك.
+
+يُحل الاسم بالترتيب التالي، وأول تطابق هو المعتمد:
+
+1. البادئة `svg:`: بقية النص مسار SVG واحد.
+2. `icons.aliases[name]`.
+3. `icons.resolve(name)`.
+4. أيقونة مدمجة في Wakeb (الجدول أدناه).
+5. مجموعة الأيقونات الخاصة بالمزود المختار:
+   - **Vuetify:** يُمرَّر الاسم إلى `VIcon`، فتبقى أسماء `mdi-*` وأسماء `$alias` تعمل وفق إعداد
+     الأيقونات وخط الأيقونات في Vuetify لديك.
+   - **PrimeVue:** تُرسم أسماء أصناف PrimeIcons (`pi pi-check` أو `pi-check`) في عنصر `<i>`.
+     حمّل ملف CSS الخاص بـ`primeicons` بنفسك.
+6. أي اسم آخر: مربع Wakeb البديل (أدناه).
+
+الأيقونات المدمجة مسارات SVG بسيطة من Material Design Icons (رخصة Apache-2.0). لا تحتاج إلى
+خط أيقونات، وتُرسم بالشكل نفسه مع كل المزودات:
+
+| الاسم | الشكل | يُستخدم افتراضيًا في |
+| --- | --- | --- |
+| `$expand` | سهم للأسفل | مؤشر `isDropdown` في WButton، و`icon` في WAccordion، و`expandIcon` في WDropdown |
+| `$collapse` | سهم للأعلى | `collapseIcon` في WDropdown |
+| `$prev` و`$next` | سهم لليسار وسهم لليمين | متاحة للاستخدام |
+| `$close` | علامة إغلاق | متاحة للاستخدام |
+| `$loading` | ربع قوس (ثابت؛ حرّكه عبر CSS) | متاحة للاستخدام |
+| `$complete` | علامة صح | متاحة للاستخدام |
+| `$checkboxOn` و`$checkboxOff` | مربع محدد ومربع فارغ | متاحة للاستخدام |
+| `$radioOn` و`$radioOff` | دائرة ممتلئة ودائرة فارغة | متاحة للاستخدام |
+
+لأن الأيقونات المدمجة تسبق المزود، أصبح `$expand` و`$collapse` يُرسمان بـSVG من Wakeb تحت
+Vuetify أيضًا وبالحجم نفسه. لاستخدام شكلك الخاص سجّل الاسم في `icons.aliases`، أو مرّر اسمًا من
+المزود مثل `mdi-chevron-down` تحت Vuetify.
+
+**البديل.** عندما لا يُحل الاسم ولا تملك المزود مجموعة أيقونات مطابقة، يرسم Wakeb إطار مربع
+(`svg.wakeb-icon--fallback`) بالحجم واللون المطلوبين، فيحافظ العنصر على حجمه ويبقى قابلًا
+للاستخدام. وفي وضع التطوير يسجّل Wakeb أيضًا `WAKEB_ICON_UNRESOLVED` مرة واحدة لكل تطبيق واسم.
+وإذا أعادت `resolve` قيمة ليست بيانات مسار SVG ولا مكوّنًا، تُتجاهل مع الرمز نفسه ويستمر الحل
+بالأيقونات المدمجة. ويُحذف التحذير من بناء الإنتاج.
+
+**الحدود.**
+
+- أسماء MDI وأسماء alias في Vuetify غير قابلة للنقل؛ فهي تُرسم تحت Vuetify فقط، وتحت PrimeVue
+  يظهر مكانها المربع البديل. استخدم بيانات مسار أو مكوّنًا أو alias في `icons` عندما يجب أن تعمل
+  الأيقونة مع كل المزودات.
+- تستقبل slots الأيقونات (`icon` و`dropdown` و`item-icon` و`header-icon` وغيرها) القيمة التي
+  مرّرتها، لا الأيقونة المحلولة.
+- الأيقونات زخرفية (`aria-hidden`)، فأعطِ العناصر التي تحتوي أيقونة فقط `ariaLabel` أو `title`.
+- تعمل `resolve` عند كل رسم ويجب أن تكون متزامنة. أعد القيمة نفسها للاسم نفسه، من خريطة مثلًا،
+  حتى لا تُعاد إنشاء المكونات. ويحتاج تعريف المكوّن إلى دالة `render` أو `setup`، وتُرفض كائنات
+  `template` التي تُترجم وقت التشغيل.
+- يُقرأ الخيار `icons` مرة واحدة عند التثبيت، وهو خاص بالتطبيق، فيمكن لتطبيقين أو لطلبَي SSR
+  استخدام محلِّلات مختلفة.
 
 ## مفردات الأنماط
 
@@ -312,7 +400,7 @@ Skeleton في Wakeb.
 
 | الرمز | السبب | الحل |
 | --- | --- | --- |
-| `WAKEB_CONFIG_INVALID` | framework أو خيار غير معروف، أو defaults أو theme غير صالحة، أو ملف plugin غير صالح أو مفقود | اتبع الرسالة، فهي تحدد الحقل أو الملف |
+| `WAKEB_CONFIG_INVALID` | framework أو خيار غير معروف، أو defaults أو theme أو icons غير صالحة، أو ملف plugin غير صالح أو مفقود | اتبع الرسالة، فهي تحدد الحقل أو الملف |
 | `WAKEB_BUILD_PLUGIN_MISSING` | بُني التطبيق دون `wakebComponents()` | أضفها إلى plugins في Vite وأعد التشغيل |
 | `WAKEB_FRAMEWORK_MISMATCH` | قيمة `framework` وقت التشغيل تختلف عن قيمة البناء | أعد تشغيل خادم التطوير أو أعد البناء |
 | `WAKEB_PROVIDER_MISSING` | الـpeers الخاصة بالمزود المختار غير مثبتة | نفّذ أمر التثبيت الموجود في الرسالة |
@@ -320,10 +408,10 @@ Skeleton في Wakeb.
 | `WAKEB_INSTALL_CONFLICT` | plugin ثانٍ لـWakeb على نفس التطبيق، أو وضع `install` مع مزود مثبت | استخدم plugin واحدًا لكل تطبيق |
 | `WAKEB_HOST_PROVIDER_MISSING` | وضع `reuse` دون مزود مثبت | ثبّت المزود قبل Wakeb |
 | `WAKEB_COMPONENT_UNSUPPORTED` | المحوّل التجريبي المختار لا يحتوي هذا المكوّن | راجع الجدول التالي |
-| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` أو الخيار `icons` في هذا البناء | استخدم Vuetify أو PrimeVue، ومرّر الأيقونات عبر الخصائص |
+| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` في هذا البناء | استخدم Vuetify أو PrimeVue |
 
 الأخطاء من النوع `WakebError` ولها الخاصية `code`، ويُصدَّر النوع من `wakeb-components`.
-أما تحذيرات وضع التطوير (`WAKEB_DEPRECATED_VALUE` و`WAKEB_UNKNOWN_VALUE`) فهي تحذيرات في
+أما تحذيرات وضع التطوير (`WAKEB_DEPRECATED_VALUE` و`WAKEB_UNKNOWN_VALUE` و`WAKEB_ICON_UNRESOLVED`) فهي تحذيرات في
 الـconsole وليست أخطاء، وتُحذف من بناء الإنتاج.
 
 ## المكونات المدعومة

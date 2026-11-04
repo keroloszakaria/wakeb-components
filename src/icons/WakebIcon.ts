@@ -1,24 +1,29 @@
-import { defineComponent, h, type PropType } from "vue";
-import type { SharedIcon } from "../types";
+import { defineComponent, h, inject, type PropType } from "vue";
+import { FALLBACK_ICON, NO_ICONS, resolveIcon } from "../core/icons";
+import { WAKEB_CONTEXT, warnOnce } from "../core/runtime";
+import type { SharedIcon, WakebSvgIcon } from "../types";
 
-/* Built-in Material Design paths for the Vuetify aliases Wakeb uses by default (SPEC R15). */
-const ALIASES: Record<string, string> = {
-  $expand: "M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z",
-  $collapse: "M7.41,15.41L12,10.83L16.59,15.41L18,14L12,8L6,14L7.41,15.41Z",
-  $close: "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z",
-  $complete: "M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z",
-};
-
-const svg = (paths: (string | [string, number])[], size: string | undefined, color: string | undefined) =>
+const svg = (paths: WakebSvgIcon, size: string | undefined, color: string | undefined, fallback = false) =>
   h(
     "svg",
-    { viewBox: "0 0 24 24", width: size, height: size, fill: color || "currentColor", "aria-hidden": "true", class: "wakeb-icon" },
-    paths.map((path) => (Array.isArray(path) ? h("path", { d: path[0], "fill-opacity": path[1] }) : h("path", { d: path }))),
+    {
+      viewBox: "0 0 24 24",
+      width: size,
+      height: size,
+      fill: color || "currentColor",
+      "aria-hidden": "true",
+      class: fallback ? "wakeb-icon wakeb-icon--fallback" : "wakeb-icon",
+    },
+    paths.map((path) => (typeof path === "string" ? h("path", { d: path }) : h("path", { d: path[0], "fill-opacity": path[1] }))),
   );
 
+/** PrimeIcons class names are the matching icon set of the PrimeVue provider. */
+const isPrimeIcon = (name: string) => /^pi(\s+pi-|-)[\w-]+$/.test(name);
+
 /**
- * Provider-neutral icon renderer used by non-Vuetify adapters: built-in aliases, `svg:` paths,
- * path lists, Vue components, or icon-font class names (for example `pi pi-check` or `mdi-check`).
+ * Provider-neutral icon renderer used by non-Vuetify adapters (SPEC R15): names go through the app's
+ * `icons` option and the Wakeb built-ins; SVG path data renders inline and components render as
+ * they are. An unresolved name renders the fallback box and reports WAKEB_ICON_UNRESOLVED.
  */
 export default defineComponent({
   name: "WakebIcon",
@@ -28,16 +33,27 @@ export default defineComponent({
     color: { type: String, default: undefined },
   },
   setup(props) {
+    const context = inject(WAKEB_CONTEXT, null);
     return () => {
       const size = props.size === undefined ? undefined : typeof props.size === "number" ? `${props.size}px` : props.size;
-      const { icon, color } = props;
-      if (!icon) return null;
-      if (Array.isArray(icon)) return svg(icon, size, color);
-      if (typeof icon !== "string") return h(icon, { width: size, height: size, style: { color } });
-      if (icon.startsWith("svg:")) return svg([icon.slice(4)], size, color);
-      if (icon.startsWith("$")) return svg([ALIASES[icon] ?? ALIASES.$expand], size, color);
-      const classes = icon.startsWith("mdi-") ? `mdi ${icon}` : icon;
-      return h("i", { class: ["wakeb-icon", classes], "aria-hidden": "true", style: { fontSize: size, color } });
+      const { color } = props;
+      const resolved = resolveIcon(context?.icons ?? NO_ICONS, props.icon, context);
+      if (!resolved) return null;
+      if (resolved.kind === "svg") return svg(resolved.paths, size, color);
+      if (resolved.kind === "component") return h(resolved.component, { width: size, height: size, style: { color } });
+      const { name } = resolved;
+      if (context?.framework === "primevue" && isPrimeIcon(name)) {
+        const classes = name.startsWith("pi-") ? `pi ${name}` : name;
+        return h("i", { class: ["wakeb-icon", classes], "aria-hidden": "true", style: { fontSize: size, color } });
+      }
+      if (process.env.NODE_ENV !== "production")
+        warnOnce(
+          context,
+          "WAKEB_ICON_UNRESOLVED",
+          name,
+          `Icon '${name}' is not resolved under the ${context?.framework} provider; rendering the Wakeb fallback box. Add it to the icons.aliases or icons.resolve plugin option, or pass SVG path data or a Vue component.`,
+        );
+      return svg(FALLBACK_ICON, size, color, true);
     };
   },
 });

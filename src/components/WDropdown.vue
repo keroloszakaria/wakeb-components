@@ -2,6 +2,7 @@
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem, VListItemTitle } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
+import { useVuetifyIcon } from "../core/icons";
 import WButton from "./WButton.vue";
 import { dropdownDefaults, useDropdown } from "../composables/dropdown";
 import { useWakebContext } from "../core/runtime";
@@ -31,6 +32,7 @@ const {
   onMenuItemClick,
   buttonProps,
 } = useDropdown(props, emits);
+const toIcon = useVuetifyIcon();
 </script>
 <template>
   <div>
@@ -73,7 +75,7 @@ const {
           <template v-if="item.icon" #prepend>
             <slot name="item-icon" :item="item" :color="resolveItemColor(item)"
               ><VIcon
-                :icon="item.icon"
+                :icon="toIcon(item.icon)"
                 :size="16"
                 :style="{ color: resolveItemColor(item) }"
             /></slot>

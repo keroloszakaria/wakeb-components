@@ -584,8 +584,8 @@ export default [
         "isDropdown",
         "boolean",
         "false",
-        "Append the dropdown slot or Vuetify $expand icon.",
-        "إضافة dropdown slot أو أيقونة Vuetify $expand."
+        "Append the dropdown slot or the built-in $expand chevron.",
+        "إضافة dropdown slot أو السهم المدمج $expand."
       ],
       [
         "action",
@@ -605,8 +605,8 @@ export default [
         "icon",
         "SharedIcon",
         "\"\"",
-        "Vuetify icon value, or the value passed to the icon slot.",
-        "أيقونة Vuetify أو القيمة الممررة إلى icon slot."
+        "Icon name, SVG path data or component, resolved as described in Providers > Icons; the icon slot receives the value as passed.",
+        "اسم أيقونة أو بيانات مسار SVG أو مكوّن، ويُحل كما في المزودات > الأيقونات؛ ويستقبل icon slot القيمة كما مُررت."
       ],
       [
         "iconSize",
@@ -645,8 +645,8 @@ export default [
       ]
     ],
     "slots": [
-      "`icon` and `dropdown`: `{ icon, size, color, maxWidth }`. `content` (or `default` fallback): content when title is empty and isTooltip=false. Tooltip mode renders the icon only. The fallback icon renderer is VIcon; configure the host Vuetify icon set/font or provide slots.",
-      "`icon` و`dropdown`: يستقبلان `{ icon, size, color, maxWidth }`. `content` أو `default` كبديل: محتوى عند فراغ title وisTooltip=false. وضع Tooltip يعرض الأيقونة فقط. العرض الافتراضي يستخدم VIcon؛ جهز مجموعة/خط أيقونات Vuetify في المشروع أو استخدم slots."
+      "`icon` and `dropdown`: `{ icon, size, color, maxWidth }`. `content` (or `default` fallback): content when title is empty and isTooltip=false. Tooltip mode renders the icon only. Icons resolve through the icons plugin option and the Wakeb built-ins; other names render through VIcon under Vuetify (configure its icon set/font) and as the fallback box under other providers.",
+      "`icon` و`dropdown`: يستقبلان `{ icon, size, color, maxWidth }`. `content` أو `default` كبديل: محتوى عند فراغ title وisTooltip=false. وضع Tooltip يعرض الأيقونة فقط. تُحل الأيقونات عبر الخيار icons والأيقونات المدمجة في Wakeb؛ وبقية الأسماء تُرسم عبر VIcon تحت Vuetify (جهز مجموعة/خط أيقوناته) وكمربع بديل مع المزودات الأخرى."
     ],
     "variables": [
       [
@@ -1123,8 +1123,8 @@ export default [
         "icon",
         "SharedIcon",
         "\"\"",
-        "Vuetify icon value or icon-slot value.",
-        "أيقونة Vuetify أو قيمة icon slot."
+        "Icon name, SVG path data or component (Providers > Icons), or the icon-slot value.",
+        "اسم أيقونة أو بيانات مسار SVG أو مكوّن (المزودات > الأيقونات)، أو قيمة icon slot."
       ],
       [
         "isDot",
@@ -1800,8 +1800,8 @@ export default [
         "icon",
         "SharedIcon",
         "undefined",
-        "Vuetify icon; replace with the icon slot for custom SVGs.",
-        "أيقونة Vuetify؛ استخدم slot للأيقونات المخصصة."
+        "Icon name, SVG path data or component (Providers > Icons); the icon slot can replace it.",
+        "اسم أيقونة أو بيانات مسار SVG أو مكوّن (المزودات > الأيقونات)؛ ويمكن استبدالها بـslot."
       ],
       [
         "text",
@@ -1873,8 +1873,8 @@ export default [
     ],
     "variables": [],
     "limits": [
-      "VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. VIcon requires your Vuetify icon configuration; the icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport; the tooltip carries only the plugin theme scope and zIndexOverlay, and tooltipStyle wins over it. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.",
-      "الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. VIcon يحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport؛ لا يحمل التلميح إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم tooltipStyle عليه. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة."
+      "VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. Icon names resolve through the icons plugin option and the Wakeb built-ins first; other names need your Vuetify icon configuration. The icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport; the tooltip carries only the plugin theme scope and zIndexOverlay, and tooltipStyle wins over it. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables.",
+      "الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. تُحل أسماء الأيقونات أولًا عبر الخيار icons والأيقونات المدمجة، وبقية الأسماء تحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport؛ لا يحمل التلميح إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم tooltipStyle عليه. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة."
     ],
     "example": "<WTooltipBtn text=\"Save changes\" icon=\"$complete\" btn-icon aria-label=\"Save changes\" @click=\"() => {}\" />",
     "playground": "IdentityPlayground",
@@ -2625,8 +2625,8 @@ export default [
       "`select(value: string)` مرة لاختيار صيغة متاحة. المكوّن لا يولد ملفًا ولا ينزله."
     ],
     "limits": [
-      "The root is VMenu, preserving its attrs/teleport contract. Default formats are PDF/pdf and Excel/xlsx with English labels; supply localized records. Inline SVG fallbacks need no icon font; optional format.icon uses the host Vuetify icon configuration. Loading disables the public default activator and menu; custom activators receive buttonProps and may preserve their existing loading contract. Permission checks, export state, network requests, MIME handling and download services stay in the host. Use the activator slot for directives; the package has no permission prop or auth dependency. menuStyle targets the actual teleported list and wins over the plugin theme scope and zIndexOverlay that the menu carries. VMenu/VList provide outside-click, Escape and keyboard behavior; rows use role=menuitem in a role=menu list and disabled formats set aria-disabled. The default native action is button, and its default height is 44px.",
-      "الجذر VMenu ويحتفظ بعقد الخصائص وteleport. الافتراضي PDF/pdf وExcel/xlsx بأسماء إنجليزية؛ مرر بيانات مترجمة. أيقونات SVG الافتراضية لا تحتاج خط أيقونات؛ format.icon الاختيارية تستخدم إعداد Vuetify للمشروع. التحميل يعطل الزر العام والقائمة؛ الـactivator المخصص يمكنه الحفاظ على سلوكه القديم. الصلاحيات وحالة التصدير والشبكة وتوليد الملف والتنزيل في المشروع. استخدم activator للصلاحيات؛ الحزمة لا تستقبل permission ولا تعتمد على auth. menuStyle يستهدف القائمة المنقولة ويتقدم على نطاق theme الخاص بالـplugin وzIndexOverlay اللذين تحملهما القائمة. Vuetify يدير النقر الخارجي وEscape والكيبورد؛ الصفوف بدور menuitem داخل menu والصيغ المعطلة معها aria-disabled. نوع الزر button وارتفاعه الافتراضي 44px."
+      "The root is VMenu, preserving its attrs/teleport contract. Default formats are PDF/pdf and Excel/xlsx with English labels; supply localized records. Inline SVG fallbacks need no icon font; optional format.icon resolves through the icons plugin option and the Wakeb built-ins, then the host Vuetify icon configuration. Loading disables the public default activator and menu; custom activators receive buttonProps and may preserve their existing loading contract. Permission checks, export state, network requests, MIME handling and download services stay in the host. Use the activator slot for directives; the package has no permission prop or auth dependency. menuStyle targets the actual teleported list and wins over the plugin theme scope and zIndexOverlay that the menu carries. VMenu/VList provide outside-click, Escape and keyboard behavior; rows use role=menuitem in a role=menu list and disabled formats set aria-disabled. The default native action is button, and its default height is 44px.",
+      "الجذر VMenu ويحتفظ بعقد الخصائص وteleport. الافتراضي PDF/pdf وExcel/xlsx بأسماء إنجليزية؛ مرر بيانات مترجمة. أيقونات SVG الافتراضية لا تحتاج خط أيقونات؛ format.icon الاختيارية تُحل عبر الخيار icons والأيقونات المدمجة ثم إعداد Vuetify للمشروع. التحميل يعطل الزر العام والقائمة؛ الـactivator المخصص يمكنه الحفاظ على سلوكه القديم. الصلاحيات وحالة التصدير والشبكة وتوليد الملف والتنزيل في المشروع. استخدم activator للصلاحيات؛ الحزمة لا تستقبل permission ولا تعتمد على auth. menuStyle يستهدف القائمة المنقولة ويتقدم على نطاق theme الخاص بالـplugin وzIndexOverlay اللذين تحملهما القائمة. Vuetify يدير النقر الخارجي وEscape والكيبورد؛ الصفوف بدور menuitem داخل menu والصيغ المعطلة معها aria-disabled. نوع الزر button وارتفاعه الافتراضي 44px."
     ],
     "example": "<WExportDropdown title=\"Download report\" @select=\"format => console.log(format)\" />",
     "playground": "CompositionPlayground"
@@ -2860,8 +2860,8 @@ export default [
         "headerIcon",
         "SharedIcon",
         "\"\"",
-        "Optional host Vuetify icon; use header-icon for SVG.",
-        "أيقونة Vuetify من المشروع؛ استخدم header-icon لـSVG."
+        "Optional icon name, SVG path data or component (Providers > Icons); header-icon can replace it.",
+        "اسم أيقونة أو بيانات مسار SVG أو مكوّن اختياري (المزودات > الأيقونات)؛ ويمكن استبداله بـheader-icon."
       ],
       [
         "ariaLabel",

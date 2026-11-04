@@ -17,6 +17,7 @@ import {
 } from "vuetify/components/VTabs";
 import { VCardText } from "vuetify/components/VCard";
 import { VIcon } from "vuetify/components/VIcon";
+import { useVuetifyIcon } from "../core/icons";
 import type { TabsProps, TabItem, NavigationKey } from "../types";
 const props = withDefaults(defineProps<TabsProps>(), {
   styleType: "outlined",
@@ -144,6 +145,7 @@ onMounted(() => {
     });
   });
 });
+const toIcon = useVuetifyIcon();
 </script>
 <template>
   <div
@@ -203,7 +205,7 @@ onMounted(() => {
                   :tab-item="tabItem"
                   :index="index"
                   :size="iconSize"
-                  ><VIcon :icon="tabItem.icon" :size="pixelIconSize"
+                  ><VIcon :icon="toIcon(tabItem.icon)" :size="pixelIconSize"
                 /></slot>
                 <p class="font-semibold!" v-if="!iconOnly">
                   {{ tabItem.label }}

@@ -83,11 +83,24 @@ export interface WakebTheme {
   tokens?: WakebThemeTokens;
 }
 
+/**
+ * App-scoped icon resolution (SPEC R15). A string icon prop is looked up in `aliases`, then passed
+ * to `resolve`, then matched against the Wakeb built-ins, then left to the selected provider's own
+ * icon set where one exists; anything else renders the Wakeb fallback box.
+ */
+export interface WakebIconsOptions {
+  /** Icon names mapped to SVG path data or Vue components. Checked first. */
+  aliases?: Readonly<Record<string, Props.WakebIconDefinition>>;
+  /** Called for names that are not in `aliases`. Return `undefined` to continue resolution. */
+  resolve?: (name: string) => Props.WakebIconDefinition | undefined;
+}
+
 interface WakebBaseOptions {
   defaults?: WakebDefaults;
   locale?: "en" | "ar";
   direction?: "ltr" | "rtl";
   theme?: WakebTheme;
+  icons?: WakebIconsOptions;
 }
 
 export type WakebComponentsOptions = {

@@ -5,6 +5,7 @@ import { useWakebContext } from "../core/runtime";
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
+import { useVuetifyIcon } from "../core/icons";
 import { truncateText } from "wakeb-utils";
 import WBadge from "./WBadge.vue";
 import type {
@@ -87,6 +88,7 @@ const resolveBadgeProps = (item: BadgeStackItem): BadgeProps => ({
 });
 const truncate = (text: string | undefined) =>
   truncateText(text || "", props.truncateLength);
+const toIcon = useVuetifyIcon();
 </script>
 <template>
   <div
@@ -124,7 +126,7 @@ const truncate = (text: string | undefined) =>
           ><VIcon
             v-if="item.badgeIcon"
             class="icon"
-            :icon="item.badgeIcon"
+            :icon="toIcon(item.badgeIcon)"
             :size="
               (
                 { xs: 16, sm: 20, md: 24, lg: 32, xl: 40 } as Record<
@@ -214,7 +216,7 @@ const truncate = (text: string | undefined) =>
                 ><VIcon
                   v-if="item.badgeIcon"
                   class="icon"
-                  :icon="item.badgeIcon"
+                  :icon="toIcon(item.badgeIcon)"
                   :size="
                     (
                       { xs: 16, sm: 20, md: 24, lg: 32, xl: 40 } as Record<

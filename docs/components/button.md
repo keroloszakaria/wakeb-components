@@ -26,10 +26,10 @@ import { WButton } from 'wakeb-components'
 | `type` | `string` | `"primary"` | primary/secondary/outline/danger/tertiary/link/icon/table-icon/text; custom strings add classes. |
 | `size` | `string` | `"lg"` | xl/lg/md/sm; custom strings need consumer CSS. |
 | `isLoading` | `boolean` | `false` | Vuetify loading indicator plus the shared loading style. |
-| `isDropdown` | `boolean` | `false` | Append the dropdown slot or Vuetify $expand icon. |
+| `isDropdown` | `boolean` | `false` | Append the dropdown slot or the built-in $expand chevron. |
 | `action` | `"button" \| "submit" \| "reset"` | `"button"` | Native HTML button type. |
 | `disabled` | `boolean` | `false` | Native disabled state. |
-| `icon` | `SharedIcon` | `""` | Vuetify icon value, or the value passed to the icon slot. |
+| `icon` | `SharedIcon` | `""` | Icon name, SVG path data or component, resolved as described in Providers > Icons; the icon slot receives the value as passed. |
 | `iconSize` | `string \| number` | `"sm"` | xs/sm/md/lg/xl map to 16/20/24/32/40px; free uses Vuetify default. |
 | `maxIconWidth` | `string \| number` | `"100%"` | Maximum icon width; numeric fallback widths use px. |
 | `iconColorType` | `"danger" \| "primary" \| "success" \| "warning" \| "currentColor"` | `"currentColor"` | Semantic icon role, resolved through namespaced CSS variables. |
@@ -42,7 +42,7 @@ import { WButton } from 'wakeb-components'
 
 ## Slots
 
-`icon` and `dropdown`: `{ icon, size, color, maxWidth }`. `content` (or `default` fallback): content when title is empty and isTooltip=false. Tooltip mode renders the icon only. The fallback icon renderer is VIcon; configure the host Vuetify icon set/font or provide slots.
+`icon` and `dropdown`: `{ icon, size, color, maxWidth }`. `content` (or `default` fallback): content when title is empty and isTooltip=false. Tooltip mode renders the icon only. Icons resolve through the icons plugin option and the Wakeb built-ins; other names render through VIcon under Vuetify (configure its icon set/font) and as the fallback box under other providers.
 
 ## CSS variables
 

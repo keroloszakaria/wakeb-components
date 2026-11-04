@@ -73,8 +73,17 @@ export interface VerticalStep { title?: string; time?: string; date?: string; is
 export interface VerticalStepsProps { steps?: readonly VerticalStep[]; label?: string; }
 
 export type ComponentClass = string | Record<string, boolean> | ComponentClass[];
-/** Icon name, SVG path list or Vue component. Provider-neutral: no provider types leak through (SPEC R10). */
-export type SharedIcon = string | (string | [path: string, opacity: number])[] | { new (): import("vue").ComponentPublicInstance } | import("vue").FunctionalComponent;
+/** SVG path data on a 24x24 viewBox; a path may carry a fill opacity (SPEC R15). */
+export type WakebSvgIcon = readonly (string | readonly [path: string, opacity: number])[];
+/** A Vue component that renders an icon. */
+export type WakebIconComponent = { new (): import("vue").ComponentPublicInstance } | import("vue").FunctionalComponent;
+/** What an icon name resolves to: SVG path data or a component, never an HTML string. */
+export type WakebIconDefinition = WakebSvgIcon | WakebIconComponent;
+/**
+ * Icon prop value (SPEC R15): a name resolved by the `icons` plugin option, a Wakeb built-in or the
+ * selected provider's icon set; SVG path data (`svg:<path>` strings are also accepted); or a Vue component.
+ */
+export type SharedIcon = string | WakebIconDefinition;
 export interface IconSlotProps { icon: SharedIcon; size: string | number; color: string; maxWidth: string | number; }
 export interface ButtonProps {
   isTooltip?: boolean;

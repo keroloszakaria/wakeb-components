@@ -78,3 +78,19 @@ const badAvatar: AvatarStackProps = { avatarColor: 'red-darken-2' };
 const badBadge: BadgeProps = { type: 'teal' };
 const intentTheme = createWakebComponents({ framework: 'vuetify', theme: { tokens: { success: '#12b76a', neutral: 'var(--gray)' } } });
 void [colors, loading, badLoading, badAvatar, badBadge, intentTheme];
+// Wakeb-owned icons (SPEC R15): names resolve to SVG path data or components, never strings.
+const iconPaths: import('wakeb-components').WakebSvgIcon = ['M7 10l5 5 5-5z', ['M0 0h24v24H0z', 0.2]];
+const iconOptions: import('wakeb-components').WakebIconsOptions = { aliases: { brand: iconPaths }, resolve: (name: string) => (name === 'check' ? ['M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'] : undefined) };
+const withIcons = createWakebComponents({ framework: 'primevue', icons: iconOptions });
+const iconButton: ButtonProps = { icon: 'svg:M7 10l5 5 5-5z' };
+// @ts-expect-error the icons option is an object, not a bare resolver function
+const bareResolver = createWakebComponents({ framework: 'vuetify', icons: (name: string) => [name] });
+// @ts-expect-error aliases map to SVG path data or components, not other names or HTML strings
+const stringAlias = createWakebComponents({ framework: 'vuetify', icons: { aliases: { check: '<svg></svg>' } } });
+// @ts-expect-error the resolver returns path data, a component or undefined, never a string
+const stringResolver = createWakebComponents({ framework: 'vuetify', icons: { resolve: (name: string) => `mdi-${name}` } });
+// @ts-expect-error icons accepts only aliases and resolve
+const unknownIconOption = createWakebComponents({ framework: 'vuetify', icons: { sets: {} } });
+// @ts-expect-error a path opacity is a number
+const badOpacity: import('wakeb-components').WakebSvgIcon = [['M0 0h24v24H0z', '0.2']];
+void [iconPaths, iconOptions, withIcons, iconButton, bareResolver, stringAlias, stringResolver, unknownIconOption, badOpacity];

@@ -3,6 +3,7 @@ import { computed, useAttrs } from "vue";
 import { VDialog } from "vuetify/components/VDialog";
 import { VCard, VCardTitle } from "vuetify/components/VCard";
 import { VIcon } from "vuetify/components/VIcon";
+import { useVuetifyIcon } from "../core/icons";
 import WButton from "./WButton.vue";
 import WLoading from "./WLoading.vue";
 import { modalDefaults, useDisclosure } from "../composables/disclosure";
@@ -41,6 +42,7 @@ defineSlots<{
   loading(props: { label: string }): unknown;
   "loading-overlay"(props: { label: string }): unknown;
 }>();
+const toIcon = useVuetifyIcon();
 </script>
 <template>
   <VDialog
@@ -79,7 +81,7 @@ defineSlots<{
           >
             <slot name="header-decoration" />
             <slot name="header-icon"
-              ><VIcon :icon="headerIcon" size="28"
+              ><VIcon :icon="toIcon(headerIcon)" size="28"
             /></slot>
           </div>
           <slot name="title"

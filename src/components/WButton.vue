@@ -2,6 +2,7 @@
 import { VBtn } from "vuetify/components/VBtn";
 import { VTooltip } from "vuetify/components/VTooltip";
 import { VIcon } from "vuetify/components/VIcon";
+import { useVuetifyIcon } from "../core/icons";
 import { buttonDefaults, useButton } from "../composables/button";
 import { useWakebContext } from "../core/runtime";
 import type { ButtonProps, IconSlotProps } from "../types";
@@ -16,6 +17,7 @@ defineSlots<{
 }>();
 const context = useWakebContext("WButton");
 const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttrs } = useButton(props, emit);
+const toIcon = useVuetifyIcon();
 </script>
 <template>
   <div v-bind="wrapperAttrs">
@@ -32,7 +34,7 @@ const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttr
           <slot name="icon" v-bind="iconProps"
             ><VIcon
               v-if="icon"
-              :icon="icon"
+              :icon="toIcon(icon)"
               :size="pixelSize"
               :color="iconColor"
               :style="iconStyle"
@@ -56,7 +58,7 @@ const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttr
           name="icon"
           v-bind="iconProps"
           ><VIcon
-            :icon="icon"
+            :icon="toIcon(icon)"
             :size="pixelSize"
             :color="iconColor"
             :style="iconStyle"
@@ -67,7 +69,7 @@ const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttr
           name="icon"
           v-bind="iconProps"
           ><VIcon
-            :icon="icon"
+            :icon="toIcon(icon)"
             :size="pixelSize"
             :color="iconColor"
             :style="iconStyle"
@@ -77,7 +79,7 @@ const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttr
         <slot name="icon" v-bind="iconProps"
           ><VIcon
             v-if="icon"
-            :icon="icon"
+            :icon="toIcon(icon)"
             :size="pixelSize"
             :color="iconColor"
             :style="iconStyle"
@@ -88,7 +90,7 @@ const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttr
         v-if="isDropdown"
         name="dropdown"
         v-bind="{ ...iconProps, icon: '$expand' }"
-        ><VIcon icon="$expand" :size="pixelSize" :color="iconColor"
+        ><VIcon :icon="toIcon('$expand')" :size="pixelSize" :color="iconColor"
       /></slot>
     </VBtn>
   </div>

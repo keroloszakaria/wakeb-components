@@ -1,6 +1,7 @@
 import { defineComponent, inject, type App, type InjectionKey } from "vue";
 import { WakebError, buildPluginMissing } from "./errors";
 import type { WakebFramework, WakebProviderServices } from "./options";
+import type { WakebIconRegistry } from "./icons";
 
 export { WakebError, buildPluginMissing } from "./errors";
 export type { WakebErrorCode } from "./errors";
@@ -16,6 +17,8 @@ export interface WakebContext {
    * overlay content. Empty unless theme or direction was configured.
    */
   readonly scope: Readonly<Record<string, unknown>>;
+  /** Validated `icons` option: aliases and resolver for this app only (SPEC R15, R19). */
+  readonly icons: WakebIconRegistry;
   /** Configured overlay z-index; providers keep their own stacking when absent. */
   readonly zIndexOverlay?: number;
   /** True when Wakeb reused a provider instance the host installed. */
@@ -28,7 +31,7 @@ export interface WakebContext {
 
 export const WAKEB_CONTEXT: InjectionKey<WakebContext> = Symbol.for("wakeb-components:context");
 
-export type WakebWarningCode = "WAKEB_DEPRECATED_VALUE" | "WAKEB_UNKNOWN_VALUE";
+export type WakebWarningCode = "WAKEB_DEPRECATED_VALUE" | "WAKEB_UNKNOWN_VALUE" | "WAKEB_ICON_UNRESOLVED";
 
 /**
  * Reports a development warning once per app and key. Call it behind

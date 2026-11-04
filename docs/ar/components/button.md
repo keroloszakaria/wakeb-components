@@ -26,10 +26,10 @@ import { WButton } from 'wakeb-components'
 | `type` | `string` | `"primary"` | الأنواع primary/secondary/outline/danger/tertiary/link/icon/table-icon/text؛ القيم الأخرى تضيف classes فقط. |
 | `size` | `string` | `"lg"` | المقاسات xl/lg/md/sm؛ القيم الأخرى تحتاج CSS من المستهلك. |
 | `isLoading` | `boolean` | `false` | مؤشر تحميل Vuetify مع تنسيق التحميل العام. |
-| `isDropdown` | `boolean` | `false` | إضافة dropdown slot أو أيقونة Vuetify $expand. |
+| `isDropdown` | `boolean` | `false` | إضافة dropdown slot أو السهم المدمج $expand. |
 | `action` | `"button" \| "submit" \| "reset"` | `"button"` | نوع زر HTML الفعلي. |
 | `disabled` | `boolean` | `false` | حالة تعطيل HTML. |
-| `icon` | `SharedIcon` | `""` | أيقونة Vuetify أو القيمة الممررة إلى icon slot. |
+| `icon` | `SharedIcon` | `""` | اسم أيقونة أو بيانات مسار SVG أو مكوّن، ويُحل كما في المزودات > الأيقونات؛ ويستقبل icon slot القيمة كما مُررت. |
 | `iconSize` | `string \| number` | `"sm"` | xs/sm/md/lg/xl تعني 16/20/24/32/40px؛ free يستخدم افتراضي Vuetify. |
 | `maxIconWidth` | `string \| number` | `"100%"` | أقصى عرض للأيقونة؛ الرقم يُحول إلى px في العرض الافتراضي. |
 | `iconColorType` | `"danger" \| "primary" \| "success" \| "warning" \| "currentColor"` | `"currentColor"` | لون دلالي للأيقونة من متغيرات CSS المستقلة. |
@@ -42,7 +42,7 @@ import { WButton } from 'wakeb-components'
 
 ## Slots
 
-`icon` و`dropdown`: يستقبلان `{ icon, size, color, maxWidth }`. `content` أو `default` كبديل: محتوى عند فراغ title وisTooltip=false. وضع Tooltip يعرض الأيقونة فقط. العرض الافتراضي يستخدم VIcon؛ جهز مجموعة/خط أيقونات Vuetify في المشروع أو استخدم slots.
+`icon` و`dropdown`: يستقبلان `{ icon, size, color, maxWidth }`. `content` أو `default` كبديل: محتوى عند فراغ title وisTooltip=false. وضع Tooltip يعرض الأيقونة فقط. تُحل الأيقونات عبر الخيار icons والأيقونات المدمجة في Wakeb؛ وبقية الأسماء تُرسم عبر VIcon تحت Vuetify (جهز مجموعة/خط أيقوناته) وكمربع بديل مع المزودات الأخرى.
 
 ## متغيرات CSS
 

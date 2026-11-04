@@ -17,7 +17,7 @@
     >
       <template v-if="iconPosition === 'before'">
         <slot name="icon" :icon="icon" :size="iconSize">
-          <VIcon v-if="icon" class="icon" :icon="icon" :size="pixelSize" />
+          <VIcon v-if="icon" class="icon" :icon="toIcon(icon)" :size="pixelSize" />
         </slot>
         <slot name="actions"></slot>
       </template>
@@ -27,7 +27,7 @@
       </slot>
       <template v-if="iconPosition === 'after'">
         <slot name="icon" :icon="icon" :size="iconSize">
-          <VIcon v-if="icon" class="icon" :icon="icon" :size="pixelSize" />
+          <VIcon v-if="icon" class="icon" :icon="toIcon(icon)" :size="pixelSize" />
         </slot>
         <slot name="actions"></slot>
       </template>
@@ -38,6 +38,7 @@
 import { computed, inject } from "vue";
 import { VChip } from "vuetify/components/VChip";
 import { VIcon } from "vuetify/components/VIcon";
+import { useVuetifyIcon } from "../core/icons";
 import type { CSSProperties } from "vue";
 import type { BadgeProps, SharedIcon } from "../types";
 import { BADGE_TYPES, VUETIFY_VARIANTS, useColor, useVariant } from "../core/vocabulary";
@@ -94,6 +95,7 @@ const chipStyle = computed<CSSProperties>(() => ({
 const dotStyle = computed(() =>
   dot.value ? { backgroundColor: dot.value } : undefined,
 );
+const toIcon = useVuetifyIcon();
 </script>
 <style lang="scss" scoped>
 :deep() {

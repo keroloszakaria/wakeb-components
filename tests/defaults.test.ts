@@ -213,8 +213,19 @@ describe(`theme and direction scope (${framework})`, () => {
     expect(invalid(options)).toThrow(message);
   });
 
-  it("reports the icons option as an unsupported capability", () => {
-    expect(invalid({ icons: () => null })).toThrow("WAKEB_CAPABILITY_UNSUPPORTED");
+  it.each([
+    [{ icons: () => null }, "icons must be an object"],
+    [{ icons: { sets: {} } }, "Unknown icons option 'sets'"],
+    [{ icons: { resolve: "mdi" } }, "icons.resolve must be a function"],
+    [{ icons: { aliases: [] } }, "icons.aliases must be an object"],
+    [{ icons: { aliases: { check: "mdi-check" } } }, "icons.aliases.check must be SVG path data"],
+    [{ icons: { aliases: { check: ["<svg><path d='M0 0'/></svg>"] } } }, "icons.aliases.check must be SVG path data"],
+    [{ icons: { aliases: { check: [] } } }, "icons.aliases.check must be SVG path data"],
+    [{ icons: { aliases: { check: [["M0 0L1 1", 2]] } } }, "icons.aliases.check must be SVG path data"],
+    [{ icons: { aliases: { check: { name: "NotAComponent" } } } }, "icons.aliases.check must be SVG path data"],
+  ])("rejects malformed icons options %#", (options, message) => {
+    expect(invalid(options)).toThrow("WAKEB_CONFIG_INVALID");
+    expect(invalid(options)).toThrow(message);
   });
 });
 

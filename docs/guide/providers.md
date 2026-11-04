@@ -204,8 +204,95 @@ accept lengths. Values that could break out of a CSS declaration are rejected.
 border tokens to dark values. Wakeb does not follow `prefers-color-scheme` or store the mode.
 Options apply when the plugin is installed; later changes need normal CSS overrides.
 
-The `icons` option is not available yet. Passing it fails with
-`WAKEB_CAPABILITY_UNSUPPORTED`.
+### Icons
+
+Icon props (`icon`, `badgeIcon`, `headerIcon`, `expandIcon`, `collapseIcon`, and item and format
+`icon`) take a `SharedIcon`, which is one of:
+
+- **A name**, such as `'$close'` or `'brand-logo'`, resolved as described below.
+- **SVG path data** (`WakebSvgIcon`): an array of path strings or `[path, opacity]` pairs on a
+  24×24 viewBox, for example `['M7 10l5 5 5-5z']`. A string that starts with `svg:` is read as
+  one path, for example `'svg:M7 10l5 5 5-5z'`. This keeps existing Vuetify SVG inputs working.
+- **A Vue component**, rendered as is.
+
+The `icons` option registers names for this app:
+
+```js
+import { h } from 'vue'
+import BrandLogo from './BrandLogo.vue'
+
+export default createWakebComponents({
+  framework: 'primevue',
+  icons: {
+    aliases: {
+      'brand-logo': BrandLogo,
+      $close: ['M6 6l12 12M18 6L6 18'],
+    },
+    resolve: (name) => (name.startsWith('app-') ? appIcons[name.slice(4)] : undefined),
+  },
+})
+```
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `aliases` | `Record<string, WakebIconDefinition>` | Names mapped to SVG path data or a component |
+| `resolve` | `(name: string) => WakebIconDefinition \| undefined` | Called for names that are not in `aliases`; return `undefined` to continue |
+
+`WakebIconDefinition` is SVG path data or a Vue component. A string is never accepted as a
+resolved value, so a name cannot point to another name or to HTML. Wakeb never renders icons
+from HTML strings. Path data may contain only SVG path commands and numbers. Aliases are copied
+when the plugin is created, so later changes to the source object have no effect.
+
+A name resolves in this order. The first match wins:
+
+1. `svg:` prefix: the rest of the string is one SVG path.
+2. `icons.aliases[name]`.
+3. `icons.resolve(name)`.
+4. A Wakeb built-in (table below).
+5. The selected provider's own icon set:
+   - **Vuetify:** the name goes to Vuetify `VIcon`, so `mdi-*` names and `$alias` names keep
+     working with your Vuetify icon configuration and icon font.
+   - **PrimeVue:** PrimeIcons class names (`pi pi-check` or `pi-check`) render as an `<i>`
+     element. Load the `primeicons` CSS yourself.
+6. Anything else: the Wakeb fallback box (below).
+
+Built-in icons are simple SVG paths from Material Design Icons (Apache-2.0). They need no icon
+font and render the same way on every provider:
+
+| Name | Shape | Used by default in |
+| --- | --- | --- |
+| `$expand` | Chevron down | WButton `isDropdown` indicator, WAccordion `icon`, WDropdown `expandIcon` |
+| `$collapse` | Chevron up | WDropdown `collapseIcon` |
+| `$prev`, `$next` | Chevron left, chevron right | Available for consumers |
+| `$close` | Cross | Available for consumers |
+| `$loading` | Quarter arc (static; animate it with CSS) | Available for consumers |
+| `$complete` | Check mark | Available for consumers |
+| `$checkboxOn`, `$checkboxOff` | Checked and empty box | Available for consumers |
+| `$radioOn`, `$radioOff` | Filled and empty circle | Available for consumers |
+
+Because built-ins come before the provider, `$expand` and `$collapse` now render the Wakeb SVG
+under Vuetify too, at the same size. To use your own glyph, register the name in
+`icons.aliases`, or pass a provider name such as `mdi-chevron-down` under Vuetify.
+
+**Fallback.** When a name is not resolved and the provider has no matching icon set, Wakeb
+renders a box outline (`svg.wakeb-icon--fallback`) at the requested size and color. The control
+keeps its size and stays usable. In development Wakeb also logs `WAKEB_ICON_UNRESOLVED` once per
+app and name. A `resolve` result that is neither SVG path data nor a component is ignored, with
+the same code, and resolution continues with the built-ins. Production builds drop the warning.
+
+**Limits.**
+
+- MDI and Vuetify alias names are not portable. They render only under Vuetify, and under
+  PrimeVue they render the fallback box. Use path data, a component or an `icons` alias when an
+  icon must work on every provider.
+- Icon slots (`icon`, `dropdown`, `item-icon`, `header-icon` and others) receive the value you
+  passed, not the resolved icon.
+- Icons are decorative (`aria-hidden`). Give icon-only controls an `ariaLabel` or a `title`.
+- `resolve` runs on each render and must be synchronous. Return the same value for the same
+  name, for example from a map, so that components are not re-created. A component definition
+  needs a `render` or `setup` function; runtime-compiled `template` objects are rejected.
+- The `icons` option is read once at install. It is scoped to the app, so two apps or two SSR
+  requests can use different resolvers.
 
 ## Style vocabulary
 
@@ -318,7 +405,7 @@ grammar.
 
 | Code | Cause | Fix |
 | --- | --- | --- |
-| `WAKEB_CONFIG_INVALID` | Unknown framework or option, malformed defaults or theme, malformed plugin file, missing plugin file | Follow the message; it names the field or file |
+| `WAKEB_CONFIG_INVALID` | Unknown framework or option, malformed defaults, theme or icons, malformed plugin file, missing plugin file | Follow the message; it names the field or file |
 | `WAKEB_BUILD_PLUGIN_MISSING` | The app was bundled without `wakebComponents()` | Add it to the Vite plugins and restart |
 | `WAKEB_FRAMEWORK_MISMATCH` | The runtime `framework` differs from the compiled one | Restart the dev server or rebuild |
 | `WAKEB_PROVIDER_MISSING` | Selected peers are not installed | Run the install command in the message |
@@ -326,10 +413,10 @@ grammar.
 | `WAKEB_INSTALL_CONFLICT` | Two Wakeb plugins on one app, or `install` mode with a host provider | Keep one plugin per app |
 | `WAKEB_HOST_PROVIDER_MISSING` | `reuse` mode without a host provider | Install the provider before Wakeb |
 | `WAKEB_COMPONENT_UNSUPPORTED` | The selected alpha adapter lacks the component | See the matrix below |
-| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` or the `icons` option in this build | Use Vuetify or PrimeVue; pass icons on props |
+| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` in this build | Use Vuetify or PrimeVue |
 
 Errors are `WakebError` instances with a `code` property, exported from `wakeb-components`.
-Development warnings (`WAKEB_DEPRECATED_VALUE`, `WAKEB_UNKNOWN_VALUE`) are console warnings, not
+Development warnings (`WAKEB_DEPRECATED_VALUE`, `WAKEB_UNKNOWN_VALUE`, `WAKEB_ICON_UNRESOLVED`) are console warnings, not
 errors, and production builds drop them.
 
 ## Capability matrix

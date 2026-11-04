@@ -33,7 +33,7 @@ const open = ref(false)
 | `description` | `string` | `""` | Optional description in the default header. |
 | `showActions` | `boolean` | `true` | Render the VCard action slot, including its empty footer. |
 | `titleClass` | `ComponentClass` | `""` | Classes on the default title. |
-| `headerIcon` | `SharedIcon` | `""` | Optional host Vuetify icon; use header-icon for SVG. |
+| `headerIcon` | `SharedIcon` | `""` | Optional icon name, SVG path data or component (Providers > Icons); header-icon can replace it. |
 | `ariaLabel` | `string` | `"Dialog"` | Fallback dialog name when title is empty. |
 
 ## Events

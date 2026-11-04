@@ -21,7 +21,7 @@ import { WBadge } from 'wakeb-components'
 | `label` | `string` | `""` | النص الافتراضي الآمن. |
 | `classList` | `ComponentClass` | `""` | classes على الشارة. |
 | `type` | `WakebBadgeType` | `"primary"` | مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة، وما زالت تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. |
-| `icon` | `SharedIcon` | `""` | أيقونة Vuetify أو قيمة icon slot. |
+| `icon` | `SharedIcon` | `""` | اسم أيقونة أو بيانات مسار SVG أو مكوّن (المزودات > الأيقونات)، أو قيمة icon slot. |
 | `isDot` | `boolean` | `false` | عرض النقطة الزخرفية قبل المحتوى. |
 | `borderRadius` | `string` | `"md"` | sm يختار 8px؛ md والافتراضي يحتفظان بنصف قطر 24px. |
 | `customBorderRadius` | `string` | `""` | قيمة CSS صريحة لنصف القطر. |

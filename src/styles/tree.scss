@@ -1,0 +1,270 @@
+/* WTree styles shared by every provider renderer. */
+.tree {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  &--rtl {
+    direction: rtl;
+    text-align: start;
+  }
+
+  &--root {
+    > .tree__node {
+      > .tree__node-content {
+        border-radius: 12px;
+      }
+    }
+  }
+
+  &__node {
+    position: relative;
+    &-line {
+      &-curve {
+        position: absolute;
+        inset-inline-start: -12px;
+        top: 0;
+        height: 50%;
+        width: 20px;
+        z-index: 1;
+        pointer-events: none;
+        border-inline-start: 1.5px solid
+          var(--wakeb-tree-input-border, var(--wakeb-tree-fallback, #d0d5dd));
+        border-bottom: 1.5px solid
+          var(--wakeb-tree-input-border, var(--wakeb-tree-fallback, #d0d5dd));
+        border-end-start-radius: 10px;
+        transition: border-color 0.3s ease;
+
+        &--trunk-active {
+          border-inline-start-color: var(
+            --wakeb-tree-primary,
+            var(--wakeb-tree-fallback, #087f8c)
+          );
+        }
+
+        &--active {
+          border-color: var(
+            --wakeb-tree-primary,
+            var(--wakeb-tree-fallback, #087f8c)
+          );
+        }
+      }
+
+      &-trunk-bottom {
+        position: absolute;
+        inset-inline-start: -12px;
+        top: 50%;
+        bottom: 0;
+        width: 1.5px;
+        z-index: 1;
+        pointer-events: none;
+        background-color: var(
+          --wakeb-tree-input-border,
+          var(--wakeb-tree-fallback, #d0d5dd)
+        );
+        transition: background-color 0.3s ease;
+
+        &--active {
+          background-color: var(
+            --wakeb-tree-primary,
+            var(--wakeb-tree-fallback, #087f8c)
+          );
+        }
+      }
+    }
+
+    &--trunk > .tree__children::before {
+      content: "";
+      position: absolute;
+      inset-inline-start: 12px;
+      top: 0;
+      bottom: 0;
+      width: 1.5px;
+      z-index: 1;
+      pointer-events: none;
+      background-color: var(
+        --wakeb-tree-input-border,
+        var(--wakeb-tree-fallback, #d0d5dd)
+      );
+      transition: background-color 0.3s ease;
+    }
+
+    &--trunk-active > .tree__children::before {
+      background-color: var(
+        --wakeb-tree-primary,
+        var(--wakeb-tree-fallback, #087f8c)
+      );
+    }
+
+    &-content {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-height: 48px;
+
+      &:hover:not(.tree__node-content--active) {
+        background: var(
+          --wakeb-tree-hover-bg,
+          var(--wakeb-tree-fallback, #f2f4f7)
+        );
+      }
+
+      &--active {
+        background: var(
+          --wakeb-tree-primary,
+          var(--wakeb-tree-fallback, #087f8c)
+        );
+
+        .tree__node-label {
+          color: var(
+            --wakeb-tree-active-text,
+            var(--wakeb-tree-fallback, #fff)
+          );
+        }
+
+        .tree__node-description {
+          color: var(
+            --wakeb-tree-active-text,
+            var(--wakeb-tree-fallback, #fff)
+          );
+          opacity: 0.82;
+        }
+      }
+    }
+
+    &-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+    }
+
+    &-start {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    &-toggle-leading {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+
+      &:empty {
+        display: none;
+      }
+    }
+
+    &-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      z-index: 2;
+      min-width: 0;
+    }
+
+    &-label {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(
+        --wakeb-tree-paragraph-primary,
+        var(--wakeb-tree-fallback, #101828)
+      );
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &-description {
+      font-size: 0.75rem;
+      color: var(
+        --wakeb-tree-paragraph-tertiary,
+        var(--wakeb-tree-fallback, #667085)
+      );
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+  }
+
+  &__toggle {
+    transition: transform 0.3s ease;
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__children {
+    position: relative;
+    padding-inline-start: 24px;
+  }
+}
+
+/* Transition */
+.tree-expand-enter-active,
+.tree-expand-leave-active {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.tree-expand-enter-from,
+.tree-expand-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+
+.tree-expand-enter-to,
+.tree-expand-leave-from {
+  opacity: 1;
+  max-height: 2000px;
+}
+
+:deep(.tree__toggle) {
+  color: var(--wakeb-tree-toggle-color, var(--wakeb-tree-fallback, #667085));
+
+  svg,
+  .svg-icon-wrapper {
+    color: var(--wakeb-tree-toggle-color, var(--wakeb-tree-fallback, #667085));
+  }
+}
+
+.tree__node-content--active :deep(.tree__toggle) {
+  color: var(--wakeb-tree-active-text, var(--wakeb-tree-fallback, #fff));
+
+  svg,
+  .svg-icon-wrapper {
+    color: var(--wakeb-tree-active-text, var(--wakeb-tree-fallback, #fff));
+  }
+}
+:deep(.tree__toggle--open) {
+  transform: rotate(180deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .tree-expand-enter-active,
+  .tree-expand-leave-active,
+  .tree__node-content,
+  .tree__toggle {
+    transition: none !important;
+  }
+}
+.tree__node[role="treeitem"]:focus-visible {
+  outline: 2px solid var(--wakeb-tree-focus, #087f8c);
+  outline-offset: 2px;
+  border-radius: 8px;
+}

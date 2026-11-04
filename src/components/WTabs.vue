@@ -1,14 +1,5 @@
 <script setup lang="ts">
-import {
-  computed,
-  nextTick,
-  onMounted,
-  ref,
-  useId,
-  useSlots,
-  watch,
-  type CSSProperties,
-} from "vue";
+import { ref } from "vue";
 import {
   VTabs,
   VTab,
@@ -18,21 +9,9 @@ import {
 import { VCardText } from "vuetify/components/VCard";
 import { VIcon } from "vuetify/components/VIcon";
 import { useVuetifyIcon } from "../core/icons";
+import { tabsDefaults, useTabs } from "../composables/tabs";
 import type { TabsProps, TabItem, NavigationKey } from "../types";
-const props = withDefaults(defineProps<TabsProps>(), {
-  styleType: "outlined",
-  isVertical: false,
-  tabs: () => [],
-  selectedTab: "",
-  isSwitcherOnly: false,
-  valueKey: "slot",
-  iconOnly: false,
-  tabHeight: null,
-  iconSize: "sm",
-  classList: "",
-  contentGap: null,
-  ariaLabel: "Tabs",
-});
+const props = withDefaults(defineProps<TabsProps>(), tabsDefaults);
 defineSlots<{
   [name: string]: (props: any) => unknown;
   "tab-label"(props: { tabItem: TabItem; index: number }): unknown;
@@ -42,109 +21,21 @@ defineSlots<{
     size: string | number;
   }): unknown;
 }>();
-const tabValue = (item: TabItem) => item[props.valueKey] as NavigationKey;
-const pixelIconSize = computed(
-  () =>
-    (({ xs: 16, sm: 20, md: 24, lg: 32, xl: 40 }) as Record<string, number>)[
-      String(props.iconSize)
-    ] ?? props.iconSize,
-);
-const slots = useSlots();
-const hasHeader = computed(() => Boolean(slots.header));
-const rootStyle = computed(() => {
-  const style: CSSProperties = {};
-
-  if (props.tabHeight != null) {
-    style["--wakeb-tabs-item-height"] = `${props.tabHeight}px`;
-    style["--v-tabs-height"] = `${props.tabHeight}px`;
-  }
-
-  if (props.contentGap != null) {
-    style.gap = `${props.contentGap}px`;
-  }
-
-  return Object.keys(style).length ? style : undefined;
-});
-
-const tabsRoot = ref<HTMLElement | null>(null);
-const uid = useId();
-const tabId = (index: number) => `wakeb-tabs-${uid}-tab-${index}`;
-const panelId = (index: number) => `wakeb-tabs-${uid}-panel-${index}`;
 const emits = defineEmits<{ updateTab: [value: NavigationKey | undefined] }>();
-
-/** Empty selectedTab + isSwitcherOnly = no highlight (dual rails on settings). */
-function tabFromProps() {
-  if (props.selectedTab !== "" && props.selectedTab != null)
-    return props.selectedTab;
-  if (props.isSwitcherOnly) return undefined;
-  return props.tabs[0] ? tabValue(props.tabs[0]) : undefined;
-}
-
-const tab = ref<NavigationKey | undefined>(tabFromProps());
-
-const hasCustomHtml = (tabItem: TabItem) => {
-  return (
-    typeof tabItem?.customHTML === "function" ||
-    typeof tabItem?.customHTML === "string"
-  );
-};
-
-const resolveCustomHtml = (tabItem: TabItem) => {
-  if (typeof tabItem?.customHTML === "function") {
-    const context = {
-      value: tabItem?.[props.valueKey],
-      isSelected: tab.value === tabItem?.[props.valueKey],
-    };
-    return tabItem.customHTML(tabItem, context) || "";
-  }
-
-  if (typeof tabItem?.customHTML === "string") return tabItem.customHTML;
-  return "";
-};
-
-const resolveItemClassList = (tabItem: TabItem, index: number) => {
-  const itemClassList = tabItem?.itemClassList;
-  if (typeof itemClassList === "function") {
-    return (
-      itemClassList(tabItem, index, {
-        value: tabItem?.[props.valueKey],
-        isSelected: tab.value === tabItem?.[props.valueKey],
-      }) || ""
-    );
-  }
-
-  return itemClassList || "";
-};
-
-let syncingFromProps = false;
-let acceptTabChange = false;
-
-watch(
-  () => [props.selectedTab, props.isSwitcherOnly],
-  () => {
-    syncingFromProps = true;
-    tab.value = tabFromProps();
-    nextTick(() => {
-      syncingFromProps = false;
-    });
-  },
-);
-watch(tab, (newVal, oldVal) => {
-  if (!acceptTabChange || syncingFromProps) return;
-  if (newVal === oldVal) return;
-  emits("updateTab", newVal);
-});
-
-onMounted(() => {
-  nextTick(() => {
-    syncingFromProps = true;
-    tab.value = tabFromProps();
-    nextTick(() => {
-      syncingFromProps = false;
-      acceptTabChange = true;
-    });
-  });
-});
+/* Selection sync, ids and legacy callbacks are shared (composables/tabs); VTabs owns focus and arrow keys. */
+const {
+  tab,
+  tabValue,
+  pixelIconSize,
+  hasHeader,
+  rootStyle,
+  tabId,
+  panelId,
+  hasCustomHtml,
+  resolveCustomHtml,
+  resolveItemClassList,
+} = useTabs(props, emits, ["--v-tabs-height"]);
+const tabsRoot = ref<HTMLElement | null>(null);
 const toIcon = useVuetifyIcon();
 </script>
 <template>
@@ -166,6 +57,7 @@ const toIcon = useVuetifyIcon();
     >
       <v-tabs
         :aria-label="ariaLabel"
+        :aria-orientation="isVertical ? 'vertical' : undefined"
         :direction="isVertical ? 'vertical' : 'horizontal'"
         v-model="tab"
       >

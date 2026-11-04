@@ -264,7 +264,7 @@ font and render the same way on every provider:
 | --- | --- | --- |
 | `$expand` | Chevron down | WButton `isDropdown` indicator, WAccordion `icon`, WDropdown `expandIcon` |
 | `$collapse` | Chevron up | WDropdown `collapseIcon` |
-| `$prev`, `$next` | Chevron left, chevron right | Available for consumers |
+| `$prev`, `$next` | Chevron left, chevron right | PrimeVue WCarousel arrows |
 | `$close` | Cross | Available for consumers |
 | `$loading` | Quarter arc (static; animate it with CSS) | Available for consumers |
 | `$complete` | Check mark | Available for consumers |
@@ -560,6 +560,7 @@ errors, and production builds drop them.
 | --- | --- | --- |
 | WButton, WDropdown, WModal, WLoading | Yes | Yes |
 | WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WPageSkeleton | Yes | Yes |
+| WTabs, WTree, WCarousel | Yes | Yes (native Wakeb markup) |
 | The other components | Yes | Not yet: `WAKEB_COMPONENT_UNSUPPORTED` |
 | shadcn-vue | — | Planned (milestone M5) |
 
@@ -568,6 +569,14 @@ errors, and production builds drop them.
 - **Same contract, different DOM.** WButton, WDropdown and WModal pass the same contract tests
   on both providers. Their markup differs: PrimeVue renders the menu and dialog with its own
   overlay elements.
+- **Tabs, tree and carousel on PrimeVue.** PrimeVue's Tabs, Tree and Carousel use other models
+  (generated ids, eager or unmounting panels, key maps for expansion, pages of several items), so
+  WTabs, WTree and WCarousel render Wakeb-owned markup and Wakeb CSS under PrimeVue. Selection,
+  ids, keyboard handling, focus recovery and the carousel timer come from the same shared code as
+  the Vuetify renderers, and one contract suite runs on both providers. The DOM differs: no
+  `.v-*` classes, a plain `role="tablist"` with `<button role="tab">` items, and slides that
+  switch without a transition or swipe gestures. The PrimeVue WTree branch toggle is the
+  PrimeVue WButton.
 - **Vuetify-only attributes.** `max-width` on WModal and other native Vuetify attributes stay a
   Vuetify compatibility surface. On PrimeVue, use the typed `width` prop.
 - **PrimeVue tooltip.** The PrimeVue WButton tooltip opens on hover only. The button still

@@ -1,29 +1,8 @@
 <script setup lang="ts">
-import { computed, inject, provide, ref, watch, type Ref } from "vue";
 import WButton from "./WButton.vue";
-import type {
-  TreeProps,
-  TreeNode,
-  TreeToggleSlotProps,
-  NavigationKey,
-} from "../types";
-const props = withDefaults(defineProps<TreeProps>(), {
-  nodes: () => [],
-  itemKey: "id",
-  itemLabel: "name",
-  itemDescription: "description",
-  childrenKey: "children",
-  level: 0,
-  isRoot: true,
-  expandedKeys: () => [],
-  activeKey: null,
-  activePath: () => [],
-  rtl: false,
-  editingNodeId: null,
-  keyboardNavigation: true,
-  ariaLabel: "Tree",
-  toggleLabel: "Toggle branch",
-});
+import { treeDefaults, useTree } from "../composables/tree";
+import type { TreeProps, TreeNode, TreeToggleSlotProps } from "../types";
+const props = withDefaults(defineProps<TreeProps>(), treeDefaults);
 const emit = defineEmits<{
   "node-click": [node: TreeNode];
   toggle: [node: TreeNode];
@@ -34,227 +13,28 @@ defineSlots<{
   "toggle-leading"?(props: TreeToggleSlotProps): unknown;
   "toggle-trailing"?(props: TreeToggleSlotProps): unknown;
 }>();
-const keyOf = (node: TreeNode) => node[props.itemKey] as NavigationKey;
-const childrenOf = (node: TreeNode) =>
-  Array.isArray(node[props.childrenKey])
-    ? (node[props.childrenKey] as readonly TreeNode[])
-    : [];
-const treeRoot = ref<HTMLElement | null>(null);
-const inherited = inject<Ref<NavigationKey | undefined> | null>(
-  "wakeb-tree-focus",
-  null,
-);
-const focusKey =
-  props.isRoot || !inherited
-    ? ref<NavigationKey | undefined>(
-        props.nodes[0] ? keyOf(props.nodes[0]) : undefined,
-      )
-    : inherited;
-provide("wakeb-tree-focus", focusKey);
-const visibleKeys = computed(() => {
-  const keys: NavigationKey[] = [];
-  const walk = (nodes: readonly TreeNode[]) => {
-    for (const node of nodes) {
-      keys.push(keyOf(node));
-      if (props.expandedKeys.includes(keyOf(node))) walk(childrenOf(node));
-    }
-  };
-  walk(props.nodes);
-  return keys;
-});
-function clickNode(event: MouseEvent, node: TreeNode) {
-  if (props.keyboardNavigation)
-    (event.currentTarget as HTMLElement)
-      .closest<HTMLElement>("[role=treeitem]")
-      ?.focus();
-  emit("node-click", node);
-}
-
-function onNodeKeydown(event: KeyboardEvent, node: TreeNode) {
-  if (
-    !props.keyboardNavigation ||
-    event.altKey ||
-    event.ctrlKey ||
-    event.metaKey
-  )
-    return;
-  const el = event.currentTarget as HTMLElement,
-    root = el.closest("[role=tree]") ?? treeRoot.value;
-  const items = Array.from(
-    root?.querySelectorAll<HTMLElement>("[role=treeitem]") ?? [],
-  ).filter((e) => !e.closest(".tree-expand-leave-active"));
-  const index = items.indexOf(el);
-  let target: HTMLElement | undefined;
-  const expand = props.rtl ? "ArrowLeft" : "ArrowRight",
-    collapse = props.rtl ? "ArrowRight" : "ArrowLeft";
-  if (event.key === "Enter" || event.key === " ") {
-    event.preventDefault();
-    emit("node-click", node);
-    return;
-  }
-  if (event.key === "ArrowDown")
-    target = items[Math.min(items.length - 1, index + 1)];
-  else if (event.key === "ArrowUp") target = items[Math.max(0, index - 1)];
-  else if (event.key === "Home") target = items[0];
-  else if (event.key === "End") target = items.at(-1);
-  else if (event.key === expand) {
-    if (hasChildren(node) && !isExpanded(node)) {
-      event.preventDefault();
-      emit("toggle", node);
-      return;
-    }
-    if (isExpanded(node))
-      target = el.querySelector<HTMLElement>("[role=treeitem]") ?? undefined;
-  } else if (event.key === collapse) {
-    if (hasChildren(node) && isExpanded(node)) {
-      event.preventDefault();
-      emit("toggle", node);
-      return;
-    }
-    target =
-      el.parentElement?.closest<HTMLElement>("[role=treeitem]") ?? undefined;
-  } else return;
-  event.preventDefault();
-  target?.focus();
-}
-const findPathToNode = (
-  nodes: readonly TreeNode[],
-  targetKey: NavigationKey,
-): NavigationKey[] | null => {
-  for (const node of nodes) {
-    if (keyOf(node) === targetKey) return [targetKey];
-    const children = childrenOf(node);
-    if (children?.length) {
-      const path = findPathToNode(children, targetKey);
-      if (path) return [keyOf(node), ...path];
-    }
-  }
-  return null;
-};
-
-const resolvedActivePath = computed(() => {
-  if (props.isRoot && props.activeKey != null) {
-    return findPathToNode(props.nodes, props.activeKey) || [];
-  }
-  return props.activePath;
-});
-
-const hasChildren = (node: TreeNode) => {
-  return childrenOf(node) && childrenOf(node).length > 0;
-};
-
-const isExpanded = (node: TreeNode) => {
-  return props.expandedKeys.includes(keyOf(node));
-};
-
-const isActive = (node: TreeNode) => {
-  return props.activeKey != null && keyOf(node) === props.activeKey;
-};
-
-const isInActivePath = (node: TreeNode) => {
-  return resolvedActivePath.value.includes(keyOf(node));
-};
-
-const activePathIndex = computed(() => {
-  return props.nodes.findIndex((n) => isInActivePath(n));
-});
-
-const isTrunkTopActive = (index: number) => {
-  return activePathIndex.value >= 0 && index <= activePathIndex.value;
-};
-
-const isTrunkBottomActive = (index: number) => {
-  return activePathIndex.value >= 0 && index < activePathIndex.value;
-};
-
-const toggleNode = (node: TreeNode) => {
-  emit("toggle", node);
-};
-
-const toggleSlotProps = (node: TreeNode): TreeToggleSlotProps => ({
-  node,
-  level: props.level,
-  expanded: isExpanded(node),
-  hasChildren: hasChildren(node),
-  toggle: () => toggleNode(node),
-});
-
-const isInlineEditingNode = (node: TreeNode) => {
-  if (props.editingNodeId == null) return false;
-  const key = keyOf(node);
-  return (
-    key === props.editingNodeId || String(key) === String(props.editingNodeId)
-  );
-};
-
-const ownsFocus = props.isRoot || !inherited;
-let previousKeys: NavigationKey[] = [];
-/** Prefer the nearest visible ancestor, then the previous visible row, so a hidden or removed row hands focus to a neighbour. */
-function nextFocusKey(keys: NavigationKey[], lost: NavigationKey | undefined) {
-  if (lost !== undefined) {
-    const path = findPathToNode(props.nodes, lost) ?? [];
-    for (let i = path.length - 2; i >= 0; i--)
-      if (keys.includes(path[i])) return path[i];
-    const old = previousKeys.indexOf(lost);
-    for (let i = old - 1; i >= 0; i--)
-      if (keys.includes(previousKeys[i])) return previousKeys[i];
-  }
-  return keys.includes(props.activeKey as NavigationKey)
-    ? (props.activeKey as NavigationKey)
-    : keys[0];
-}
-if (ownsFocus)
-  watch(
-    visibleKeys,
-    (keys) => {
-      if (focusKey.value === undefined || !keys.includes(focusKey.value))
-        focusKey.value = nextFocusKey(keys, focusKey.value);
-      previousKeys = keys;
-    },
-    { immediate: true },
-  );
-
-// Restores DOM focus only when it was inside this tree and its row disappeared; focus elsewhere is never taken.
-let focusWithin = false;
-function onFocusIn() {
-  focusWithin = true;
-}
-function onFocusOut(event: FocusEvent) {
-  const next = event.relatedTarget as Node | null;
-  if (next) {
-    focusWithin = Boolean(treeRoot.value?.contains(next));
-    return;
-  }
-  const target = event.target as Node;
-  queueMicrotask(() => {
-    if (target.isConnected) focusWithin = false;
-  });
-}
-const rowIsVisible = (row: Element | null) =>
-  !row ||
-  visibleKeys.value.some(
-    (key) => String(key) === row.getAttribute("data-tree-key"),
-  );
-if (ownsFocus)
-  watch(
-    visibleKeys,
-    () => {
-      const root = treeRoot.value;
-      if (!root || typeof document === "undefined") return;
-      const active = document.activeElement;
-      // A leaving row still holds focus during its transition; a removed row leaves focus on body.
-      const lost =
-        (active &&
-          root.contains(active) &&
-          !rowIsVisible(active.closest("[data-tree-key]"))) ||
-        (focusWithin && (!active || active === document.body));
-      if (!lost) return;
-      Array.from(root.querySelectorAll<HTMLElement>("[data-tree-key]"))
-        .find((row) => row.dataset.treeKey === String(focusKey.value))
-        ?.focus();
-    },
-    { flush: "post" },
-  );
+/* Expansion, active path, roving focus and keys are shared with every provider (composables/tree). */
+const {
+  treeRoot,
+  keyOf,
+  childrenOf,
+  hasChildren,
+  isExpanded,
+  isActive,
+  isFocusTarget,
+  setFocusTarget,
+  clickNode,
+  onNodeKeydown,
+  resolvedActivePath,
+  isInActivePath,
+  isTrunkTopActive,
+  isTrunkBottomActive,
+  toggleNode,
+  toggleSlotProps,
+  isInlineEditingNode,
+  onFocusIn,
+  onFocusOut,
+} = useTree(props, emit);
 </script>
 <template>
   <ul
@@ -262,8 +42,8 @@ if (ownsFocus)
     :role="keyboardNavigation ? (isRoot ? 'tree' : 'group') : undefined"
     :aria-label="keyboardNavigation && isRoot ? ariaLabel : undefined"
     class="tree"
-    @focusin="ownsFocus && keyboardNavigation && onFocusIn()"
-    @focusout="ownsFocus && keyboardNavigation && onFocusOut($event)"
+    @focusin="onFocusIn"
+    @focusout="onFocusOut"
     :class="{ 'tree--root': isRoot, 'tree--rtl': rtl }"
   >
     <li
@@ -283,9 +63,9 @@ if (ownsFocus)
       :aria-posinset="keyboardNavigation ? index + 1 : undefined"
       :aria-setsize="keyboardNavigation ? nodes.length : undefined"
       :tabindex="
-        keyboardNavigation ? (focusKey === node[itemKey] ? 0 : -1) : undefined
+        keyboardNavigation ? (isFocusTarget(node) ? 0 : -1) : undefined
       "
-      @focus="keyboardNavigation && (focusKey = keyOf(node))"
+      @focus="keyboardNavigation && setFocusTarget(node)"
       @keydown.self="onNodeKeydown($event, node)"
       :class="{
         'tree__node--expanded': isExpanded(node),
@@ -445,274 +225,7 @@ if (ownsFocus)
   </ul>
 </template>
 
+
 <style lang="scss" scoped>
-.tree {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-
-  &--rtl {
-    direction: rtl;
-    text-align: start;
-  }
-
-  &--root {
-    > .tree__node {
-      > .tree__node-content {
-        border-radius: 12px;
-      }
-    }
-  }
-
-  &__node {
-    position: relative;
-    &-line {
-      &-curve {
-        position: absolute;
-        inset-inline-start: -12px;
-        top: 0;
-        height: 50%;
-        width: 20px;
-        z-index: 1;
-        pointer-events: none;
-        border-inline-start: 1.5px solid
-          var(--wakeb-tree-input-border, var(--wakeb-tree-fallback, #d0d5dd));
-        border-bottom: 1.5px solid
-          var(--wakeb-tree-input-border, var(--wakeb-tree-fallback, #d0d5dd));
-        border-end-start-radius: 10px;
-        transition: border-color 0.3s ease;
-
-        &--trunk-active {
-          border-inline-start-color: var(
-            --wakeb-tree-primary,
-            var(--wakeb-tree-fallback, #087f8c)
-          );
-        }
-
-        &--active {
-          border-color: var(
-            --wakeb-tree-primary,
-            var(--wakeb-tree-fallback, #087f8c)
-          );
-        }
-      }
-
-      &-trunk-bottom {
-        position: absolute;
-        inset-inline-start: -12px;
-        top: 50%;
-        bottom: 0;
-        width: 1.5px;
-        z-index: 1;
-        pointer-events: none;
-        background-color: var(
-          --wakeb-tree-input-border,
-          var(--wakeb-tree-fallback, #d0d5dd)
-        );
-        transition: background-color 0.3s ease;
-
-        &--active {
-          background-color: var(
-            --wakeb-tree-primary,
-            var(--wakeb-tree-fallback, #087f8c)
-          );
-        }
-      }
-    }
-
-    &--trunk > .tree__children::before {
-      content: "";
-      position: absolute;
-      inset-inline-start: 12px;
-      top: 0;
-      bottom: 0;
-      width: 1.5px;
-      z-index: 1;
-      pointer-events: none;
-      background-color: var(
-        --wakeb-tree-input-border,
-        var(--wakeb-tree-fallback, #d0d5dd)
-      );
-      transition: background-color 0.3s ease;
-    }
-
-    &--trunk-active > .tree__children::before {
-      background-color: var(
-        --wakeb-tree-primary,
-        var(--wakeb-tree-fallback, #087f8c)
-      );
-    }
-
-    &-content {
-      position: relative;
-      display: flex;
-      align-items: center;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s;
-      min-height: 48px;
-
-      &:hover:not(.tree__node-content--active) {
-        background: var(
-          --wakeb-tree-hover-bg,
-          var(--wakeb-tree-fallback, #f2f4f7)
-        );
-      }
-
-      &--active {
-        background: var(
-          --wakeb-tree-primary,
-          var(--wakeb-tree-fallback, #087f8c)
-        );
-
-        .tree__node-label {
-          color: var(
-            --wakeb-tree-active-text,
-            var(--wakeb-tree-fallback, #fff)
-          );
-        }
-
-        .tree__node-description {
-          color: var(
-            --wakeb-tree-active-text,
-            var(--wakeb-tree-fallback, #fff)
-          );
-          opacity: 0.82;
-        }
-      }
-    }
-
-    &-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      gap: 12px;
-    }
-
-    &-start {
-      display: flex;
-      align-items: center;
-      flex: 1;
-      gap: 8px;
-      min-width: 0;
-    }
-
-    &-toggle-leading {
-      display: flex;
-      align-items: center;
-      flex-shrink: 0;
-
-      &:empty {
-        display: none;
-      }
-    }
-
-    &-info {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      z-index: 2;
-      min-width: 0;
-    }
-
-    &-label {
-      font-weight: 600;
-      font-size: 0.875rem;
-      color: var(
-        --wakeb-tree-paragraph-primary,
-        var(--wakeb-tree-fallback, #101828)
-      );
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    &-description {
-      font-size: 0.75rem;
-      color: var(
-        --wakeb-tree-paragraph-tertiary,
-        var(--wakeb-tree-fallback, #667085)
-      );
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    &-actions {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-  }
-
-  &__toggle {
-    transition: transform 0.3s ease;
-
-    &--open {
-      transform: rotate(180deg);
-    }
-  }
-
-  &__children {
-    position: relative;
-    padding-inline-start: 24px;
-  }
-}
-
-/* Transition */
-.tree-expand-enter-active,
-.tree-expand-leave-active {
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.tree-expand-enter-from,
-.tree-expand-leave-to {
-  opacity: 0;
-  max-height: 0;
-}
-
-.tree-expand-enter-to,
-.tree-expand-leave-from {
-  opacity: 1;
-  max-height: 2000px;
-}
-
-:deep(.tree__toggle) {
-  color: var(--wakeb-tree-toggle-color, var(--wakeb-tree-fallback, #667085));
-
-  svg,
-  .svg-icon-wrapper {
-    color: var(--wakeb-tree-toggle-color, var(--wakeb-tree-fallback, #667085));
-  }
-}
-
-.tree__node-content--active :deep(.tree__toggle) {
-  color: var(--wakeb-tree-active-text, var(--wakeb-tree-fallback, #fff));
-
-  svg,
-  .svg-icon-wrapper {
-    color: var(--wakeb-tree-active-text, var(--wakeb-tree-fallback, #fff));
-  }
-}
-:deep(.tree__toggle--open) {
-  transform: rotate(180deg);
-}
-@media (prefers-reduced-motion: reduce) {
-  .tree-expand-enter-active,
-  .tree-expand-leave-active,
-  .tree__node-content,
-  .tree__toggle {
-    transition: none !important;
-  }
-}
-.tree__node[role="treeitem"]:focus-visible {
-  outline: 2px solid var(--wakeb-tree-focus, #087f8c);
-  outline-offset: 2px;
-  border-radius: 8px;
-}
+@use "../styles/tree";
 </style>

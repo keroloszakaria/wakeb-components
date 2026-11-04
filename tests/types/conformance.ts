@@ -37,6 +37,9 @@ import type PrimeVueWPageSkeleton from "../../src/adapters/primevue/WPageSkeleto
 import type PrimeVueWSegmentedProgress from "../../src/adapters/primevue/WSegmentedProgress.vue";
 import type PrimeVueWSemiCircleGauge from "../../src/adapters/primevue/WSemiCircleGauge.vue";
 import type PrimeVueWVerticalSteps from "../../src/adapters/primevue/WVerticalSteps.vue";
+import type PrimeVueWTabs from "../../src/adapters/primevue/WTabs.vue";
+import type PrimeVueWTree from "../../src/adapters/primevue/WTree.vue";
+import type PrimeVueWCarousel from "../../src/adapters/primevue/WCarousel.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -99,6 +102,9 @@ interface PrimeVue {
   WSegmentedProgress: typeof PrimeVueWSegmentedProgress;
   WSemiCircleGauge: typeof PrimeVueWSemiCircleGauge;
   WVerticalSteps: typeof PrimeVueWVerticalSteps;
+  WTabs: typeof PrimeVueWTabs;
+  WTree: typeof PrimeVueWTree;
+  WCarousel: typeof PrimeVueWCarousel;
 }
 
 /** The Vuetify renderer set is complete: every public component has one. */

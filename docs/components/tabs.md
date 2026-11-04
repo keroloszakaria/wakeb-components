@@ -1,7 +1,7 @@
 <!-- Generated from docs/reference-data.mjs -->
 # WTabs
 
-Styled tab rails and lazy Vuetify panels with explicit selection events.
+Styled tab rails and lazily mounted panels with explicit selection events.
 
 ## Usage
 
@@ -73,7 +73,7 @@ The root layout `div.wakeb-tabs`. Tabs and panels keep Wakeb's ids, roles and ar
 
 ## Accessibility and limits
 
-Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation. Each tab has an id unique within the app; the selected tab references its rendered role=tabpanel wrapper (div.wakeb-tabs__panel) through aria-controls, and the panel is labelled by its tab; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content.
+Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation. Each tab has an id unique within the app; the selected tab references its rendered role=tabpanel wrapper (div.wakeb-tabs__panel) through aria-controls, and the panel is labelled by its tab; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content. A vertical rail sets aria-orientation=vertical on the tablist. PrimeVue: Wakeb renders the tablist itself (a div with role=tablist and button role=tab items) because PrimeVue Tabs generates its own ids and mounts all panels or unmounts hidden ones. Selection, ids and events come from the same shared code as Vuetify. Keys follow the Vuetify slide group: manual activation with click, Enter or Space; arrows move focus along the orientation, wrap, and reverse horizontally when the tablist is RTL; Home/End jump to the ends; the selected tab, or the first tab when none is selected, is the single tab stop. Panels mount on first selection and stay mounted, switching without a transition. Icons render through the Wakeb icon resolver. The tab look comes from the same --wakeb-tabs-* variables on Wakeb markup, not from PrimeVue styles.
 
 ## Try it
 

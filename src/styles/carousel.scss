@@ -1,0 +1,39 @@
+/* WCarousel indicator styles shared by every provider renderer. */
+.carousel-indicators {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.5rem;
+  z-index: 10;
+  .indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: var(
+      --wakeb-carousel-indicator-bg,
+      var(--wakeb-carousel-fallback, #98a2b3)
+    );
+    transition: all 0.3s ease;
+    &.active {
+      background: var(
+        --wakeb-carousel-indicator-active-bg,
+        var(--wakeb-carousel-fallback, #087f8c)
+      );
+      width: 28px;
+      border-radius: 5px;
+    }
+    &[data-wakeb-keyboard]:focus-visible {
+      outline: 2px solid var(--wakeb-carousel-focus, #087f8c);
+      outline-offset: 3px;
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    transition: none !important;
+  }
+}

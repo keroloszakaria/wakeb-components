@@ -257,7 +257,7 @@ export default createWakebComponents({
 | --- | --- | --- |
 | `$expand` | سهم للأسفل | مؤشر `isDropdown` في WButton، و`icon` في WAccordion، و`expandIcon` في WDropdown |
 | `$collapse` | سهم للأعلى | `collapseIcon` في WDropdown |
-| `$prev` و`$next` | سهم لليسار وسهم لليمين | متاحة للاستخدام |
+| `$prev` و`$next` | سهم لليسار وسهم لليمين | أسهم WCarousel على PrimeVue |
 | `$close` | علامة إغلاق | متاحة للاستخدام |
 | `$loading` | ربع قوس (ثابت؛ حرّكه عبر CSS) | متاحة للاستخدام |
 | `$complete` | علامة صح | متاحة للاستخدام |
@@ -552,6 +552,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | --- | --- | --- |
 | WButton وWDropdown وWModal وWLoading | مدعوم | مدعوم |
 | WSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton | مدعوم | مدعوم |
+| WTabs وWTree وWCarousel | مدعوم | مدعوم (markup أصلي من Wakeb) |
 | بقية المكونات | مدعوم | ليس بعد: `WAKEB_COMPONENT_UNSUPPORTED` |
 | shadcn-vue | — | مخطط له (المرحلة M5) |
 
@@ -559,6 +560,14 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 
 - **نفس العقد مع DOM مختلف.** تجتاز WButton وWDropdown وWModal نفس اختبارات العقد على
   المزودين، لكن الـmarkup مختلف: يرسم PrimeVue القائمة والنافذة بعناصر الطبقة الخاصة به.
+- **التبويبات والشجرة والعرض المتتابع على PrimeVue.** تعتمد مكونات Tabs وTree وCarousel في
+  PrimeVue نماذج مختلفة (معرفات مولّدة، ولوحات تُركَّب كلها أو تُزال عند إخفائها، وخرائط مفاتيح
+  للفتح، وصفحات من عدة عناصر)، لذلك ترسم WTabs وWTree وWCarousel على PrimeVue markup وأنماطًا
+  يملكها Wakeb. يأتي التحديد والمعرفات والتعامل مع لوحة المفاتيح واستعادة التركيز ومؤقت العرض
+  المتتابع من الكود المشترك نفسه الذي تستخدمه renderers ‏Vuetify، وتعمل مجموعة اختبارات عقد
+  واحدة على المزودين. الـDOM مختلف: لا توجد classes ‏`.v-*`، وقائمة `role="tablist"` بسيطة
+  بعناصر `<button role="tab">`، والشرائح تتبدل دون حركة انتقال أو إيماءات سحب. زر فتح الفرع
+  في WTree على PrimeVue هو WButton الخاص بـPrimeVue.
 - **سمات خاصة بـVuetify.** تبقى `max-width` في WModal وبقية سمات Vuetify الأصلية واجهة توافق
   مع Vuetify فقط. على PrimeVue استخدم الخاصية `width`.
 - **التلميح في PrimeVue.** يفتح تلميح WButton على PrimeVue عند مرور المؤشر فقط، ويبقى للزر

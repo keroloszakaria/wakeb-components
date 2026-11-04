@@ -1,5 +1,15 @@
 # سجل التغييرات
 
+## غير منشور (إصدار تجريبي للإطار)
+
+تغيير غير متوافق: الاستيراد من جذر الحزمة يتطلب الآن ملف plugin والدالة `wakebComponents()` من `wakeb-components/vite`. استمر على 0.7.x لاستخدام Vuetify وحده دون تكامل في البناء.
+
+- إضافة `createWakebComponents({ framework })` وتكامل البناء `wakeb-components/vite` ورموز أخطاء `WakebError` وبيانات `capabilities`.
+- يقرأ تكامل البناء قيمة framework من ملف الـplugin دون تشغيله، ولا يضم إلا renderers المزود المختار. الصيغ غير المدعومة تفشل برسالة واضحة.
+- أوضاع المزود `auto` و`reuse` و`install` تعيد استخدام نسخة Vuetify أو PrimeVue في التطبيق دون تغيير الـtheme أو القيم الافتراضية.
+- محوّل PrimeVue 4 تجريبي لـWButton وWDropdown وWModal وWLoading، وبقية المكونات تعلن `WAKEB_COMPONENT_UNSUPPORTED`.
+- لم يعد `SharedIcon` يشير إلى أنواع Vuetify.
+
 ## غير منشور (0.7.x)
 
 - إصلاح WSegmentedProgress بحيث لا يؤثر طول النص على نسبة الجزء الممتلئ.

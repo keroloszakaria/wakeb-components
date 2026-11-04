@@ -3,12 +3,13 @@ import { mount, type VueWrapper } from "@vue/test-utils";
 import { createSSRApp, h, nextTick, ref } from "vue";
 import { renderToString } from "@vue/server-renderer";
 import { createVuetify } from "vuetify";
+import { wakeb } from "./wakeb";
 import { WButton, WBadge, WAccordion } from "../src";
 const wrappers: VueWrapper[] = [];
 function render(component: any, options: any = {}) {
   const wrapper = mount(component, {
     attachTo: document.body,
-    global: { plugins: [createVuetify()] },
+    global: { plugins: [createVuetify(), wakeb()] },
     ...options,
   });
   wrappers.push(wrapper);
@@ -304,7 +305,7 @@ describe("WAccordion", () => {
       ]);
     const renderPage = () =>
       renderToString(
-        createSSRApp({ render: view }).use(createVuetify({ ssr: true })),
+        createSSRApp({ render: view }).use(createVuetify({ ssr: true })).use(wakeb()),
       );
     const html = await renderPage();
     const ids = [...html.matchAll(/id="(wakeb-accordion-[^"]+)"/g)].map(

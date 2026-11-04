@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased (framework alpha)
+
+- Breaking: root imports need a plugin file and `wakebComponents()` from `wakeb-components/vite`.
+- Add `createWakebComponents`, static provider selection, host provider reuse modes, `WakebError` codes and a PrimeVue 4 alpha adapter for WButton, WDropdown, WModal and WLoading.
+
 ## Unreleased (0.7.x)
 
 - Fix progress geometry, dropdown value precedence, null clearing and item refresh, disabled link navigation, menu roles, tab-panel ARIA, tree focus recovery, button loading activation, teleported circle badge styles, secondary button tokens and modal description/width handling.

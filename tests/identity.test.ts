@@ -2,13 +2,14 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { mount, type VueWrapper } from "@vue/test-utils";
 import { h, nextTick } from "vue";
 import { createVuetify } from "vuetify";
+import { wakeb } from "./wakeb";
 import { VTooltip } from "vuetify/components/VTooltip";
 import { WBadgeStack, WUserBadge, WTooltipBtn, WBadge } from "../src";
 const wrappers: VueWrapper[] = [];
 function render(component: any, options: any = {}) {
   const w = mount(component, {
     attachTo: document.body,
-    global: { plugins: [createVuetify()] },
+    global: { plugins: [createVuetify(), wakeb()] },
     ...options,
   });
   wrappers.push(w);

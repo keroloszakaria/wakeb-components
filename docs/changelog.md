@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased (framework alpha)
+
+Breaking: root imports now need a plugin file and `wakebComponents()` from `wakeb-components/vite`. Stay on 0.7.x for Vuetify-only use without build integration.
+
+- Add `createWakebComponents({ framework })`, the `wakeb-components/vite` build integration, typed `WakebError` codes and `capabilities` metadata.
+- The build integration reads the framework statically from the plugin file and bundles only the selected provider's renderers. Unsupported syntax fails with an actionable error.
+- Host provider modes `auto`, `reuse` and `install` reuse the app's Vuetify or PrimeVue instance without changing its theme or defaults.
+- PrimeVue 4 alpha adapter for WButton, WDropdown, WModal and WLoading; the other components report `WAKEB_COMPONENT_UNSUPPORTED`.
+- `SharedIcon` no longer references Vuetify types.
+
 ## Unreleased (0.7.x)
 
 - Fix WSegmentedProgress so the fill ratio ignores label width.

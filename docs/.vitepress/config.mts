@@ -1,10 +1,13 @@
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "vitepress";
+import { wakebComponents } from "../../src/build/vite";
 import reference from "../reference-data.mjs";
 const sidebar = (ar = false) => {
   const p = ar ? "/ar" : "";
   return [{ text: ar ? "ابدأ هنا" : "Start here", items: [
     { text: ar ? "نظرة عامة" : "Overview", link: `${p}/guide/introduction` },
     { text: ar ? "التثبيت" : "Installation", link: `${p}/guide/installation` },
+    { text: ar ? "المزودات والإعداد" : "Providers and setup", link: `${p}/guide/providers` },
     { text: ar ? "التخصيص" : "Customization", link: `${p}/guide/customization` },
     { text: "SSR", link: `${p}/guide/ssr` },
     { text: ar ? "نماذج البيانات" : "Data models", link: `${p}/guide/data-models` },
@@ -26,5 +29,10 @@ export default defineConfig({
   },
   themeConfig: { logo: "/logo.svg", outline: [2, 3], search: { provider: "local", options: { locales: { ar: { translations: { button: { buttonText: "بحث", buttonAriaLabel: "البحث في التوثيق" }, modal: { noResultsText: "لا توجد نتائج", resetButtonTitle: "مسح البحث", displayDetails: "عرض التفاصيل" } } } } } }, footer: { message: "Vue 3 + Vuetify 3. Built for reuse.", copyright: "MIT © 2026 Wakeb contributors" } },
   markdown: { lineNumbers: true }, ignoreDeadLinks: false,
-  vite: { server: { host: "localhost" }, ssr: { noExternal: ["vuetify"] } },
+  // The docs compile the source package through the same build integration consumers use.
+  vite: {
+    server: { host: "localhost" },
+    resolve: { alias: [{ find: /^wakeb-components$/, replacement: fileURLToPath(new URL("../../src/index.ts", import.meta.url)) }] },
+    plugins: [wakebComponents({ configFile: ".vitepress/plugins/wakeb-components.js" })],
+  },
 });

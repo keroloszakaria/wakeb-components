@@ -3,10 +3,11 @@ import { mount, type VueWrapper } from "@vue/test-utils";
 import { createSSRApp, h, nextTick } from "vue";
 import { renderToString } from "@vue/server-renderer";
 import { createVuetify } from "vuetify";
+import { wakeb } from "./wakeb";
 import { WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps } from "../src";
 const wrappers: VueWrapper[] = [];
 function render(component: any, options: any = {}) {
-  const wrapper = mount(component, { attachTo: document.body, global: { plugins: [createVuetify()] }, ...options });
+  const wrapper = mount(component, { attachTo: document.body, global: { plugins: [createVuetify(), wakeb()] }, ...options });
   wrappers.push(wrapper); return wrapper;
 }
 afterEach(() => { for (const w of wrappers.splice(0)) w.unmount(); document.body.innerHTML = ""; });

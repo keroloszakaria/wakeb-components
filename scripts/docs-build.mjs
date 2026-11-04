@@ -13,11 +13,14 @@ const interfaces = Object.fromEntries(types.statements.filter(ts.isInterfaceDecl
 for (const locale of ["", "ar/"]) {
   assert.ok(readFileSync(join(root, "docs", locale, "guide/data-models.md"), "utf8").includes(readFileSync(join(root, "src/types.ts"), "utf8")), "Public data model docs must match declarations");
 }
-const publicNames = [...readFileSync(join(root,"src/index.ts"),"utf8").matchAll(/default as (\w+)/g)].map(m => m[1]);
+const publicNames = [...readFileSync(join(root,"src/index.ts"),"utf8").matchAll(/^export const (\w+) = \w+Renderer as/gm)].map(m => m[1]);
 assert.deepEqual(reference.map(item=>item.name).sort(),publicNames.sort());
 for (const entry of reference) {
   assert.deepEqual(entry.props.map(row=>row[0]).sort(), interfaces[entry.interface].sort(), `${entry.name} public props documentation`);
-  const source = readFileSync(join(root, "src/components", entry.name + ".vue"), "utf8");
+  const component = readFileSync(join(root, "src/components", entry.name + ".vue"), "utf8");
+  // Behavior and styles shared by every provider renderer live in src/composables and src/styles.
+  const shared = (pattern, dir, ext) => [...component.matchAll(pattern)].map(([, name]) => readFileSync(join(root, "src", dir, name + ext), "utf8"));
+  const source = [component, ...shared(/@use "\.\.\/styles\/([\w-]+)"/g, "styles", ".scss"), ...shared(/from "\.\.\/composables\/([\w-]+)"/g, "composables", ".ts")].join("\n");
   for (const [variable] of entry.variables) for (const token of variable.match(/--[a-z0-9-]+/g) ?? []) assert.ok(source.includes(token), `${entry.name} documents ${token} but never consumes it`);
   for (const [prefix, lang] of [["",0],["ar/",1]]) {
     const title = lang ? ["الاستخدام","المدخلات","Slots","متغيرات CSS","الوصول وحدود السلوك","جرّب بنفسك"] : ["Usage","Props","Slots","CSS variables","Accessibility and limits","Try it"];

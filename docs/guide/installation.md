@@ -1,5 +1,10 @@
 # Installation
 
+::: tip Provider abstraction (unreleased)
+The next major release adds Vuetify and PrimeVue providers behind one API. It needs a plugin
+file and a one-time Vite integration. See [Providers and setup](./providers).
+:::
+
 Install the public npm package in a Vue 3.5 + Vuetify 3.13.2+ project:
 
 ```sh

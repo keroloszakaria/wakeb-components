@@ -1,51 +1,23 @@
 <script setup lang="ts">
-import { computed, ref, useAttrs, watch } from "vue";
+import { computed, useAttrs } from "vue";
 import { VDialog } from "vuetify/components/VDialog";
 import { VCard, VCardTitle } from "vuetify/components/VCard";
 import { VIcon } from "vuetify/components/VIcon";
 import WButton from "./WButton.vue";
 import WLoading from "./WLoading.vue";
+import { modalDefaults, useDisclosure } from "../composables/disclosure";
+import { useWakebContext } from "../core/runtime";
 import type { ModalProps } from "../types";
 defineOptions({ inheritAttrs: false });
-const props = withDefaults(defineProps<ModalProps>(), {
-  modelValue: false,
-  title: "",
-  description: "",
-  persistent: true,
-  closable: true,
-  loading: false,
-  dataLoaded: true,
-  showActions: true,
-  titleClass: "",
-  headerIcon: "",
-  closeLabel: "Close",
-  loadingLabel: "Loading",
-  ariaLabel: "Dialog",
-});
+const props = withDefaults(defineProps<ModalProps>(), modalDefaults);
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
   afterLeave: [];
 }>();
-const attrs = useAttrs(),
-  open = ref(props.modelValue);
-watch(
-  () => props.modelValue,
-  (value) => {
-    open.value = value;
-  },
-);
-const dialog = computed({
-  get: () => open.value,
-  set: (value) => {
-    if (open.value === value) return;
-    open.value = value;
-    emit("update:modelValue", value);
-  },
-});
-const close = () => {
-  dialog.value = false;
-};
-/** The typed width prop wins; a native max-width attr applies only when width is absent. */
+useWakebContext("WModal");
+const attrs = useAttrs();
+const { model: dialog, close } = useDisclosure(props, emit);
+/** The typed width prop wins; a native max-width attr applies only when width is absent (Vuetify compatibility surface). */
 const maxWidth = computed(
   () =>
     props.width ??

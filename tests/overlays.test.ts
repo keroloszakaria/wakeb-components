@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { flushPromises, mount, type VueWrapper } from "@vue/test-utils";
 import { defineComponent, h, nextTick } from "vue";
 import { createVuetify } from "vuetify";
+import { wakeb } from "./wakeb";
 import { VApp } from "vuetify/components/VApp";
 import { VDialog } from "vuetify/components/VDialog";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
@@ -24,7 +25,7 @@ async function render(component: any, options: any = {}, rtl = false) {
   });
   const host = mount(Host, {
     attachTo: document.body,
-    global: { plugins: [vuetify], stubs: { transition: false } },
+    global: { plugins: [vuetify, wakeb()], stubs: { transition: false } },
   });
   wrappers.push(host);
   await flushPromises();

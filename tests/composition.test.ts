@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { mount, flushPromises, type VueWrapper } from "@vue/test-utils";
 import { h, nextTick } from "vue";
 import { createVuetify } from "vuetify";
+import { wakeb } from "./wakeb";
 import { VCarousel } from "vuetify/components/VCarousel";
 import { VSkeletonLoader } from "vuetify/components/VSkeletonLoader";
 import { WCarousel, WExportDropdown, WBaseSidebar } from "../src";
@@ -9,7 +10,7 @@ const wrappers: VueWrapper[] = [];
 function render(component: any, options: any = {}) {
   const w = mount(component, {
     attachTo: document.body,
-    global: { plugins: [createVuetify()] },
+    global: { plugins: [createVuetify(), wakeb()] },
     ...options,
   });
   wrappers.push(w);

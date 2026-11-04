@@ -60,7 +60,8 @@ export interface VerticalStep { title?: string; time?: string; date?: string; is
 export interface VerticalStepsProps { steps?: readonly VerticalStep[]; label?: string; }
 
 export type ComponentClass = string | Record<string, boolean> | ComponentClass[];
-export type SharedIcon = string | (string | [path: string, opacity: number])[] | import("vuetify").JSXComponent;
+/** Icon name, SVG path list or Vue component. Provider-neutral: no provider types leak through (SPEC R10). */
+export type SharedIcon = string | (string | [path: string, opacity: number])[] | { new (): import("vue").ComponentPublicInstance } | import("vue").FunctionalComponent;
 export interface IconSlotProps { icon: SharedIcon; size: string | number; color: string; maxWidth: string | number; }
 export interface ButtonProps {
   isTooltip?: boolean;

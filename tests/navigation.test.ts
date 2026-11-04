@@ -2,12 +2,13 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { mount, flushPromises, type VueWrapper } from "@vue/test-utils";
 import { h, nextTick, ref } from "vue";
 import { createVuetify } from "vuetify";
+import { wakeb } from "./wakeb";
 import { WTabs, WTree, WDropdown, WButton } from "../src";
 const wrappers: VueWrapper[] = [];
 function render(c: any, o: any = {}) {
   const w = mount(c, {
     attachTo: document.body,
-    global: { plugins: [createVuetify()] },
+    global: { plugins: [createVuetify(), wakeb()] },
     ...o,
   });
   wrappers.push(w);

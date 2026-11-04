@@ -207,10 +207,17 @@ WBadgeStack، و`iconColor` في WAccordion.
 - الـintents هي: `primary` و`secondary` و`success` و`warning` و`danger` و`info` و`neutral`. يُحل كل
   intent إلى متغيره `--wakeb-ui-<intent>`، ثم إلى لون theme المزود، ثم إلى قيمة احتياطية من Wakeb.
   راجع [المزودات والإعداد](./providers).
-- تحت **Vuetify** يظل اسم اللون الخاص بـVuetify يُعرض كما كان خلال فترة الإهمال، مع
-  `WAKEB_DEPRECATED_VALUE`.
-- تحت **PrimeVue** لا يُفهم الاسم نفسه، فيرجع الـprop إلى قيمته الافتراضية مع `WAKEB_UNKNOWN_VALUE`.
-- يرفض TypeScript أسماء ألوان المزود من الآن: نوع الـprop هو `WakebColor`.
+- تظل `color` في WLoading و`avatarColor` في WAvatarStack وWUserBadge تقبل أسماء ألوان Vuetify خلال
+  فترة الإهمال. تحت **Vuetify** يظل الاسم يُعرض كما كان، مع `WAKEB_DEPRECATED_VALUE`. وتحت
+  **PrimeVue** و**shadcn-vue** لا يُفهم الاسم، فيرجع الـprop إلى قيمته الافتراضية مع
+  `WAKEB_UNKNOWN_VALUE`.
+- ما زال TypeScript يقبل هذه الأسماء في هذه الخصائص الثلاث: نوع الـprop هو
+  `WakebColor | WakebDeprecatedColor`، فيُترجَم كود 0.7 دون أخطاء. النوع `WakebDeprecatedColor`
+  موسوم بـ`@deprecated`، ويستمر المحرر في اقتراح القيم القابلة للنقل. ولرفض أسماء المزود من الآن،
+  اجعل نوع قيمك `WakebColor`.
+- لا تعرض خصائص الألوان الأخرى (`color` في WSegmentedProgress، و`dotColor` في WBadge، و`dotColor`
+  و`color` العناصر و`dotColor` العناصر في WBadgeStack، و`iconColor` في WAccordion) أسماء المزود
+  تحت أي مزود: يرجع الاسم إلى القيمة الافتراضية مع `WAKEB_UNKNOWN_VALUE`، ويرفضه نوعها `WakebColor`.
 
 لا ينطبق ذلك على `iconColor` و`color` العناصر في WDropdown؛ فهي تحتفظ بمفاتيح `colorMap` الخاصة بها.
 
@@ -229,7 +236,10 @@ Wakeb، نوعه `WakebBadgeType`، وترسمه CSS الخاصة بـWakeb:
 - في 0.7 كانت `type` تُمرَّر أيضًا إلى Vuetify كـ`color` للـchip. لم تعد كذلك، فيتبع نص الـchip
   وأيقونته لون نص الشارة.
 - النوع الذي ليس في هذه القائمة يُعامَل كاسم لون من Vuetify: تحت Vuetify يظل يُمرَّر كلون للـchip مع
-  `WAKEB_DEPRECATED_VALUE`، ويرفضه TypeScript.
+  `WAKEB_DEPRECATED_VALUE`. وتحت PrimeVue وshadcn-vue تستخدم الشارة `primary` مع `WAKEB_UNKNOWN_VALUE`.
+- ما زال TypeScript يقبل هذا النوع خلال فترة الإهمال: نوع الـprop هو
+  `WakebBadgeType | WakebDeprecatedBadgeType` (وكذلك `badgeType` في WBadgeStack). الجزء المهمل موسوم
+  بـ`@deprecated`؛ اجعل نوع قيمك `WakebBadgeType` لرفض الأسماء الأخرى.
 - `variant="solid"` يملأ الشارة باللون القوي للنوع. يمكنك تغييره بـ`--wakeb-badge-solid-bg`
   و`--wakeb-badge-solid-text`.
 

@@ -341,8 +341,8 @@ Vuetify أيضًا وبالحجم نفسه. لاستخدام شكلك الخاص
 
 ### الـintents والألوان
 
-تقبل خصائص الألوان intent من Wakeb أو لون CSS، ويرفض النوع `WakebColor` أي قيمة أخرى أثناء
-الترجمة:
+تقبل خصائص الألوان intent من Wakeb أو لون CSS، ويصفها النوع `WakebColor` الذي يرفض أي قيمة أخرى
+أثناء الترجمة:
 
 - الـintents: ‏`primary` و`secondary` و`success` و`warning` و`danger` و`info` و`neutral`.
 - ألوان CSS: ‏`#hex` و`rgb()` و`rgba()` و`hsl()` و`hsla()` و`hwb()` و`lab()` و`lch()` و`oklab()`
@@ -384,16 +384,23 @@ Vuetify أيضًا وبالحجم نفسه. لاستخدام شكلك الخاص
 دون tokens يحتفظ تطبيق Vuetify بألوان ثيمه. تأخذ أحرف الصور الرمزية لونها من
 `--wakeb-avatar-text`، ثم `--wakeb-ui-on-primary`، ثم الأبيض.
 
-تتبع أسماء ألوان المزوّد سياسة الإهمال. تحت Vuetify تبقى تُرسم كما كانت، وتسجّل
-`WAKEB_DEPRECATED_VALUE` في وضع التطوير. أما تحت المزودات الأخرى فترجع إلى القيمة الافتراضية
-للخاصية، وتسجّل `WAKEB_UNKNOWN_VALUE`.
+تتبع أسماء ألوان المزوّد سياسة الإهمال في `color` الخاصة بـWLoading و`avatarColor` الخاصة
+بـWAvatarStack وWUserBadge. تحت Vuetify تبقى تُرسم كما كانت، وتسجّل `WAKEB_DEPRECATED_VALUE` في وضع
+التطوير. أما تحت المزودات الأخرى فترجع إلى القيمة الافتراضية للخاصية، وتسجّل `WAKEB_UNKNOWN_VALUE`.
+وخلال فترة الإهمال يكون نوع هذه الخصائص الثلاث `WakebColor | WakebDeprecatedColor`، فيظل كود 0.7
+يجتاز فحص الأنواع، والنوع `WakebDeprecatedColor` موسوم بـ`@deprecated`. أما خصائص الألوان الأخرى
+فتبقى من النوع `WakebColor`: فهي لا تعرض أسماء المزود في هذا الإصدار، وترجع إلى القيمة الافتراضية
+مع `WAKEB_UNKNOWN_VALUE` تحت كل المزودات.
 
 `type` في WBadge مفتاح نمط من Wakeb (`WakebBadgeType`) ترسمه Wakeb CSS، ولم يعد يُرسل إلى
 Vuetify بوصفه `color` للشارة. لذلك يتبع نص الشارة وأيقونتها لون نص الشارة. والنوع غير الموجود في
 القائمة يُعامل كاسم لون من Vuetify، ويخضع لمعالجة الإهمال نفسها. ويملأ `variant="solid"` الشارة
 باللون القوي لنوعها، ويمكن تغييره عبر `--wakeb-badge-solid-bg` و`--wakeb-badge-solid-text`.
-أما تحت PrimeVue فلا يُقرأ النوع غير الموجود في القائمة كلون: تستخدم الشارة `primary` وتسجّل
-`WAKEB_UNKNOWN_VALUE` في وضع التطوير.
+أما تحت PrimeVue وshadcn-vue فلا يُقرأ النوع غير الموجود في القائمة كلون: تستخدم الشارة `primary`
+وتسجّل `WAKEB_UNKNOWN_VALUE` في وضع التطوير. وخلال فترة الإهمال يكون نوع خصائص نوع الشارة (`type`
+في WBadge وWUserBadge وعناصر WBadgeStack، و`badgeType` في WBadgeStack) هو
+`WakebBadgeType | WakebDeprecatedBadgeType`، فيظل هذا النوع يجتاز الترجمة، والجزء المهمل موسوم
+بـ`@deprecated`.
 
 ### أسماء الـSkeleton
 

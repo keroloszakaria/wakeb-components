@@ -22,7 +22,7 @@ import { WBadgeStack } from 'wakeb-components'
 | `max` | `number` | `1` | Visible item slice limit; use a finite nonnegative integer. |
 | `truncateLength` | `number` | `12` | Visible label length including the three-dot suffix. Overflow labels stay full. |
 | `showOverflowMenu` | `boolean` | `false` | Enable a real hover/click/keyboard overflow list on +N (a Vuetify menu or a PrimeVue Popover). |
-| `badgeType` | `string` | `"transparent"` | Default WBadge semantic type. |
+| `badgeType` | `WakebBadgeType \| WakebDeprecatedBadgeType` | `"transparent"` | Default WBadge semantic type. |
 | `badgeVariant` | `BadgeProps["variant"]` | `"soft"` | Style of every badge and of the +N badge; an item variant overrides it per row. Baseline names warn in development. |
 | `badgeBorderRadius` | `string` | `"md"` | Default preset radius. |
 | `customBorderRadius` | `string` | `"sm"` | Legacy custom radius passed verbatim; use a CSS length for new code. |

@@ -71,17 +71,31 @@ const textZIndex = createWakebComponents({ framework: 'vuetify', theme: { tokens
 // @ts-expect-error theme mode is light or dark
 const dimMode = createWakebComponents({ framework: 'vuetify', theme: { mode: 'dim' } });
 void [configured, modelDefault, dataDefault, callbackDefault, wrongDefault, unknownComponent, unknownProp, textZIndex, dimMode];
-// Portable intents and color props (SPEC R23): intents and CSS colors only, never provider names.
+// Portable intents and color props (SPEC R23): WakebColor itself takes intents and CSS colors only.
 const colors: import('wakeb-components').WakebColor[] = ['primary', 'neutral', '#0a7', 'rgb(0 0 0)', 'var(--brand, #000)', 'transparent'];
+// @ts-expect-error the strict portable type still rejects provider color names
+const strictColor: import('wakeb-components').WakebColor = 'red-darken-2';
+// @ts-expect-error the strict portable badge type still rejects provider color names
+const strictBadgeType: import('wakeb-components').WakebBadgeType = 'teal';
 const loading: import('wakeb-components').LoadingProps = { color: 'danger' };
-// @ts-expect-error Vuetify theme names are not portable colors
-const badLoading: import('wakeb-components').LoadingProps = { color: 'error' };
-// @ts-expect-error Vuetify palette names are not portable colors
-const badAvatar: AvatarStackProps = { avatarColor: 'red-darken-2' };
-// @ts-expect-error badge types are Wakeb style keys, not provider colors
-const badBadge: BadgeProps = { type: 'teal' };
+// Deprecated 0.7 values still type-check for one major release (WakebDeprecatedColor, WakebDeprecatedBadgeType).
+const legacyLoading: import('wakeb-components').LoadingProps = { color: 'error' };
+const legacyAvatar: AvatarStackProps = { avatarColor: 'red-darken-2' };
+const legacyUserAvatar: import('wakeb-components').UserBadgeProps = { avatarColor: 'grey-lighten-1', type: 'teal' };
+const legacyBadge: BadgeProps = { type: 'teal', variant: 'outlined' };
+const legacyStack: import('wakeb-components').BadgeStackProps = { badgeType: 'teal', badgeVariant: 'tonal', items: [{ type: 'teal', variant: 'text' }] };
+const deprecatedColor: import('wakeb-components').WakebDeprecatedColor = 'red-darken-2';
+const deprecatedBadgeType: import('wakeb-components').WakebDeprecatedBadgeType = 'teal';
+// @ts-expect-error a color is a string, not a number
+const numericLoading: import('wakeb-components').LoadingProps = { color: 1 };
+// @ts-expect-error a badge type is a string, not an object
+const objectBadge: BadgeProps = { type: { color: 'teal' } };
+// @ts-expect-error unknown variant names are not deprecated aliases
+const unknownVariant: BadgeProps = { variant: 'shiny' };
+// @ts-expect-error colors that only some components still render as provider names stay strict
+const strictDot: BadgeProps = { dotColor: 'red-darken-2' };
 const intentTheme = createWakebComponents({ framework: 'vuetify', theme: { tokens: { success: '#12b76a', neutral: 'var(--gray)' } } });
-void [colors, loading, badLoading, badAvatar, badBadge, intentTheme];
+void [colors, strictColor, strictBadgeType, loading, legacyLoading, legacyAvatar, legacyUserAvatar, legacyBadge, legacyStack, deprecatedColor, deprecatedBadgeType, numericLoading, objectBadge, unknownVariant, strictDot, intentTheme];
 // Wakeb-owned icons (SPEC R15): names resolve to SVG path data or components, never strings.
 const iconPaths: import('wakeb-components').WakebSvgIcon = ['M7 10l5 5 5-5z', ['M0 0h24v24H0z', 0.2]];
 const iconOptions: import('wakeb-components').WakebIconsOptions = { aliases: { brand: iconPaths }, resolve: (name: string) => (name === 'check' ? ['M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'] : undefined) };

@@ -347,8 +347,8 @@ development. Production builds drop both warnings: the code sits behind
 
 ### Intents and colors
 
-Color props take a Wakeb intent or a CSS color. The type `WakebColor` rejects anything else at
-compile time:
+Color props take a Wakeb intent or a CSS color, described by the type `WakebColor`, which rejects
+anything else at compile time:
 
 - Intents: `primary`, `secondary`, `success`, `warning`, `danger`, `info`, `neutral`.
 - CSS colors: `#hex`, `rgb()`, `rgba()`, `hsl()`, `hsla()`, `hwb()`, `lab()`, `lch()`, `oklab()`,
@@ -391,17 +391,24 @@ instead.
 Without tokens, a Vuetify app keeps its theme colors. Avatar initials use `--wakeb-avatar-text`,
 then `--wakeb-ui-on-primary`, then white.
 
-Provider color names follow the deprecation policy. Under Vuetify they still render as before
-and log `WAKEB_DEPRECATED_VALUE` in development. Under other providers they fall back to the
-prop default and log `WAKEB_UNKNOWN_VALUE`.
+Provider color names follow the deprecation policy on WLoading `color` and WAvatarStack and
+WUserBadge `avatarColor`. Under Vuetify they still render as before and log
+`WAKEB_DEPRECATED_VALUE` in development. Under other providers they fall back to the prop default
+and log `WAKEB_UNKNOWN_VALUE`. During the deprecation window these three props are typed
+`WakebColor | WakebDeprecatedColor`, so 0.7 code still type-checks; `WakebDeprecatedColor` is
+marked `@deprecated`. The other color props stay `WakebColor`: they do not render provider names
+in this release, and fall back with `WAKEB_UNKNOWN_VALUE` on every provider.
 
 WBadge `type` is a Wakeb style key (`WakebBadgeType`) painted by Wakeb CSS. It is no longer
 sent to Vuetify as a chip `color`, so the chip text and icon follow the badge's text color. A
 type outside the list is treated as a Vuetify color name and gets the same deprecation
 handling. `variant="solid"` fills the badge with the type's strong color, which you can
-override with `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`. Under PrimeVue a type
-outside the list is not read as a color: the badge uses `primary` and logs `WAKEB_UNKNOWN_VALUE`
-in development.
+override with `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`. Under PrimeVue and
+shadcn-vue a type outside the list is not read as a color: the badge uses `primary` and logs
+`WAKEB_UNKNOWN_VALUE` in development. During the deprecation window badge type props (WBadge,
+WUserBadge and WBadgeStack item `type`, WBadgeStack `badgeType`) are typed
+`WakebBadgeType | WakebDeprecatedBadgeType`, so such a type still compiles; the deprecated part is
+marked `@deprecated`.
 
 ### Skeleton names
 

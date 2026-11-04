@@ -22,7 +22,7 @@ import { WBadgeStack } from 'wakeb-components'
 | `max` | `number` | `1` | حد العناصر الظاهرة؛ استخدم عددًا صحيحًا محدودًا لا يقل عن صفر. |
 | `truncateLength` | `number` | `12` | طول الاسم الظاهر شامل النقاط؛ أسماء قائمة الزيادة كاملة. |
 | `showOverflowMenu` | `boolean` | `false` | تفعيل قائمة زيادة حقيقية عند hover أو النقر أو الكيبورد على +N (قائمة Vuetify أو Popover في PrimeVue). |
-| `badgeType` | `string` | `"transparent"` | نوع WBadge الافتراضي. |
+| `badgeType` | `WakebBadgeType \| WakebDeprecatedBadgeType` | `"transparent"` | نوع WBadge الافتراضي. |
 | `badgeVariant` | `BadgeProps["variant"]` | `"soft"` | نمط كل الشارات وشارة +N، ويتقدم عليه variant الخاص بكل عنصر. الأسماء القديمة تعطي تحذيرًا في وضع التطوير. |
 | `badgeBorderRadius` | `string` | `"md"` | نصف القطر الافتراضي. |
 | `customBorderRadius` | `string` | `"sm"` | القيمة القديمة تمر كما هي؛ استخدم طول CSS صالحًا في المشاريع الجديدة. |

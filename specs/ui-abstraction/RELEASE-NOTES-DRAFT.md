@@ -21,7 +21,7 @@ Upgrading needs the migration guide. Root imports alone no longer work.
    - `vuetify`, `primevue` with `@primeuix/themes`, and `reka-ui` are optional peers. Install the one your framework uses.
    - See [Peer dependencies](../../docs/guide/migration.md#peer-dependencies).
 3. **Portable variants.** WBadge, WTooltipBtn and WBadgeStack take `soft`, `solid`, `outline` and `ghost`. The 0.7 names still map, with a development-only `WAKEB_DEPRECATED_VALUE`.
-4. **Portable colors.** Color props take a Wakeb intent (`primary`, `secondary`, `success`, `warning`, `danger`, `info`, `neutral`) or a CSS color. TypeScript rejects Vuetify color names. At runtime, Vuetify color names still render under Vuetify, with a deprecation warning.
+4. **Portable colors.** Color props take a Wakeb intent (`primary`, `secondary`, `success`, `warning`, `danger`, `info`, `neutral`) or a CSS color. Under Vuetify, WLoading `color` and WAvatarStack and WUserBadge `avatarColor` still render Vuetify color names, with a deprecation warning, and TypeScript still accepts them there through the `@deprecated` type `WakebDeprecatedColor`. The other color props take only portable values. Badge types outside the Wakeb list type-check the same way through `WakebDeprecatedBadgeType`.
 5. **WBadge `type` is painted by Wakeb CSS.** It is no longer forwarded to Vuetify as a chip color.
 6. **Skeleton grammar and grid.**
    - WBaseSidebar `skeletonType` and the WPageSkeleton types use the Wakeb grammar: `@N` repetition is capped at 100, and unknown names are skipped with `WAKEB_UNKNOWN_VALUE`.
@@ -64,7 +64,7 @@ Upgrading needs the migration guide. Root imports alone no longer work.
 - **Vuetify WDrawer** still needs `VApp` or `VLayout` and does not close on Escape. PrimeVue and shadcn-vue do close on Escape.
 - **PrimeVue tooltips ignore `zIndexOverlay`**, because PrimeVue sets tooltip z-index globally.
 - **WDropdown `colorMap` keys** are open strings.
-- **Deprecated Vuetify color names and badge types.** TypeScript rejects them, but the runtime still accepts them under Vuetify.
+- **Deprecated Vuetify color names and badge types.** They type-check, flagged `@deprecated`, and render only under Vuetify; PrimeVue and shadcn-vue fall back with `WAKEB_UNKNOWN_VALUE`.
 - **shadcn-vue overlays** write `dir="ltr"` unless Wakeb `direction` is set. The theme bridge assumes Tailwind v4 complete-color variables.
 - **`style.css`** still contains every provider's CSS.
 - **Error codes.** `WAKEB_CAPABILITY_UNSUPPORTED` is reserved for documented optional features; none is defined in this build.
@@ -77,7 +77,7 @@ Each of these must be decided before a stable release. They can be deferred for 
 1. **Vuetify WDrawer.** Either accept the layout-host requirement and the missing Escape close as a documented provider difference, or require parity, which means an internal host and Escape handling.
 2. **PrimeVue tooltips and `zIndexOverlay`.** Either document that tooltips ignore it, or set PrimeVue's global tooltip z-index from Wakeb, which affects the whole host app.
 3. **WDropdown `colorMap`.** Either keep keys as open strings, or narrow them to `WakebIntent | string` with documented semantics.
-4. **Deprecated Vuetify values.** Either keep the type and runtime asymmetry for the deprecation window, or reject the values at runtime too, as a further breaking change.
+4. ~~**Deprecated Vuetify values.**~~ **Decided.** TypeScript accepts the deprecated values the runtime still renders, flagged with `@deprecated`, for the one-major deprecation window.
 5. **Release version and dist-tag** (below).
 6. **Aware compatibility.** R20 needs external Aware evidence or a recorded blocker.
 

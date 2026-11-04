@@ -273,10 +273,10 @@ export default [
       ],
       [
         "avatarColor",
-        "WakebColor",
+        "WakebColor | WakebDeprecatedColor",
         "\"primary\"",
-        "Initials, overflow and image-avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Initials use --wakeb-avatar-text.",
-        "خلفية الحروف والعدد الإضافي والصور. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. لون الحروف من --wakeb-avatar-text."
+        "Initials, overflow and image-avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Initials use --wakeb-avatar-text. Deprecated Vuetify color names (WakebDeprecatedColor, such as error or red-darken-2) still type-check and render under Vuetify with WAKEB_DEPRECATED_VALUE; other providers fall back with WAKEB_UNKNOWN_VALUE.",
+        "خلفية الحروف والعدد الإضافي والصور. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. لون الحروف من --wakeb-avatar-text. أسماء ألوان Vuetify المهملة (WakebDeprecatedColor مثل error أو red-darken-2) ما زالت مقبولة في TypeScript وتُعرض تحت Vuetify مع WAKEB_DEPRECATED_VALUE، وترجع المزودات الأخرى إلى القيمة الافتراضية مع WAKEB_UNKNOWN_VALUE."
       ],
       [
         "showOverflowMenu",
@@ -400,10 +400,10 @@ export default [
       ],
       [
         "color",
-        "WakebColor",
+        "WakebColor | WakebDeprecatedColor",
         "\"primary\"",
-        "Spinner color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color.",
-        "لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS."
+        "Spinner color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Deprecated Vuetify color names (WakebDeprecatedColor, such as error or red-darken-2) still type-check and render under Vuetify with WAKEB_DEPRECATED_VALUE; other providers fall back with WAKEB_UNKNOWN_VALUE.",
+        "لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. أسماء ألوان Vuetify المهملة (WakebDeprecatedColor مثل error أو red-darken-2) ما زالت مقبولة في TypeScript وتُعرض تحت Vuetify مع WAKEB_DEPRECATED_VALUE، وترجع المزودات الأخرى إلى القيمة الافتراضية مع WAKEB_UNKNOWN_VALUE."
       ],
       [
         "label",
@@ -1160,10 +1160,10 @@ export default [
       ],
       [
         "type",
-        "WakebBadgeType",
+        "WakebBadgeType | WakebDeprecatedBadgeType",
         "\"primary\"",
-        "Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names: they still render under Vuetify with WAKEB_DEPRECATED_VALUE. Under PrimeVue they fall back to primary with WAKEB_UNKNOWN_VALUE.",
-        "مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة، وما زالت تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. وتحت PrimeVue ترجع إلى primary مع WAKEB_UNKNOWN_VALUE."
+        "Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names (WakebDeprecatedBadgeType): they still type-check and render under Vuetify with WAKEB_DEPRECATED_VALUE. Under PrimeVue they fall back to primary with WAKEB_UNKNOWN_VALUE.",
+        "مفتاح نمط ترسمه Wakeb CSS: primary وprimarybtn وsuccess وdanger وwarning وinfo وoutline وoutline-secondary وtransparent وdark وtertiary وsuccess-transparent وdanger-transparent وcheck وuncheck. لم يعد يُرسل إلى Vuetify كلون. القيم الأخرى أسماء ألوان Vuetify مهملة (WakebDeprecatedBadgeType)، وما زالت مقبولة في TypeScript وتعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. وتحت PrimeVue ترجع إلى primary مع WAKEB_UNKNOWN_VALUE."
       ],
       [
         "icon",
@@ -1591,7 +1591,7 @@ export default [
       ],
       [
         "badgeType",
-        "string",
+        "WakebBadgeType | WakebDeprecatedBadgeType",
         "\"transparent\"",
         "Default WBadge semantic type.",
         "نوع WBadge الافتراضي."
@@ -1772,7 +1772,7 @@ export default [
       ],
       [
         "type",
-        "WakebBadgeType",
+        "WakebBadgeType | WakebDeprecatedBadgeType",
         "\"outline\"",
         "WBadge style key.",
         "مفتاح نمط WBadge."
@@ -1814,10 +1814,10 @@ export default [
       ],
       [
         "avatarColor",
-        "WakebColor",
+        "WakebColor | WakebDeprecatedColor",
         "\"primary\"",
-        "Initials avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color.",
-        "خلفية حاوية الأحرف. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS."
+        "Initials avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Deprecated Vuetify color names (WakebDeprecatedColor, such as error or red-darken-2) still type-check and render under Vuetify with WAKEB_DEPRECATED_VALUE; other providers fall back with WAKEB_UNKNOWN_VALUE.",
+        "خلفية حاوية الأحرف. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. أسماء ألوان Vuetify المهملة (WakebDeprecatedColor مثل error أو red-darken-2) ما زالت مقبولة في TypeScript وتُعرض تحت Vuetify مع WAKEB_DEPRECATED_VALUE، وترجع المزودات الأخرى إلى القيمة الافتراضية مع WAKEB_UNKNOWN_VALUE."
       ]
     ],
     "slots": [

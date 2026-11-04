@@ -12,6 +12,15 @@ export type WakebColor =
   | `lab(${string})` | `lch(${string})` | `oklab(${string})` | `oklch(${string})` | `color(${string})` | `color-mix(${string})`
   | `var(--${string})`
   | "transparent" | "currentColor";
+/**
+ * @deprecated A 0.7 provider color name, such as the Vuetify theme name `error` or the palette name
+ * `red-darken-2`. It type-checks during the one-major deprecation window only on the props that still
+ * render it: WLoading `color`, and WAvatarStack and WUserBadge `avatarColor`. Under Vuetify it renders
+ * as before with `WAKEB_DEPRECATED_VALUE`; under PrimeVue and shadcn-vue the prop falls back with
+ * `WAKEB_UNKNOWN_VALUE`. Use a {@link WakebColor} (an intent or a CSS color) instead. Removed in the
+ * next major release; type a value as `WakebColor` to reject provider names today.
+ */
+export type WakebDeprecatedColor = string & {};
 /** Portable skeleton names (SPEC R16). Skeleton props take a comma-separated list of these, each optionally `@N`. */
 export type WakebSkeletonName =
   | "text" | "paragraph" | "heading" | "avatar" | "image" | "button" | "chip" | "list-item" | "list-item-avatar"
@@ -21,6 +30,14 @@ export type WakebSkeletonName =
 export type WakebBadgeType =
   | "success" | "success-transparent" | "primary" | "primarybtn" | "danger" | "danger-transparent" | "warning" | "info"
   | "transparent" | "dark" | "tertiary" | "outline" | "outline-secondary" | "check" | "uncheck";
+/**
+ * @deprecated A 0.7 badge type outside the {@link WakebBadgeType} list, which 0.7 forwarded to Vuetify
+ * as the chip color (for example `teal`). It type-checks during the one-major deprecation window: under
+ * Vuetify it is still passed as the chip color with `WAKEB_DEPRECATED_VALUE`; under PrimeVue and
+ * shadcn-vue it falls back to `primary` with `WAKEB_UNKNOWN_VALUE`. Use a `WakebBadgeType` instead.
+ * Removed in the next major release; type a value as `WakebBadgeType` to reject other names today.
+ */
+export type WakebDeprecatedBadgeType = string & {};
 /**
  * Native props and listeners for the selected provider's primitive (SPEC R12). Not portable: the keys
  * belong to whichever provider the build selected. Wakeb-owned bindings, portable attributes
@@ -43,7 +60,7 @@ export interface AvatarStackProps {
   items?: readonly unknown[];
   max?: number;
   size?: string | number;
-  avatarColor?: WakebColor;
+  avatarColor?: WakebColor | WakebDeprecatedColor;
   showOverflowMenu?: boolean;
   showTooltip?: boolean;
   itemKey?: string;
@@ -54,7 +71,7 @@ export interface AvatarStackProps {
   menuStyle?: CSSProperties;
   tooltipStyle?: CSSProperties;
 }
-export interface LoadingProps { size?: string | number; color?: WakebColor; label?: string; providerProps?: WakebProviderProps; }
+export interface LoadingProps { size?: string | number; color?: WakebColor | WakebDeprecatedColor; label?: string; providerProps?: WakebProviderProps; }
 export interface SkeletonItem {
   type?: string;
   width?: string | number;
@@ -113,12 +130,15 @@ export interface ButtonProps {
 }
 /** Portable style variants (SPEC R23), rendered on every provider. */
 export type WakebVariant = "soft" | "solid" | "outline" | "ghost";
-/** Baseline variant names, accepted with a development warning until the next major release. */
+/**
+ * @deprecated Baseline 0.7 variant names, accepted on every provider with `WAKEB_DEPRECATED_VALUE`
+ * until the next major release. Use the matching {@link WakebVariant} instead.
+ */
 export type WakebDeprecatedVariant = "default" | "tonal" | "flat" | "elevated" | "outlined" | "text" | "plain";
 export interface BadgeProps {
   label?: string;
   classList?: ComponentClass;
-  type?: WakebBadgeType;
+  type?: WakebBadgeType | WakebDeprecatedBadgeType;
   icon?: SharedIcon;
   isDot?: boolean;
   borderRadius?: string;
@@ -154,7 +174,7 @@ export interface BadgeStackItem {
   label?: string;
   icon?: string;
   color?: WakebColor;
-  type?: WakebBadgeType;
+  type?: WakebBadgeType | WakebDeprecatedBadgeType;
   variant?: BadgeProps["variant"];
   borderRadius?: string;
   customBorderRadius?: string;
@@ -171,7 +191,7 @@ export interface BadgeStackProps {
   max?: number;
   truncateLength?: number;
   showOverflowMenu?: boolean;
-  badgeType?: WakebBadgeType;
+  badgeType?: WakebBadgeType | WakebDeprecatedBadgeType;
   badgeVariant?: BadgeProps["variant"];
   badgeBorderRadius?: string;
   customBorderRadius?: string;
@@ -199,13 +219,13 @@ export interface BadgeStackIconSlotProps {
 export interface BadgeUser { name?: string; avatar?: string; }
 export interface UserBadgeProps {
   user?: BadgeUser;
-  type?: WakebBadgeType;
+  type?: WakebBadgeType | WakebDeprecatedBadgeType;
   borderRadius?: string;
   icon?: SharedIcon;
   iconSize?: string | number;
   iconPosition?: "before" | "after";
   avatarSize?: string | number;
-  avatarColor?: WakebColor;
+  avatarColor?: WakebColor | WakebDeprecatedColor;
 }
 export interface TooltipBtnProps {
   icon?: SharedIcon;

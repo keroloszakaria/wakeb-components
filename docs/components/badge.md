@@ -20,7 +20,7 @@ import { WBadge } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `label` | `string` | `""` | Escaped fallback content. |
 | `classList` | `ComponentClass` | `""` | Classes on the chip. |
-| `type` | `WakebBadgeType` | `"primary"` | Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names: they still render under Vuetify with WAKEB_DEPRECATED_VALUE. Under PrimeVue they fall back to primary with WAKEB_UNKNOWN_VALUE. |
+| `type` | `WakebBadgeType \| WakebDeprecatedBadgeType` | `"primary"` | Wakeb style key painted by Wakeb CSS: primary, primarybtn, success, danger, warning, info, outline, outline-secondary, transparent, dark, tertiary, success-transparent, danger-transparent, check, uncheck. It is no longer sent to Vuetify as a color. Other values are deprecated Vuetify color names (WakebDeprecatedBadgeType): they still type-check and render under Vuetify with WAKEB_DEPRECATED_VALUE. Under PrimeVue they fall back to primary with WAKEB_UNKNOWN_VALUE. |
 | `icon` | `SharedIcon` | `""` | Icon name, SVG path data or component (Providers > Icons), or the icon-slot value. |
 | `isDot` | `boolean` | `false` | Show the decorative dot before content. |
 | `borderRadius` | `string` | `"md"` | sm selects 8px; md/default preserves the 24px chip radius. |

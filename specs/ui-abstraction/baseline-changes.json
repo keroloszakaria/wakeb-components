@@ -32,7 +32,7 @@
       "changes": [
         "(self): string -> WakebColor"
       ],
-      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). This prop does not render provider color names on any provider (they fall back with WAKEB_UNKNOWN_VALUE), so TypeScript keeps rejecting them; only WLoading color and WAvatarStack and WUserBadge avatarColor accept WakebDeprecatedColor during the deprecation window.",
       "migration": "docs/guide/migration.md#colors"
     },
     {
@@ -44,16 +44,6 @@
       ],
       "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
       "migration": "docs/guide/migration.md#icon-types"
-    },
-    {
-      "id": "WAvatarStack.prop.avatarColor.type",
-      "from": "string",
-      "to": "WakebColor",
-      "changes": [
-        "(self): string -> WakebColor"
-      ],
-      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
-      "migration": "docs/guide/migration.md#colors"
     },
     {
       "id": "WBadge.default.dotColor",
@@ -76,18 +66,8 @@
       "changes": [
         "(self): string -> WakebColor"
       ],
-      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). This prop does not render provider color names on any provider (they fall back with WAKEB_UNKNOWN_VALUE), so TypeScript keeps rejecting them; only WLoading color and WAvatarStack and WUserBadge avatarColor accept WakebDeprecatedColor during the deprecation window.",
       "migration": "docs/guide/migration.md#colors"
-    },
-    {
-      "id": "WBadge.prop.type.type",
-      "from": "string",
-      "to": "WakebBadgeType",
-      "changes": [
-        "(self): string -> WakebBadgeType"
-      ],
-      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23); any other string is rejected by TypeScript and only accepted at runtime under Vuetify as a deprecated color alias.",
-      "migration": "docs/guide/migration.md#badge-type"
     },
     {
       "id": "WBadge.slot.icon.payload",
@@ -114,23 +94,13 @@
       "migration": "docs/guide/migration.md#colors"
     },
     {
-      "id": "WBadgeStack.prop.badgeType.type",
-      "from": "string",
-      "to": "WakebBadgeType",
-      "changes": [
-        "(self): string -> WakebBadgeType"
-      ],
-      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23); any other string is rejected by TypeScript and only accepted at runtime under Vuetify as a deprecated color alias.",
-      "migration": "docs/guide/migration.md#badge-type"
-    },
-    {
       "id": "WBadgeStack.prop.dotColor.type",
       "from": "string",
       "to": "WakebColor",
       "changes": [
         "(self): string -> WakebColor"
       ],
-      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). This prop does not render provider color names on any provider (they fall back with WAKEB_UNKNOWN_VALUE), so TypeScript keeps rejecting them; only WLoading color and WAvatarStack and WUserBadge avatarColor accept WakebDeprecatedColor during the deprecation window.",
       "migration": "docs/guide/migration.md#colors"
     },
     {
@@ -141,10 +111,9 @@
         "[].badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
         "[].color: string | undefined -> WakebColor | undefined",
         "[].dotColor: string | undefined -> WakebColor | undefined",
-        "[].type: string | undefined -> WakebBadgeType | undefined",
         "[].variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
       ],
-      "reason": "Stack item color and dotColor are WakebColor and item type is WakebBadgeType (SPEC R23); TypeScript rejects provider color names and other badge types. Item variant and badgeIcon only widened, so they accept every 0.7 value.",
+      "reason": "Stack item color and dotColor are WakebColor (SPEC R23); TypeScript rejects provider color names there, which these props do not render on any provider. Item type (WakebBadgeType | WakebDeprecatedBadgeType), variant and badgeIcon only widened, so they accept every 0.7 value.",
       "migration": "docs/guide/migration.md#colors"
     },
     {
@@ -156,10 +125,9 @@
         "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
         "item.color: string | undefined -> WakebColor | undefined",
         "item.dotColor: string | undefined -> WakebColor | undefined",
-        "item.type: string | undefined -> WakebBadgeType | undefined",
         "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
       ],
-      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor, item type is WakebBadgeType (SPEC R23), and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item variant only widened.",
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type (deprecated badge types type-check) and variant only widened.",
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
@@ -170,10 +138,9 @@
         "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
         "item.color: string | undefined -> WakebColor | undefined",
         "item.dotColor: string | undefined -> WakebColor | undefined",
-        "item.type: string | undefined -> WakebBadgeType | undefined",
         "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
       ],
-      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor, item type is WakebBadgeType (SPEC R23), and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item variant only widened.",
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type (deprecated badge types type-check) and variant only widened.",
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
@@ -184,10 +151,9 @@
         "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
         "item.color: string | undefined -> WakebColor | undefined",
         "item.dotColor: string | undefined -> WakebColor | undefined",
-        "item.type: string | undefined -> WakebBadgeType | undefined",
         "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
       ],
-      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor, item type is WakebBadgeType (SPEC R23), and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item variant only widened.",
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type (deprecated badge types type-check) and variant only widened.",
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
@@ -283,23 +249,13 @@
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
-      "id": "WLoading.prop.color.type",
-      "from": "string",
-      "to": "WakebColor",
-      "changes": [
-        "(self): string -> WakebColor"
-      ],
-      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
-      "migration": "docs/guide/migration.md#colors"
-    },
-    {
       "id": "WSegmentedProgress.prop.color.type",
       "from": "string",
       "to": "WakebColor",
       "changes": [
         "(self): string -> WakebColor"
       ],
-      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
+      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). This prop does not render provider color names on any provider (they fall back with WAKEB_UNKNOWN_VALUE), so TypeScript keeps rejecting them; only WLoading color and WAvatarStack and WUserBadge avatarColor accept WakebDeprecatedColor during the deprecation window.",
       "migration": "docs/guide/migration.md#colors"
     },
     {
@@ -354,26 +310,6 @@
       ],
       "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
       "migration": "docs/guide/migration.md#icon-types"
-    },
-    {
-      "id": "WUserBadge.prop.avatarColor.type",
-      "from": "string",
-      "to": "WakebColor",
-      "changes": [
-        "(self): string -> WakebColor"
-      ],
-      "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). TypeScript rejects Vuetify theme and palette names; under Vuetify they still render as deprecated aliases with WAKEB_DEPRECATED_VALUE.",
-      "migration": "docs/guide/migration.md#colors"
-    },
-    {
-      "id": "WUserBadge.prop.type.type",
-      "from": "string",
-      "to": "WakebBadgeType",
-      "changes": [
-        "(self): string -> WakebBadgeType"
-      ],
-      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23); any other string is rejected by TypeScript and only accepted at runtime under Vuetify as a deprecated color alias.",
-      "migration": "docs/guide/migration.md#badge-type"
     }
   ]
 }

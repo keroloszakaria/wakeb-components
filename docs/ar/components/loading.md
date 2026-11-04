@@ -19,7 +19,7 @@ import { WLoading } from 'wakeb-components'
 | المعامل | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `size` | `string \| number` | `50` | حجم مؤشر Vuetify. |
-| `color` | `WakebColor` | `"primary"` | لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. |
+| `color` | `WakebColor \| WakebDeprecatedColor` | `"primary"` | لون المؤشر. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. أسماء ألوان Vuetify المهملة (WakebDeprecatedColor مثل error أو red-darken-2) ما زالت مقبولة في TypeScript وتُعرض تحت Vuetify مع WAKEB_DEPRECATED_VALUE، وترجع المزودات الأخرى إلى القيمة الافتراضية مع WAKEB_UNKNOWN_VALUE. |
 | `label` | `string` | `"Loading"` | اسم حالة التحميل لقارئ الشاشة؛ مرر ترجمة المشروع. |
 | `providerProps` | `WakebProviderProps` | `undefined` | غير قابل للنقل. خصائص أصلية لـprimitive مؤشر التحميل (`VProgressCircular` في Vuetify و`ProgressSpinner` في PrimeVue). `color` و`size` وحالة التحميل غير المحددة و`strokeWidth` و`pt` في PrimeVue يملكها Wakeb. لا أثر له عندما يستبدل الـslot الافتراضي المؤشر. |
 

@@ -213,11 +213,18 @@ A color prop now takes a Wakeb intent or a CSS color:
 - Intents: `primary`, `secondary`, `success`, `warning`, `danger`, `info`, `neutral`. Each
   resolves to its `--wakeb-ui-<intent>` token, then the provider theme color, then a Wakeb
   fallback. See [Intents and colors](./providers#intents-and-colors).
-- Under **Vuetify**, a Vuetify color name still renders as before during the deprecation window,
-  with `WAKEB_DEPRECATED_VALUE`.
-- Under **PrimeVue**, the same name is not understood. The prop falls back to its default, with
-  `WAKEB_UNKNOWN_VALUE`.
-- TypeScript rejects provider color names already: the prop type is `WakebColor`.
+- WLoading `color`, and WAvatarStack and WUserBadge `avatarColor`, keep accepting Vuetify color
+  names during the deprecation window. Under **Vuetify** the name still renders as before, with
+  `WAKEB_DEPRECATED_VALUE`. Under **PrimeVue** and **shadcn-vue** it is not understood: the prop
+  falls back to its default, with `WAKEB_UNKNOWN_VALUE`.
+- TypeScript still accepts these names on those three props: the prop type is
+  `WakebColor | WakebDeprecatedColor`, so 0.7 code compiles. `WakebDeprecatedColor` is marked
+  `@deprecated`, and editors keep suggesting the portable values. To reject provider names today,
+  type your own values as `WakebColor`.
+- The other color props (WSegmentedProgress `color`, WBadge `dotColor`, WBadgeStack `dotColor`,
+  item `color` and item `dotColor`, WAccordion `iconColor`) do not render provider names on any
+  provider: a name falls back to the default with `WAKEB_UNKNOWN_VALUE`, and their type,
+  `WakebColor`, rejects it.
 
 WDropdown `iconColor` and item `color` are not covered; they keep their own `colorMap` keys.
 
@@ -237,7 +244,11 @@ WBadge `type` (also WBadgeStack item `type` and WUserBadge `type`) is a Wakeb st
 - In 0.7, `type` was also forwarded to Vuetify as the chip `color`. It no longer is, so the chip
   text and icon follow the badge's text color.
 - A type outside this list is treated as a Vuetify color name: under Vuetify it is still passed
-  as the chip color, with `WAKEB_DEPRECATED_VALUE`. TypeScript rejects it.
+  as the chip color, with `WAKEB_DEPRECATED_VALUE`. Under PrimeVue and shadcn-vue the badge uses
+  `primary`, with `WAKEB_UNKNOWN_VALUE`.
+- TypeScript still accepts such a type during the deprecation window: the prop type is
+  `WakebBadgeType | WakebDeprecatedBadgeType` (also on WBadgeStack `badgeType`). The deprecated
+  part is marked `@deprecated`; type your own values as `WakebBadgeType` to reject other names.
 - `variant="solid"` fills the badge with the type's strong color. Override it with
   `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`.
 

@@ -21,7 +21,7 @@ import { WAvatarStack } from 'wakeb-components'
 | `items` | `readonly unknown[]` | `[]` | العناصر؛ القيم المفقودة أو غير الصالحة تستخدم النص البديل. |
 | `max` | `number` | `3` | العدد الظاهر؛ يُقرب لأسفل ويُحصر عند صفر. القيم غير المحدودة تستخدم 3. |
 | `size` | `string \| number` | `32` | حجم الصورة: رقم أو نص رقمي بالبكسل، أو طول CSS آخر، أو اسم حجم من Vuetify ‏(x-small ‏24px وsmall ‏32px وdefault ‏40px وlarge ‏48px وx-large ‏56px). |
-| `avatarColor` | `WakebColor` | `"primary"` | خلفية الحروف والعدد الإضافي والصور. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. لون الحروف من --wakeb-avatar-text. |
+| `avatarColor` | `WakebColor \| WakebDeprecatedColor` | `"primary"` | خلفية الحروف والعدد الإضافي والصور. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. لون الحروف من --wakeb-avatar-text. أسماء ألوان Vuetify المهملة (WakebDeprecatedColor مثل error أو red-darken-2) ما زالت مقبولة في TypeScript وتُعرض تحت Vuetify مع WAKEB_DEPRECATED_VALUE، وترجع المزودات الأخرى إلى القيمة الافتراضية مع WAKEB_UNKNOWN_VALUE. |
 | `showOverflowMenu` | `boolean` | `false` | عرض باقي المستخدمين في قائمة زيادة (قائمة Vuetify أو Popover في PrimeVue). |
 | `showTooltip` | `boolean` | `true` | تفعيل Tooltip بالتركيز أو المرور على المستخدمين الظاهرين. |
 | `itemKey` | `string` | `"id"` | مسار بالنقاط لمفتاح نصي أو رقمي؛ البديل index. |

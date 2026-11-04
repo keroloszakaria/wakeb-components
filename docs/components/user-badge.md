@@ -19,13 +19,13 @@ import { WUserBadge } from 'wakeb-components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `user` | `BadgeUser` | `{}` | Presentational name/avatar record; data is escaped text. |
-| `type` | `WakebBadgeType` | `"outline"` | WBadge style key. |
+| `type` | `WakebBadgeType \| WakebDeprecatedBadgeType` | `"outline"` | WBadge style key. |
 | `borderRadius` | `string` | `"md"` | Badge radius preset. |
 | `icon` | `SharedIcon` | `""` | Legacy WBadge icon prop; avatar slot replaces the glyph. |
 | `iconSize` | `string \| number` | `"xs"` | Legacy WBadge glyph size; avatarSize controls the actual avatar. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | Avatar position relative to content. |
 | `avatarSize` | `string \| number` | `16` | Avatar size: a number of pixels or a CSS length. Vuetify size names work only under Vuetify. |
-| `avatarColor` | `WakebColor` | `"primary"` | Initials avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. |
+| `avatarColor` | `WakebColor \| WakebDeprecatedColor` | `"primary"` | Initials avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Deprecated Vuetify color names (WakebDeprecatedColor, such as error or red-darken-2) still type-check and render under Vuetify with WAKEB_DEPRECATED_VALUE; other providers fall back with WAKEB_UNKNOWN_VALUE. |
 
 ## Events
 

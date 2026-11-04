@@ -21,7 +21,7 @@ import { WAvatarStack } from 'wakeb-components'
 | `items` | `readonly unknown[]` | `[]` | Entries; null or malformed entries use fallback labels. |
 | `max` | `number` | `3` | Visible count; finite values are floored and clamped to zero, NaN/infinity use 3. |
 | `size` | `string \| number` | `32` | Avatar size: a number or numeric string in pixels, another CSS length, or a Vuetify size name (x-small 24px, small 32px, default 40px, large 48px, x-large 56px). |
-| `avatarColor` | `WakebColor` | `"primary"` | Initials, overflow and image-avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Initials use --wakeb-avatar-text. |
+| `avatarColor` | `WakebColor \| WakebDeprecatedColor` | `"primary"` | Initials, overflow and image-avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Initials use --wakeb-avatar-text. Deprecated Vuetify color names (WakebDeprecatedColor, such as error or red-darken-2) still type-check and render under Vuetify with WAKEB_DEPRECATED_VALUE; other providers fall back with WAKEB_UNKNOWN_VALUE. |
 | `showOverflowMenu` | `boolean` | `false` | Show remaining users in an overflow list (a Vuetify menu or a PrimeVue Popover). |
 | `showTooltip` | `boolean` | `true` | Enable focus/hover tooltips for visible users. |
 | `itemKey` | `string` | `"id"` | Dot path for a string/number key; index fallback. |

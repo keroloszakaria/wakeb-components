@@ -19,7 +19,7 @@ import { WLoading } from 'wakeb-components'
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `size` | `string \| number` | `50` | Vuetify spinner size. |
-| `color` | `WakebColor` | `"primary"` | Spinner color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. |
+| `color` | `WakebColor \| WakebDeprecatedColor` | `"primary"` | Spinner color. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Deprecated Vuetify color names (WakebDeprecatedColor, such as error or red-darken-2) still type-check and render under Vuetify with WAKEB_DEPRECATED_VALUE; other providers fall back with WAKEB_UNKNOWN_VALUE. |
 | `label` | `string` | `"Loading"` | Accessible loading status; supply translated text. |
 | `providerProps` | `WakebProviderProps` | `undefined` | Nonportable. Native props for the indicator primitive (Vuetify `VProgressCircular`, PrimeVue `ProgressSpinner`). `color`, `size`, the indeterminate state and PrimeVue `strokeWidth`/`pt` stay Wakeb-owned. Has no effect when the default slot replaces the indicator. |
 

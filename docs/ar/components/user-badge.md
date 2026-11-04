@@ -19,13 +19,13 @@ import { WUserBadge } from 'wakeb-components'
 | المعامل | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `user` | `BadgeUser` | `{}` | بيانات العرض للاسم والصورة؛ الاسم نص آمن. |
-| `type` | `WakebBadgeType` | `"outline"` | مفتاح نمط WBadge. |
+| `type` | `WakebBadgeType \| WakebDeprecatedBadgeType` | `"outline"` | مفتاح نمط WBadge. |
 | `borderRadius` | `string` | `"md"` | نصف قطر الشارة. |
 | `icon` | `SharedIcon` | `""` | خاصية الأيقونة القديمة؛ الصورة تستبدل glyph. |
 | `iconSize` | `string \| number` | `"xs"` | حجم glyph القديم؛ avatarSize يتحكم في الصورة. |
 | `iconPosition` | `"before" \| "after"` | `"before"` | موضع الصورة بالنسبة للمحتوى. |
 | `avatarSize` | `string \| number` | `16` | حجم الصورة: رقم بالبكسل أو طول CSS. أسماء أحجام Vuetify تعمل تحت Vuetify فقط. |
-| `avatarColor` | `WakebColor` | `"primary"` | خلفية حاوية الأحرف. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. |
+| `avatarColor` | `WakebColor \| WakebDeprecatedColor` | `"primary"` | خلفية حاوية الأحرف. intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. أسماء ألوان Vuetify المهملة (WakebDeprecatedColor مثل error أو red-darken-2) ما زالت مقبولة في TypeScript وتُعرض تحت Vuetify مع WAKEB_DEPRECATED_VALUE، وترجع المزودات الأخرى إلى القيمة الافتراضية مع WAKEB_UNKNOWN_VALUE. |
 
 ## الأحداث
 

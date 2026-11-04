@@ -51,7 +51,7 @@ export const WDrawer = /* @__PURE__ */ defineWakebFacade("WDrawer", WDrawerRende
 
 export type { TruncatedTextProps, SegmentedProgressProps, SemiCircleGaugeProps } from "./types";
 export type { AvatarStackProps, LoadingProps, SkeletonItem, SkeletonRow, PageSkeletonProps, VerticalStep, VerticalStepsProps } from "./types";
-export type { ComponentClass, SharedIcon, WakebSvgIcon, WakebIconComponent, WakebIconDefinition, IconSlotProps, ButtonProps, BadgeProps, AccordionProps, WakebVariant, WakebDeprecatedVariant, WakebIntent, WakebColor, WakebSkeletonName, WakebBadgeType, WakebProviderProps } from "./types";
+export type { ComponentClass, SharedIcon, WakebSvgIcon, WakebIconComponent, WakebIconDefinition, IconSlotProps, ButtonProps, BadgeProps, AccordionProps, WakebVariant, WakebDeprecatedVariant, WakebIntent, WakebColor, WakebDeprecatedColor, WakebSkeletonName, WakebBadgeType, WakebDeprecatedBadgeType, WakebProviderProps } from "./types";
 export type { BadgeStackItem, BadgeStackProps, BadgeStackIconSlotProps, BadgeUser, UserBadgeProps, TooltipBtnProps } from "./types";
 export type { NavigationKey, TabContext, TabItem, TabsProps, TreeNode, TreeToggleSlotProps, TreeProps, DropdownItem, DropdownProps } from "./types";
 export type { CarouselProps, ExportFormat, ExportDropdownProps, SidebarItem, BaseSidebarProps } from "./types";

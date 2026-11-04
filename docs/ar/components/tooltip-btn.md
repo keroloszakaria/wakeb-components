@@ -45,7 +45,7 @@ import { WTooltipBtn } from 'wakeb-components'
 
 ## الوصول وحدود السلوك
 
-الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. VIcon يحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة.
+الخصائص والأحداث العادية تصل إلى VBtn مرة واحدة؛ wrapperAttrs للحاوية الخارجية. الافتراضات تحافظ على المظهر الأصلي: النمط ghost ‏(text في Vuetify) وأسفل وتأخير 200ms. مرر text=t(key) من المشروع؛ الحزمة لا تعتمد على i18n ولا تستقبل path. VTooltip يستخدم activator=parent مع التركيز وhover وEscape وaria-describedby. وفر ariaLabel أو نصًا واضحًا للأزرار المصورة. الزر المعطل يحتفظ بسلوكه ولا يصبح هدفًا للـTooltip عبر الكيبورد؛ استخدم عنصر مساعدة منفصلًا عند الحاجة. VIcon يحتاج إعداد أيقونات Vuetify؛ slot يدعم SVG مباشرة. خصص Tooltip عبر tooltipStyle بسبب teleport؛ لا يحمل التلميح إلا نطاق theme الخاص بالـplugin وzIndexOverlay، وتتقدم tooltipStyle عليه. التنسيق من Vuetify theme دون متغيرات CSS إضافية خاصة بالحزمة.
 
 ## جرّب بنفسك
 

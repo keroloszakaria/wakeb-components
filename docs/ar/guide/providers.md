@@ -188,7 +188,7 @@ Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فت
 | `radius` | `--wakeb-ui-radius` | زوايا WButton وWModal |
 | `spacing` | `--wakeb-ui-spacing` | الحشو الداخلي في WModal |
 | `fontFamily` | `--wakeb-ui-font-family` | محتوى WModal |
-| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب طبقات WModal وWDropdown |
+| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب الطبقات المنقولة: WModal وWDropdown وWExportDropdown وقائمتا WAvatarStack وWBadgeStack وتلميحات Vuetify |
 
 متغيرات المكونات مثل `--wakeb-button-primary-background` تتقدم على هذه المتغيرات. تقبل
 متغيرات الألوان صيغ hex و`rgb()` و`hsl()` و`var(--…)` وأسماء الألوان، ويقبل `radius`
@@ -349,10 +349,19 @@ Skeleton في Wakeb.
   عمومًا يجب أن يضبط أنماط هذه الطبقات بنفسه.
 - **PrimeVue في أكثر من تطبيق.** يحتفظ PrimeVue بخدمة الـtheme على مستوى الوحدة، فيتشارك
   تطبيقان في الصفحة نفسها أنماط الـtheme. يبقى سياق Wakeb منفصلًا لكل تطبيق.
-- **حدود نطاق الـtheme.** تصل سمات الـtheme والاتجاه إلى جذور المكونات وإلى طبقات WModal
-  وWDropdown، ولا تصل بعد إلى الطبقات الأخرى (التلميحات، وقوائم WAvatarStack وWBadgeStack،
-  وWDrawer). تستخدم WButton وWDropdown وWModal هذه المتغيرات، وتحتفظ بقية المكونات بمتغيراتها
-  الخاصة حتى يتم نقلها.
+- **حدود نطاق الـtheme.** تصل سمات الـtheme والاتجاه (`data-wakeb-theme` و`dir` ومتغيرات
+  `--wakeb-ui-*`) إلى جذور المكونات وإلى كل طبقة منقولة: نافذة WModal، وقائمتا WDropdown
+  وWExportDropdown، وقائمتا العناصر الإضافية في WAvatarStack وWBadgeStack، وتلميحات WButton
+  وWTooltipBtn وWTruncatedText وWAvatarStack. خصائص تنسيق الطبقة مثل `menuStyle`
+  و`tooltipStyle` توضع على محتوى الطبقة داخل هذا النطاق، لذا تتقدم عليه. ويحتفظ كل تطبيق في
+  الصفحة نفسها بنطاق طبقاته الخاص.
+- **حدود ترتيب الطبقات.** يُطبَّق `zIndexOverlay` على كل طبقات Vuetify السابقة وعلى قائمة
+  PrimeVue ونافذته. يستقبل تلميح WButton على PrimeVue سمات الـtheme، لكنه يحتفظ بترتيب
+  z-index الخاص بتلميحات PrimeVue. أما WDrawer فلا يُنقل: هو عنصر تخطيط في Vuetify يُرسم في
+  مكانه، فتصل سمات النطاق إلى لوحته كجذر، ويبقى z-index الخاص به للتخطيط في Vuetify الذي
+  يحدد موضع الخلفية المعتمة أيضًا.
+- **مستخدمو المتغيرات.** تستخدم WButton وWDropdown وWModal هذه المتغيرات، وتحتفظ بقية المكونات
+  بمتغيراتها الخاصة حتى يتم نقلها. والمتغيرات الموجودة على الطبقة متاحة لأنماطك الخاصة بمحتواها.
 - **غلاف المكوّن.** كل مكوّن مستورد من الجذر غلاف رقيق حول renderer المزود. أدوات الاختبار
   التي تبحث عن المكونات بالاسم، مثل `findAllComponents(WTabs)`، تجد الغلاف والـrenderer معًا.
 - **الأنماط.** ما زال `style.css` يحتوي أنماط كل الـrenderers، وتقسيمه حسب المزود مخطط له.

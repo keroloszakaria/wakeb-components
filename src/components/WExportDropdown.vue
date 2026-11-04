@@ -3,6 +3,7 @@ import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem, VListItemTitle } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
 import WButton from "./WButton.vue";
+import { useWakebContext } from "../core/runtime";
 import type { ExportDropdownProps, ExportFormat, ButtonProps } from "../types";
 const props = withDefaults(defineProps<ExportDropdownProps>(), {
   isLoading: false,
@@ -14,6 +15,7 @@ const props = withDefaults(defineProps<ExportDropdownProps>(), {
   ],
 });
 const emit = defineEmits<{ select: [value: string] }>();
+const context = useWakebContext("WExportDropdown");
 defineSlots<{
   activator?(props: {
     props: Record<string, unknown>;
@@ -37,7 +39,8 @@ function select(format: ExportFormat) {
 }
 </script>
 <template>
-  <VMenu :disabled="disabled || isLoading">
+  <!-- The root VMenu already receives the theme scope as attrs; only its stacking is set here. -->
+  <VMenu :disabled="disabled || isLoading" :z-index="context.zIndexOverlay">
     <template #activator="{ props: activatorProps }"
       ><slot
         name="activator"

@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import Button from "primevue/button";
 import Tooltip from "primevue/tooltip";
+import { usePrimeVue } from "primevue/config";
 import WakebIcon from "../../icons/WakebIcon";
 import { buttonDefaults, useButton } from "../../composables/button";
 import { useWakebContext } from "../../core/runtime";
@@ -26,12 +27,24 @@ const tooltipSide = computed(() => {
   const position = { top: "top", bottom: "bottom", start: rtl ? "right" : "left", end: rtl ? "left" : "right" }[props.location];
   return { position } as unknown as string;
 });
+/*
+ * The directive builds its element on document.body, so the theme scope travels through pt.root.
+ * A pt style replaces the directive's inline defaults, so they are restated first.
+ */
+const primevue = usePrimeVue();
+const tooltipValue = computed(() => {
+  if (!props.isTooltip) return undefined;
+  const { style, ...attrs } = context.scope;
+  if (style === undefined && Object.keys(attrs).length === 0) return props.title;
+  const base = { display: "inline-block", width: "fit-content", pointerEvents: primevue.config.unstyled ? undefined : "none" };
+  return { value: props.title, pt: { root: style === undefined ? attrs : { ...attrs, style: [base, style] } } } as unknown as string;
+});
 </script>
 <template>
   <div v-bind="wrapperAttrs">
     <!-- Unstyled: Wakeb token CSS owns the look so every WButton type matches across providers (SPEC R23). -->
     <Button
-      v-pv-tooltip:[tooltipSide]="isTooltip ? title : undefined"
+      v-pv-tooltip:[tooltipSide]="tooltipValue"
       unstyled
       v-bind="actualAttrs()"
       :class="[classes, 'wakeb-pv-button']"

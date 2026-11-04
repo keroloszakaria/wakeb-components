@@ -144,6 +144,50 @@ describe(`theme and direction scope (${framework})`, () => {
     expect(scoped!.style.zIndex).toBe("3100");
   });
 
+  const openTooltip = async (options: Partial<WakebComponentsOptions>) => {
+    const w = render(WButton, options, { props: { title: "Save", icon: "$close", isTooltip: true } });
+    const button = w.get("button");
+    // Vuetify opens on focus; the PrimeVue directive opens on hover.
+    if (framework === "vuetify") (button.element as HTMLElement).focus();
+    else await button.trigger("mouseenter");
+    await vi.waitFor(() => expect(document.querySelector('[role="tooltip"]')).not.toBeNull());
+    const tooltip = document.querySelector<HTMLElement>('[role="tooltip"]')!;
+    expect(w.element.contains(tooltip)).toBe(false);
+    return tooltip;
+  };
+
+  it("carries the scope into the teleported WButton tooltip", async () => {
+    const tooltip = await openTooltip({ theme, direction: "rtl" });
+    expect(tooltip.getAttribute("data-wakeb-theme")).toBe("dark");
+    expect(tooltip.getAttribute("dir")).toBe("rtl");
+    expect(tooltip.style.getPropertyValue("--wakeb-ui-primary")).toBe("#123456");
+    // PrimeVue's tooltip directive owns its z-index stack; only Vuetify takes the configured value.
+    if (framework === "vuetify") expect(tooltip.style.zIndex).toBe("3100");
+    else expect(tooltip.style.display).toBe("inline-block");
+  });
+
+  it("adds nothing to the WButton tooltip when theme and direction are not configured", async () => {
+    const tooltip = await openTooltip({});
+    expect(tooltip.hasAttribute("data-wakeb-theme")).toBe(false);
+    expect(tooltip.hasAttribute("dir")).toBe(false);
+    expect(tooltip.getAttribute("style") ?? "").not.toContain("--wakeb-ui");
+  });
+
+  it("carries the scope and overlay z-index into the teleported dialog while caller styles win", async () => {
+    const w = render(WModal, { theme, direction: "rtl" }, { props: { modelValue: true, title: "Report" }, attrs: { style: "--wakeb-ui-radius: 2px" } });
+    await vi.waitFor(() => expect(document.querySelector('[role="dialog"]')).not.toBeNull());
+    const dialog = document.querySelector<HTMLElement>('[role="dialog"]')!;
+    const scoped = dialog.closest<HTMLElement>("[data-wakeb-theme]")!;
+    expect(scoped).not.toBeNull();
+    expect(w.element.contains?.(scoped) ?? false).toBe(false);
+    expect(scoped.getAttribute("dir")).toBe("rtl");
+    expect(scoped.style.getPropertyValue("--wakeb-ui-primary")).toBe("#123456");
+    expect(scoped.style.getPropertyValue("--wakeb-ui-radius")).toBe("2px");
+    let stacked: HTMLElement | null = dialog;
+    while (stacked && stacked.style.zIndex !== "3100") stacked = stacked.parentElement;
+    expect(stacked).not.toBeNull();
+  });
+
   it("keeps two apps with different themes isolated", () => {
     const mountApp = (primary: string) => {
       const root = document.createElement("div");

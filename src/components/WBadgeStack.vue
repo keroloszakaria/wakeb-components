@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useColor, useVariant } from "../core/vocabulary";
+import { useWakebContext } from "../core/runtime";
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
@@ -49,6 +50,7 @@ defineSlots<{
 }>();
 // Normalized here so deprecation warnings name the stack prop the caller used.
 const toVariant = useVariant("WBadgeStack");
+const context = useWakebContext("WBadgeStack");
 const stackVariant = computed(() => toVariant(props.badgeVariant, "badgeVariant", "soft"));
 const toColor = useColor("WBadgeStack");
 const stackDot = computed(() => toColor(props.dotColor, "dotColor", "").css);
@@ -152,6 +154,7 @@ const truncate = (text: string | undefined) =>
       :open-on-focus="overflowTag === 'button' ? false : undefined"
       location="top"
       :offset="8"
+      v-bind="context.scope" :z-index="context.zIndexOverlay"
     >
       <template #activator="{ props: menuProps }">
         <component

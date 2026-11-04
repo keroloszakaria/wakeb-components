@@ -5,6 +5,7 @@ import { VIcon } from "vuetify/components/VIcon";
 import { VTooltip } from "vuetify/components/VTooltip";
 import type { TooltipBtnProps, SharedIcon } from "../types";
 import { VUETIFY_VARIANTS, useVariant } from "../core/vocabulary";
+import { useWakebContext } from "../core/runtime";
 defineOptions({ inheritAttrs: false });
 withDefaults(defineProps<TooltipBtnProps>(), {
   text: "",
@@ -17,6 +18,7 @@ withDefaults(defineProps<TooltipBtnProps>(), {
 defineSlots<{ icon?(props: { icon: SharedIcon | undefined }): unknown }>();
 const attrs = useAttrs();
 const toVariant = useVariant("WTooltipBtn");
+const context = useWakebContext("WTooltipBtn");
 </script>
 <template>
   <span class="v-app-tooltip-btn d-inline-block" v-bind="wrapperAttrs">
@@ -30,6 +32,7 @@ const toVariant = useVariant("WTooltipBtn");
       <VTooltip
         v-if="text"
         activator="parent"
+        v-bind="context.scope" :z-index="context.zIndexOverlay"
         :class="contentClass"
         :location="location"
         :open-delay="openDelay"

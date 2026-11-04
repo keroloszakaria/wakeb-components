@@ -6,8 +6,10 @@ import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem, VListItemTitle } from "vuetify/components/VList";
 import type { AvatarStackProps } from "../types";
 import { VUETIFY_INTENTS, useColor, vuetifyFill } from "../core/vocabulary";
+import { useWakebContext } from "../core/runtime";
 const props = withDefaults(defineProps<AvatarStackProps>(), { items: () => [], max: 3, size: 32, avatarColor: "primary", showOverflowMenu: false, showTooltip: true, itemKey: "id", nameKey: "name", avatarKey: "avatar", unknownLabel: "Unknown user", overflowLabel: "", menuStyle: () => ({}), tooltipStyle: () => ({}) });
 const toColor = useColor("WAvatarStack", VUETIFY_INTENTS, true);
+const context = useWakebContext("WAvatarStack");
 const fill = computed(() => vuetifyFill(toColor(props.avatarColor, "avatarColor", "primary"), "var(--wakeb-avatar-text, var(--wakeb-ui-on-primary, #fff))"));
 defineSlots<{ avatar(props: { item: unknown; index: number; label: string; avatar: string; initials: string }): unknown; overflow(props: { count: number }): unknown }>();
 const count = computed(() => Number.isFinite(props.max) ? Math.max(0, Math.floor(props.max)) : 3);
@@ -24,7 +26,7 @@ const initials = (item: unknown) => { const value = field(item, props.nameKey); 
 </script>
 <template>
   <div class="avatars-stack">
-    <VTooltip v-for="(item, index) in visibleItems" :key="getKey(item, index)" :text="getName(item)" :disabled="!showTooltip" location="top" :content-props="{ style: tooltipStyle }">
+    <VTooltip v-for="(item, index) in visibleItems" :key="getKey(item, index)" :text="getName(item)" :disabled="!showTooltip" location="top" v-bind="context.scope" :z-index="context.zIndexOverlay" :content-props="{ style: tooltipStyle }">
       <template #activator="{ props: tooltipProps }">
         <div v-bind="tooltipProps" :tabindex="showTooltip ? 0 : undefined" role="img" :aria-label="getName(item)">
           <slot name="avatar" :item="item" :index="index" :label="getName(item)" :avatar="getAvatar(item)" :initials="initials(item)">
@@ -34,7 +36,7 @@ const initials = (item: unknown) => { const value = field(item, props.nameKey); 
         </div>
       </template>
     </VTooltip>
-    <VMenu v-if="overflowCount > 0 && showOverflowMenu" open-on-hover location="top" :offset="8">
+    <VMenu v-if="overflowCount > 0 && showOverflowMenu" open-on-hover location="top" :offset="8" v-bind="context.scope" :z-index="context.zIndexOverlay">
       <template #activator="{ props: menuProps }">
         <VAvatar v-bind="{ ...menuProps, 'aria-haspopup': undefined, ...fill }" tag="button" type="button" :size="size" class="actor-avatar actor-overflow" :aria-label="overflowName"><span class="actor-initials"><slot name="overflow" :count="overflowCount">+{{ overflowCount }}</slot></span></VAvatar>
       </template>

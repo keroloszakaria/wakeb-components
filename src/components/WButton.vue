@@ -14,12 +14,12 @@ defineSlots<{
   content(): unknown;
   default(): unknown;
 }>();
-useWakebContext("WButton");
+const context = useWakebContext("WButton");
 const { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttrs } = useButton(props, emit);
 </script>
 <template>
   <div v-bind="wrapperAttrs">
-    <VTooltip v-if="isTooltip" :location="location" :text="title">
+    <VTooltip v-if="isTooltip" v-bind="context.scope" :z-index="context.zIndexOverlay" :location="location" :text="title">
       <template #activator="{ props: tooltipProps }">
         <VBtn
           v-bind="actualAttrs(tooltipProps)"

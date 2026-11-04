@@ -1,5 +1,5 @@
 <template>
-  <VTooltip :disabled="!isTruncated" :location="tooltipLocation" :text="label"
+  <VTooltip v-bind="context.scope" :z-index="context.zIndexOverlay" :disabled="!isTruncated" :location="tooltipLocation" :text="label"
     :max-width="tooltipMaxWidth" :content-class="contentClass" :content-props="{ style: tooltipStyle }">
     <template #activator="{ props: tooltipProps }">
       <span v-bind="mergeProps(tooltipProps, attrs)" class="truncated-text"
@@ -13,6 +13,7 @@
 import { computed, mergeProps, useAttrs } from "vue";
 import { VTooltip } from "vuetify/components/VTooltip";
 import { truncateText } from "wakeb-utils";
+import { useWakebContext } from "../core/runtime";
 import type { TruncatedTextProps } from "../types";
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<TruncatedTextProps>(), {
@@ -20,6 +21,7 @@ const props = withDefaults(defineProps<TruncatedTextProps>(), {
 });
 defineSlots<{ default?(props: { text: string; label: string; truncated: boolean }): unknown }>();
 const attrs = useAttrs();
+const context = useWakebContext("WTruncatedText");
 const displayLabel = computed(() => truncateText(props.label || "", props.length));
 const isTruncated = computed(() => (props.label || "").length > props.length);
 </script>

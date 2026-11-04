@@ -194,7 +194,7 @@ direction.
 | `radius` | `--wakeb-ui-radius` | WButton and WModal corners |
 | `spacing` | `--wakeb-ui-spacing` | WModal padding |
 | `fontFamily` | `--wakeb-ui-font-family` | WModal content |
-| `zIndexOverlay` (number) | `--wakeb-ui-z-index-overlay` | WModal and WDropdown overlay stacking |
+| `zIndexOverlay` (number) | `--wakeb-ui-z-index-overlay` | Stacking of teleported overlays: WModal, WDropdown, WExportDropdown, the WAvatarStack and WBadgeStack menus and the Vuetify tooltips |
 
 Component variables such as `--wakeb-button-primary-background` still win over these tokens.
 Color tokens accept hex, `rgb()`, `hsl()`, `var(--…)` and named colors. `radius` and `spacing`
@@ -356,10 +356,20 @@ errors, and production builds drop them.
   style those overlays itself.
 - **PrimeVue across apps.** PrimeVue keeps its theme service in module scope, so two PrimeVue
   apps on one page share theme styles. Wakeb's own context stays isolated per app.
-- **Theme scope reach.** Theme and direction attributes reach component roots, and the
-  overlays of WModal and WDropdown. Other overlays (tooltips, WAvatarStack and WBadgeStack
-  menus, WDrawer) do not receive them yet. The tokens are consumed by WButton, WDropdown and
-  WModal; the other components keep their own variables until they migrate.
+- **Theme scope reach.** The theme and direction attributes (`data-wakeb-theme`, `dir` and the
+  `--wakeb-ui-*` variables) reach component roots and every teleported overlay: the WModal
+  dialog, the WDropdown and WExportDropdown menus, the WAvatarStack and WBadgeStack overflow
+  menus, and the tooltips of WButton, WTooltipBtn, WTruncatedText and WAvatarStack. Overlay
+  styling props such as `menuStyle` and `tooltipStyle` sit on the overlay content inside that
+  scope, so they win. Two apps on one page keep their own overlay scope.
+- **Overlay stacking limits.** `zIndexOverlay` applies to every Vuetify overlay above and to
+  the PrimeVue menu and dialog. The PrimeVue WButton tooltip receives the theme attributes but
+  keeps PrimeVue's own tooltip z-index stack. WDrawer is not teleported: it is a Vuetify layout
+  item rendered in place, so its panel takes the scope attributes as a root, and its z-index
+  stays with the Vuetify layout, which also places the scrim.
+- **Token consumers.** The tokens are consumed by WButton, WDropdown and WModal; the other
+  components keep their own variables until they migrate. The variables on an overlay are
+  available to your own CSS for that overlay content.
 - **Component wrapper.** Each root import is a thin wrapper around the provider renderer.
   Test utilities that look components up by name, such as `findAllComponents(WTabs)`, match
   both the wrapper and the renderer.

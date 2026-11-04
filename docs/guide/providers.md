@@ -205,7 +205,7 @@ direction.
 | `radius` | `--wakeb-ui-radius` | WButton and WModal corners |
 | `spacing` | `--wakeb-ui-spacing` | WModal padding |
 | `fontFamily` | `--wakeb-ui-font-family` | WModal content |
-| `zIndexOverlay` (number) | `--wakeb-ui-z-index-overlay` | Stacking of teleported overlays: WModal, WDropdown, WExportDropdown, the WAvatarStack and WBadgeStack menus, the Vuetify tooltips and the PrimeVue WDrawer |
+| `zIndexOverlay` (number) | `--wakeb-ui-z-index-overlay` | Stacking of teleported overlays: WModal, WDropdown, WExportDropdown, the WAvatarStack and WBadgeStack menus, the tooltips and the PrimeVue WDrawer |
 
 Component variables such as `--wakeb-button-primary-background` still win over these tokens.
 Color tokens accept hex, `rgb()`, `hsl()`, `var(--…)` and named colors. `radius` and `spacing`
@@ -639,7 +639,9 @@ errors, and production builds drop them.
   one trigger only, so Wakeb runs the directive's hover handlers on focus; caller mouse listeners
   do not fire on focus. The target points to the tooltip through `aria-describedby`, with an id
   from Vue's `useId`. PrimeVue sides are physical, so `start` and `end` follow the plugin
-  `direction` option, not the page direction.
+  `direction` option, not the page direction. These tooltips and the WAvatarStack tooltips keep a
+  global PrimeVue `pt.directives.tooltip.root` style: its properties stay on the tooltip root, and
+  the Wakeb theme scope and `tooltipStyle` win where they set the same property.
 - **PrimeVue styling.** WButton renders PrimeVue's Button unstyled and uses Wakeb tokens. The
   menu and dialog need PrimeVue's styled mode. A host that sets `unstyled: true` globally must
   style those overlays itself.
@@ -653,8 +655,10 @@ errors, and production builds drop them.
   styling props such as `menuStyle` and `tooltipStyle` sit on the overlay content inside that
   scope, so they win. Two apps on one page keep their own overlay scope.
 - **Overlay stacking limits.** `zIndexOverlay` applies to every Vuetify overlay above and to
-  the PrimeVue menus, dialog and drawer. The PrimeVue tooltips of WButton, WTooltipBtn and WTruncatedText
-  receive the theme attributes but keep PrimeVue's own tooltip z-index stack. On Vuetify, WDrawer is not
+  the PrimeVue menus, dialog, drawer and tooltips. On PrimeVue, the tooltips of WButton,
+  WTooltipBtn, WTruncatedText and WAvatarStack take `zIndexOverlay` in place of PrimeVue's tooltip
+  z-index; a `zIndex` in the WAvatarStack `tooltipStyle` wins. Without `zIndexOverlay` they keep
+  PrimeVue's tooltip z-index (`zIndex.tooltip` in the PrimeVue config). On Vuetify, WDrawer is not
   teleported: it is a Vuetify layout item rendered in place, so its panel takes the scope
   attributes as a root, and its z-index stays with the Vuetify layout, which also places the
   scrim. On PrimeVue, WDrawer is teleported under its own mask, which takes `zIndexOverlay`;

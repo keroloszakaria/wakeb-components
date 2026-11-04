@@ -3,7 +3,7 @@ import { defineComponent, h, nextTick } from "vue";
 import { enableAutoUnmount, mount, type VueWrapper } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
-import { WBadge, WButton, WTooltipBtn, WTruncatedText, WUserBadge, type WakebComponentsOptions } from "../src";
+import { WAvatarStack, WBadge, WButton, WTooltipBtn, WTruncatedText, WUserBadge, type WakebComponentsOptions } from "../src";
 import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /*
@@ -518,5 +518,88 @@ describe(`WUserBadge contract (${framework})`, () => {
       expect(avatar.attributes("style")).toContain(shadcn ? "var(--wakeb-ui-primary, var(--primary, #087f8c))" : "var(--wakeb-ui-primary, var(--p-primary-color))");
       expect(warnings()[0]).toMatch(/^\[WAKEB_UNKNOWN_VALUE\] WUserBadge avatarColor 'deep-purple'/);
     }
+  });
+});
+
+describe.runIf(framework === "primevue")("PrimeVue tooltip stacking and global pass-through (SPEC R17, R19)", () => {
+  const zTheme: Partial<WakebComponentsOptions> = { theme: { mode: "dark", tokens: { primary: "#123456", zIndexOverlay: 3100 } } };
+  const globalPt = { directives: { tooltip: { root: { style: { outline: "2px solid green", zIndex: 7 }, "data-global": "yes" } } } };
+  /** Mounts with a PrimeVue host that sets a global tooltip root pass-through. */
+  const renderWithGlobalPt = (component: unknown, options: Record<string, unknown>, plugin: Partial<WakebComponentsOptions>) =>
+    mount(component as never, {
+      attachTo: document.body,
+      global: { plugins: [[PrimeVue, { theme: "none", pt: globalPt }] as never, wakeb(plugin)], stubs: { transition: false } },
+      ...options,
+    });
+  const hoverTooltip = async (w: VueWrapper, selector: string, text: string) => {
+    await w.get(selector).trigger("mouseenter");
+    return tooltipWith(w, text);
+  };
+  const leave = async (w: VueWrapper, selector: string) => {
+    await w.get(selector).trigger("mouseleave");
+    await vi.waitFor(() => noTooltip());
+  };
+
+  it.each([
+    ["WButton", WButton, { title: "Save", icon: "$close", isTooltip: true }, "button", "Save"],
+    ["WTooltipBtn", WTooltipBtn, { text: "Help", icon: "$close", openDelay: 0 }, "button", "Help"],
+    ["WTruncatedText", WTruncatedText, { label: "A long stacked label", length: 6 }, ".truncated-text", "A long stacked label"],
+    ["WAvatarStack", WAvatarStack, { items: [{ name: "Ada Lovelace" }] }, '[role="img"]', "Ada Lovelace"],
+  ] as const)("%s tooltip takes zIndexOverlay", async (_name, component, props, selector, text) => {
+    const w = render(component, { props }, zTheme);
+    const tooltip = await hoverTooltip(w, selector, text);
+    expect(tooltip.style.zIndex).toBe("3100");
+    expect(tooltip.getAttribute("data-wakeb-theme")).toBe("dark");
+  });
+
+  it("keeps PrimeVue's own z-index without zIndexOverlay and releases its stack after a configured tooltip", async () => {
+    const plain = render(WTruncatedText, { props: { label: "A long plain label", length: 6 } });
+    const first = (await hoverTooltip(plain, ".truncated-text", "A long plain label")).style.zIndex;
+    expect(first).not.toBe("");
+    expect(first).not.toBe("3100");
+    await leave(plain, ".truncated-text");
+    const stacked = render(WTruncatedText, { props: { label: "A long stacked label", length: 6 } }, zTheme);
+    expect((await hoverTooltip(stacked, ".truncated-text", "A long stacked label")).style.zIndex).toBe("3100");
+    await leave(stacked, ".truncated-text");
+    // PrimeVue's z-index stack released the entry it registered for the configured tooltip.
+    expect((await hoverTooltip(plain, ".truncated-text", "A long plain label")).style.zIndex).toBe(first);
+  });
+
+  it("keeps zIndexOverlay after the tooltip value updates", async () => {
+    const w = render(WTruncatedText, { props: { label: "A long updated label", length: 6 } }, zTheme);
+    await w.setProps({ label: "A long changed label" });
+    expect((await hoverTooltip(w, ".truncated-text", "A long changed label")).style.zIndex).toBe("3100");
+  });
+
+  it("keeps a global pt.directives.tooltip.root style under the Wakeb scope while tooltipStyle wins", async () => {
+    const w = renderWithGlobalPt(
+      WTruncatedText,
+      { props: { label: "A long global label", length: 6, tooltipStyle: { "--wakeb-ui-primary": "#abcdef" } } },
+      zTheme,
+    );
+    const tooltip = await hoverTooltip(w, ".truncated-text", "A long global label");
+    expect(tooltip.style.outline).toBe("2px solid green");
+    expect(tooltip.getAttribute("data-global")).toBe("yes");
+    expect(tooltip.style.getPropertyValue("--wakeb-ui-primary")).toBe("#123456");
+    expect(tooltip.style.zIndex).toBe("3100");
+    const text = tooltip.querySelector<HTMLElement>('[data-pc-section="text"]')!;
+    expect(text.style.getPropertyValue("--wakeb-ui-primary")).toBe("#abcdef");
+  });
+
+  it("keeps a global pt.directives.tooltip.root style on WAvatarStack tooltips while tooltipStyle wins", async () => {
+    const w = renderWithGlobalPt(WAvatarStack, { props: { items: [{ name: "Ada Lovelace" }], tooltipStyle: { outline: "1px dashed red" } } }, zTheme);
+    const tooltip = await hoverTooltip(w, '[role="img"]', "Ada Lovelace");
+    expect(tooltip.getAttribute("data-global")).toBe("yes");
+    expect(tooltip.style.outline).toBe("1px dashed red");
+    expect(tooltip.style.getPropertyValue("--wakeb-ui-primary")).toBe("#123456");
+    expect(tooltip.style.zIndex).toBe("3100");
+  });
+
+  it("adds nothing to the global style when nothing is configured", async () => {
+    const w = renderWithGlobalPt(WButton, { props: { title: "Plain", icon: "$close", isTooltip: true } }, {});
+    const tooltip = await hoverTooltip(w, "button", "Plain");
+    expect(tooltip.style.outline).toBe("2px solid green");
+    expect(tooltip.style.zIndex).not.toBe("3100");
+    expect(tooltip.hasAttribute("data-wakeb-theme")).toBe(false);
   });
 });

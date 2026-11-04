@@ -62,7 +62,6 @@ Upgrading needs the migration guide. Root imports alone no longer work.
   - All component evidence is jsdom, `renderToString` or packed-consumer builds (ACCEPTANCE.md R18, R19).
 - **No Jervis DevOps pipeline run is recorded** for this branch, and the docs are not published from it (ACCEPTANCE.md R22).
 - **Vuetify WDrawer** still needs `VApp` or `VLayout` and does not close on Escape. PrimeVue and shadcn-vue do close on Escape.
-- **PrimeVue tooltips ignore `zIndexOverlay`**, because PrimeVue sets tooltip z-index globally.
 - **WDropdown `colorMap` keys** are open strings.
 - **Deprecated Vuetify color names and badge types.** They type-check, flagged `@deprecated`, and render only under Vuetify; PrimeVue and shadcn-vue fall back with `WAKEB_UNKNOWN_VALUE`.
 - **shadcn-vue overlays** write `dir="ltr"` unless Wakeb `direction` is set. The theme bridge assumes Tailwind v4 complete-color variables.
@@ -75,7 +74,7 @@ Upgrading needs the migration guide. Root imports alone no longer work.
 Each of these must be decided before a stable release. They can be deferred for an alpha only if this list ships with it.
 
 1. **Vuetify WDrawer.** Either accept the layout-host requirement and the missing Escape close as a documented provider difference, or require parity, which means an internal host and Escape handling.
-2. **PrimeVue tooltips and `zIndexOverlay`.** Either document that tooltips ignore it, or set PrimeVue's global tooltip z-index from Wakeb, which affects the whole host app.
+2. ~~**PrimeVue tooltips and `zIndexOverlay`.**~~ **Decided:** PrimeVue tooltips honor `zIndexOverlay` like every other overlay. Wakeb sets it on each Wakeb tooltip element only, so PrimeVue's global tooltip z-index for the rest of the host app is unchanged.
 3. **WDropdown `colorMap`.** Either keep keys as open strings, or narrow them to `WakebIntent | string` with documented semantics.
 4. ~~**Deprecated Vuetify values.**~~ **Decided.** TypeScript accepts the deprecated values the runtime still renders, flagged with `@deprecated`, for the one-major deprecation window.
 5. **Release version and dist-tag** (below).

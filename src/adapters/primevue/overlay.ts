@@ -2,6 +2,7 @@ import { computed, onBeforeUnmount, ref, type CSSProperties } from "vue";
 import { usePrimeVue } from "primevue/config";
 import type Popover from "primevue/popover";
 import type { WakebContext } from "../../core/runtime";
+import { tooltipRoot } from "./tooltip";
 
 /*
  * Overlay helpers shared by the PrimeVue renderers that open informational overlays (WAvatarStack,
@@ -13,7 +14,9 @@ import type { WakebContext } from "../../core/runtime";
 /**
  * Value for PrimeVue's `v-tooltip` directive. The directive builds its element on document.body, so
  * the theme scope and the caller style travel through `pt.root`. A pt style replaces the directive's
- * inline defaults, so they are restated first; the caller style comes last and wins.
+ * inline defaults, so they are restated first; a global pt.directives.tooltip.root style stays under
+ * them and the caller style comes last and wins. A configured zIndexOverlay replaces PrimeVue's tooltip
+ * z-index unless the caller style names its own zIndex; bind the value through `vPvTooltip` (./tooltip).
  */
 export function useTooltipValue(context: WakebContext, callerStyle: () => CSSProperties | undefined) {
   const primevue = usePrimeVue();
@@ -22,9 +25,10 @@ export function useTooltipValue(context: WakebContext, callerStyle: () => CSSPro
     const { style, ...attrs } = context.scope;
     const caller = callerStyle();
     const hasCaller = caller !== undefined && Object.keys(caller).length > 0;
-    if (style === undefined && !hasCaller && Object.keys(attrs).length === 0) return text;
+    const zIndex = context.zIndexOverlay === undefined ? undefined : (caller?.zIndex ?? context.zIndexOverlay);
+    if (style === undefined && !hasCaller && Object.keys(attrs).length === 0 && zIndex === undefined) return text;
     const base = { display: "inline-block", width: "fit-content", pointerEvents: primevue.config.unstyled ? undefined : "none" };
-    return { value: text, pt: { root: { ...attrs, style: [base, style, hasCaller ? caller : undefined] } } } as unknown as string;
+    return { value: text, zIndex, pt: { root: tooltipRoot(attrs, [base, style, hasCaller ? caller : undefined]) } } as unknown as string;
   };
 }
 

@@ -300,8 +300,16 @@ describe(`overflow and tooltip scope (${framework})`, () => {
     expect(overlay.getAttribute("data-wakeb-theme")).toBe("dark");
     expect(overlay.getAttribute("dir")).toBe("rtl");
     expect(content.style.getPropertyValue("--wakeb-ui-primary")).toBe("#abcdef");
-    // PrimeVue's tooltip directive owns its z-index stack; only Vuetify takes the configured value.
-    if (vuetify) expect(overlay.style.zIndex).toBe("3100");
+    expect(overlay.style.zIndex).toBe("3100");
+  });
+
+  it("WAvatarStack tooltip lets a tooltipStyle zIndex win over zIndexOverlay", async () => {
+    const w = render(WAvatarStack, { props: { items: people.slice(0, 1), tooltipStyle: { zIndex: 4200 } } }, theme);
+    (w.get('[role="img"]').element as HTMLElement).focus();
+    await vi.waitFor(() => expect(tooltipParts()).toBeDefined());
+    const { content, overlay } = tooltipParts()!;
+    // The caller style sits on the PrimeVue tooltip root itself; Vuetify and reka-ui style an inner surface.
+    expect((framework === "primevue" ? overlay : content).style.zIndex).toBe("4200");
   });
 });
 

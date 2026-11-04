@@ -198,7 +198,7 @@ Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فت
 | `radius` | `--wakeb-ui-radius` | زوايا WButton وWModal |
 | `spacing` | `--wakeb-ui-spacing` | الحشو الداخلي في WModal |
 | `fontFamily` | `--wakeb-ui-font-family` | محتوى WModal |
-| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب الطبقات المنقولة: WModal وWDropdown وWExportDropdown وقائمتا WAvatarStack وWBadgeStack وتلميحات Vuetify وWDrawer على PrimeVue |
+| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب الطبقات المنقولة: WModal وWDropdown وWExportDropdown وقائمتا WAvatarStack وWBadgeStack والتلميحات وWDrawer على PrimeVue |
 
 متغيرات المكونات مثل `--wakeb-button-primary-background` تتقدم على هذه المتغيرات. تقبل
 متغيرات الألوان صيغ hex و`rgb()` و`hsl()` و`var(--…)` وأسماء الألوان، ويقبل `radius`
@@ -630,7 +630,9 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
   يدعم توجيه PrimeVue إلا مُشغّلًا واحدًا، لذلك يشغّل Wakeb معالجات المرور الخاصة بالتوجيه عند
   التركيز، ولا تُستدعى مستمعات الفأرة الخاصة بالمستخدم عند التركيز. ويشير العنصر إلى التلميح عبر
   `aria-describedby` بمعرّف من `useId` في Vue. ولأن جهات PrimeVue فيزيائية، تتبع `start` و`end`
-  خيار `direction` في الـplugin، لا اتجاه الصفحة.
+  خيار `direction` في الـplugin، لا اتجاه الصفحة. وتحتفظ هذه التلميحات وتلميحات WAvatarStack
+  بنمط `pt.directives.tooltip.root` العام في PrimeVue: تبقى خصائصه على جذر التلميح، ويتقدم
+  نطاق theme الخاص بـWakeb و`tooltipStyle` عليه حين يضبطان الخاصية نفسها.
 - **الأنماط في PrimeVue.** يرسم WButton زر PrimeVue دون أنماطه ويعتمد على tokens ‏Wakeb.
   القائمة والنافذة تحتاجان وضع الأنماط في PrimeVue، والتطبيق الذي يفعّل `unstyled: true`
   عمومًا يجب أن يضبط أنماط هذه الطبقات بنفسه.
@@ -643,8 +645,10 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
   و`tooltipStyle` توضع على محتوى الطبقة داخل هذا النطاق، لذا تتقدم عليه. ويحتفظ كل تطبيق في
   الصفحة نفسها بنطاق طبقاته الخاص.
 - **حدود ترتيب الطبقات.** يُطبَّق `zIndexOverlay` على كل طبقات Vuetify السابقة وعلى قوائم
-  PrimeVue ونافذته ولوحته الجانبية. تستقبل تلميحات WButton وWTooltipBtn وWTruncatedText على
-  PrimeVue سمات الـtheme، لكنها تحتفظ بترتيب z-index الخاص بتلميحات PrimeVue. على Vuetify لا
+  PrimeVue ونافذته ولوحته الجانبية وتلميحاته. على PrimeVue تأخذ تلميحات WButton وWTooltipBtn
+  وWTruncatedText وWAvatarStack قيمة `zIndexOverlay` بدلًا من z-index تلميحات PrimeVue، وتتقدم
+  قيمة `zIndex` في `tooltipStyle` الخاصة بـWAvatarStack عليها. وبدون `zIndexOverlay` تحتفظ
+  بقيمة z-index تلميحات PrimeVue ‏(`zIndex.tooltip` في إعدادات PrimeVue). على Vuetify لا
   يُنقل WDrawer: هو عنصر تخطيط في Vuetify يُرسم في مكانه، فتصل سمات النطاق إلى لوحته كجذر،
   ويبقى z-index الخاص به للتخطيط في Vuetify الذي يحدد موضع الخلفية المعتمة أيضًا. أما على
   PrimeVue فيُنقل WDrawer تحت طبقة الخلفية الخاصة به، وهي التي تأخذ `zIndexOverlay`؛ وبدونه

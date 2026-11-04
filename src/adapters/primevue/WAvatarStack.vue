@@ -2,17 +2,16 @@
 import { computed, useId } from "vue";
 import Avatar from "primevue/avatar";
 import Popover from "primevue/popover";
-import Tooltip from "primevue/tooltip";
 import type { AvatarStackProps } from "../../types";
 import { PRIMEVUE_INTENTS, useColor } from "../../core/vocabulary";
 import { useWakebContext } from "../../core/runtime";
 import { avatarLength, avatarStackDefaults, useAvatarStack } from "../../composables/avatar-stack";
 import { focusOpensTooltip, useOverflowPopup, useTooltipValue } from "./overlay";
+/* The PrimeVue directive under a local name (no clash with Vuetify's v-tooltip), with zIndexOverlay. */
+import { vPvTooltip } from "./tooltip";
 defineOptions({ name: "WAvatarStack" });
 const props = withDefaults(defineProps<AvatarStackProps>(), avatarStackDefaults);
 defineSlots<{ avatar(props: { item: unknown; index: number; label: string; avatar: string; initials: string }): unknown; overflow(props: { count: number }): unknown }>();
-/* Local name avoids the global Vuetify v-tooltip directive typing. */
-const vPvTooltip = Tooltip;
 const context = useWakebContext("WAvatarStack");
 /* Provider color names are not portable here: they fall back to primary with WAKEB_UNKNOWN_VALUE (SPEC R23). */
 const toColor = useColor("WAvatarStack", PRIMEVUE_INTENTS);

@@ -162,9 +162,8 @@ describe(`theme and direction scope (${framework})`, () => {
     expect(tooltip.getAttribute("data-wakeb-theme")).toBe("dark");
     expect(tooltip.getAttribute("dir")).toBe("rtl");
     expect(tooltip.style.getPropertyValue("--wakeb-ui-primary")).toBe("#123456");
-    // PrimeVue's tooltip directive owns its z-index stack; Vuetify and shadcn take the configured value.
-    if (framework !== "primevue") expect(tooltip.style.zIndex).toBe("3100");
-    else expect(tooltip.style.display).toBe("inline-block");
+    expect(tooltip.style.zIndex).toBe("3100");
+    if (framework === "primevue") expect(tooltip.style.display).toBe("inline-block");
   });
 
   it("adds nothing to the WButton tooltip when theme and direction are not configured", async () => {

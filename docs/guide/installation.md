@@ -79,3 +79,19 @@ Vue 3.5.40 is the lowest supported Vue. The package's type declarations use the 
 parameter that Vue 3.5.40 added to `DefineComponent`. With Vue 3.5.0 to 3.5.39 the components
 still build and render, but `tsc --strict` rejects the declarations. Vite is now a required peer,
 because the provider is selected only by the `wakebComponents()` Vite plugin.
+
+## What switching providers does not cover
+
+The provider release lets you change the provider that renders Wakeb components. Switching changes
+how Wakeb components render; it does not migrate the rest of your app. It does not cover:
+
+- Direct use of provider components in your app, for example `v-data-table`, PrimeVue
+  `DataTable`, or shadcn-vue source copied into the app.
+- `providerProps` values and other nonportable escape hatches.
+- CSS that targets provider classes or DOM (`.v-*`, `.p-*`, Tailwind utilities inside Wakeb
+  output).
+- Your provider's own theme, plugin options, icon sets and global defaults.
+- Deprecated aliases that only one provider accepts, such as Vuetify color names.
+
+[Switching providers](./switching) has the checklist that finds these usages, and
+[Migrating from 0.7](./migration) covers the upgrade from 0.7.

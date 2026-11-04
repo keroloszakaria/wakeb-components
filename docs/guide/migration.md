@@ -172,6 +172,8 @@ The full list of error codes is in [Errors](./providers#errors).
 0.7 accepted some values that only Vuetify understands. The provider release replaces them with
 Wakeb values that work on every provider. The old values keep working for **one major release**
 and log `WAKEB_DEPRECATED_VALUE` in development. The release after that removes them.
+WTabs item `customHTML` follows the same rule: it still renders on every provider, logs
+`WAKEB_DEPRECATED_VALUE` once per app, and should be replaced with the `tab-label` slot.
 
 ### Variants
 
@@ -298,8 +300,6 @@ provider's primitive. They are **nonportable**: under another provider the keys 
 
 ## Not changed yet
 
-- **WTabs `customHTML`.** The specification deprecates `customHTML` in favor of slots, but this
-  build still accepts it without a warning. Prefer the `tab-label` slot in new code.
 - **Development report of nonportable values.** There is no single report yet. Use the console
   warnings and the search patterns in [Switching providers](./switching#checklist).
 

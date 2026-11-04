@@ -1,4 +1,5 @@
-import { computed, nextTick, onMounted, ref, useId, useSlots, watch, type CSSProperties } from "vue";
+import { computed, inject, nextTick, onMounted, ref, useId, useSlots, watch, type CSSProperties } from "vue";
+import { WAKEB_CONTEXT, warnOnce } from "../core/runtime";
 import type { NavigationKey, TabItem, TabsProps } from "../types";
 
 /** Defaults shared by every WTabs renderer; providers must not change them. */
@@ -55,8 +56,14 @@ export function useTabs(props: ResolvedTabsProps, emit: TabsEmit, heightVariable
   const tab = ref<NavigationKey | undefined>(tabFromProps());
   const isSelected = (item: TabItem) => tab.value === item?.[props.valueKey];
 
-  const hasCustomHtml = (tabItem: TabItem) =>
-    typeof tabItem?.customHTML === "function" || typeof tabItem?.customHTML === "string";
+  const wakebContext = inject(WAKEB_CONTEXT, null);
+  // SPEC R16: customHTML keeps working but is deprecated; report it once per app in development.
+  const hasCustomHtml = (tabItem: TabItem) => {
+    const used = typeof tabItem?.customHTML === "function" || typeof tabItem?.customHTML === "string";
+    if (used && process.env.NODE_ENV !== "production")
+      warnOnce(wakebContext, "WAKEB_DEPRECATED_VALUE", "WTabs.tabs.customHTML", "WTabs tab item 'customHTML' is deprecated; render the label through the 'tab-label' slot instead. customHTML is removed in the next major release.");
+    return used;
+  };
   const resolveCustomHtml = (tabItem: TabItem) => {
     if (typeof tabItem?.customHTML === "function") {
       const context = { value: tabItem?.[props.valueKey], isSelected: isSelected(tabItem) };

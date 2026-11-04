@@ -43,6 +43,21 @@ const tabButtons = (w: VueWrapper) => w.findAll("[role=tab]");
 const selectedTab = (w: VueWrapper) => w.findAll('[role=tab][aria-selected="true"]');
 
 describe(`WTabs contract (${framework})`, () => {
+  it("still renders customHTML and reports it as deprecated once per app (R16)", async () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    const items = [
+      { slot: "one", label: "One", customHTML: "<b>Bold one</b>" },
+      { slot: "two", label: "Two", customHTML: () => "<i>Two</i>" },
+    ];
+    const w = render(WTabs, { props: { tabs: items } });
+    await settle();
+    expect(w.find("b").text()).toBe("Bold one");
+    const messages = vi.mocked(console.warn).mock.calls.map(([message]) => String(message));
+    expect(messages.filter((message) => message.includes("customHTML"))).toEqual([
+      "[WAKEB_DEPRECATED_VALUE] WTabs tab item 'customHTML' is deprecated; render the label through the 'tab-label' slot instead. customHTML is removed in the next major release.",
+    ]);
+  });
+
   it("selects the first tab silently, then emits updateTab once per click", async () => {
     const w = render(WTabs, { props: { tabs }, slots: { two: () => h("input", { class: "draft", value: "Draft" }) } });
     await settle();

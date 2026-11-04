@@ -1,0 +1,171 @@
+/* WTabs styles for the Wakeb-owned tablist and panels shared by the PrimeVue and shadcn-vue renderers, with the same Wakeb variables as the Vuetify renderer. */
+.wakeb-tabs {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--wakeb-tabs-content-gap, 32px);
+}
+.wakeb-tabs.flex-col {
+  flex-direction: column;
+}
+.wakeb-tabs__rail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.wakeb-tabs > .w-full,
+.wakeb-tabs__panels {
+  width: 100%;
+}
+.wakeb-tabs__window-item {
+  padding: 2px;
+}
+.wakeb-tabs__list {
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  border: 1px solid var(--wakeb-tabs-item-active-border, var(--wakeb-tabs-fallback, #d0d5dd));
+  border-radius: 10px;
+  overflow: hidden;
+  &--vertical {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 223px;
+    border-radius: 20px;
+  }
+}
+.wakeb-tabs__tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--wakeb-tabs-item-height, 44px);
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  color: var(--wakeb-tabs-item-color, var(--wakeb-tabs-fallback, #344054));
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  &:not(:first-of-type)::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background-color: var(--wakeb-tabs-item-active-border, var(--wakeb-tabs-fallback, #d0d5dd));
+  }
+  &--selected {
+    background-color: var(--wakeb-tabs-filled-item-active-bg, var(--wakeb-tabs-fallback, #e6f2f3));
+    color: var(--wakeb-tabs-item-active-color, var(--wakeb-tabs-fallback, #087f8c));
+    border-color: var(--wakeb-tabs-item-active-border, var(--wakeb-tabs-fallback, #d0d5dd));
+  }
+  &:focus-visible {
+    outline: 2px solid var(--wakeb-ui-focus, #087f8c);
+    outline-offset: -2px;
+  }
+}
+.wakeb-tabs__list--vertical .wakeb-tabs__tab {
+  width: 100%;
+  &::before {
+    content: unset;
+  }
+}
+.wakeb-tabs__tab-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  p {
+    margin: 0;
+  }
+  .tab-notification {
+    width: 29px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 10px;
+    border: 1px solid var(--wakeb-tabs-input-border, var(--wakeb-tabs-fallback, #d0d5dd));
+    border-radius: 50%;
+    background-color: var(--wakeb-tabs-input-bg, var(--wakeb-tabs-fallback, #fff));
+    color: var(--wakeb-tabs-input-label, var(--wakeb-tabs-fallback, #344054));
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+.tabs__rail-header {
+  width: 100%;
+  text-align: start;
+  padding: 0 4px 12px 0;
+}
+.tabs__section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding-block: 8px;
+  padding-inline: 4px 8px;
+  color: var(--wakeb-tabs-section-color, var(--wakeb-tabs-fallback, #667085));
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 18px;
+  white-space: nowrap;
+}
+.tabs__section-label-line {
+  flex: 1;
+  height: 0;
+  border-top: 1px solid var(--wakeb-tabs-section-border, var(--wakeb-tabs-fallback, #d0d5dd));
+}
+.tabs--sized .wakeb-tabs__tab {
+  height: var(--wakeb-tabs-item-height, var(--wakeb-tabs-fallback, 44px));
+  min-height: var(--wakeb-tabs-item-height, var(--wakeb-tabs-fallback, 44px));
+  padding: 8px 14px;
+  line-height: 1;
+}
+.none .wakeb-tabs__list {
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border: none;
+  background-color: transparent;
+}
+.filled .wakeb-tabs__list {
+  width: 100%;
+  border-radius: var(--wakeb-tabs-filled-tab-radius, var(--wakeb-tabs-fallback, 10px));
+  .wakeb-tabs__tab {
+    height: 45px;
+  }
+  .wakeb-tabs__tab--selected {
+    background-color: var(--wakeb-tabs-filled-item-active-bg, var(--wakeb-tabs-fallback, #e6f2f3));
+    color: var(--wakeb-tabs-filled-item-active-color, var(--wakeb-tabs-fallback, #087f8c));
+    border: none;
+  }
+}
+.minimal .wakeb-tabs__list {
+  gap: var(--wakeb-tabs-minimal-tab-gap, var(--wakeb-tabs-fallback, 4px));
+  padding: var(--wakeb-tabs-minimal-tab-padding, var(--wakeb-tabs-fallback, 4px));
+  background-color: var(--wakeb-tabs-minimal-tab-bg, var(--wakeb-tabs-fallback, #f2f4f7));
+  border: 1px solid var(--wakeb-tabs-minimal-tab-border, var(--wakeb-tabs-fallback, #d0d5dd));
+  border-radius: var(--wakeb-tabs-minimal-tab-radius, var(--wakeb-tabs-fallback, 12px));
+  .wakeb-tabs__tab {
+    height: 42px;
+    border-radius: var(--wakeb-tabs-minimal-item-radius, var(--wakeb-tabs-fallback, 8px));
+    color: var(--wakeb-tabs-minimal-item-color, var(--wakeb-tabs-fallback, #667085));
+    font-size: 16px;
+    &::before {
+      content: unset;
+    }
+  }
+  .wakeb-tabs__tab--selected {
+    background-color: var(--wakeb-tabs-filled-item-active-bg, var(--wakeb-tabs-fallback, #e6f2f3));
+    color: var(--wakeb-tabs-minimal-item-active-color, var(--wakeb-tabs-fallback, #101828));
+    border-color: transparent;
+    border-radius: var(--wakeb-tabs-minimal-item-active-radius, var(--wakeb-tabs-fallback, 8px));
+  }
+}

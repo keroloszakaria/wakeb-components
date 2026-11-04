@@ -5,10 +5,10 @@ import { renderToString } from "vue/server-renderer";
 import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WCarousel, WTabs, WTree } from "../src";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /* Server render without browser globals, with deterministic ids (SPEC R19), on each provider. */
-const host = () => (framework === "vuetify" ? createVuetify({ ssr: true }) : ([PrimeVue, { theme: "none" }] as const));
+const host = () => (framework === "vuetify" ? createVuetify({ ssr: true }) : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost);
 const page = () =>
   h("main", [
     h(WTabs, { tabs: [{ slot: "one", label: "One", content: "Server panel" }, { slot: "two", label: "Two" }] }),

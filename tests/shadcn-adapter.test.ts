@@ -3,7 +3,7 @@ import { defineComponent, h, nextTick, ref } from "vue";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { WButton, WDropdown, WLoading, WModal } from "../src";
+import { WButton, WCarousel, WDropdown, WLoading, WModal, WTabs, WTree } from "../src";
 import TooltipContent from "../src/adapters/shadcn/ui/TooltipContent.vue";
 import { shadcnHost, wakeb } from "./wakeb";
 
@@ -193,6 +193,71 @@ describe("shadcn WLoading indicator", () => {
     expect(svg.attributes("stroke-width")).toBe(String((3 * 24) / 32));
     expect(svg.attributes("style")).toContain("width: 32px");
     expect(w.get('[role="status"]').attributes("aria-label")).toBe("Saving");
+  });
+});
+
+describe("shadcn WTabs, WTree and WCarousel keyboard and attribute targets", () => {
+  const tabs = [
+    { slot: "one", label: "One", content: "First" },
+    { slot: "two", label: "Two", content: "Second" },
+    { slot: "three", label: "Three", content: "Third" },
+  ];
+
+  it("mirrors horizontal tab arrows in right-to-left layouts without selecting", async () => {
+    // jsdom does not inherit `direction`, so the computed layout direction a browser reports is stubbed.
+    const computed = window.getComputedStyle;
+    vi.spyOn(window, "getComputedStyle").mockImplementation((element, pseudo) => Object.assign(computed(element, pseudo), { direction: "rtl" }));
+    const w = render(WTabs, { props: { tabs } });
+    const buttons = () => w.findAll<HTMLElement>("[role=tab]").map((tab) => tab.element);
+    buttons()[0].focus();
+    key(buttons()[0], "ArrowLeft");
+    await settle();
+    expect(document.activeElement).toBe(buttons()[1]);
+    key(buttons()[1], "ArrowRight");
+    await settle();
+    expect(document.activeElement).toBe(buttons()[0]);
+    key(buttons()[0], "End");
+    await settle();
+    expect(document.activeElement).toBe(buttons()[2]);
+    expect(buttons()[0].getAttribute("aria-selected")).toBe("true");
+    expect(buttons().map((tab) => tab.tabIndex)).toEqual([0, -1, -1]);
+  });
+
+  it("toggles branches with the shadcn-vue WButton and keeps action clicks off the node", async () => {
+    const nodes = [{ id: 1, name: "Root", children: [{ id: 2, name: "Child" }] }];
+    const w = render(WTree, { props: { nodes, expandedKeys: [] } });
+    const toggle = w.get("button.tree__toggle");
+    expect(toggle.attributes("data-slot")).toBe("button");
+    expect(toggle.classes()).toContain("wakeb-sc-button");
+    expect(toggle.attributes("aria-expanded")).toBe("false");
+    await toggle.trigger("click");
+    expect(w.emitted("toggle")).toEqual([[nodes[0]]]);
+    expect(w.emitted("node-click")).toBeUndefined();
+  });
+
+  it("keeps focus on the matching arrow when arrow keys move slides", async () => {
+    const w = render(WCarousel, { props: { slides: ["a", "b", "c"], showArrows: true }, slots: { slide: ({ slide }: { slide: string }) => h("p", slide) } });
+    const [prev, next] = w.findAll<HTMLElement>(".wakeb-carousel__arrow").map((arrow) => arrow.element);
+    next.focus();
+    key(next, "ArrowRight");
+    await settle();
+    expect(w.emitted("update:modelValue")).toEqual([[1]]);
+    expect(document.activeElement).toBe(next);
+    key(next, "ArrowLeft");
+    await settle();
+    expect(document.activeElement).toBe(prev);
+  });
+
+  it.each([
+    ["WTabs", WTabs, { tabs }, ".wakeb-tabs"],
+    ["WTree", WTree, { nodes: [{ id: 1, name: "Root" }] }, 'ul[role="tree"]'],
+    ["WCarousel", WCarousel, { slides: [1, 2] }, '[role="region"]'],
+  ] as const)("%s sends portable attributes to its documented root", (_name, component, props, selector) => {
+    render(component, { props, attrs: { class: "caller-class", id: "caller-id", "data-test": "caller" } });
+    const target = document.querySelector('[data-test="caller"]')!;
+    expect(target.matches(selector)).toBe(true);
+    expect(target.classList.contains("caller-class")).toBe(true);
+    expect(target.id).toBe("caller-id");
   });
 });
 

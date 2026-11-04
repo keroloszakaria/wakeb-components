@@ -28,5 +28,5 @@ export type ComponentName = (typeof COMPONENTS)[number];
 export const SUPPORTED: Record<"vuetify" | "primevue" | "shadcn", readonly ComponentName[]> = {
   vuetify: COMPONENTS,
   primevue: COMPONENTS,
-  shadcn: ["WButton", "WDropdown", "WLoading", "WModal"],
+  shadcn: ["WButton", "WDropdown", "WLoading", "WModal", "WTabs", "WTree", "WCarousel"],
 };

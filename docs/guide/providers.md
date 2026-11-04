@@ -610,7 +610,7 @@ errors, and production builds drop them.
 | WExportDropdown, WBaseSidebar, WDrawer | Yes | Yes |
 | WAvatarStack, WBadgeStack, WAccordion | Yes | Yes |
 | WTruncatedText, WTooltipBtn, WBadge, WUserBadge | Yes | Yes |
-| shadcn-vue (alpha) | — | WButton, WDropdown, WModal, WLoading; the other 17 components: `WAKEB_COMPONENT_UNSUPPORTED` |
+| shadcn-vue (alpha) | — | WButton, WDropdown, WModal, WLoading; WTabs, WTree, WCarousel (native Wakeb markup); the other 14 components: `WAKEB_COMPONENT_UNSUPPORTED` |
 
 ## Limits of this alpha
 
@@ -685,8 +685,8 @@ errors, and production builds drop them.
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning Alpha
-The shadcn-vue adapter renders WButton, WDropdown, WModal and WLoading. Every other component
-fails with `WAKEB_COMPONENT_UNSUPPORTED` under `framework: 'shadcn'`.
+The shadcn-vue adapter renders WButton, WDropdown, WModal, WLoading, WTabs, WTree and WCarousel.
+Every other component fails with `WAKEB_COMPONENT_UNSUPPORTED` under `framework: 'shadcn'`.
 :::
 
 shadcn-vue is not an npm component library. Its components are source files that the
@@ -719,6 +719,15 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
   the closing animation.
 - **WLoading** renders the shadcn-vue Spinner (the Lucide `loader-circle` icon). The icon is
   decorative; the WLoading root keeps `role="status"` and its label.
+- **WTabs, WTree and WCarousel** render the same Wakeb-owned markup and CSS as on PrimeVue, from
+  the same shared code. The shadcn-vue Tabs selects a tab as soon as an arrow key focuses it,
+  shadcn-vue has no Tree, and its Carousel needs Embla and has no autoplay or indicators, so
+  none of them is used. WTabs keeps manual activation: arrow keys, Home and End move focus (the
+  horizontal arrows are mirrored when the tablist's computed `direction` is `rtl`), and Enter,
+  Space or a click selects. The tablist has one Tab stop, and a panel mounts on first selection
+  and stays mounted. WCarousel keeps the Wakeb autoplay timer, which pauses on hover, on focus
+  inside the carousel or its indicators, while the document is hidden, and when the user
+  prefers reduced motion. The WTree branch toggle is the shadcn-vue WButton.
 
 **Limits.**
 
@@ -733,6 +742,11 @@ the CLI, Tailwind CSS or the shadcn-vue copies of those components:
   Changing your own shadcn-vue copies does not change Wakeb components.
 - **DOM.** The markup follows shadcn-vue (`data-slot`, `data-state`, `data-variant`), not
   Vuetify or PrimeVue. CSS that targets `.v-*` or `.p-*` classes does not apply.
+- **Tabs, tree and carousel DOM.** WTabs, WTree and WCarousel use Wakeb classes (`wakeb-tabs`,
+  `tree`, `wakeb-carousel`), not `data-slot` attributes or `wakeb-sc-*` classes; only the WTree
+  toggle button carries the shadcn-vue Button markup. Slides switch without a transition or
+  swipe gestures. They have no provider primitive, so `providerProps` is dropped with a
+  `WAKEB_PROVIDER_PROP_IGNORED` warning in development.
 - **Styles.** `style.css` contains the CSS of every renderer, including the shadcn-vue rules.
 
 **License.** shadcn-vue is MIT licensed (Copyright (c) 2023 unovue), and the inlined Lucide

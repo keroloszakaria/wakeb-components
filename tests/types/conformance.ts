@@ -54,6 +54,9 @@ import type ShadcnWButton from "../../src/adapters/shadcn/WButton.vue";
 import type ShadcnWDropdown from "../../src/adapters/shadcn/WDropdown.vue";
 import type ShadcnWLoading from "../../src/adapters/shadcn/WLoading.vue";
 import type ShadcnWModal from "../../src/adapters/shadcn/WModal.vue";
+import type ShadcnWTabs from "../../src/adapters/shadcn/WTabs.vue";
+import type ShadcnWTree from "../../src/adapters/shadcn/WTree.vue";
+import type ShadcnWCarousel from "../../src/adapters/shadcn/WCarousel.vue";
 
 type Instance<T> = T extends abstract new (...args: any) => infer I ? I : never;
 type PropsOf<T> = Instance<T> extends { $props: infer P } ? P : never;
@@ -135,6 +138,9 @@ interface Shadcn {
   WDropdown: typeof ShadcnWDropdown;
   WLoading: typeof ShadcnWLoading;
   WModal: typeof ShadcnWModal;
+  WTabs: typeof ShadcnWTabs;
+  WTree: typeof ShadcnWTree;
+  WCarousel: typeof ShadcnWCarousel;
 }
 
 /** The Vuetify renderer set is complete: every public component has one. */

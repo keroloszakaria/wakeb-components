@@ -602,7 +602,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | WExportDropdown وWBaseSidebar وWDrawer | مدعوم | مدعوم |
 | WAvatarStack وWBadgeStack وWAccordion | مدعوم | مدعوم |
 | WTruncatedText وWTooltipBtn وWBadge وWUserBadge | مدعوم | مدعوم |
-| shadcn-vue (تجريبي) | — | WButton وWDropdown وWModal وWLoading؛ وبقية المكونات (17 مكوّنًا): `WAKEB_COMPONENT_UNSUPPORTED` |
+| shadcn-vue (تجريبي) | — | WButton وWDropdown وWModal وWLoading؛ وWTabs وWTree وWCarousel (markup أصلي من Wakeb)؛ وبقية المكونات (14 مكوّنًا): `WAKEB_COMPONENT_UNSUPPORTED` |
 
 ## حدود الإصدار التجريبي
 
@@ -672,7 +672,8 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning تجريبي
-يرسم محوّل shadcn-vue المكونات WButton وWDropdown وWModal وWLoading. أما بقية المكونات فتفشل
+يرسم محوّل shadcn-vue المكونات WButton وWDropdown وWModal وWLoading وWTabs وWTree وWCarousel.
+أما بقية المكونات فتفشل
 بالرمز `WAKEB_COMPONENT_UNSUPPORTED` مع `framework: 'shadcn'`.
 :::
 
@@ -705,6 +706,15 @@ shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملف�
   العنصر الذي كان مركّزًا قبل فتحه. ويُطلق `afterLeave` بعد انتهاء حركة الإغلاق.
 - **WLoading** يرسم Spinner من shadcn-vue (أيقونة `loader-circle` من Lucide). الأيقونة زخرفية،
   ويحتفظ جذر WLoading بالقيمة `role="status"` وبالاسم الوصفي.
+- **WTabs وWTree وWCarousel** ترسم الـmarkup والأنماط نفسها التي يملكها Wakeb على PrimeVue، من
+  الكود المشترك نفسه. لا يُستخدم أي مكوّن من shadcn-vue هنا: مكوّن Tabs فيه يحدد التبويب بمجرد أن
+  ينقل إليه مفتاح سهم التركيز، ولا يحتوي shadcn-vue على Tree، ومكوّن Carousel فيه يحتاج إلى Embla
+  ولا يوفّر تشغيلًا تلقائيًا ولا مؤشرات. يحتفظ WTabs بالتفعيل اليدوي: تنقل مفاتيح الأسهم وHome
+  وEnd التركيز فقط (وتنعكس الأسهم الأفقية عندما تكون قيمة `direction` المحسوبة لقائمة التبويبات
+  `rtl`)، ويحدد Enter أو Space أو النقر التبويب. لقائمة التبويبات موضع Tab واحد، وتُركَّب اللوحة
+  عند أول تحديد لها وتبقى مركّبة بعده. ويحتفظ WCarousel بمؤقت التشغيل التلقائي الخاص بـWakeb، الذي
+  يتوقف عند مرور المؤشر، وعند وجود التركيز داخل العرض المتتابع أو مؤشراته، وأثناء إخفاء المستند،
+  وعندما يفضّل المستخدم تقليل الحركة. وزر فتح الفرع في WTree هو WButton الخاص بـshadcn-vue.
 
 **الحدود.**
 
@@ -719,6 +729,11 @@ shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملف�
   نسخك الخاصة من shadcn-vue لا يغيّر مكونات Wakeb.
 - **الـDOM.** يتبع الـmarkup مكونات shadcn-vue ‏(`data-slot` و`data-state` و`data-variant`)، لا
   Vuetify ولا PrimeVue، فلا تنطبق الأنماط التي تستهدف أصناف `.v-*` أو `.p-*`.
+- **DOM التبويبات والشجرة والعرض المتتابع.** تستخدم WTabs وWTree وWCarousel أصناف Wakeb
+  (`wakeb-tabs` و`tree` و`wakeb-carousel`)، لا سمات `data-slot` ولا أصناف `wakeb-sc-*`؛ ولا يحمل
+  markup زر shadcn-vue إلا زر فتح الفرع في WTree. تتبدل الشرائح دون حركة انتقال أو إيماءات سحب.
+  ولا تملك هذه المكونات primitive من المزود، لذا تُهمَل `providerProps` مع تحذير
+  `WAKEB_PROVIDER_PROP_IGNORED` في وضع التطوير.
 - **الأنماط.** يحتوي `style.css` أنماط كل الـrenderers، ومنها قواعد shadcn-vue.
 
 **الترخيص.** يخضع shadcn-vue لرخصة MIT ‏(Copyright (c) 2023 unovue)، وتخضع أيقونة Lucide المضمّنة

@@ -4,13 +4,13 @@ import { mount, type VueWrapper } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
 import PrimeVue from "primevue/config";
 import { WCarousel, WTabs, WTree } from "../src";
-import { framework, wakeb } from "./wakeb";
+import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /*
  * Shared WTabs, WTree and WCarousel contract (SPEC R12, R13, R18; IMPLEMENTATION M4), run once per
  * provider project. Queries use roles and Wakeb classes only: provider markup is not part of the contract.
  */
-const host = () => (framework === "vuetify" ? createVuetify() : ([PrimeVue, { theme: "none" }] as const));
+const host = () => (framework === "vuetify" ? createVuetify() : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost);
 const wrappers: VueWrapper[] = [];
 const render = (component: unknown, options: Record<string, unknown> = {}, plugin = wakeb()) => {
   const w = mount(component as never, {

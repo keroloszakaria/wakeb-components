@@ -104,57 +104,5 @@ function onArrowKeydown(event: KeyboardEvent) {
 </template>
 <style scoped lang="scss">
 @use "../../styles/carousel";
-.wakeb-carousel {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-.wakeb-carousel__container {
-  position: relative;
-  height: 100%;
-}
-.wakeb-carousel__item {
-  height: 100%;
-}
-.wakeb-carousel__controls {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-inline: 16px;
-  pointer-events: none;
-  > :deep(*) {
-    pointer-events: auto;
-  }
-}
-.wakeb-carousel__arrow {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: 0;
-  border-radius: 50%;
-  cursor: pointer;
-  color: var(--wakeb-ui-on-surface, #101828);
-  background: color-mix(in srgb, var(--wakeb-ui-surface, #fff) 80%, transparent);
-  &:focus-visible {
-    outline: 2px solid var(--wakeb-carousel-focus, var(--wakeb-ui-focus, #087f8c));
-    outline-offset: 2px;
-  }
-}
-.wakeb-carousel--arrows-hover .wakeb-carousel__controls {
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.wakeb-carousel--arrows-hover:hover .wakeb-carousel__controls,
-.wakeb-carousel--arrows-hover:focus-within .wakeb-carousel__controls {
-  opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .wakeb-carousel--arrows-hover .wakeb-carousel__controls {
-    transition: none;
-  }
-}
+@use "../../styles/carousel-native";
 </style>

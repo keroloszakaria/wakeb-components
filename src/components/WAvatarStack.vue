@@ -6,23 +6,14 @@ import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem, VListItemTitle } from "vuetify/components/VList";
 import type { AvatarStackProps } from "../types";
 import { VUETIFY_INTENTS, useColor, vuetifyFill } from "../core/vocabulary";
+import { avatarStackDefaults, useAvatarStack } from "../composables/avatar-stack";
 import { useWakebContext } from "../core/runtime";
-const props = withDefaults(defineProps<AvatarStackProps>(), { items: () => [], max: 3, size: 32, avatarColor: "primary", showOverflowMenu: false, showTooltip: true, itemKey: "id", nameKey: "name", avatarKey: "avatar", unknownLabel: "Unknown user", overflowLabel: "", menuStyle: () => ({}), tooltipStyle: () => ({}) });
+const props = withDefaults(defineProps<AvatarStackProps>(), avatarStackDefaults);
 const toColor = useColor("WAvatarStack", VUETIFY_INTENTS, true);
 const context = useWakebContext("WAvatarStack");
 const fill = computed(() => vuetifyFill(toColor(props.avatarColor, "avatarColor", "primary"), "var(--wakeb-avatar-text, var(--wakeb-ui-on-primary, #fff))"));
 defineSlots<{ avatar(props: { item: unknown; index: number; label: string; avatar: string; initials: string }): unknown; overflow(props: { count: number }): unknown }>();
-const count = computed(() => Number.isFinite(props.max) ? Math.max(0, Math.floor(props.max)) : 3);
-const items = computed(() => Array.isArray(props.items) ? props.items : []);
-const visibleItems = computed(() => items.value.slice(0, count.value));
-const overflowItems = computed(() => items.value.slice(count.value));
-const overflowCount = computed(() => overflowItems.value.length);
-const overflowName = computed(() => props.overflowLabel || `+${overflowCount.value}`);
-function field(item: unknown, path: string): unknown { return path.split(".").reduce<unknown>((value, key) => value != null && typeof value === "object" && Object.prototype.hasOwnProperty.call(value, key) ? (value as Record<string, unknown>)[key] : undefined, item); }
-const getName = (item: unknown) => { const value = field(item, props.nameKey); return typeof value === "string" && value.trim() ? value : props.unknownLabel; };
-const getAvatar = (item: unknown) => { const value = field(item, props.avatarKey); return typeof value === "string" && (value.startsWith("http") || value.startsWith("/") || value.startsWith("data:")) ? value : ""; };
-const getKey = (item: unknown, index: number) => { const value = field(item, props.itemKey); return typeof value === "string" || typeof value === "number" ? value : index; };
-const initials = (item: unknown) => { const value = field(item, props.nameKey); if (typeof value !== "string" || !value.trim() || value === "—") return "?"; return value.trim().split(/\s+/).slice(0, 2).map(word => Array.from(word)[0]).join("").toUpperCase(); };
+const { visibleItems, overflowItems, overflowCount, overflowName, getName, getAvatar, getKey, initials } = useAvatarStack(props);
 </script>
 <template>
   <div class="avatars-stack">
@@ -51,15 +42,5 @@ const initials = (item: unknown) => { const value = field(item, props.nameKey); 
   </div>
 </template>
 <style scoped lang="scss">
-.avatars-stack { display:flex; align-items:center;
-  > :not(:first-child) { margin-inline-start:var(--wakeb-avatar-overlap, -10px); }
-  .actor-avatar { border:2px solid var(--wakeb-avatar-border, rgb(var(--v-theme-surface, 255, 255, 255))); font-size:.6875rem; font-weight:600; }
-  .actor-initials { font-size:.6875rem; font-weight:600; line-height:1; }
-  > div:focus-visible, button:focus-visible { outline:2px solid var(--wakeb-avatar-focus, rgb(var(--v-theme-primary, 8, 127, 140))); outline-offset:2px; }
-}
-.overflow-menu-list { background:var(--wakeb-avatar-menu-surface, rgb(var(--v-theme-surface, 255, 255, 255))) !important; min-width:200px; }
-.overflow-menu-item { padding-inline:.625rem !important; }
-.overflow-menu-avatar { margin-inline-end:.5rem; }
-.overflow-menu-name { color:var(--wakeb-avatar-menu-text, rgb(var(--v-theme-on-surface, 16, 24, 40))); font-size:.75rem; font-weight:600; }
-.overflow-menu-initials { font-size:.625rem; font-weight:600; line-height:1; }
+@use "../styles/avatar-stack";
 </style>

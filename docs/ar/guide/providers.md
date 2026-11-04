@@ -554,6 +554,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | WSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton | مدعوم | مدعوم |
 | WTabs وWTree وWCarousel | مدعوم | مدعوم (markup أصلي من Wakeb) |
 | WExportDropdown وWBaseSidebar وWDrawer | مدعوم | مدعوم |
+| WAvatarStack وWBadgeStack وWAccordion | مدعوم | مدعوم (ترسم WBadgeStack شاراتها بشارة داخلية من Wakeb إلى أن يصل WBadge الخاص بـPrimeVue) |
 | بقية المكونات | مدعوم | ليس بعد: `WAKEB_COMPONENT_UNSUPPORTED` |
 | shadcn-vue | — | مخطط له (المرحلة M5) |
 

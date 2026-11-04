@@ -21,7 +21,7 @@ import { WBadgeStack } from 'wakeb-components'
 | `items` | `readonly BadgeStackItem[]` | `[]` | Records with label, image URL, color and per-badge overrides. |
 | `max` | `number` | `1` | Visible item slice limit; use a finite nonnegative integer. |
 | `truncateLength` | `number` | `12` | Visible label length including the three-dot suffix. Overflow labels stay full. |
-| `showOverflowMenu` | `boolean` | `false` | Enable a real hover/click/keyboard Vuetify menu on +N. |
+| `showOverflowMenu` | `boolean` | `false` | Enable a real hover/click/keyboard overflow list on +N (a Vuetify menu or a PrimeVue Popover). |
 | `badgeType` | `string` | `"transparent"` | Default WBadge semantic type. |
 | `badgeVariant` | `BadgeProps["variant"]` | `"soft"` | Style of every badge and of the +N badge; an item variant overrides it per row. Baseline names warn in development. |
 | `badgeBorderRadius` | `string` | `"md"` | Default preset radius. |
@@ -42,7 +42,7 @@ import { WBadgeStack } from 'wakeb-components'
 
 ## Events
 
-No custom events. Native wrapper listeners bubble normally; menu state belongs to Vuetify.
+No custom events. Native wrapper listeners bubble normally; menu state belongs to the provider overlay (Vuetify menu or PrimeVue Popover).
 
 ## Slots
 
@@ -65,7 +65,7 @@ The root flex `div.badge-stack`. Each badge receives `badgeAttrs`; the teleporte
 
 ## Accessibility and limits
 
-Ordinary attrs target the flex wrapper. No business/theme/icon registry is imported. WBadge variables also apply. Set menu colors through menuStyle and badgeAttrs styles/classes because Vuetify teleports the list outside the stack; the menu carries only the plugin theme scope and zIndexOverlay, and menuStyle wins over it. Image URLs render as decorative img elements; no fetch proxy or detection tint is built in. Nullish per-item overrides preserve false/empty values. max keeps Array.slice and count arithmetic for compatibility; negative, fractional or nonfinite values are unsupported configurations. Visible labels use Wakeb Utils UTF-16 truncation; the menu shows full labels. Only the menu overflow uses customOverflowBorderRadius; the static +N uses customBorderRadius. The circle icon variant also applies to the teleported overflow list. The overflow activator is not announced as a menu because the list is informational. The inherited 58px overflow selector and the legacy circle sizing rules are retained; replace through CSS as needed. Native menu button supports focus, Enter/Space and Escape via Vuetify. The legacy div tag does not provide a native tab stop.
+Ordinary attrs target the flex wrapper. No business/theme/icon registry is imported. WBadge variables also apply. Set menu colors through menuStyle and badgeAttrs styles/classes because Vuetify teleports the list outside the stack; the menu carries only the plugin theme scope and zIndexOverlay, and menuStyle wins over it. Image URLs render as decorative img elements; no fetch proxy or detection tint is built in. Nullish per-item overrides preserve false/empty values. max keeps Array.slice and count arithmetic for compatibility; negative, fractional or nonfinite values are unsupported configurations. Visible labels use Wakeb Utils UTF-16 truncation; the menu shows full labels. Only the menu overflow uses customOverflowBorderRadius; the static +N uses customBorderRadius. The circle icon variant also applies to the teleported overflow list. The overflow activator is not announced as a menu because the list is informational. The inherited 58px overflow selector and the legacy circle sizing rules are retained; replace through CSS as needed. Native menu button supports focus, Enter/Space and Escape via Vuetify. The legacy div tag does not provide a native tab stop. PrimeVue: the overflow list opens in a Popover with the same opening rules (hover; click toggles the button; the legacy div opens on hover only). Escape and outside clicks close it; it takes the theme scope and zIndexOverlay, and menuStyle on the list wins. Until the PrimeVue WBadge renderer lands, the stack draws its badges with an internal badge that takes WBadge's props and uses Wakeb CSS only: badge type and variant classes and the --wakeb-badge-* variables match, but the DOM is not a VChip, and a non-Wakeb badge type falls back to primary with WAKEB_UNKNOWN_VALUE. Badge glyphs resolve through the Wakeb icon resolver.
 
 ## Try it
 

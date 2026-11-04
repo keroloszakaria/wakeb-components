@@ -20,9 +20,9 @@ import { WAvatarStack } from 'wakeb-components'
 | --- | --- | --- | --- |
 | `items` | `readonly unknown[]` | `[]` | Entries; null or malformed entries use fallback labels. |
 | `max` | `number` | `3` | Visible count; finite values are floored and clamped to zero, NaN/infinity use 3. |
-| `size` | `string \| number` | `32` | Vuetify avatar size. |
+| `size` | `string \| number` | `32` | Avatar size: a number or numeric string in pixels, another CSS length, or a Vuetify size name (x-small 24px, small 32px, default 40px, large 48px, x-large 56px). |
 | `avatarColor` | `WakebColor` | `"primary"` | Initials, overflow and image-avatar background. Wakeb intent (primary, secondary, success, warning, danger, info, neutral) or CSS color. Initials use --wakeb-avatar-text. |
-| `showOverflowMenu` | `boolean` | `false` | Show remaining users in a Vuetify menu. |
+| `showOverflowMenu` | `boolean` | `false` | Show remaining users in an overflow list (a Vuetify menu or a PrimeVue Popover). |
 | `showTooltip` | `boolean` | `true` | Enable focus/hover tooltips for visible users. |
 | `itemKey` | `string` | `"id"` | Dot path for a string/number key; index fallback. |
 | `nameKey` | `string` | `"name"` | Dot path for a display name. |
@@ -53,7 +53,7 @@ The root `div.avatars-stack`. The overflow menu is teleported and does not recei
 
 ## Accessibility and limits
 
-Visible avatars have full accessible names and gain a tab stop only when tooltips are enabled. Overflow is a real button when the menu is enabled. It exposes aria-expanded but not aria-haspopup, because the list is informational. Click, keyboard activation and hover use Vuetify. Without a menu it is a static named image. Duplicate item keys are the caller’s responsibility. Only own-property dot paths are read; names are escaped text. Image paths accept http-prefixed, slash-relative or data URLs; image fetching follows the browser and Vuetify. Fallback initials use the first Unicode code point of two words. No i18n/store instance is needed. Teleported menu variables belong in menuStyle; tooltip styling belongs in tooltipStyle. The menu and tooltips carry only the plugin theme scope (data-wakeb-theme, dir, --wakeb-ui-* variables and zIndexOverlay); menuStyle and tooltipStyle win over it.
+Visible avatars have full accessible names and gain a tab stop only when tooltips are enabled. Overflow is a real button when the menu is enabled. It exposes aria-expanded but not aria-haspopup, because the list is informational. Click, keyboard activation and hover use Vuetify. Without a menu it is a static named image. Duplicate item keys are the caller’s responsibility. Only own-property dot paths are read; names are escaped text. Image paths accept http-prefixed, slash-relative or data URLs; image fetching follows the browser and Vuetify. Fallback initials use the first Unicode code point of two words. No i18n/store instance is needed. Teleported menu variables belong in menuStyle; tooltip styling belongs in tooltipStyle. The menu and tooltips carry only the plugin theme scope (data-wakeb-theme, dir, --wakeb-ui-* variables and zIndexOverlay); menuStyle and tooltipStyle win over it. PrimeVue: avatars use PrimeVue Avatar, sized and colored by Wakeb CSS. The overflow is a native button that opens a Popover on hover, focus or click; Escape or an outside click closes it, and aria-controls names it only while it is open. The Popover is a non-modal dialog (aria-modal="false") named by overflowLabel; PrimeVue places it below or above the button and adds its focus-trap sentinels. Tooltips use PrimeVue's tooltip directive; Wakeb also opens them on keyboard focus and closes them on blur and Escape. Tooltips carry the theme scope and tooltipStyle but keep PrimeVue's own tooltip z-index stack; the Popover takes zIndexOverlay. Provider color names in avatarColor are not portable on PrimeVue: they fall back to primary with WAKEB_UNKNOWN_VALUE.
 
 ## Try it
 

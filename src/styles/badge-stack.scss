@@ -1,0 +1,105 @@
+/* WBadgeStack styles shared by every provider renderer; provider DOM selectors are no-ops elsewhere. */
+.badge-stack {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.badge-stack__overflow-activator {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+button.badge-stack__overflow-activator {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+.badge-stack__overflow-activator:focus-visible {
+  outline: 2px solid var(--wakeb-badge-stack-focus, #087f8c);
+  outline-offset: 2px;
+  border-radius: 999px;
+}
+.badge-stack__overflow {
+  max-width: 58px;
+  width: fit-content;
+  height: 22px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--wakeb-badge-stack-overflow-background, #fff) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+
+  :deep(.v-chip__content) {
+    padding: 0 6px !important;
+    gap: 4px !important;
+  }
+
+  :deep(span) {
+    font-size: 10px !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
+    color: var(--wakeb-badge-stack-overflow-color, #101828) !important;
+    white-space: nowrap;
+  }
+}
+
+.badge-stack :deep(.badge-stack__icon),
+.overflow-menu-item :deep(.badge-stack__icon) {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.badge-stack--circle-icon {
+  :deep(.badge-stack__icon-wrap) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    padding: 2px;
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+
+  :deep(.badge-stack__icon) {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.overflow-menu-list {
+  background: var(
+    --wakeb-badge-stack-menu-surface,
+    var(
+      --wakeb-badge-stack-fallback,
+      rgb(var(--v-theme-surface, 255, 255, 255))
+    )
+  ) !important;
+  min-width: 160px;
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  overflow: visible;
+}
+
+.overflow-menu-item {
+  padding-inline: 0.625rem !important;
+  overflow: visible;
+}
+
+.overflow-menu-item :deep(.v-list-item__content) {
+  min-width: max-content;
+  overflow: visible;
+}
+
+.overflow-menu-item :deep(.v-chip) {
+  max-width: calc(100vw - 44px);
+}

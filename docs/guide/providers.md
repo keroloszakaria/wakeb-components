@@ -562,6 +562,7 @@ errors, and production builds drop them.
 | WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WPageSkeleton | Yes | Yes |
 | WTabs, WTree, WCarousel | Yes | Yes (native Wakeb markup) |
 | WExportDropdown, WBaseSidebar, WDrawer | Yes | Yes |
+| WAvatarStack, WBadgeStack, WAccordion | Yes | Yes (WBadgeStack draws badges with an internal Wakeb badge until the PrimeVue WBadge lands) |
 | The other components | Yes | Not yet: `WAKEB_COMPONENT_UNSUPPORTED` |
 | shadcn-vue | — | Planned (milestone M5) |
 

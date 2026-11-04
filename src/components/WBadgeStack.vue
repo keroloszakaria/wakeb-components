@@ -1,41 +1,18 @@
 <script setup lang="ts">
-import { computed } from "vue";
-import { useColor, useVariant } from "../core/vocabulary";
 import { useWakebContext } from "../core/runtime";
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
 import { useVuetifyIcon } from "../core/icons";
-import { truncateText } from "wakeb-utils";
+import { badgeStackDefaults, useBadgeStack } from "../composables/badge-stack";
 import WBadge from "./WBadge.vue";
 import type {
   BadgeStackProps,
   BadgeStackItem,
   BadgeStackIconSlotProps,
-  BadgeProps,
   SharedIcon,
-  WakebColor,
 } from "../types";
-const props = withDefaults(defineProps<BadgeStackProps>(), {
-  items: () => [],
-  max: 1,
-  truncateLength: 12,
-  showOverflowMenu: false,
-  badgeType: "transparent",
-  badgeVariant: "soft",
-  badgeBorderRadius: "md",
-  customBorderRadius: "sm",
-  badgePadding: "",
-  badgeClassList: "",
-  isDot: false,
-  iconSize: "xs",
-  iconPosition: "before",
-  iconVariant: "default",
-  iconBackgroundOpacity: 1,
-  customOverflowBorderRadius: "999px",
-  overflowLabel: "",
-  overflowTag: "button",
-});
+const props = withDefaults(defineProps<BadgeStackProps>(), badgeStackDefaults);
 defineSlots<{
   icon?(props: BadgeStackIconSlotProps): unknown;
   badgeIcon?(props: {
@@ -49,45 +26,8 @@ defineSlots<{
     overflow: boolean;
   }): unknown;
 }>();
-// Normalized here so deprecation warnings name the stack prop the caller used.
-const toVariant = useVariant("WBadgeStack");
 const context = useWakebContext("WBadgeStack");
-const stackVariant = computed(() => toVariant(props.badgeVariant, "badgeVariant", "soft"));
-const toColor = useColor("WBadgeStack");
-const stackDot = computed(() => toColor(props.dotColor, "dotColor", "").css);
-const items = computed(() => (Array.isArray(props.items) ? props.items : []));
-const visibleItems = computed(() => items.value.slice(0, props.max));
-const overflowItems = computed(() => items.value.slice(props.max));
-const overflowCount = computed(() =>
-  Math.max(items.value.length - props.max, 0),
-);
-const iconWrapStyle = (item: BadgeStackItem) => {
-  const color = toColor(item.color, "items[].color", "var(--wakeb-badge-stack-icon-background, #087f8c)").css;
-  const percent = Math.round(
-    Math.min(Math.max(Number(props.iconBackgroundOpacity) || 0, 0), 1) * 100,
-  );
-  return {
-    backgroundColor:
-      percent >= 100
-        ? color
-        : `color-mix(in srgb, ${color} ${percent}%, transparent)`,
-  };
-};
-const resolveBadgeProps = (item: BadgeStackItem): BadgeProps => ({
-  type: item.type ?? props.badgeType,
-  variant: item.variant === undefined ? stackVariant.value : toVariant(item.variant, "items[].variant", stackVariant.value),
-  borderRadius: item.borderRadius ?? props.badgeBorderRadius,
-  customBorderRadius: item.customBorderRadius ?? props.customBorderRadius,
-  customPadding: item.customPadding ?? props.badgePadding,
-  dotColor: (item.dotColor === undefined ? stackDot.value : toColor(item.dotColor, "items[].dotColor", stackDot.value as WakebColor | "").css) as WakebColor,
-  isDot: item.isDot ?? props.isDot,
-  classList: item.classList ?? props.badgeClassList,
-  icon: item.badgeIcon,
-  iconSize: item.iconSize ?? props.iconSize,
-  iconPosition: item.iconPosition ?? props.iconPosition,
-});
-const truncate = (text: string | undefined) =>
-  truncateText(text || "", props.truncateLength);
+const { stackVariant, visibleItems, overflowItems, overflowCount, iconWrapStyle, resolveBadgeProps, truncate } = useBadgeStack(props);
 const toIcon = useVuetifyIcon();
 </script>
 <template>
@@ -255,108 +195,5 @@ const toIcon = useVuetifyIcon();
   </div>
 </template>
 <style lang="scss" scoped>
-.badge-stack {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.badge-stack__overflow-activator {
-  display: inline-flex;
-  cursor: pointer;
-}
-
-button.badge-stack__overflow-activator {
-  border: 0;
-  padding: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-}
-.badge-stack__overflow-activator:focus-visible {
-  outline: 2px solid var(--wakeb-badge-stack-focus, #087f8c);
-  outline-offset: 2px;
-  border-radius: 999px;
-}
-.badge-stack__overflow {
-  max-width: 58px;
-  width: fit-content;
-  height: 22px;
-  padding: 2px 6px;
-  border-radius: 999px;
-  background: var(--wakeb-badge-stack-overflow-background, #fff) !important;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-
-  :deep(.v-chip__content) {
-    padding: 0 6px !important;
-    gap: 4px !important;
-  }
-
-  :deep(span) {
-    font-size: 10px !important;
-    font-weight: 500 !important;
-    line-height: 1.2 !important;
-    text-align: center !important;
-    color: var(--wakeb-badge-stack-overflow-color, #101828) !important;
-    white-space: nowrap;
-  }
-}
-
-.badge-stack :deep(.badge-stack__icon),
-.overflow-menu-item :deep(.badge-stack__icon) {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-  object-fit: contain;
-}
-
-.badge-stack--circle-icon {
-  :deep(.badge-stack__icon-wrap) {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    padding: 2px;
-    border-radius: 999px;
-    flex-shrink: 0;
-  }
-
-  :deep(.badge-stack__icon) {
-    width: 14px;
-    height: 14px;
-  }
-}
-
-.overflow-menu-list {
-  background: var(
-    --wakeb-badge-stack-menu-surface,
-    var(
-      --wakeb-badge-stack-fallback,
-      rgb(var(--v-theme-surface, 255, 255, 255))
-    )
-  ) !important;
-  min-width: 160px;
-  width: max-content;
-  max-width: calc(100vw - 24px);
-  overflow: visible;
-}
-
-.overflow-menu-item {
-  padding-inline: 0.625rem !important;
-  overflow: visible;
-}
-
-.overflow-menu-item :deep(.v-list-item__content) {
-  min-width: max-content;
-  overflow: visible;
-}
-
-.overflow-menu-item :deep(.v-chip) {
-  max-width: calc(100vw - 44px);
-}
+@use "../styles/badge-stack";
 </style>

@@ -1,6 +1,6 @@
 # M2 progress: core, defaults and design contracts
 
-Status: in progress on `feat/m1-selector-packaging`, after M1 (`307d4d4`). This record lists what has landed against the IMPLEMENTATION.md M2 deliverables, how it was verified, and what remains. It does not authorize publication.
+Status: M2 exit criteria met at `92f4657` on `feat/m1-selector-packaging` (see "M2 exit status"); carried follow-ups listed below. Started after M1 (`307d4d4`). This record lists what has landed against the IMPLEMENTATION.md M2 deliverables, how it was verified, and what remains. It does not authorize publication.
 
 ## Landed
 
@@ -34,13 +34,28 @@ Suite: 493 tests in two Vitest projects, with 38 skipped where a case applies to
 - **The remaining work ran as parallel tracks** in separate worktrees, then was cherry-picked onto this branch with conflicts resolved by hand.
 - **Internal compositions do not pick up plugin defaults.** The close button inside WModal is one example. They pass explicit props.
 
-## Remaining for M2 exit
+## M2 exit status (updated at `92f4657`)
 
-1. **Neutral contract declarations.** Facade types still come from the Vuetify renderer declarations, though those declarations no longer reference Vuetify types. Separate contract files and compile-time tests for event and slot payloads are still to do.
+**The M2 exit criteria in IMPLEMENTATION.md are met in jsdom and in the packed consumers. Real-browser evidence and a Jervis DevOps run are not recorded.** M2 is closed as a milestone. Five follow-ups below carry into M3–M6 and the owner decisions in RELEASE-NOTES-DRAFT.md. This record still does not authorize publication.
+
+| M2 exit criterion | Status | Evidence |
+| --- | --- | --- |
+| Independent app and SSR-request isolation | Met (jsdom, `renderToString`) | `tests/defaults.test.ts`, `tests/overlay-scope.test.ts`, `tests/icons.test.ts`; SSR suites `tests/navigation-ssr.test.ts`, `tests/stacks-ssr.test.ts`, `tests/badge-tooltip-ssr.test.ts`, `tests/accordion-shadcn-ssr.test.ts` |
+| Precedence including undefined, false, zero and null | Met | `tests/defaults.test.ts` on all three Vitest projects (`vitest.config.ts`) |
+| No provider types in portable declarations | Met | `src/contracts.ts`, `tests/types/conformance.ts` (vue-tsc in `npm run typecheck`), `tests/contracts.test.ts`, `tests/layers.test.ts`; packed consumers run `tsc --strict` and `vue-tsc` without the other providers installed (`scripts/consumer-harness.mjs`). Commits `5ce7116`, `285b979`, `eb56419` |
+| No unintended default global registration | Met | `tests/plugin.test.ts` |
+
+For this record, `npx vitest run` was re-run on `92f4657`: 55 files passed and 2 were skipped; 1049 tests passed and 115 were skipped, across three Vitest projects (vuetify, primevue, shadcn). The full `npm run check` and `npm run check:peers` were reported as passing on this commit but were not re-run here. `check:peers` covers six cells, recorded in `tests/fixtures/peers/results.json`. The 493-test figure above dates from the earlier two-provider state.
+
+## Remaining after M2
+
+1. ~~**Neutral contract declarations.**~~ **Landed** in `5ce7116` (with `285b979`, `eb56419`). Facade types now come from `src/contracts.ts` (`*Emits`, `*Slots`, `WakebComponent`, `WakebFacade`), not from the Vuetify renderer declarations. Every renderer is type-checked against its contract in `tests/types/conformance.ts`. The packed consumers reject wrong event and slot payloads under `tsc --strict` and `vue-tsc`.
 2. **Follow-ups for M3 and M4.**
-   - The variant and intent mapping tables become final once the visual contract tests exist (M3).
-   - WDropdown `colorMap` keys remain open strings.
-   - WDrawer stacking needs the overlay host (M4).
-   - The PrimeVue tooltip ignores `zIndexOverlay`, because PrimeVue sets tooltip z-index globally.
-   - The owned-key lists for `providerProps` are written by hand per adapter and need review when provider versions change.
-3. **Untested interaction.** A global PrimeVue `pt.directives.tooltip.root.style` may be replaced by the Wakeb tooltip style when a theme is configured.
+   - Open: the variant and intent mapping tables become final only after visual contract tests run in a real browser. jsdom computed-style checks exist; browser checks do not.
+   - Open (owner decision): WDropdown `colorMap` keys are still open strings.
+   - ~~WDrawer stacking needs the overlay host (M4).~~ **Resolved on PrimeVue and shadcn-vue.** PrimeVue WDrawer (`869bbd5`) and shadcn-vue WDrawer (`c88b803`) render their own overlay host, with no layout host. They take `zIndexOverlay`, trap focus, close on Escape unless `persistent`, and stack a dialog opened from the drawer above it. Evidence: `tests/compositions-contract.test.ts` (WDrawer contract) and `tests/shadcn-adapter.test.ts` (shadcn WDrawer overlay host). **Still open on Vuetify (owner decision):** WDrawer still needs `VApp` or `VLayout` and does not close on Escape.
+   - Open (owner decision): the PrimeVue tooltip ignores `zIndexOverlay`, because PrimeVue sets tooltip z-index globally.
+   - Open: the owned-key lists for `providerProps` are written by hand per adapter and need review whenever provider versions change.
+   - ~~WTabs `customHTML`~~ **Deprecation landed** in `ed1666b` (R16). The option still renders and reports `WAKEB_DEPRECATED_VALUE` once per app; the replacement is the `tab-label` slot. Evidence: `tests/navigation-contract.test.ts`. Removal is planned for the next major release.
+3. **Untested interaction (still open).** When a theme is configured, the Wakeb tooltip style may replace a global PrimeVue `pt.directives.tooltip.root.style`. No test covers this yet.
+4. **Type and runtime mismatch (owner decision).** The types reject deprecated Vuetify color names and badge types (`@ts-expect-error` cases in the packed consumers). Under Vuetify the runtime still accepts them, with `WAKEB_DEPRECATED_VALUE`. JavaScript callers and `as never` casts therefore still reach the deprecated path.

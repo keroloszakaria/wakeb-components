@@ -1,6 +1,32 @@
 # M5 architecture decision: shadcn-vue adapter foundation
 
-Status: accepted for the first M5 slice on the framework alpha branch, based on `2e5dc33`. This record covers the adapter foundation and four renderers: WButton, WLoading, WDropdown and WModal. It does not cover the other 17 components. It does not authorize npm publication. shadcn-vue stays advertised as alpha and incomplete (IMPLEMENTATION.md M5 exit rule).
+Status: accepted for the framework alpha branch. The first slice (`ddceaec`, based on `2e5dc33`) delivered the adapter foundation and four renderers. Updated at `92f4657`: 15 of the 21 components are now supported (`SUPPORTED.shadcn` in `src/adapters/manifest.ts`), and six are on a parallel track (see "Coverage"). **M5 is not exited.** shadcn-vue stays advertised as alpha and incomplete until all 21 rows pass and real-browser evidence exists (IMPLEMENTATION.md M5 exit rule). This record does not authorize npm publication.
+
+## Coverage (at `92f4657`)
+
+| Component | Status | Commit | Primitive or markup |
+| --- | --- | --- | --- |
+| WButton | Supported | `ddceaec` | `ui/Button.vue`, `ui/TooltipContent.vue` |
+| WLoading | Supported | `ddceaec` | `ui/Spinner.vue` |
+| WDropdown | Supported | `ddceaec` | `ui/DropdownMenuContent.vue`, `ui/DropdownMenuItem.vue` |
+| WModal | Supported | `ddceaec`, `92f4657` (a persistent modal stays open on a non-cancelable Escape) | `ui/DialogContent.vue` |
+| WTabs | Supported | `c5451f3` | Wakeb-owned markup |
+| WTree | Supported | `c5451f3` | Wakeb-owned markup |
+| WCarousel | Supported | `c5451f3` | Wakeb-owned markup; Wakeb-owned autoplay |
+| WSegmentedProgress | Supported | `08bf727` | Wakeb-owned markup |
+| WSemiCircleGauge | Supported | `08bf727` | Wakeb-owned markup |
+| WVerticalSteps | Supported | `08bf727` | Wakeb-owned markup |
+| WPageSkeleton | Supported | `08bf727` | `ui/Skeleton.vue` with the Wakeb grid |
+| WAccordion | Supported | `08bf727` | Wakeb-owned markup |
+| WExportDropdown | Supported | `c88b803` | `ui/DropdownMenuContent.vue`, `ui/DropdownMenuItem.vue` |
+| WBaseSidebar | Supported | `c88b803` | Wakeb skeleton sequence |
+| WDrawer | Supported | `c88b803` | `ui/SheetContent.vue` (reka Dialog). Own overlay host, focus trap, Escape and outside press unless `persistent`, `zIndexOverlay` |
+
+> **IN PROGRESS (parallel track) — the single place in this file to flip:** WTruncatedText, WTooltipBtn, WBadge, WUserBadge, WAvatarStack and WBadgeStack. At `92f4657` they are not in `SUPPORTED.shadcn` and render `WAKEB_COMPONENT_UNSUPPORTED` under `framework: 'shadcn'`. When they land, move them into the table above with their commits, and add their test files to the `shadcn` project in `vitest.config.ts`.
+
+The upstream files used now also include `sheet/SheetContent.vue` and `skeleton` from the same shadcn-vue 2.9.0 commit (see the headers in `src/adapters/shadcn/ui/`). The license list under "License handling" names only the first five directories.
+
+Evidence for the 15 rows: the `shadcn` Vitest project in `vitest.config.ts` runs the shared suites (`contract`, `defaults`, `colors`, `plugin`, `icons`, `provider-props`, `contract-display`, `navigation-contract`, `navigation-ssr`, `compositions-contract`) plus `tests/shadcn-adapter.test.ts`, `tests/accordion-shadcn.test.ts` and `tests/accordion-shadcn-ssr.test.ts`. All of these run in jsdom. No real-browser run has been recorded for keyboard, focus, positioning or visual parity.
 
 ## Decision
 
@@ -60,7 +86,7 @@ All four keep the Vuetify contract. Each is built from the shared composables (`
 - `npm run check`, including vitest with a third `shadcn` project. That project runs the shared contract, defaults, colors, plugin, icons and provider-props suites plus `tests/shadcn-adapter.test.ts`.
 - `npm run check:package` covers three isolated consumers. The shadcn consumer has only `reka-ui`. It passes `tsc --strict`, browser and SSR builds, tree shaking, the no-Preflight CSS check and the runtime-classes-in-CSS check.
 - `npm run check:peers` passes six cells: `shadcn-min` (Vue 3.5.40, Vite 6.0.0, reka-ui 2.10.5) and `shadcn-current` (Vue 3.5.44, Vite 6.4.5, reka-ui 2.11.0) pass alongside the Vuetify and PrimeVue rows.
-- Rendered module counts, full graph / WButton-only graph:
+- Rendered module counts, full graph / WButton-only graph. These were measured at the four-component slice and have not been re-recorded since the other 11 renderers landed:
 
 | Provider | Full | WButton only |
 | --- | --- | --- |
@@ -77,4 +103,8 @@ In the WButton-only shadcn graph, reka Dialog and DropdownMenu content are tree-
 - **Theme bridge.** The bridge only works with Tailwind v4 (complete-color) themes. A v3 HSL-channel theme needs Wakeb tokens.
 - **`style.css`.** It still contains every renderer's CSS. Splitting it per provider is planned.
 - **jsdom limits.** floating-ui positioning and pointer events are not fully modeled in jsdom. Side and outside-press tests check props and use `MouseEvent("pointerdown")`. Real-browser visual and positioning checks are still pending.
-- **Remaining work.** The other 17 components fail with `WAKEB_COMPONENT_UNSUPPORTED`. SSR hydration-mismatch tests in a real browser and visual contract tests are also outstanding for the M5 exit.
+- **Remaining work for the M5 exit (at `92f4657`).**
+  - Six components are on the parallel track (see "Coverage"). Until they land they fail with `WAKEB_COMPONENT_UNSUPPORTED`.
+  - Still outstanding: SSR hydration-mismatch tests in a real browser, and real-browser keyboard, focus and visual contract tests.
+  - The module counts above need re-recording for the full 15-component graph.
+- **WDrawer difference across providers.** shadcn-vue and PrimeVue close the drawer on Escape. Vuetify does not, and still needs `VApp` or `VLayout`. This is an open owner decision; see RELEASE-NOTES-DRAFT.md.

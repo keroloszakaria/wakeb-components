@@ -1,64 +1,94 @@
 # Acceptance and verification matrix
 
-Status: specification acceptance plan, **not completed implementation tests**. Every unchecked requirement below is future work. The current repository quality gate is only a baseline.
+Status: acceptance plan with recorded status at `92f4657` (`feat/m1-selector-packaging`), updated for the M2–M6 release review. **No row is fully met for a stable release.** Real-browser verification (section C) and a Jervis DevOps pipeline run are not recorded for any milestone. The release is alpha at most (see "Completion evidence format"). Nothing has been published.
+
+Status values:
+
+- **Met:** the evidence required in the second column exists and passes.
+- **Partial:** some of the evidence exists (usually jsdom, `renderToString` or packed-consumer evidence), and the column says what is missing.
+- **Not met:** no qualifying evidence exists.
+
+Commands at `92f4657`:
+
+- `npx vitest run` was re-run for this record: 55 files passed and 2 were skipped; 1049 tests passed and 115 were skipped, in three projects (vuetify, primevue, shadcn).
+- `npm run check` and `npm run check:peers` were reported as passing on this commit but were not re-run for this record. `check:peers` has six cells, vuetify, primevue and shadcn × min and current (`tests/fixtures/peers/results.json`).
+- No exit-code logs or archive checksums are attached yet; the "Completion evidence format" below still applies.
 
 ## Traceability
 
-| ID | Acceptance evidence required |
+| ID | Acceptance evidence required | Status | Evidence / what is missing |
+| --- | --- | --- | --- |
+| R01 | Same consumer Vue source imports root W* exports under each provider; all baseline exports exist | Partial | Met for Vuetify and PrimeVue (21/21). shadcn has 15/21 (`SUPPORTED` in `src/adapters/manifest.ts`). Byte-identical fixture sources in `scripts/consumer/*` run under three providers in `npm run check:package`; `tests/types/conformance.ts` and `tests/contracts.test.ts`. Missing: the six shadcn rows (see the grid). |
+| R02 | Literal framework union; selection only in plugin file; restart/rebuild switching tested | Partial | `tests/selector.test.ts`; plugin-file-only selection in `src/build/vite`; three consumers differ only in plugin file, manifest and lockfile (`scripts/consumer-harness.mjs`). Missing: a recorded restart/rebuild switch of one running project. |
+| R03 | Dependency/import boundary scan; no business/store/router/i18n-instance/application-token coupling | Met (automated scan) | `tests/layers.test.ts` (provider import boundaries). Review against AGENTS.md exclusions; no store, router or i18n imports in `src/`. |
+| R04 | Clean installation, dev startup and production build using exactly the documented plugin/main/Vite flow | Partial | Clean temp-dir installs from the packed tarball, with browser and SSR builds (`npm run check:package`, `npm run check:peers`). Missing: recorded dev-server startup per provider following `docs/guide/installation.md` literally. |
+| R05 | Published declaration consumers with valid/invalid options, defaults and provider branches; synchronous Plugin install | Met (packed consumers) | `@ts-expect-error` cases in `scripts/consumer/consumer.ts` under `tsc --strict`; `tests/plugin.test.ts`, `tests/defaults.test.ts`. Commit `825f3ba`. |
+| R06 | Defaults precedence and mutation isolation tests for absent/undefined/false/zero/empty/null inputs | Met | `tests/defaults.test.ts` on all three projects. Commit `825f3ba`. |
+| R07 | Each stable error code triggered intentionally with actionable safe message and no silent fallback | Partial | `tests/plugin.test.ts`, `tests/selector.test.ts`, `tests/defaults.test.ts`, `scripts/consumer/unconfigured.js` (`WAKEB_BUILD_PLUGIN_MISSING`). **Gap:** `WAKEB_CAPABILITY_UNSUPPORTED` is declared in `src/core/errors.ts` but is never raised or tested. |
+| R08 | Architecture scan; compositions reuse neutral primitives; no duplicate focus/keyboard behavior | Partial | `tests/layers.test.ts`; shared composables (`useButton`, `useDropdown`, `useDisclosure`, `useColor`, `useSkeleton`). Missing: a review that confirms no duplicated focus or keyboard logic across the three adapters' Wakeb-owned markup (WTabs, WTree, WCarousel). |
+| R09 | Actual packed consumer build module graph proves absent/unselected provider isolation and tree shaking | Met (packed consumers) | `scripts/consumer-harness.mjs` (`collect-modules`, `PROVIDER_MODULE`, `OVERLAY_MODULE`) in `check:package` and `check:peers`. Module counts are in M1-DECISION.md and M5-DECISION.md; the shadcn counts predate the 15-component graph. |
+| R10 | Archive export-target existence, CSS/JS/declaration entry resolution, mandatory/optional peer validation | Met | `packTarball` assertions in `scripts/consumer-harness.mjs`; six locked cells in `tests/fixtures/peers/*` and `scripts/check-peers.mjs`. Commit `3cc4a2d`. |
+| R11 | shadcn-only consumer without Tailwind config/source copying; scoped styles and licenses verified | Partial | `assertScopedAdapterCss` in `scripts/consumer-harness.mjs`; `THIRD-PARTY-NOTICES.txt` in the tarball; `tests/shadcn-adapter.test.ts` ("shadcn adapter CSS"). Missing: the six shadcn components. The M5-DECISION license list should name `sheet` and `skeleton`. |
+| R12 | Baseline-to-current API diff, signature snapshots and full component/provider contract coverage | Partial | Neutral contracts in `src/contracts.ts` and `tests/types/conformance.ts` (commits `5ce7116`, `285b979`, `eb56419`). **Gap:** no automated diff against `specs/ui-abstraction/baseline.json`. shadcn coverage is 15/21. |
+| R13 | Exact event payload/order/count, model synchronization, item changes/clear state, disabled behavior | Partial | `tests/contract.test.ts`, `tests/navigation-contract.test.ts`, `tests/compositions-contract.test.ts`, `tests/stacks-contract.test.ts`, `tests/badge-tooltip-contract.test.ts` (jsdom). Stacks and badge/tooltip suites do not run on shadcn yet. |
+| R14 | Slot inference/runtime payloads, attrs targets, class/style merge and exactly-once native handlers | Partial | `vue-tsc` on `Templates.vue` in the packed consumers; `tests/provider-props.test.ts`; attribute targets documented in `docs/guide/providers.md`. Same shadcn coverage gap as R13. |
+| R15 | Built-in icons/resolver/slots on every provider; neutral root declarations without Vuetify types | Met (jsdom) | `tests/icons.test.ts` on all three projects; commit `c250d4b`. |
+| R16 | Skeleton grammar/repetition/grid fixtures; customHTML trusted-only documentation and escaped normal text | Met (jsdom) | `tests/colors.test.ts`, `tests/extracted.test.ts` (commits `7ab2025`, `0aacfd6`); customHTML deprecation in `tests/navigation-contract.test.ts` (commit `ed1666b`). Breakpoint behavior has not been checked in a real browser. |
+| R17 | Token extraction/docs coverage and computed-state colors; dark/RTL/Teleport/multi-app checks | Partial | `docs:build` token scan; `tests/overlay-scope.test.ts`, `tests/colors.test.ts` (commit `2894dea`). One earlier manual browser check on the packed PrimeVue consumer (M2-PROGRESS.md). Missing: a recorded browser matrix (section C). PrimeVue tooltips ignore `zIndexOverlay` (owner decision). |
+| R18 | Automated browser semantics and keyboard/focus suites plus targeted manual accessibility review | **Not met** | jsdom keyboard and focus tests exist (`tests/shadcn-adapter.test.ts`, `tests/primevue-adapter.test.ts`, `tests/navigation.test.ts`), but they are not browser execution. Needed: a versioned browser harness running the section C regressions on three providers × light/dark × LTR/RTL, plus a recorded manual review. |
+| R19 | SSR import/render, server-client hydration and concurrent-request/multi-app isolation fixtures | Partial | `renderToString` and concurrent-request isolation: `tests/navigation-ssr.test.ts`, `tests/stacks-ssr.test.ts`, `tests/badge-tooltip-ssr.test.ts`, `tests/accordion-shadcn-ssr.test.ts`, `tests/defaults.test.ts`; packed SSR builds (`scripts/consumer/server.js`). **Not met:** server-to-client hydration in a browser, with warnings captured (section D). |
+| R20 | EN/AR breaking migration checklist and external Aware compatibility evidence or explicit blocker | Partial | `docs/guide/migration.md`, `docs/ar/guide/migration.md` (commit `a8e6979`). Missing: external Aware compatibility evidence, or an explicit blocker recorded by the owner. |
+| R21 | Capability manifests accurately reflect coverage; unsupported mandatory features block stable adapter status | Met for alpha | `SUPPORTED` in `src/adapters/manifest.ts` matches the renderers in `src/adapters/*`; unsupported rows raise `WAKEB_COMPONENT_UNSUPPORTED`. shadcn stays alpha. |
+| R22 | EN/AR VitePress build; Jervis DevOps evidence; archive freshness/trusted deployment receipt verification | Partial | EN/AR `docs:build` inside `npm run check` (reported passing); `scripts/verify-deployment.mjs` compares against the local receipt. **Not met:** no Jervis DevOps pipeline run and no verified publication at wakeb-components.surge.sh for this branch. |
+| R23 | Type tests reject provider-native style values; every portable value renders on every provider with expected computed styles; each alias maps correctly and warns once in development only; mapping tables match tested versions | Partial | `tests/vocabulary.test.ts`, `tests/colors.test.ts`; consumer `@ts-expect-error` cases; production bundle check for stripped warnings (commits `d6f7b4f`, `7ab2025`). Missing: browser computed-style checks on every provider. Owner decision: types reject deprecated Vuetify names and badge types, but the Vuetify runtime still accepts them. |
+| R24 | auto/reuse/install on each provider in both install orders; host theme/defaults unchanged after reuse; WAKEB_HOST_PROVIDER_MISSING and WAKEB_INSTALL_CONFLICT triggered; two apps isolated | Met (jsdom) | `tests/plugin.test.ts` on all three projects; shadcn modes in M5-DECISION.md. |
+| R25 | EN/AR install, switching and migration pages contain the disclosure and checklist; no "zero changes" claim without it | Met (docs content) | `docs/guide/{installation,switching,migration}.md` and `docs/ar/guide/{installation,switching,migration}.md` (commits `a8e6979`, `ccdf74d`). The published site is not verified (R22). |
+
+Milestone summary at `92f4657`:
+
+| Milestone | Status |
 | --- | --- |
-| R01 | Same consumer Vue source imports root W* exports under each provider; all baseline exports exist |
-| R02 | Literal framework union; selection only in plugin file; restart/rebuild switching tested |
-| R03 | Dependency/import boundary scan; no business/store/router/i18n-instance/application-token coupling |
-| R04 | Clean installation, dev startup and production build using exactly the documented plugin/main/Vite flow |
-| R05 | Published declaration consumers with valid/invalid options, defaults and provider branches; synchronous Plugin install |
-| R06 | Defaults precedence and mutation isolation tests for absent/undefined/false/zero/empty/null inputs |
-| R07 | Each stable error code triggered intentionally with actionable safe message and no silent fallback |
-| R08 | Architecture scan; compositions reuse neutral primitives; no duplicate focus/keyboard behavior |
-| R09 | Actual packed consumer build module graph proves absent/unselected provider isolation and tree shaking |
-| R10 | Archive export-target existence, CSS/JS/declaration entry resolution, mandatory/optional peer validation |
-| R11 | shadcn-only consumer without Tailwind config/source copying; scoped styles and licenses verified |
-| R12 | Baseline-to-current API diff, signature snapshots and full component/provider contract coverage |
-| R13 | Exact event payload/order/count, model synchronization, item changes/clear state, disabled behavior |
-| R14 | Slot inference/runtime payloads, attrs targets, class/style merge and exactly-once native handlers |
-| R15 | Built-in icons/resolver/slots on every provider; neutral root declarations without Vuetify types |
-| R16 | Skeleton grammar/repetition/grid fixtures; customHTML trusted-only documentation and escaped normal text |
-| R17 | Token extraction/docs coverage and computed-state colors; dark/RTL/Teleport/multi-app checks |
-| R18 | Automated browser semantics and keyboard/focus suites plus targeted manual accessibility review |
-| R19 | SSR import/render, server-client hydration and concurrent-request/multi-app isolation fixtures |
-| R20 | EN/AR breaking migration checklist and external Aware compatibility evidence or explicit blocker |
-| R21 | Capability manifests accurately reflect coverage; unsupported mandatory features block stable adapter status |
-| R22 | EN/AR VitePress build; Jervis DevOps evidence; archive freshness/trusted deployment receipt verification |
-| R23 | Type tests reject provider-native style values; every portable value renders on every provider with expected computed styles; each alias maps correctly and warns once in development only; mapping tables match tested versions |
-| R24 | auto/reuse/install on each provider in both install orders; host theme/defaults unchanged after reuse; WAKEB_HOST_PROVIDER_MISSING and WAKEB_INSTALL_CONFLICT triggered; two apps isolated |
-| R25 | EN/AR install, switching and migration pages contain the disclosure and checklist; no "zero changes" claim without it |
+| M0 | Fixes landed (`d8c75ad`); the 0.7.x patch release has not been cut (CHANGELOG "Unreleased (0.7.x)"); real-browser regression cases not recorded |
+| M1 | Accepted (M1-DECISION.md) |
+| M2 | Exit criteria met (M2-PROGRESS.md) |
+| M3, M4 | Implemented and passing shared jsdom/SSR suites on Vuetify and PrimeVue; **browser exit evidence missing** |
+| M5 | 15/21; six on a parallel track; **not exited** |
+| M6 | Docs and migration guides written; release notes drafted (RELEASE-NOTES-DRAFT.md); **Jervis DevOps and publication evidence missing** |
 
 ## Provider/component completion grid
 
-`Pending` means not implemented/verified by this specification. A stable release requires every cell to pass shared portable behavior, type/slot/model contracts and applicable browser/SSR checks. Native/shared components still run inside each provider fixture to detect style/integration conflicts.
+A stable release requires every cell to pass shared portable behavior, type/slot/model contracts and applicable browser/SSR checks. Native/shared components still run inside each provider fixture to detect style/integration conflicts.
+
+Cell values at `92f4657`:
+
+- **jsdom+SSR:** the renderer exists, and the shared contract and SSR (`renderToString`) suites pass in jsdom. Real-browser and hydration checks are still pending, so no cell is browser-verified and no cell is stable.
+- **Unsupported†:** the component renders `WAKEB_COMPONENT_UNSUPPORTED`.
 
 | Component | Vuetify | PrimeVue | shadcn |
 | --- | --- | --- | --- |
-| WTruncatedText | Pending | Pending | Pending |
-| WSegmentedProgress | Pending | Pending | Pending |
-| WSemiCircleGauge | Pending | Pending | Pending |
-| WAvatarStack | Pending | Pending | Pending |
-| WLoading | Pending | Pending | Pending |
-| WPageSkeleton | Pending | Pending | Pending |
-| WVerticalSteps | Pending | Pending | Pending |
-| WButton | Pending | Pending | Pending |
-| WBadge | Pending | Pending | Pending |
-| WAccordion | Pending | Pending | Pending |
-| WBadgeStack | Pending | Pending | Pending |
-| WUserBadge | Pending | Pending | Pending |
-| WTooltipBtn | Pending | Pending | Pending |
-| WTabs | Pending | Pending | Pending |
-| WTree | Pending | Pending | Pending |
-| WDropdown | Pending | Pending | Pending |
-| WCarousel | Pending | Pending | Pending |
-| WExportDropdown | Pending | Pending | Pending |
-| WBaseSidebar | Pending | Pending | Pending |
-| WModal | Pending | Pending | Pending |
-| WDrawer | Pending | Pending | Pending |
+| WTruncatedText | jsdom+SSR | jsdom+SSR | Unsupported† |
+| WSegmentedProgress | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WSemiCircleGauge | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WAvatarStack | jsdom+SSR | jsdom+SSR | Unsupported† |
+| WLoading | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WPageSkeleton | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WVerticalSteps | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WButton | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WBadge | jsdom+SSR | jsdom+SSR | Unsupported† |
+| WAccordion | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WBadgeStack | jsdom+SSR | jsdom+SSR | Unsupported† |
+| WUserBadge | jsdom+SSR | jsdom+SSR | Unsupported† |
+| WTooltipBtn | jsdom+SSR | jsdom+SSR | Unsupported† |
+| WTabs | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WTree | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WDropdown | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WCarousel | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WExportDropdown | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WBaseSidebar | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WModal | jsdom+SSR | jsdom+SSR | jsdom+SSR |
+| WDrawer | jsdom+SSR (needs `VApp`/`VLayout`; no Escape close; owner decision) | jsdom+SSR | jsdom+SSR |
+
+> **† IN PROGRESS (parallel track) — the single place in this file to flip:** WTruncatedText, WTooltipBtn, WBadge, WUserBadge, WAvatarStack and WBadgeStack on shadcn-vue. When they land in `SUPPORTED.shadcn`, and `tests/stacks-*.test.ts` and `tests/badge-tooltip-*.test.ts` run in the `shadcn` Vitest project, change their six cells to `jsdom+SSR`. Then update R01, R11, R12, R13 and R14.
 
 ## Required fixtures
 

@@ -2,22 +2,20 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { createSSRApp, defineComponent, h, nextTick, ref } from "vue";
 import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
-import { VLayout } from "vuetify/components/VLayout";
+import { VApp } from "vuetify/components/VApp";
+import { VMain } from "vuetify/components/VMain";
 import PrimeVue from "primevue/config";
 import { WBaseSidebar, WDrawer, WExportDropdown, WModal, type WakebComponentsOptions } from "../src";
 import { framework, shadcnHost, wakeb } from "./wakeb";
 
 /*
  * WExportDropdown, WBaseSidebar and WDrawer contract (SPEC R12–R19, M4), run once per provider
- * project. Queries go through roles and Wakeb classes, never provider DOM. The only host difference
- * is the Vuetify layout that VNavigationDrawer needs; PrimeVue and shadcn-vue render WDrawer with no
- * host markup.
+ * project. Queries go through roles and Wakeb classes, never provider DOM. No provider needs host
+ * markup: every WDrawer renderer brings its own overlay host.
  */
 const vuetify = framework === "vuetify";
 const host = () => (vuetify ? createVuetify() : framework === "primevue" ? ([PrimeVue, { theme: "none" }] as const) : shadcnHost);
 const plugins = (options: Partial<WakebComponentsOptions> = {}) => [host() as never, wakeb(options)];
-/** Vuetify needs an application layout for WDrawer (documented limit); PrimeVue and shadcn-vue need nothing. */
-const layout = (render: () => unknown) => (vuetify ? h(VLayout, null, { default: render }) : render());
 const render = (component: unknown, options: { props?: Record<string, unknown>; attrs?: Record<string, unknown>; slots?: Record<string, unknown>; wakeb?: Partial<WakebComponentsOptions> } = {}) =>
   mount(component as never, {
     attachTo: document.body,
@@ -25,9 +23,9 @@ const render = (component: unknown, options: { props?: Record<string, unknown>; 
     slots: options.slots as never,
     global: { plugins: plugins(options.wakeb), stubs: { transition: false } },
   });
-/** Renders WDrawer inside the provider's required host and returns the WDrawer wrapper. */
+/** Renders WDrawer with no host markup and returns the WDrawer wrapper. */
 const renderDrawer = (props: Record<string, unknown> = {}, slots: Record<string, () => unknown> = {}, options: Partial<WakebComponentsOptions> = {}) => {
-  const view = defineComponent(() => () => layout(() => h(WDrawer, props, slots)));
+  const view = defineComponent(() => () => h(WDrawer, props, slots));
   const w = mount(view, { attachTo: document.body, global: { plugins: plugins(options), stubs: { transition: false } } });
   return w.findComponent(WDrawer as never);
 };
@@ -254,7 +252,7 @@ describe(`WDrawer contract (${framework})`, () => {
     expect(w.emitted("close")).toEqual([[]]);
 
     const parent = ref(false);
-    const view = defineComponent(() => () => layout(() => h(WDrawer, { modelValue: parent.value, title: "Controlled" })));
+    const view = defineComponent(() => () => h(WDrawer, { modelValue: parent.value, title: "Controlled" }));
     const controlled = mount(view, { attachTo: document.body, global: { plugins: plugins(), stubs: { transition: false } } });
     parent.value = true;
     await settle();
@@ -281,13 +279,12 @@ describe(`WDrawer contract (${framework})`, () => {
     expect(drawer()?.querySelector('[aria-busy="true"]')).not.toBeNull();
   });
 
-  it("closes on Escape unless persistent (PrimeVue, shadcn-vue); the Vuetify drawer keeps its documented native behavior", async () => {
+  it("closes on Escape unless persistent, emitting only update:modelValue", async () => {
     const w = renderDrawer({ modelValue: true, persistent: false });
     await settle();
     escape();
     await settle();
-    // Vuetify's VNavigationDrawer has no Escape dismissal; this is a documented provider difference.
-    expect(w.emitted("update:modelValue")).toEqual(vuetify ? undefined : [[false]]);
+    expect(w.emitted("update:modelValue")).toEqual([[false]]);
     expect(w.emitted("close")).toBeUndefined();
     const persistent = renderDrawer({ modelValue: true, persistent: true });
     await settle();
@@ -305,16 +302,96 @@ describe(`WDrawer contract (${framework})`, () => {
     expect(root.getAttribute("dir")).toBe("rtl");
     // Caller styles merge after the scope, so they win.
     expect(root.style.getPropertyValue("--wakeb-ui-primary")).toBe("#abcdef");
-    // PrimeVue and shadcn-vue teleport the drawer with an overlay stacking of zIndexOverlay; Vuetify keeps its layout z-index.
-    if (!vuetify) expect(stackedZ(root)).toBe("3100");
+    // Every provider teleports the drawer with an overlay stacking of zIndexOverlay.
+    expect(stackedZ(root)).toBe("3100");
+    expect(root.closest("[data-v-app]")).toBeNull();
+  });
+
+  it("is a named modal dialog that takes focus on open and returns it to the opener after Escape", async () => {
+    const open = ref(false);
+    const view = defineComponent(() => () => [
+      h("button", { type: "button", class: "opener", onClick: () => (open.value = true) }, "Open"),
+      h(WDrawer, { modelValue: open.value, "onUpdate:modelValue": (value: boolean) => (open.value = value), title: "Filters" }, { content: () => h("input", { class: "field" }) }),
+    ]);
+    const w = mount(view, { attachTo: document.body, global: { plugins: plugins(), stubs: { transition: false } } });
+    const opener = w.get(".opener").element as HTMLElement;
+    opener.focus();
+    await w.get(".opener").trigger("click");
+    await settle();
+    const root = document.querySelector<HTMLElement>(".wakeb-drawer")!;
+    expect(root.getAttribute("role")).toBe("dialog");
+    expect(root.getAttribute("aria-modal")).toBe("true");
+    expect(root.getAttribute("aria-label")).toBe("Filters");
+    await vi.waitFor(() => expect(root.contains(document.activeElement)).toBe(true));
+    escape();
+    await settle();
+    expect(open.value).toBe(false);
+    await vi.waitFor(() => expect(document.activeElement).toBe(opener));
   });
 
   it("server-renders a closed drawer without browser globals", async () => {
     const { renderToString } = await import("vue/server-renderer");
-    const html = await renderToString(createSSRApp(() => layout(() => h(WDrawer, { title: "Server drawer" }))).use(host() as never).use(wakeb()));
+    const html = await renderToString(createSSRApp(() => h(WDrawer, { title: "Server drawer" })).use(host() as never).use(wakeb()));
     expect(html).not.toContain("NaN");
-    // A closed drawer exposes no operable controls in server markup.
-    expect(/<button(?![^>]*inert)/.test(html.replace(/<nav[^>]*inert[^>]*>[\s\S]*<\/nav>/, ""))).toBe(false);
+    // A closed drawer exposes no operable controls in server markup: it is not rendered, or it sits under an inert root.
+    const parsed = document.createElement("div");
+    parsed.innerHTML = html;
+    for (const node of parsed.querySelectorAll("button, input, a[href]")) expect(node.closest("[inert]")).not.toBeNull();
+  });
+});
+
+/* Vuetify-only R18/R19 wiring: the Wakeb-owned layout host around VNavigationDrawer. */
+describe.runIf(vuetify)("Vuetify WDrawer layout host (R18, R19)", () => {
+  it("renders with no layout host, teleported next to Vuetify overlays, and locks body scroll while open", async () => {
+    const open = ref(true);
+    const view = defineComponent(() => () => h(WDrawer, { modelValue: open.value, "onUpdate:modelValue": (value: boolean) => (open.value = value), title: "Filters" }));
+    mount(view, { attachTo: document.body, global: { plugins: plugins(), stubs: { transition: false } } });
+    await settle();
+    const root = document.querySelector<HTMLElement>(".wakeb-drawer")!;
+    expect(root.closest(".v-overlay-container")).not.toBeNull();
+    expect(root.closest<HTMLElement>(".wakeb-drawer-host")!.style.zIndex).toBe("2000");
+    expect(document.body.style.overflow).toBe("hidden");
+    open.value = false;
+    await settle();
+    expect(document.body.style.overflow).toBe("");
+  });
+
+  it("works inside a VApp without registering in the app layout", async () => {
+    const view = defineComponent(() => () =>
+      h(VApp, null, { default: () => [h(WDrawer, { modelValue: true, title: "Filters", width: 400 }), h(VMain, { class: "app-main" }, () => "Main")] }),
+    );
+    const w = mount(view, { attachTo: document.body, global: { plugins: plugins(), stubs: { transition: false } } });
+    await settle();
+    const main = w.get(".app-main").element as HTMLElement;
+    // A layout item registered in the app layout would pad VMain; the Wakeb host keeps the drawer out of it.
+    expect(main.style.getPropertyValue("--v-layout-right")).toBe("0px");
+    expect(main.style.getPropertyValue("--v-layout-left")).toBe("0px");
+    expect(document.querySelector(".wakeb-drawer")!.closest(".v-application")).toBeNull();
+  });
+
+  it("closes from the scrim unless persistent, and a transparent overlay keeps the scrim", async () => {
+    const w = renderDrawer({ modelValue: true, transparentOverlay: true });
+    await settle();
+    const scrim = document.querySelector<HTMLElement>(".wakeb-drawer-host--transparent .v-navigation-drawer__scrim")!;
+    scrim.click();
+    await settle();
+    expect(w.emitted("update:modelValue")).toEqual([[false]]);
+    expect(w.emitted("close")).toBeUndefined();
+    const persistent = renderDrawer({ modelValue: true, persistent: true });
+    await settle();
+    [...document.querySelectorAll<HTMLElement>(".v-navigation-drawer__scrim")].at(-1)!.click();
+    await settle();
+    expect(persistent.emitted("update:modelValue")).toBeUndefined();
+  });
+
+  it("leaves Escape to a dialog opened from the drawer", async () => {
+    const w = renderDrawer({ modelValue: true, title: "Drawer" }, { content: () => h(WModal, { modelValue: true, persistent: false, title: "Nested" }) });
+    await settle();
+    const dialog = document.querySelector<HTMLElement>(".wakeb-modal")!;
+    (dialog.querySelector("button") ?? dialog).focus();
+    escape();
+    await settle();
+    expect(w.emitted("update:modelValue")).toBeUndefined();
   });
 });
 

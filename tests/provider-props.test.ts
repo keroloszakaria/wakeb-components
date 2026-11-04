@@ -11,7 +11,6 @@ import Button from "primevue/button";
 import Menu from "primevue/menu";
 import Dialog from "primevue/dialog";
 import ProgressSpinner from "primevue/progressspinner";
-import { VLayout } from "vuetify/components/VLayout";
 import ShadcnButton from "../src/adapters/shadcn/ui/Button.vue";
 import ShadcnDropdownMenuContent from "../src/adapters/shadcn/ui/DropdownMenuContent.vue";
 import ShadcnDialogContent from "../src/adapters/shadcn/ui/DialogContent.vue";
@@ -162,13 +161,13 @@ describe.skipIf(!vuetify)("attribute targets of Vuetify-only components", () => 
     expect(selector === "root" ? target === w.element : target.matches(selector)).toBe(true);
   });
 
-  it("WDrawer sends attrs to its nav root", async () => {
-    const view = defineComponent(() => () => h(VLayout, () => h(WDrawer, { modelValue: true, title: "Filters", ...portableAttrs(() => {}) })));
+  it("WDrawer sends attrs to its dialog root", async () => {
+    const view = defineComponent(() => () => h(WDrawer, { modelValue: true, title: "Filters", ...portableAttrs(() => {}) }));
     render(view);
     await settle();
     const target = document.querySelector('[data-test="caller"]')!;
     expectPortableTarget(target);
-    expect(target.tagName).toBe("NAV");
+    expect(target.getAttribute("role")).toBe("dialog");
     expect(target.classList.contains("wakeb-drawer")).toBe(true);
   });
 

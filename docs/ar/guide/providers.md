@@ -198,7 +198,7 @@ Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فت
 | `radius` | `--wakeb-ui-radius` | زوايا WButton وWModal |
 | `spacing` | `--wakeb-ui-spacing` | الحشو الداخلي في WModal |
 | `fontFamily` | `--wakeb-ui-font-family` | محتوى WModal |
-| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب الطبقات المنقولة: WModal وWDropdown وWExportDropdown وقائمتا WAvatarStack وWBadgeStack والتلميحات وWDrawer على PrimeVue |
+| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب الطبقات المنقولة: WModal وWDropdown وWExportDropdown وقائمتا WAvatarStack وWBadgeStack والتلميحات وWDrawer |
 
 متغيرات المكونات مثل `--wakeb-button-primary-background` تتقدم على هذه المتغيرات. تقبل
 متغيرات الألوان صيغ hex و`rgb()` و`hsl()` و`var(--…)` وأسماء الألوان، ويقبل `radius`
@@ -447,7 +447,7 @@ Skeleton في Wakeb.
 | WTruncatedText | عنصر `<span>` النصي الذي يفتح الـTooltip. |
 | WTooltipBtn | عنصر `<button>` الأصلي. أما `wrapperAttrs` فتستهدف الـspan الخارجي. |
 | WCarousel | جذر العرض المتتابع (`role="region"`). وكل مؤشر يستقبل `indicatorAttrs`. |
-| WDrawer | العنصر الذي يحمل `.wakeb-drawer`: على Vuetify جذر اللوحة، وهو عنصر `<nav>`؛ وعلى PrimeVue وshadcn-vue العنصر المنقول الذي يحمل `role="dialog"`، ولا يوجد إلا أثناء فتح اللوحة. |
+| WDrawer | العنصر الذي يحمل `.wakeb-drawer`، وهو العنصر المنقول الذي يحمل `role="dialog"`: على Vuetify جذر `VNavigationDrawer`، وهو عنصر `<div>` يبقى في DOM تحت `inert` أثناء الإغلاق؛ وعلى PrimeVue وshadcn-vue لا يوجد إلا أثناء فتح اللوحة. |
 | WExportDropdown | طبقة القائمة المنقولة على كل المزودين، ولا توجد إلا أثناء فتح القائمة (للتوافق مع الإصدار الأساسي). وعلى shadcn-vue هي عنصر يغلّف العنصر ذا `role="menu"`. |
 | WTree | عنصر `ul` الجذري (`role="tree"`). |
 | بقية المكونات | العنصر الجذري. يرسل WBadge القيمة `chipAttrs` إلى الـchip، ويرسل WBadgeStack القيمة `badgeAttrs` إلى كل شارة. |
@@ -640,17 +640,19 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
   تطبيقان في الصفحة نفسها أنماط الـtheme. يبقى سياق Wakeb منفصلًا لكل تطبيق.
 - **حدود نطاق الـtheme.** تصل سمات الـtheme والاتجاه (`data-wakeb-theme` و`dir` ومتغيرات
   `--wakeb-ui-*`) إلى جذور المكونات وإلى كل طبقة منقولة: نافذة WModal، وقائمتا WDropdown
-  وWExportDropdown، واللوحة الجانبية WDrawer على PrimeVue، وقائمتا العناصر الإضافية في WAvatarStack وWBadgeStack، وتلميحات WButton
+  وWExportDropdown، واللوحة الجانبية WDrawer، وقائمتا العناصر الإضافية في WAvatarStack وWBadgeStack، وتلميحات WButton
   وWTooltipBtn وWTruncatedText وWAvatarStack. خصائص تنسيق الطبقة مثل `menuStyle`
   و`tooltipStyle` توضع على محتوى الطبقة داخل هذا النطاق، لذا تتقدم عليه. ويحتفظ كل تطبيق في
   الصفحة نفسها بنطاق طبقاته الخاص.
-- **حدود ترتيب الطبقات.** يُطبَّق `zIndexOverlay` على كل طبقات Vuetify السابقة وعلى قوائم
-  PrimeVue ونافذته ولوحته الجانبية وتلميحاته. على PrimeVue تأخذ تلميحات WButton وWTooltipBtn
-  وWTruncatedText وWAvatarStack قيمة `zIndexOverlay` بدلًا من z-index تلميحات PrimeVue، وتتقدم
-  قيمة `zIndex` في `tooltipStyle` الخاصة بـWAvatarStack عليها. وبدون `zIndexOverlay` تحتفظ
-  بقيمة z-index تلميحات PrimeVue ‏(`zIndex.tooltip` في إعدادات PrimeVue). على Vuetify لا
-  يُنقل WDrawer: هو عنصر تخطيط في Vuetify يُرسم في مكانه، فتصل سمات النطاق إلى لوحته كجذر،
-  ويبقى z-index الخاص به للتخطيط في Vuetify الذي يحدد موضع الخلفية المعتمة أيضًا. أما على
+- **حدود ترتيب الطبقات.** يُطبَّق `zIndexOverlay` على كل طبقات Vuetify السابقة، وعلى حاضن
+  WDrawer في Vuetify، وعلى قوائم PrimeVue ونافذته ولوحته الجانبية وتلميحاته. على PrimeVue تأخذ
+  تلميحات WButton وWTooltipBtn وWTruncatedText وWAvatarStack قيمة `zIndexOverlay` بدلًا من
+  z-index تلميحات PrimeVue، وتتقدم قيمة `zIndex` في `tooltipStyle` الخاصة بـWAvatarStack عليها.
+  وبدون `zIndexOverlay` تحتفظ بقيمة z-index تلميحات PrimeVue ‏(`zIndex.tooltip` في إعدادات
+  PrimeVue). على Vuetify يُنقل WDrawer إلى حاوية الطبقات في Vuetify داخل الحاضن الذي يملكه
+  Wakeb. تأخذ اللوحة سمات النطاق، ويأخذ الحاضن `zIndexOverlay`؛ وبدونه يستخدم الحاضن 2000، وهي
+  القيمة الافتراضية لطبقات Vuetify. وتُركَّب القوائم والتلميحات والنوافذ المفتوحة من داخل اللوحة
+  لاحقًا في الحاوية نفسها، فتظهر فوقها. أما على
   PrimeVue فيُنقل WDrawer تحت طبقة الخلفية الخاصة به، وهي التي تأخذ `zIndexOverlay`؛ وبدونه
   تتشارك اللوحة وWModal ترتيب z-index الخاص بالنوافذ في PrimeVue، فتظهر النافذة المفتوحة من
   داخل اللوحة فوقها.
@@ -664,15 +666,20 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 - **غلاف المكوّن.** كل مكوّن مستورد من الجذر غلاف رقيق حول renderer المزود. أدوات الاختبار
   التي تبحث عن المكونات بالاسم، مثل `findAllComponents(WTabs)`، تجد الغلاف والـrenderer معًا.
 - **الأنماط.** ما زال `style.css` يحتوي أنماط كل الـrenderers، وتقسيمه حسب المزود مخطط له.
-- **حاضن WDrawer.** على Vuetify يحتاج WDrawer تخطيط تطبيق Vuetify (`VApp` أو `VLayout`). أما
-  على PrimeVue فلا يحتاج markup حاضنًا ولا غلافًا حول جذر تطبيقك: طبقة الخلفية المنقولة الخاصة
-  بـPrimeVue هي التي تحتضنه.
-- **سلوك WDrawer.** تحقق اللوحة على PrimeVue قواعد اللوحة المؤقتة: هي `role="dialog"` مشروطة
-  (modal)، تنقل التركيز إلى داخلها وتحصر Tab فيها، وتُغلق بـEscape وبالنقر خارجها ما لم تكن
-  `persistent`، وتمنع تمرير الصفحة، وتعيد التركيز إلى العنصر الذي فتحها. يخفي
-  `transparentOverlay` لون الخلفية لكنه يبقيها، فتظل الصفحة خلفها غير قابلة للتفاعل. ويتبع
-  الجانب المنطقي خيار `direction` في Wakeb. أما لوحة Vuetify فتحتفظ بسلوكها الأصلي: لا إغلاق
-  بـEscape، ولا منع للتمرير، والمشروع يدير التركيز عند الفتح والعودة.
+- **حاضن WDrawer.** لا يحتاج WDrawer إلى markup حاضن على أي مزود. على PrimeVue لا يحتاج غلافًا
+  حول جذر تطبيقك: طبقة الخلفية المنقولة الخاصة بـPrimeVue هي التي تحتضنه. وعلى Vuetify يرسم
+  WDrawer عنصر `VLayout` خاصًا به حول `VNavigationDrawer` وحده، وينقله إلى حاوية الطبقات في
+  Vuetify، فيصبح `VApp` و`VLayout` اختياريين. وإذا كان في تطبيقك `VApp`، تُسجَّل اللوحة في
+  التخطيط الداخلي لا في تخطيطك: لا تتحرك أشرطة التطبيق ولا لوحاته الجانبية ولا `VMain` عند
+  فتحها.
+- **سلوك WDrawer.** تحقق اللوحة قواعد اللوحة المؤقتة على كل المزودين: هي `role="dialog"` مشروطة
+  (modal) يسميها `title` ثم `ariaLabel`. تنقل التركيز إلى داخلها وتحصر Tab فيها، وتُغلق بـEscape
+  وبالنقر خارجها ما لم تكن `persistent`، وتمنع تمرير الصفحة، وتعيد التركيز إلى العنصر الذي
+  فتحها. يرسل Escape والنقر الخارجي `update:modelValue` فقط، أما `close` فيأتي من زر الإغلاق.
+  يخفي `transparentOverlay` لون الخلفية لكنه يبقيها، فتظل الصفحة خلفها غير قابلة للتفاعل. على
+  PrimeVue يتبع الجانب المنطقي خيار `direction` في Wakeb. أما على Vuetify فيتبع لغة Vuetify،
+  ويبقى المحتوى المغلق في DOM تحت `inert`، ويغلق السحب باللمس ومراقبة المسار الأصليان اللوحة
+  أيضًا.
 - **هيكل التحميل في WBaseSidebar.** على PrimeVue يقبل هيكل التحميل أسماء الهياكل المحمولة فقط
   (SPEC R16) ويرسمها بعناصر `Skeleton` من PrimeVue. الأسماء الخاصة بـVuetify تُتجاوز مع
   التحذير `WAKEB_UNKNOWN_VALUE`.

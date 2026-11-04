@@ -213,12 +213,14 @@ describe("WDrawer", () => {
     expect(document.querySelector(".drawer-panel__actions")?.textContent).toBe(
       "Apply",
     );
+    // A transparent overlay keeps the scrim (so the page stays blocked) and only hides its color.
     const transparent = await render(WDrawer, {
       props: { transparentOverlay: true },
     });
     expect(transparent.getComponent(VNavigationDrawer).props("scrim")).toBe(
-      false,
+      true,
     );
+    expect(document.querySelector(".wakeb-drawer-host--transparent")).not.toBeNull();
   });
   it("replaces data content during loading and omits unused header/footer", async () => {
     await render(WDrawer, {

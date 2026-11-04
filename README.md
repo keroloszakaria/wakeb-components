@@ -62,4 +62,4 @@ until their separate contracts are reviewed.
 
 MIT. See LICENSE.
 
-WModal and WDrawer provide dialog and temporary drawer shells with typed models, explicit loading slots and no form, router or permission dependency. Use a Vuetify layout provider (normally VApp) for WDrawer. See the bilingual overlay examples and native behavior limits in the docs.
+WModal and WDrawer provide dialog and temporary drawer shells with typed models, explicit loading slots and no form, router or permission dependency. WDrawer is a modal dialog drawer that needs no VApp or layout host. See the bilingual overlay examples and native behavior limits in the docs.

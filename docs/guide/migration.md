@@ -44,8 +44,8 @@ Work through these steps in order. Each step links to the section that explains 
    names ([Deprecated values](#deprecated-values)).
 7. Run `vue-tsc` or `tsc --strict`. Fix the type errors for provider color names, badge types
    and wrong event or slot payloads ([Typed contracts](./providers#typed-contracts)).
-8. Review the [behavior changes](#behavior-changes) for WLoading, icons, WCarousel and
-   WAccordion, and update tests that relied on the old behavior.
+8. Review the [behavior changes](#behavior-changes) for WLoading, icons, WCarousel, WAccordion
+   and the Vuetify WDrawer, and update tests that relied on the old behavior.
 9. Build for production and run your test suite. Development warnings are removed from the
    production bundle; errors are not.
 10. If you plan to switch providers later, run the [switching checklist](./switching#checklist).
@@ -293,6 +293,16 @@ These changes apply immediately; there is no alias.
 - **WAccordion panel is a named region.** When `title` is set, the panel has `role="region"` and
   `aria-label` set to the title. Without a title it has no role, as before. The header toggle
   keeps `aria-expanded` and `aria-controls`.
+- **Vuetify WDrawer is a modal dialog with no layout host.** WDrawer no longer needs `VApp` or
+  `VLayout`: it renders its own `VLayout` around the drawer and teleports it to Vuetify's overlay
+  container. Inside a `VApp` it does not register with your layout, so `VMain` does not move. It
+  now closes on Escape unless `persistent`, emitting `update:modelValue` only, locks body
+  scrolling while open, moves focus into the drawer and returns it to the opener. Remove your own
+  Escape, focus or scroll-lock workarounds. The root is now a `<div role="dialog"
+  aria-modal="true">` instead of a `<nav>`, outside your app's DOM tree, so update CSS or test
+  selectors that relied on `nav.wakeb-drawer` or on the drawer being a descendant of your app.
+  `transparentOverlay` now keeps a transparent scrim, so the page behind stays blocked and an
+  outside click closes a non-persistent drawer. The drawer stacks at `zIndexOverlay`, or 2000.
 - **Typed neutral contracts.** Every root component's type comes from a provider-neutral
   contract. `vue-tsc` now rejects handlers and slot destructuring that do not match the declared
   payloads, provider color names and badge types outside `WakebBadgeType`. Contract types such as

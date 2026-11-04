@@ -13,7 +13,7 @@ export type WakebErrorCode =
    * manifest, SPEC R05/R21) cannot work on the selected provider; the message must name the
    * capability and its alternative. No optional feature is defined in this build, so nothing raises
    * it. Missing mandatory behavior never uses this code: a missing component is
-   * WAKEB_COMPONENT_UNSUPPORTED, and layout-host needs such as the Vuetify WDrawer are R19 limits.
+   * WAKEB_COMPONENT_UNSUPPORTED, and provider layout hosts are encapsulated by the renderer (R19).
    */
   | "WAKEB_CAPABILITY_UNSUPPORTED";
 

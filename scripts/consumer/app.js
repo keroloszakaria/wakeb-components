@@ -4,6 +4,7 @@ import * as W from 'wakeb-components'
 
 const views = {
   WModal: () => h(W.WModal, { modelValue: false, title: 'Packed dialog' }),
+  WDrawer: () => h(W.WDrawer, { modelValue: false, title: 'Packed drawer' }),
   WCarousel: () => h(W.WCarousel, { slides: ['Welcome'], cycle: false }, { slide: ({ slide }) => h('p', slide) }),
   WExportDropdown: () => h(W.WExportDropdown, { title: 'Export report' }),
   WBaseSidebar: () => h(W.WBaseSidebar, { title: 'Team sidebar', items: [{ id: 1, name: 'Ada' }] }, { item: ({ item }) => h('b', item.name) }),
@@ -24,9 +25,9 @@ const views = {
   WBadge: () => h(W.WBadge, { label: 'Approved', type: 'success', isDot: true }),
   WAccordion: () => h(W.WAccordion, { title: 'Details', modelValue: true }, () => h('input', { value: 'Draft' })),
 }
-/** Text each supported component must server-render. WDrawer needs the R19 layout host (M4), so it is type-checked only. */
+/** Text each supported component must server-render. Closed overlays (WModal, WDrawer) only need to render without a host. */
 export const expected = {
-  WModal: [], WCarousel: ['Welcome'], WExportDropdown: ['Export report'], WBaseSidebar: ['Team sidebar'], WTabs: ['Public tab panel'],
+  WModal: [], WDrawer: [], WCarousel: ['Welcome'], WExportDropdown: ['Export report'], WBaseSidebar: ['Team sidebar'], WTabs: ['Public tab panel'],
   WTree: ['Root navigation'], WDropdown: ['Actions'], WBadgeStack: ['Owner'], WUserBadge: ['Grace Hopper'], WTooltipBtn: ['Open settings'],
   WTruncatedText: ['aria-label="Public package consumer"'], WSegmentedProgress: ['role="progressbar"'], WSemiCircleGauge: ['aria-label="75%"'], WAvatarStack: ['Ada'],
   WLoading: ['Loading report'], WPageSkeleton: ['skeleton-block'], WVerticalSteps: ['Review'], WButton: ['Save'], WBadge: ['Approved'],

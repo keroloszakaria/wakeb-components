@@ -122,20 +122,20 @@ describe("overlay scope isolation", () => {
 });
 
 describe("WDrawer scope", () => {
-  // The temporary drawer is a Vuetify layout item rendered in place, not teleported; its root takes the scope attributes.
+  // The drawer is teleported inside its Wakeb-owned layout host; its panel root takes the scope attributes.
   it("carries the scope on the drawer panel and keeps caller styles first", async () => {
-    const w = render(WDrawer, { modelValue: true, title: "Filters" }, configured, { style: caller });
+    render(WDrawer, { modelValue: true, title: "Filters" }, configured, { style: caller });
     await nextTick();
-    const panel = w.get(".wakeb-drawer").element as HTMLElement;
+    const panel = document.querySelector<HTMLElement>(".wakeb-drawer")!;
     expect(panel.getAttribute("data-wakeb-theme")).toBe("dark");
     expect(panel.getAttribute("dir")).toBe("rtl");
     expect(panel.style.getPropertyValue("--wakeb-ui-primary")).toBe("#abcdef");
   });
 
   it("adds nothing to the drawer when nothing is configured", async () => {
-    const w = render(WDrawer, { modelValue: true, title: "Filters" }, {});
+    render(WDrawer, { modelValue: true, title: "Filters" }, {});
     await nextTick();
-    const panel = w.get(".wakeb-drawer").element as HTMLElement;
+    const panel = document.querySelector<HTMLElement>(".wakeb-drawer")!;
     expect(panel.hasAttribute("data-wakeb-theme")).toBe(false);
     expect(panel.hasAttribute("dir")).toBe(false);
     expect(panel.getAttribute("style") ?? "").not.toContain("--wakeb-ui");

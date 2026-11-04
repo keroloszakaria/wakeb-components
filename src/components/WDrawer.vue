@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed, useAttrs } from "vue";
+import { computed, onMounted, ref, shallowRef, useAttrs } from "vue";
 import { useLocale } from "vuetify";
+import { VLayout } from "vuetify/components/VLayout";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
 import WButton from "./WButton.vue";
 import WLoading from "./WLoading.vue";
-import { drawerDefaults, useDrawer } from "../composables/drawer";
+import { drawerDefaults, useDrawer, useModalDrawer } from "../composables/drawer";
+import { useWakebContext } from "../core/runtime";
 import type { DrawerProps } from "../types";
 defineOptions({ inheritAttrs: false });
 const props = withDefaults(defineProps<DrawerProps>(), drawerDefaults);
@@ -14,8 +16,51 @@ const emit = defineEmits<{
 }>();
 const attrs = useAttrs(),
   { isRtl } = useLocale();
+const context = useWakebContext("WDrawer");
 const { model: dialog, side, numericWidth, close } = useDrawer(props, emit);
 const location = computed(() => side(isRtl.value));
+/*
+ * Wakeb-owned layout host (SPEC R19). VNavigationDrawer must register with a Vuetify layout, so
+ * WDrawer renders its own VLayout around the drawer only and teleports it next to Vuetify's
+ * overlays (the shared .v-overlay-container in body). The app needs no VApp or VLayout. With one,
+ * the drawer still registers here, never in the app layout, so the app's main content does not
+ * move. The host is a fixed, click-through box over the viewport; only the drawer and its scrim
+ * take pointer events. Before mount (server render, hydration) the teleport is disabled and the
+ * closed, inert host renders in place, so the markup matches; it moves to the container on mount.
+ */
+const target = shallowRef<HTMLElement>();
+const mounted = ref(false);
+onMounted(() => {
+  const body = document.body;
+  let container = [...body.children].find((el) => el.matches(".v-overlay-container")) as HTMLElement | undefined;
+  if (!container) {
+    container = document.createElement("div");
+    container.className = "v-overlay-container";
+    body.appendChild(container);
+  }
+  target.value = container;
+  mounted.value = true;
+});
+/*
+ * Stacking: zIndexOverlay when configured, else Vuetify's default overlay z-index (2000). Vuetify
+ * overlays opened from the drawer (menus, tooltips, WModal) mount later in the same container, so
+ * on an equal z-index they stack above the drawer.
+ */
+const hostStyle = computed(() => ({
+  position: "fixed" as const,
+  inset: "0",
+  zIndex: context.zIndexOverlay ?? 2000,
+  overflow: "hidden",
+  pointerEvents: "none" as const,
+}));
+const panelStyle = computed(() => (context.zIndexOverlay === undefined ? undefined : { zIndex: context.zIndexOverlay }));
+const panel = ref<HTMLElement>();
+useModalDrawer({
+  open: dialog,
+  persistent: () => props.persistent,
+  panel: () => panel.value?.closest<HTMLElement>(".wakeb-drawer"),
+  mounted,
+});
 defineSlots<{
   title(): unknown;
   "header-actions"(): unknown;
@@ -28,61 +73,83 @@ defineSlots<{
 }>();
 </script>
 <template>
-  <VNavigationDrawer
-    v-bind="attrs"
-    v-model="dialog"
-    :location="location"
-    :width="numericWidth"
-    temporary
-    :scrim="!transparentOverlay"
-    :persistent="persistent"
-    :aria-label="title || ariaLabel"
-    class="wakeb-drawer"
-  >
-    <div class="drawer-panel" :aria-busy="loading || !dataLoaded">
-      <div
-        v-if="title || $slots.title || $slots['header-actions'] || closable"
-        class="drawer-panel__header"
+  <!-- Wakeb owns Escape, initial and return focus, the scroll lock and the dialog role; VNavigationDrawer owns the scrim, slide and Tab trap. -->
+  <Teleport :to="target ?? 'body'" :disabled="!target">
+    <VLayout
+      class="wakeb-drawer-host"
+      :class="{ 'wakeb-drawer-host--transparent': transparentOverlay }"
+      :style="hostStyle"
+    >
+      <VNavigationDrawer
+        :style="panelStyle"
+        v-bind="attrs"
+        v-model="dialog"
+        tag="div"
+        :location="location"
+        :width="numericWidth"
+        temporary
+        scrim
+        retain-focus
+        :persistent="persistent"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="title || ariaLabel"
+        class="wakeb-drawer"
       >
-        <slot name="title"
-          ><span class="drawer-panel__title">{{ title }}</span></slot
-        >
-        <div class="wakeb-drawer__header-actions">
-          <slot name="header-actions" />
-          <slot
-            v-if="closable"
-            name="close-button"
-            :close="close"
-            :label="closeLabel"
+        <div ref="panel" class="drawer-panel" :aria-busy="loading || !dataLoaded">
+          <div
+            v-if="title || $slots.title || $slots['header-actions'] || closable"
+            class="drawer-panel__header"
           >
-            <WButton
-              type="outline"
-              class-list="wakeb-drawer__close"
-              :aria-label="closeLabel"
-              @click="close"
-              ><span aria-hidden="true">×</span></WButton
+            <slot name="title"
+              ><span class="drawer-panel__title">{{ title }}</span></slot
             >
+            <div class="wakeb-drawer__header-actions">
+              <slot name="header-actions" />
+              <slot
+                v-if="closable"
+                name="close-button"
+                :close="close"
+                :label="closeLabel"
+              >
+                <WButton
+                  type="outline"
+                  class-list="wakeb-drawer__close"
+                  :aria-label="closeLabel"
+                  @click="close"
+                  ><span aria-hidden="true">×</span></WButton
+                >
+              </slot>
+            </div>
+          </div>
+          <div class="drawer-panel__content">
+            <slot v-if="!dataLoaded" name="loading" :label="loadingLabel"
+              ><WLoading :label="loadingLabel"
+            /></slot>
+            <template v-else><slot name="content" /><slot /></template>
+          </div>
+          <div v-if="$slots.actions" class="drawer-panel__actions">
+            <slot name="actions" />
+          </div>
+          <slot v-if="loading" name="loading-overlay" :label="loadingLabel">
+            <div class="wakeb-drawer__loading-overlay">
+              <WLoading :label="loadingLabel" />
+            </div>
           </slot>
         </div>
-      </div>
-      <div class="drawer-panel__content">
-        <slot v-if="!dataLoaded" name="loading" :label="loadingLabel"
-          ><WLoading :label="loadingLabel"
-        /></slot>
-        <template v-else><slot name="content" /><slot /></template>
-      </div>
-      <div v-if="$slots.actions" class="drawer-panel__actions">
-        <slot name="actions" />
-      </div>
-      <slot v-if="loading" name="loading-overlay" :label="loadingLabel">
-        <div class="wakeb-drawer__loading-overlay">
-          <WLoading :label="loadingLabel" />
-        </div>
-      </slot>
-    </div>
-  </VNavigationDrawer>
+      </VNavigationDrawer>
+    </VLayout>
+  </Teleport>
 </template>
 <style scoped lang="scss">
+/* The host is click-through and the scrim inherits that, so the scrim takes pointer events back to block the page. */
+.wakeb-drawer-host :deep(.v-navigation-drawer__scrim) {
+  pointer-events: auto;
+}
+/* transparentOverlay hides the scrim color but keeps the scrim, so the page stays blocked. */
+.wakeb-drawer-host--transparent :deep(.v-navigation-drawer__scrim) {
+  background: transparent;
+}
 .wakeb-drawer {
   background: var(
     --wakeb-drawer-bg,

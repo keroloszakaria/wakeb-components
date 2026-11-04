@@ -21,7 +21,7 @@ defineSlots<{
   "item-icon"?(props: { item: DropdownItem; color: string }): unknown;
   "item-label"?(props: { item: DropdownItem; text: string }): unknown;
 }>();
-useWakebContext("WDropdown");
+const context = useWakebContext("WDropdown");
 const {
   resolveItemColor,
   buttonTitle,
@@ -75,7 +75,9 @@ const activatorProps = computed(() => ({
       :model="model"
       popup
       class="wakeb-pv-dropdown"
-      :style="menuStyle"
+      v-bind="context.scope"
+      :style="[menuStyle, context.zIndexOverlay === undefined ? undefined : { zIndex: context.zIndexOverlay }]"
+      :auto-z-index="context.zIndexOverlay === undefined"
       @hide="isActive = false"
     >
       <template #item="{ item, props: itemProps }">

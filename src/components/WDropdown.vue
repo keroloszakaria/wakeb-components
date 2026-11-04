@@ -20,7 +20,7 @@ defineSlots<{
   "item-icon"?(props: { item: DropdownItem; color: string }): unknown;
   "item-label"?(props: { item: DropdownItem; text: string }): unknown;
 }>();
-useWakebContext("WDropdown");
+const context = useWakebContext("WDropdown");
 const {
   resolveItemColor,
   buttonTitle,
@@ -34,7 +34,8 @@ const {
 </script>
 <template>
   <div>
-    <v-menu :disabled="disabled || isLoading">
+    <!-- Teleported content carries the configured theme and direction scope. -->
+    <v-menu :disabled="disabled || isLoading" v-bind="context.scope" :z-index="context.zIndexOverlay">
       <template v-slot:activator="{ props: activatorProps, isActive }">
         <div
           class="dropdown-activator"

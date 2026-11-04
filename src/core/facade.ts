@@ -1,0 +1,50 @@
+import { camelize, defineComponent, h, inject, mergeProps, toHandlerKey, type Component, type ComponentObjectPropsOptions } from "vue";
+import { LOCALE_DEFAULTS, clone } from "./defaults";
+import { WAKEB_CONTEXT } from "./runtime";
+import type { WakebComponentName } from "./options";
+
+type PropOptions = Record<string, { type?: unknown; required?: boolean } | null>;
+type Renderer = { props?: PropOptions; emits?: string[] | Record<string, unknown> };
+
+/**
+ * Wraps a selected renderer with the plugin defaults layer (SPEC R06). The wrapper declares the same
+ * props without defaults, so it sees exactly what the caller passed: Boolean casting cannot invent
+ * `false`, and only undefined counts as absent. It then resolves each prop in this order:
+ * explicit value, plugin default, built-in localized string, and finally the renderer's own default.
+ * Declared events are re-emitted from the wrapper, so they reach caller listeners once and stay visible
+ * to devtools and test utilities. Other attributes, listeners and slots pass through unchanged; theme
+ * scope attributes are merged first so the caller's class and style still win.
+ */
+export function defineWakebFacade(name: WakebComponentName, renderer: Component) {
+  const source = (renderer as Renderer).props ?? {};
+  const declared = (renderer as Renderer).emits ?? [];
+  const emits = Array.isArray(declared) ? declared : Object.keys(declared);
+  const props: ComponentObjectPropsOptions = Object.fromEntries(
+    Object.entries(source).map(([key, option]) => [
+      key,
+      { type: (option?.type ?? null) as null, required: option?.required ?? false, default: undefined },
+    ]),
+  );
+  return defineComponent({
+    name,
+    inheritAttrs: false,
+    props,
+    emits,
+    setup(input, { attrs, slots, emit }) {
+      const context = inject(WAKEB_CONTEXT, null);
+      const localized = context?.locale === "ar" ? LOCALE_DEFAULTS.ar[name] : undefined;
+      const fallback: Record<string, unknown> = { ...localized, ...clone(context?.defaults[name]) };
+      const forward = Object.fromEntries(
+        emits.map((event) => [toHandlerKey(camelize(event)), (...args: unknown[]) => emit(event, ...args)]),
+      );
+      return () => {
+        const resolved: Record<string, unknown> = {};
+        for (const key of Object.keys(props)) {
+          const value = (input as Record<string, unknown>)[key];
+          resolved[key] = value !== undefined ? value : fallback[key];
+        }
+        return h(renderer, mergeProps(context?.scope ?? {}, resolved, attrs, forward), slots);
+      };
+    },
+  });
+}

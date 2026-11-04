@@ -9,13 +9,39 @@ export interface WakebContext {
   readonly framework: WakebFramework;
   readonly locale: "en" | "ar";
   readonly direction: "ltr" | "rtl";
+  /** Validated plugin defaults per component; copied again for each instance. */
+  readonly defaults: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
+  /**
+   * Attributes that carry the configured theme and direction to Wakeb roots and teleported
+   * overlay content. Empty unless theme or direction was configured.
+   */
+  readonly scope: Readonly<Record<string, unknown>>;
+  /** Configured overlay z-index; providers keep their own stacking when absent. */
+  readonly zIndexOverlay?: number;
   /** True when Wakeb reused a provider instance the host installed. */
   readonly providerReused: boolean;
   /** Identity of the plugin object that installed this context. */
   readonly owner: object;
+  /** Development warnings already reported for this app. */
+  readonly warned: Set<string>;
 }
 
 export const WAKEB_CONTEXT: InjectionKey<WakebContext> = Symbol.for("wakeb-components:context");
+
+export type WakebWarningCode = "WAKEB_DEPRECATED_VALUE";
+
+/**
+ * Reports a development warning once per app and key. Call it behind
+ * `process.env.NODE_ENV !== "production"` so production bundles drop the call and its text.
+ */
+export function warnOnce(context: WakebContext | null, code: WakebWarningCode, key: string, message: string) {
+  const id = `${code}:${key}`;
+  if (context) {
+    if (context.warned.has(id)) return;
+    context.warned.add(id);
+  }
+  console.warn(`[${code}] ${message}`);
+}
 
 export function useWakebContext(component: string): WakebContext {
   const context = inject(WAKEB_CONTEXT, null);

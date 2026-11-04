@@ -33,7 +33,7 @@ export function useDropdown(props: Props, emits: Emit) {
     success: "var(--wakeb-dropdown-color-success, #12b76a)",
     danger: "var(--wakeb-dropdown-color-danger, #f04438)",
     warning: "var(--wakeb-dropdown-color-warning, #f79009)",
-    primary: "var(--wakeb-dropdown-color-primary, #087f8c)",
+    primary: "var(--wakeb-dropdown-color-primary, var(--wakeb-ui-primary, #087f8c))",
     info: "var(--wakeb-dropdown-color-info, #2e90fa)",
     ...props.colorMap,
   }));

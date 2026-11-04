@@ -46,7 +46,7 @@ describe(`createWakebComponents (${framework})`, () => {
   it.each([
     [{}, "framework must be one of"],
     [{ framework: "react" }, "received \"react\""],
-    [{ framework, theme: "dark" }, "Unknown option 'theme'"],
+    [{ framework, theme: "dark" }, "theme must be an object"],
     [{ framework, locale: "fr" }, "locale must be"],
     [{ framework, providerOptions: { kind: other } }, `providerOptions.kind must be '${framework}'`],
     [{ framework, providerOptions: { kind: framework, mode: "always" } }, "providerOptions.mode must be one of"],

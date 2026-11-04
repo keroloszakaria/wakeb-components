@@ -14,7 +14,7 @@ const emit = defineEmits<{
   "update:modelValue": [value: boolean];
   afterLeave: [];
 }>();
-useWakebContext("WModal");
+const context = useWakebContext("WModal");
 const attrs = useAttrs();
 const { model: dialog, close } = useDisclosure(props, emit);
 /** The typed width prop wins; a native max-width attr applies only when width is absent (Vuetify compatibility surface). */
@@ -48,6 +48,7 @@ defineSlots<{
     v-model="dialog"
     :persistent="persistent"
     :max-width="maxWidth"
+    :z-index="context.zIndexOverlay"
     :aria-label="title || ariaLabel"
     class="wakeb-modal"
     @after-leave="emit('afterLeave')"
@@ -128,21 +129,22 @@ defineSlots<{
   margin: var(--wakeb-modal-margin, 1rem);
   background: var(
     --wakeb-modal-bg,
-    var(--wakeb-modal-fallback, rgb(var(--v-theme-surface)))
+    var(--wakeb-modal-fallback, var(--wakeb-ui-surface, rgb(var(--v-theme-surface))))
   ) !important;
+  font-family: var(--wakeb-ui-font-family, inherit);
   border: 1px solid
-    var(--wakeb-modal-border, var(--wakeb-modal-fallback, #d0d5dd)) !important;
+    var(--wakeb-modal-border, var(--wakeb-modal-fallback, var(--wakeb-ui-border, #d0d5dd))) !important;
 }
 .wakeb-modal :deep(.wakeb-modal__card) {
-  border-radius: var(--wakeb-modal-radius, 4px);
+  border-radius: var(--wakeb-modal-radius, var(--wakeb-ui-radius, 4px));
 }
 .wakeb-modal__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--wakeb-modal-padding, 1.25rem);
+  padding: var(--wakeb-modal-padding, var(--wakeb-ui-spacing, 1.25rem));
   border-radius: 24px;
-  color: var(--wakeb-modal-title, var(--wakeb-modal-fallback, inherit));
+  color: var(--wakeb-modal-title, var(--wakeb-modal-fallback, var(--wakeb-ui-on-surface, inherit)));
   :deep(.v-card-title) {
     font-weight: 600 !important;
     font-size: 1.125rem;
@@ -186,20 +188,20 @@ defineSlots<{
 .wakeb-modal__description {
   max-width: 32rem;
   margin: -0.5rem auto 0;
-  color: var(--wakeb-modal-description, rgb(var(--v-theme-on-surface)));
+  color: var(--wakeb-modal-description, var(--wakeb-ui-muted, rgb(var(--v-theme-on-surface))));
   font-size: 0.875rem;
   line-height: 1.65;
   text-align: center;
 }
 .wakeb-modal__content {
-  padding: var(--wakeb-modal-padding, 1.25rem);
+  padding: var(--wakeb-modal-padding, var(--wakeb-ui-spacing, 1.25rem));
   position: relative;
   height: 100%;
 }
 .wakeb-modal :deep(.v-card-actions) {
   justify-content: flex-start !important;
   gap: 1rem;
-  padding: var(--wakeb-modal-padding, 1.25rem);
+  padding: var(--wakeb-modal-padding, var(--wakeb-ui-spacing, 1.25rem));
 }
 .wakeb-modal :deep(.v-card-actions .v-btn ~ .v-btn:not(.v-btn-toggle .v-btn)) {
   margin-inline-start: 0 !important;

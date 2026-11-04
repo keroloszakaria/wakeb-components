@@ -9,6 +9,8 @@ Breaking: root imports now need a plugin file and `wakebComponents()` from `wake
 - Host provider modes `auto`, `reuse` and `install` reuse the app's Vuetify or PrimeVue instance without changing its theme or defaults.
 - PrimeVue 4 alpha adapter for WButton, WDropdown, WModal and WLoading; the other components report `WAKEB_COMPONENT_UNSUPPORTED`.
 - `SharedIcon` no longer references Vuetify types.
+- Plugin `defaults` per component, with explicit props winning and data, model and callback props rejected.
+- `locale: 'ar'` built-in labels, `direction`, and `theme` with `mode` and `--wakeb-ui-*` tokens scoped to each app and its overlays.
 
 ## Unreleased (0.7.x)
 

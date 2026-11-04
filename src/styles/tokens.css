@@ -1,0 +1,11 @@
+/*
+ * Dark-mode values for Wakeb semantic tokens (SPEC R05, R17). The plugin writes data-wakeb-theme on
+ * Wakeb roots and overlay content only when theme.mode is configured; tokens passed in theme.tokens
+ * are inline variables and therefore win over these defaults. Light mode uses each fallback in place.
+ */
+[data-wakeb-theme="dark"] {
+  --wakeb-ui-surface: #1d2939;
+  --wakeb-ui-on-surface: #f2f4f7;
+  --wakeb-ui-muted: #98a2b3;
+  --wakeb-ui-border: #475467;
+}

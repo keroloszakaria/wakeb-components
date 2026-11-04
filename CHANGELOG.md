@@ -4,6 +4,7 @@
 
 - Breaking: root imports need a plugin file and `wakebComponents()` from `wakeb-components/vite`.
 - Add `createWakebComponents`, static provider selection, host provider reuse modes, `WakebError` codes and a PrimeVue 4 alpha adapter for WButton, WDropdown, WModal and WLoading.
+- Add plugin `defaults`, Arabic built-in labels, `direction`, and `theme` mode and `--wakeb-ui-*` tokens scoped per app and overlay.
 
 ## Unreleased (0.7.x)
 

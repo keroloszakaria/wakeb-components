@@ -2,6 +2,7 @@ import type { App } from "vue";
 import services from "wakeb-components/_internal/selected/services";
 import { WakebError, buildPluginMissing } from "./errors";
 import { WAKEB_CONTEXT, appContext, type WakebContext } from "./runtime";
+import { validateDefaults, validateTheme } from "./defaults";
 import {
   FRAMEWORKS,
   type WakebCapabilities,
@@ -10,7 +11,7 @@ import {
   type WakebProviderMode,
 } from "./options";
 
-const KNOWN_OPTIONS = ["framework", "locale", "direction", "providerOptions"];
+const KNOWN_OPTIONS = ["framework", "defaults", "locale", "direction", "theme", "providerOptions"];
 const MODES: readonly WakebProviderMode[] = ["auto", "reuse", "install"];
 const invalid = (message: string) => new WakebError("WAKEB_CONFIG_INVALID", message);
 const list = (values: readonly string[]) => values.map((value) => `'${value}'`).join(", ");
@@ -19,8 +20,14 @@ function validate(options: WakebComponentsOptions) {
   if (!options || typeof options !== "object") throw invalid("createWakebComponents() needs an options object with a framework.");
   if (!FRAMEWORKS.includes(options.framework))
     throw invalid(`framework must be one of ${list(FRAMEWORKS)}; received ${JSON.stringify(options.framework)}. There is no default provider.`);
-  for (const key of Object.keys(options))
+  for (const key of Object.keys(options)) {
+    if (key === "icons")
+      throw new WakebError(
+        "WAKEB_CAPABILITY_UNSUPPORTED",
+        "The icons resolver option is not available in this alpha. Pass icon components or SVG paths to icon props instead.",
+      );
     if (!KNOWN_OPTIONS.includes(key)) throw invalid(`Unknown option '${key}'. Supported options: ${list(KNOWN_OPTIONS)}.`);
+  }
   if (options.locale !== undefined && !["en", "ar"].includes(options.locale))
     throw invalid(`locale must be 'en' or 'ar'; received ${JSON.stringify(options.locale)}.`);
   if (options.direction !== undefined && !["ltr", "rtl"].includes(options.direction))
@@ -42,6 +49,14 @@ function validate(options: WakebComponentsOptions) {
  */
 export function createWakebComponents(options: WakebComponentsOptions): WakebPlugin {
   const provider = validate(options);
+  const defaults = validateDefaults(options.defaults);
+  const theme = validateTheme(options.theme);
+  // Scope attributes reach Wakeb roots and teleported overlays; nothing is added unless configured.
+  const scope: Record<string, unknown> = {};
+  if (Object.keys(theme.variables).length) scope.style = Object.freeze(theme.variables);
+  if (theme.mode) scope["data-wakeb-theme"] = theme.mode;
+  if (options.direction) scope.dir = options.direction;
+  Object.freeze(scope);
   const { framework } = options;
   const capabilities: WakebCapabilities = Object.freeze({
     version: 1,
@@ -71,8 +86,12 @@ export function createWakebComponents(options: WakebComponentsOptions): WakebPlu
         framework,
         locale: options.locale ?? "en",
         direction: options.direction ?? "ltr",
+        defaults,
+        scope,
+        zIndexOverlay: theme.tokens.zIndexOverlay,
         providerReused: reused,
         owner: plugin,
+        warned: new Set<string>(),
       });
       app.provide(WAKEB_CONTEXT, context);
     },

@@ -49,3 +49,21 @@ const mismatched = createWakebComponents({ framework: 'vuetify', providerOptions
 // @ts-expect-error there is no default provider
 const unselected = createWakebComponents({});
 void [plugin, mismatched, unselected];
+const configured: WakebPlugin = createWakebComponents({ framework: 'vuetify', defaults: { WButton: { size: 'md', disabled: false }, WModal: { persistent: false, closeLabel: 'Dismiss' } }, locale: 'ar', direction: 'rtl', theme: { mode: 'dark', tokens: { primary: '#123456', radius: '6px', zIndexOverlay: 3000 } } });
+// @ts-expect-error model props stay on each instance
+const modelDefault = createWakebComponents({ framework: 'vuetify', defaults: { WDropdown: { modelValue: 'x' } } });
+// @ts-expect-error data arrays stay on each instance
+const dataDefault = createWakebComponents({ framework: 'vuetify', defaults: { WDropdown: { menuItems: [] } } });
+// @ts-expect-error callbacks such as label formatters stay on each instance
+const callbackDefault = createWakebComponents({ framework: 'vuetify', defaults: { WDropdown: { labelFormatter: (value?: string) => value ?? '' } } });
+// @ts-expect-error default values keep the prop type
+const wrongDefault = createWakebComponents({ framework: 'vuetify', defaults: { WButton: { disabled: 'yes' } } });
+// @ts-expect-error defaults are keyed by public component names
+const unknownComponent = createWakebComponents({ framework: 'vuetify', defaults: { WSelect: {} } });
+// @ts-expect-error defaults accept only declared props
+const unknownProp = createWakebComponents({ framework: 'vuetify', defaults: { WButton: { colour: 'red' } } });
+// @ts-expect-error the overlay z-index token is numeric
+const textZIndex = createWakebComponents({ framework: 'vuetify', theme: { tokens: { zIndexOverlay: '10' } } });
+// @ts-expect-error theme mode is light or dark
+const dimMode = createWakebComponents({ framework: 'vuetify', theme: { mode: 'dim' } });
+void [configured, modelDefault, dataDefault, callbackDefault, wrongDefault, unknownComponent, unknownProp, textZIndex, dimMode];

@@ -61,6 +61,8 @@ const focusDialog = () =>
     :draggable="false"
     :close-on-escape="!persistent"
     :dismissable-mask="!persistent"
+    :auto-z-index="context.zIndexOverlay === undefined"
+    :pt="context.zIndexOverlay === undefined ? undefined : { mask: { style: { zIndex: context.zIndexOverlay } } }"
     :style="{ width: '100%', maxWidth: size(width) }"
     v-bind="$attrs"
     class="wakeb-modal wakeb-pv-modal"
@@ -112,10 +114,11 @@ const focusDialog = () =>
 /* Teleported dialog: namespaced global rules; .p-dialog is doubled to win over runtime-injected theme CSS. */
 .wakeb-pv-modal.p-dialog {
   margin: var(--wakeb-modal-margin, 1rem);
-  background: var(--wakeb-modal-bg, var(--wakeb-modal-fallback, var(--p-dialog-background)));
-  border: 1px solid var(--wakeb-modal-border, var(--wakeb-modal-fallback, #d0d5dd));
-  border-radius: var(--wakeb-modal-radius, 4px);
-  color: var(--p-dialog-color);
+  background: var(--wakeb-modal-bg, var(--wakeb-modal-fallback, var(--wakeb-ui-surface, var(--p-dialog-background))));
+  font-family: var(--wakeb-ui-font-family, inherit);
+  border: 1px solid var(--wakeb-modal-border, var(--wakeb-modal-fallback, var(--wakeb-ui-border, #d0d5dd)));
+  border-radius: var(--wakeb-modal-radius, var(--wakeb-ui-radius, 4px));
+  color: var(--wakeb-ui-on-surface, var(--p-dialog-color));
   overflow: hidden;
 }
 .wakeb-pv-modal .wakeb-modal__card {
@@ -125,8 +128,8 @@ const focusDialog = () =>
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--wakeb-modal-padding, 1.25rem);
-  color: var(--wakeb-modal-title, var(--wakeb-modal-fallback, inherit));
+  padding: var(--wakeb-modal-padding, var(--wakeb-ui-spacing, 1.25rem));
+  color: var(--wakeb-modal-title, var(--wakeb-modal-fallback, var(--wakeb-ui-on-surface, inherit)));
 }
 .wakeb-pv-modal .wakeb-modal__title {
   margin: 0;
@@ -170,13 +173,13 @@ const focusDialog = () =>
 .wakeb-pv-modal .wakeb-modal__description {
   max-width: 32rem;
   margin: -0.5rem auto 0;
-  color: var(--wakeb-modal-description, var(--p-text-muted-color));
+  color: var(--wakeb-modal-description, var(--wakeb-ui-muted, var(--p-text-muted-color)));
   font-size: 0.875rem;
   line-height: 1.65;
   text-align: center;
 }
 .wakeb-pv-modal .wakeb-modal__content {
-  padding: var(--wakeb-modal-padding, 1.25rem);
+  padding: var(--wakeb-modal-padding, var(--wakeb-ui-spacing, 1.25rem));
   position: relative;
   height: 100%;
 }
@@ -184,7 +187,7 @@ const focusDialog = () =>
   display: flex;
   justify-content: flex-start;
   gap: 1rem;
-  padding: var(--wakeb-modal-padding, 1.25rem);
+  padding: var(--wakeb-modal-padding, var(--wakeb-ui-spacing, 1.25rem));
 }
 .wakeb-pv-modal .wakeb-modal__close.btn {
   width: 36px;

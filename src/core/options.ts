@@ -1,4 +1,6 @@
-export type WakebFramework = "vuetify" | "primevue" | "shadcn";
+import type * as Props from "../types";
+
+export type WakebFramework ="vuetify" | "primevue" | "shadcn";
 export const FRAMEWORKS: readonly WakebFramework[] = ["vuetify", "primevue", "shadcn"];
 
 /**
@@ -16,9 +18,69 @@ export interface WakebProviderOptions<F extends WakebFramework> {
   options?: Readonly<Record<string, unknown>>;
 }
 
+/** Public props of each component, keyed by its exported name. */
+export interface WakebComponentProps {
+  WTruncatedText: Props.TruncatedTextProps;
+  WSegmentedProgress: Props.SegmentedProgressProps;
+  WSemiCircleGauge: Props.SemiCircleGaugeProps;
+  WAvatarStack: Props.AvatarStackProps;
+  WLoading: Props.LoadingProps;
+  WPageSkeleton: Props.PageSkeletonProps;
+  WVerticalSteps: Props.VerticalStepsProps;
+  WButton: Props.ButtonProps;
+  WBadge: Props.BadgeProps;
+  WAccordion: Props.AccordionProps;
+  WBadgeStack: Props.BadgeStackProps;
+  WUserBadge: Props.UserBadgeProps;
+  WTooltipBtn: Props.TooltipBtnProps;
+  WTabs: Props.TabsProps;
+  WTree: Props.TreeProps;
+  WDropdown: Props.DropdownProps;
+  WCarousel: Props.CarouselProps;
+  WExportDropdown: Props.ExportDropdownProps;
+  WBaseSidebar: Props.BaseSidebarProps;
+  WModal: Props.ModalProps;
+  WDrawer: Props.DrawerProps;
+}
+export type WakebComponentName = keyof WakebComponentProps;
+
+/** Data and model props stay on each instance (SPEC R06). */
+type ControlledProp =
+  | "items" | "nodes" | "tabs" | "steps" | "slides" | "config" | "user" | "menuItems" | "formats"
+  | "modelValue" | "selectedTab" | "expandedKeys" | "activeKey" | "activePath" | "editingNodeId";
+/** Keys whose values are callbacks; plugin defaults cannot hold them. */
+type CallbackProp<P> = { [K in keyof P]-?: NonNullable<P[K]> extends (...args: never[]) => unknown ? K : never }[keyof P];
+
+/** Plugin-wide component defaults: props only, shallow, with data, model and callback props excluded. */
+export type WakebDefaults = {
+  [C in WakebComponentName]?: Partial<Omit<WakebComponentProps[C], ControlledProp | CallbackProp<WakebComponentProps[C]>>>;
+};
+
+/** Semantic tokens written to `--wakeb-ui-*` variables (kebab-case keys). */
+export interface WakebThemeTokens {
+  primary?: string;
+  onPrimary?: string;
+  surface?: string;
+  onSurface?: string;
+  muted?: string;
+  border?: string;
+  focus?: string;
+  radius?: string;
+  spacing?: string;
+  fontFamily?: string;
+  zIndexOverlay?: number;
+}
+
+export interface WakebTheme {
+  mode?: "light" | "dark";
+  tokens?: WakebThemeTokens;
+}
+
 interface WakebBaseOptions {
+  defaults?: WakebDefaults;
   locale?: "en" | "ar";
   direction?: "ltr" | "rtl";
+  theme?: WakebTheme;
 }
 
 export type WakebComponentsOptions = {

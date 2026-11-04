@@ -1,7 +1,7 @@
 # مزودات الواجهة والإعداد
 
 ::: warning إصدار تجريبي للإطار
-تشرح هذه الصفحة طبقة المزودات غير المنشورة بعد (المرحلة M1)، وهي ليست جزءًا من 0.7.x.
+تشرح هذه الصفحة طبقة المزودات غير المنشورة بعد (المرحلتان M1 وM2، والعمل جارٍ)، وهي ليست جزءًا من 0.7.x.
 يبقى الإصدار 0.7.x خاصًا بـVuetify ولا يحتاج أي تكامل في البناء.
 :::
 
@@ -121,11 +121,89 @@ export default createWakebComponents({
 وضع `auto` نسخة مثبتة لأنها ستُتجاهل. عندما يثبّت Wakeb مكتبة Vuetify يستخدم `ssr: true`،
 وعندما يثبّت PrimeVue يستخدم preset ‏Aura.
 
+## خيارات الـplugin
+
+كل الخيارات اختيارية ما عدا `framework`. القيم غير الصالحة تفشل بالخطأ `WAKEB_CONFIG_INVALID`
+مع رسالة تحدد الحقل.
+
+```js
+export default createWakebComponents({
+  framework: 'vuetify',
+  defaults: { WButton: { size: 'md' }, WModal: { persistent: false } },
+  locale: 'ar',
+  direction: 'rtl',
+  theme: { mode: 'dark', tokens: { primary: '#087f8c', radius: '8px' } },
+})
+```
+
+### القيم الافتراضية للمكونات
+
+يضبط `defaults` خصائص كل نسخ المكوّن في هذا التطبيق. تُحسم قيمة كل خاصية بهذا الترتيب:
+
+1. القيمة الممررة على المكوّن. تُعد `false` و`0` و`''` و`null` قيمًا ممررة.
+2. القيمة الافتراضية في الـplugin.
+3. النص المدمج الخاص بالـ`locale` المضبوط.
+4. القيمة الافتراضية للمكوّن نفسه.
+
+القيمة `undefined` تعني أن الخاصية لم تُمرَّر. وتحتفظ السمات المنطقية بمعناها في HTML، فتكون
+`<WButton disabled>` بالقيمة `true` حتى لو كانت القيمة الافتراضية في الـplugin هي `false`.
+
+القيم الافتراضية سطحية: القيمة من نوع object تحل محل القيمة الافتراضية للمكوّن ولا تُدمج
+معها. تحصل كل نسخة على نسختها الخاصة، وتغيير الكائن المصدر بعد `createWakebComponents()` لا
+يؤثر. وتُرفض الحالات التالية في TypeScript ووقت التشغيل:
+
+- خصائص البيانات والـmodel: `items` و`nodes` و`tabs` و`steps` و`slides` و`config` و`user`
+  و`menuItems` و`formats` و`modelValue` و`selectedTab` و`expandedKeys` و`activeKey`
+  و`activePath` و`editingNodeId`.
+- مستمعات الأحداث مثل `onClick`.
+- دوال الاستدعاء مثل `labelFormatter`.
+- أسماء المكونات غير المعروفة. ويرفض TypeScript أيضًا الخصائص غير المعروفة وأنواع القيم الخاطئة.
+
+تنطبق القيم الافتراضية على المكونات المستوردة من `wakeb-components`. أما المكونات التي يرسمها
+Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فتأخذ خصائصها من ذلك المكوّن.
+
+### اللغة والاتجاه
+
+يحدد `locale` (القيمة الافتراضية `'en'`) النصوص المدمجة، مثل اسم زر الإغلاق في WModal واسم
+حالة WLoading. مع `'ar'` تظهر هذه النصوص بالعربية. خاصية النص أو القيمة الافتراضية في الـplugin
+تتقدم دائمًا، ولا يقرأ Wakeb نسخة i18n الخاصة بالتطبيق.
+
+الخيار `direction` مستقل عن `locale`. عند ضبطه يكتب Wakeb السمة `dir` على جذور مكوناته وعلى
+محتوى الطبقات المنقولة (teleported). وعند تركه دون ضبط ترث المكونات اتجاه الصفحة.
+
+### متغيرات الـtheme
+
+يضبط `theme.tokens` متغيرات دلالية على جذور مكونات Wakeb ومحتوى الطبقات، وتقتصر على هذا التطبيق:
+
+| الـtoken | المتغير | يستخدمه |
+| --- | --- | --- |
+| `primary` | `--wakeb-ui-primary` | خلفية WButton الأساسية، ولون `primary` في WDropdown |
+| `onPrimary` | `--wakeb-ui-on-primary` | نص WButton الأساسي |
+| `surface` | `--wakeb-ui-surface` | خلفية WModal |
+| `onSurface` | `--wakeb-ui-on-surface` | عنوان WModal |
+| `muted` | `--wakeb-ui-muted` | وصف WModal |
+| `border` | `--wakeb-ui-border` | حدود WModal |
+| `focus` | `--wakeb-ui-focus` | إطار التركيز في WButton |
+| `radius` | `--wakeb-ui-radius` | زوايا WButton وWModal |
+| `spacing` | `--wakeb-ui-spacing` | الحشو الداخلي في WModal |
+| `fontFamily` | `--wakeb-ui-font-family` | محتوى WModal |
+| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب طبقات WModal وWDropdown |
+
+متغيرات المكونات مثل `--wakeb-button-primary-background` تتقدم على هذه المتغيرات. تقبل
+متغيرات الألوان صيغ hex و`rgb()` و`hsl()` و`var(--…)` وأسماء الألوان، ويقبل `radius`
+و`spacing` الأطوال. وتُرفض القيم التي قد تخرج من تعريف CSS.
+
+يكتب `theme.mode: 'dark'` السمة `data-wakeb-theme="dark"` ويحوّل متغيرات السطح والنص والنص
+الثانوي والحدود إلى قيم داكنة. لا يتبع Wakeb إعداد `prefers-color-scheme` ولا يحفظ الوضع.
+تُطبَّق الخيارات عند تثبيت الـplugin، والتغييرات اللاحقة تتم عبر CSS عادي.
+
+الخيار `icons` غير متاح بعد، وتمريره يفشل بالخطأ `WAKEB_CAPABILITY_UNSUPPORTED`.
+
 ## الأخطاء
 
 | الرمز | السبب | الحل |
 | --- | --- | --- |
-| `WAKEB_CONFIG_INVALID` | framework أو خيار غير معروف، أو ملف plugin غير صالح أو مفقود | اتبع الرسالة، فهي تحدد الحقل أو الملف |
+| `WAKEB_CONFIG_INVALID` | framework أو خيار غير معروف، أو defaults أو theme غير صالحة، أو ملف plugin غير صالح أو مفقود | اتبع الرسالة، فهي تحدد الحقل أو الملف |
 | `WAKEB_BUILD_PLUGIN_MISSING` | بُني التطبيق دون `wakebComponents()` | أضفها إلى plugins في Vite وأعد التشغيل |
 | `WAKEB_FRAMEWORK_MISMATCH` | قيمة `framework` وقت التشغيل تختلف عن قيمة البناء | أعد تشغيل خادم التطوير أو أعد البناء |
 | `WAKEB_PROVIDER_MISSING` | الـpeers الخاصة بالمزود المختار غير مثبتة | نفّذ أمر التثبيت الموجود في الرسالة |
@@ -133,7 +211,7 @@ export default createWakebComponents({
 | `WAKEB_INSTALL_CONFLICT` | plugin ثانٍ لـWakeb على نفس التطبيق، أو وضع `install` مع مزود مثبت | استخدم plugin واحدًا لكل تطبيق |
 | `WAKEB_HOST_PROVIDER_MISSING` | وضع `reuse` دون مزود مثبت | ثبّت المزود قبل Wakeb |
 | `WAKEB_COMPONENT_UNSUPPORTED` | المحوّل التجريبي المختار لا يحتوي هذا المكوّن | راجع الجدول التالي |
-| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` في هذا البناء | استخدم Vuetify أو PrimeVue حاليًا |
+| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` أو الخيار `icons` في هذا البناء | استخدم Vuetify أو PrimeVue، ومرّر الأيقونات عبر الخصائص |
 
 الأخطاء من النوع `WakebError` ولها الخاصية `code`، ويُصدَّر النوع من `wakeb-components`.
 
@@ -160,6 +238,12 @@ export default createWakebComponents({
   عمومًا يجب أن يضبط أنماط هذه الطبقات بنفسه.
 - **PrimeVue في أكثر من تطبيق.** يحتفظ PrimeVue بخدمة الـtheme على مستوى الوحدة، فيتشارك
   تطبيقان في الصفحة نفسها أنماط الـtheme. يبقى سياق Wakeb منفصلًا لكل تطبيق.
+- **حدود نطاق الـtheme.** تصل سمات الـtheme والاتجاه إلى جذور المكونات وإلى طبقات WModal
+  وWDropdown، ولا تصل بعد إلى الطبقات الأخرى (التلميحات، وقوائم WAvatarStack وWBadgeStack،
+  وWDrawer). تستخدم WButton وWDropdown وWModal هذه المتغيرات، وتحتفظ بقية المكونات بمتغيراتها
+  الخاصة حتى يتم نقلها.
+- **غلاف المكوّن.** كل مكوّن مستورد من الجذر غلاف رقيق حول renderer المزود. أدوات الاختبار
+  التي تبحث عن المكونات بالاسم، مثل `findAllComponents(WTabs)`، تجد الغلاف والـrenderer معًا.
 - **الأنماط.** ما زال `style.css` يحتوي أنماط كل الـrenderers، وتقسيمه حسب المزود مخطط له.
 - **WDrawer** يحتاج تخطيط تطبيق Vuetify. طبقة overlay محايدة مخطط لها (المرحلة M4).
 

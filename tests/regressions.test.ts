@@ -159,7 +159,8 @@ describe("WTabs ARIA linkage", () => {
       render: () => [h(WTabs, { tabs }), h(WTabs, { tabs })],
     });
     await settle();
-    const [one, two] = page.findAllComponents(WTabs);
+    // Name lookups match both the public facade and its renderer; keep the facades.
+    const [one, two] = page.findAllComponents(WTabs).filter((w) => w.vm.$.type === WTabs);
     const ids = new Set<string>();
     for (const w of [one, two]) {
       const selected = w.get("[role=tab][aria-selected=true]");

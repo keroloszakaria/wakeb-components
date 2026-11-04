@@ -11,7 +11,7 @@
   font-weight: 500;
   line-height: 24px;
   min-width: unset;
-  border-radius: var(--wakeb-button-radius, 12px);
+  border-radius: var(--wakeb-button-radius, var(--wakeb-ui-radius, 12px));
   box-shadow: none;
   text-transform: none;
   transition: 0.2s ease;
@@ -83,11 +83,11 @@
       );
     background: var(
       --wakeb-button-primary-background,
-      var(--wakeb-button-fallback, #087f8c)
+      var(--wakeb-button-fallback, var(--wakeb-ui-primary, #087f8c))
     );
     color: var(
       --wakeb-button-primary-color,
-      var(--wakeb-button-fallback, #fff)
+      var(--wakeb-button-fallback, var(--wakeb-ui-on-primary, #fff))
     );
 
     :deep(svg) {
@@ -112,7 +112,7 @@
       outline: 1px solid
         var(
           --wakeb-button-primary-focus-outline,
-          var(--wakeb-button-fallback, #087f8c)
+          var(--wakeb-button-fallback, var(--wakeb-ui-focus, #087f8c))
         );
       outline-offset: 2px;
     }
@@ -141,7 +141,7 @@
         );
       background: var(
         --wakeb-button-primary-loading-background,
-        var(--wakeb-button-fallback, #087f8c)
+        var(--wakeb-button-fallback, var(--wakeb-ui-primary, #087f8c))
       );
     }
   }
@@ -188,7 +188,7 @@
       outline: 1px solid
         var(
           --wakeb-button-secondary-focus-outline,
-          var(--wakeb-button-fallback, #087f8c)
+          var(--wakeb-button-fallback, var(--wakeb-ui-focus, #087f8c))
         );
       outline-offset: 2px;
     }
@@ -256,7 +256,7 @@
       outline: 1px solid
         var(
           --wakeb-button-outline-focus-outline,
-          var(--wakeb-button-fallback, #087f8c)
+          var(--wakeb-button-fallback, var(--wakeb-ui-focus, #087f8c))
         );
       outline-offset: 2px;
     }
@@ -330,7 +330,7 @@
       outline: 1px solid
         var(
           --wakeb-button-danger-focus-outline,
-          var(--wakeb-button-fallback, #087f8c)
+          var(--wakeb-button-fallback, var(--wakeb-ui-focus, #087f8c))
         );
       outline-offset: 2px;
     }
@@ -396,7 +396,7 @@
       outline: 1px solid
         var(
           --wakeb-button-tertiary-focus-outline,
-          var(--wakeb-button-fallback, #087f8c)
+          var(--wakeb-button-fallback, var(--wakeb-ui-focus, #087f8c))
         );
       outline-offset: 2px;
     }
@@ -458,7 +458,7 @@
       outline: 1px solid
         var(
           --wakeb-button-link-focus-outline,
-          var(--wakeb-button-fallback, #087f8c)
+          var(--wakeb-button-fallback, var(--wakeb-ui-focus, #087f8c))
         );
       outline-offset: 2px;
     }
@@ -612,7 +612,7 @@
       outline: 1px solid
         var(
           --wakeb-button-text-focus-outline,
-          var(--wakeb-button-fallback, #087f8c)
+          var(--wakeb-button-fallback, var(--wakeb-ui-focus, #087f8c))
         );
       outline-offset: 2px;
     }

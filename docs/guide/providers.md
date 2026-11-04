@@ -1,7 +1,7 @@
 # Providers and setup
 
 ::: warning Framework alpha
-This page describes the unreleased provider abstraction (milestone M1). It is not part of
+This page describes the unreleased provider abstraction (milestones M1 and M2, in progress). It is not part of
 0.7.x. Version 0.7.x stays Vuetify-only and needs no build integration.
 :::
 
@@ -124,11 +124,93 @@ These options are not portable. They are rejected with `mode: 'reuse'`, and also
 finds a host instance, because they would be ignored. When Wakeb installs Vuetify it uses
 `ssr: true`. When it installs PrimeVue it uses the Aura preset.
 
+## Plugin options
+
+All options except `framework` are optional. Invalid values fail with
+`WAKEB_CONFIG_INVALID` and a message that names the field.
+
+```js
+export default createWakebComponents({
+  framework: 'vuetify',
+  defaults: { WButton: { size: 'md' }, WModal: { persistent: false } },
+  locale: 'ar',
+  direction: 'rtl',
+  theme: { mode: 'dark', tokens: { primary: '#087f8c', radius: '8px' } },
+})
+```
+
+### Component defaults
+
+`defaults` sets props for every instance of a component in this app. Each prop resolves in this
+order:
+
+1. A value passed on the component. `false`, `0`, `''` and `null` count as passed values.
+2. The plugin default.
+3. The built-in string for the configured `locale`.
+4. The component's own default.
+
+`undefined` means the prop was not passed. Boolean attributes keep their HTML meaning:
+`<WButton disabled>` is `true` even when the plugin default is `false`.
+
+Defaults are shallow: an object default replaces the component default and is not merged into
+it. Each instance gets its own copy, and changing the source object after
+`createWakebComponents()` has no effect. These are rejected, both in TypeScript and at runtime:
+
+- Data and model props: `items`, `nodes`, `tabs`, `steps`, `slides`, `config`, `user`,
+  `menuItems`, `formats`, `modelValue`, `selectedTab`, `expandedKeys`, `activeKey`,
+  `activePath` and `editingNodeId`.
+- Event listeners such as `onClick`.
+- Callbacks such as `labelFormatter`.
+- Unknown component names. TypeScript also rejects unknown props and wrong value types.
+
+Defaults apply to components imported from `wakeb-components`. Components that Wakeb renders
+inside another component, such as the close button in WModal, take their props from that
+component.
+
+### Locale and direction
+
+`locale` (`'en'` by default) selects the built-in labels, for example the WModal close label
+and the WLoading status name. With `'ar'` they come in Arabic. A label prop or a plugin default
+always wins. Wakeb does not read the host app's i18n instance.
+
+`direction` is independent of `locale`. When you set it, Wakeb writes `dir` on its component
+roots and on teleported overlay content. When you leave it unset, components inherit the page
+direction.
+
+### Theme tokens
+
+`theme.tokens` sets semantic variables on Wakeb roots and overlay content, scoped to this app:
+
+| Token | Variable | Used by |
+| --- | --- | --- |
+| `primary` | `--wakeb-ui-primary` | WButton primary background, WDropdown `primary` color |
+| `onPrimary` | `--wakeb-ui-on-primary` | WButton primary text |
+| `surface` | `--wakeb-ui-surface` | WModal background |
+| `onSurface` | `--wakeb-ui-on-surface` | WModal title |
+| `muted` | `--wakeb-ui-muted` | WModal description |
+| `border` | `--wakeb-ui-border` | WModal border |
+| `focus` | `--wakeb-ui-focus` | WButton focus outline |
+| `radius` | `--wakeb-ui-radius` | WButton and WModal corners |
+| `spacing` | `--wakeb-ui-spacing` | WModal padding |
+| `fontFamily` | `--wakeb-ui-font-family` | WModal content |
+| `zIndexOverlay` (number) | `--wakeb-ui-z-index-overlay` | WModal and WDropdown overlay stacking |
+
+Component variables such as `--wakeb-button-primary-background` still win over these tokens.
+Color tokens accept hex, `rgb()`, `hsl()`, `var(--…)` and named colors. `radius` and `spacing`
+accept lengths. Values that could break out of a CSS declaration are rejected.
+
+`theme.mode: 'dark'` writes `data-wakeb-theme="dark"` and switches the surface, text, muted and
+border tokens to dark values. Wakeb does not follow `prefers-color-scheme` or store the mode.
+Options apply when the plugin is installed; later changes need normal CSS overrides.
+
+The `icons` option is not available yet. Passing it fails with
+`WAKEB_CAPABILITY_UNSUPPORTED`.
+
 ## Errors
 
 | Code | Cause | Fix |
 | --- | --- | --- |
-| `WAKEB_CONFIG_INVALID` | Unknown framework or option, malformed plugin file, missing plugin file | Follow the message; it names the field or file |
+| `WAKEB_CONFIG_INVALID` | Unknown framework or option, malformed defaults or theme, malformed plugin file, missing plugin file | Follow the message; it names the field or file |
 | `WAKEB_BUILD_PLUGIN_MISSING` | The app was bundled without `wakebComponents()` | Add it to the Vite plugins and restart |
 | `WAKEB_FRAMEWORK_MISMATCH` | The runtime `framework` differs from the compiled one | Restart the dev server or rebuild |
 | `WAKEB_PROVIDER_MISSING` | Selected peers are not installed | Run the install command in the message |
@@ -136,7 +218,7 @@ finds a host instance, because they would be ignored. When Wakeb installs Vuetif
 | `WAKEB_INSTALL_CONFLICT` | Two Wakeb plugins on one app, or `install` mode with a host provider | Keep one plugin per app |
 | `WAKEB_HOST_PROVIDER_MISSING` | `reuse` mode without a host provider | Install the provider before Wakeb |
 | `WAKEB_COMPONENT_UNSUPPORTED` | The selected alpha adapter lacks the component | See the matrix below |
-| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` in this build | Use Vuetify or PrimeVue for now |
+| `WAKEB_CAPABILITY_UNSUPPORTED` | `framework: 'shadcn'` or the `icons` option in this build | Use Vuetify or PrimeVue; pass icons on props |
 
 Errors are `WakebError` instances with a `code` property, exported from `wakeb-components`.
 
@@ -164,6 +246,13 @@ Errors are `WakebError` instances with a `code` property, exported from `wakeb-c
   style those overlays itself.
 - **PrimeVue across apps.** PrimeVue keeps its theme service in module scope, so two PrimeVue
   apps on one page share theme styles. Wakeb's own context stays isolated per app.
+- **Theme scope reach.** Theme and direction attributes reach component roots, and the
+  overlays of WModal and WDropdown. Other overlays (tooltips, WAvatarStack and WBadgeStack
+  menus, WDrawer) do not receive them yet. The tokens are consumed by WButton, WDropdown and
+  WModal; the other components keep their own variables until they migrate.
+- **Component wrapper.** Each root import is a thin wrapper around the provider renderer.
+  Test utilities that look components up by name, such as `findAllComponents(WTabs)`, match
+  both the wrapper and the renderer.
 - **Styles.** `style.css` still contains the CSS of every renderer. Splitting it per provider
   is planned.
 - **WDrawer** needs Vuetify's application layout. A provider-neutral overlay host is planned

@@ -13,7 +13,7 @@ const interfaces = Object.fromEntries(types.statements.filter(ts.isInterfaceDecl
 for (const locale of ["", "ar/"]) {
   assert.ok(readFileSync(join(root, "docs", locale, "guide/data-models.md"), "utf8").includes(readFileSync(join(root, "src/types.ts"), "utf8")), "Public data model docs must match declarations");
 }
-const publicNames = [...readFileSync(join(root,"src/index.ts"),"utf8").matchAll(/^export const (\w+) = \w+Renderer as/gm)].map(m => m[1]);
+const publicNames = [...readFileSync(join(root,"src/index.ts"),"utf8").matchAll(/^export const (\w+) = \/\* @__PURE__ \*\/ defineWakebFacade\("\1", \1Renderer\)/gm)].map(m => m[1]);
 assert.deepEqual(reference.map(item=>item.name).sort(),publicNames.sort());
 for (const entry of reference) {
   assert.deepEqual(entry.props.map(row=>row[0]).sort(), interfaces[entry.interface].sort(), `${entry.name} public props documentation`);

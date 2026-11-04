@@ -9,6 +9,8 @@
 - أوضاع المزود `auto` و`reuse` و`install` تعيد استخدام نسخة Vuetify أو PrimeVue في التطبيق دون تغيير الـtheme أو القيم الافتراضية.
 - محوّل PrimeVue 4 تجريبي لـWButton وWDropdown وWModal وWLoading، وبقية المكونات تعلن `WAKEB_COMPONENT_UNSUPPORTED`.
 - لم يعد `SharedIcon` يشير إلى أنواع Vuetify.
+- قيم `defaults` لكل مكوّن في الـplugin، تتقدم عليها الخصائص الممررة، وتُرفض فيها خصائص البيانات والـmodel ودوال الاستدعاء.
+- نصوص مدمجة بالعربية مع `locale: 'ar'`، والخيار `direction`، والخيار `theme` مع `mode` ومتغيرات `--wakeb-ui-*` المقتصرة على كل تطبيق وطبقاته.
 
 ## غير منشور (0.7.x)
 

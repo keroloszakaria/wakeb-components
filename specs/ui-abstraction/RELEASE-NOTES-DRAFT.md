@@ -103,7 +103,7 @@ The reasons:
   - No real-browser or hydration suites have run.
   - No Jervis DevOps evidence is recorded.
   - Calling this `1.0.0-alpha.0` would anchor the 1.0 line before the owner decisions above are settled. Any of them could change public types again.
-- **The default must stay `0.7.0`.** With the `alpha` dist-tag, `npm install wakeb-components` keeps returning `0.7.0` (R20: do not silently change the package default). `package.json` has no `publishConfig.tag`, so a plain `npm publish` would move `latest`. The tag must be passed explicitly: `npm publish --tag alpha`.
+- **The default must stay `0.7.0`.** With the `alpha` dist-tag, `npm install wakeb-components` keeps returning `0.7.0` (R20: do not silently change the package default). `package.json` sets `publishConfig.tag` to `alpha`, so a plain `npm publish` cannot move `latest`; switch it back only for the stable release.
 - **Next steps.** Later alphas become `0.8.0-alpha.N`. The stable version, either `0.8.0` or `1.0.0`, is decided once ACCEPTANCE.md has no "not met" rows.
 
 **Alternative: `1.0.0-alpha.0`.** Choose this only if the owner already treats the neutral contracts as the 1.0 API, and accepts that any change from the open decisions means a breaking change inside the 1.0 prerelease line.

@@ -108,5 +108,8 @@
     "wakeb",
     "typescript",
     "rtl"
-  ]
+  ],
+  "publishConfig": {
+    "tag": "alpha"
+  }
 }

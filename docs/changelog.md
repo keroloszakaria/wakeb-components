@@ -15,6 +15,11 @@ Breaking: root imports now need a plugin file and `wakebComponents()` from `wake
 - Breaking: color props take a Wakeb intent or a CSS color (`WakebColor`). Intents resolve through `--wakeb-ui-*` tokens and then the provider theme, so an unconfigured Vuetify app keeps its colors. Vuetify color names still render under Vuetify with a `WAKEB_DEPRECATED_VALUE` warning.
 - Breaking: WBadge `type` is painted by Wakeb CSS only and no longer sent to Vuetify as a chip color; `solid` fills with the type color. New intent theme tokens and the `--wakeb-avatar-text`, `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text` variables.
 - Breaking: WBaseSidebar `skeletonType` and WPageSkeleton types follow the Wakeb skeleton grammar. Repetitions are capped at 100 and unknown names are skipped with `WAKEB_UNKNOWN_VALUE`.
+- Breaking: WPageSkeleton rows use a Wakeb 12-column grid with fixed breakpoints (sm 600px, md 960px, lg 1280px) instead of Vuetify VRow and VCol, so provider breakpoint settings no longer change the layout.
+- The theme scope and `zIndexOverlay` now reach every teleported overlay: the WButton, WTooltipBtn, WTruncatedText and WAvatarStack tooltips, the WAvatarStack and WBadgeStack overflow menus, and the WExportDropdown menu. `menuStyle` and `tooltipStyle` still win. The PrimeVue WButton tooltip gets the scope attributes but keeps PrimeVue's z-index.
+- Wakeb-owned icons: the `icons` plugin option (`aliases` and `resolve`) per app, built-in SVGs for chevrons, close, loading, complete and checkbox and radio toggles, and a fallback box with the `WAKEB_ICON_UNRESOLVED` development warning outside Vuetify. Under Vuetify, other names still render through `VIcon`, but `$expand` and `$collapse` now use the Wakeb SVG.
+- A nonportable `providerProps` escape hatch on WButton, WDropdown, WModal and WLoading passes native props to the selected provider's primitive. Wakeb-owned keys are dropped with the `WAKEB_PROVIDER_PROP_IGNORED` development warning. Every component page documents its attribute target, and WLoading now keeps its `role="status"` and accessible name.
+- Breaking: the `vue` peer range is now `^3.5.40`, because the generated declarations need it, and `vite` is a required peer. `npm run check:peers` runs the locked peer version matrix; see Supported versions in the installation guide.
 
 ## Unreleased (0.7.x)
 

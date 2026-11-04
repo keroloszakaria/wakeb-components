@@ -9,6 +9,11 @@
 - Breaking: color props take a Wakeb intent (`primary`, `secondary`, `success`, `warning`, `danger`, `info`, `neutral`) or a CSS color (`WakebColor`); intents resolve through `--wakeb-ui-*` tokens, then the provider theme. Vuetify color names still render under Vuetify with `WAKEB_DEPRECATED_VALUE`.
 - Breaking: WBadge `type` is no longer forwarded to Vuetify as a chip color; Wakeb CSS paints it, and `solid` fills with the type color. Add intent theme tokens and `--wakeb-avatar-text`, `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`.
 - Breaking: WBaseSidebar `skeletonType` and WPageSkeleton types use the Wakeb skeleton grammar with `@N` repetitions capped at 100; unknown names are skipped with `WAKEB_UNKNOWN_VALUE`.
+- Breaking: WPageSkeleton rows use a Wakeb 12-column grid (`wakeb-grid-row`, `wakeb-grid-col`) with fixed sm 600px, md 960px and lg 1280px breakpoints instead of Vuetify VRow/VCol.
+- Theme scope and `zIndexOverlay` reach every teleported overlay: the WButton, WTooltipBtn, WTruncatedText and WAvatarStack tooltips, the WAvatarStack and WBadgeStack menus and the WExportDropdown menu. `menuStyle` and `tooltipStyle` still win.
+- Add Wakeb-owned icons: the `icons` option (`aliases`, `resolve`) per app, built-in SVGs for chevrons, close, loading, complete and toggles, and a fallback box with `WAKEB_ICON_UNRESOLVED` outside Vuetify. Under Vuetify, `$expand` and `$collapse` now render the Wakeb SVG instead of the host's Vuetify icon set.
+- Add a nonportable `providerProps` escape hatch to WButton, WDropdown, WModal and WLoading; Wakeb-owned keys are dropped with `WAKEB_PROVIDER_PROP_IGNORED`. Document the attribute target of all 21 components; WLoading keeps its `role="status"` and accessible name.
+- Breaking: the `vue` peer range is `^3.5.40` (the emitted declarations need it) and `vite` is a required peer. `npm run check:peers` runs the locked peer version matrix.
 
 ## Unreleased (0.7.x)
 

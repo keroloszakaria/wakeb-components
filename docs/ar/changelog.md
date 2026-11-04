@@ -15,6 +15,11 @@
 - تغيير غير متوافق: تقبل خصائص الألوان intent من Wakeb أو لون CSS (`WakebColor`). يُحسب الـintent عبر tokens ‏`--wakeb-ui-*` ثم ثيم المزوّد، فيحتفظ تطبيق Vuetify غير المضبوط بألوانه. وتبقى أسماء ألوان Vuetify تعمل تحت Vuetify مع تحذير `WAKEB_DEPRECATED_VALUE`.
 - تغيير غير متوافق: ترسم Wakeb CSS وحدها `type` في WBadge، ولم يعد يُرسل إلى Vuetify كلون للشارة، ويملأ `solid` الشارة بلون النوع. أُضيفت tokens للـintents والمتغيرات `--wakeb-avatar-text` و`--wakeb-badge-solid-bg` و`--wakeb-badge-solid-text`.
 - تغيير غير متوافق: يتبع `skeletonType` في WBaseSidebar وأنواع WPageSkeleton صيغة Skeleton في Wakeb. الحد الأقصى للتكرار 100، وتُتجاهل الأسماء غير المعروفة مع `WAKEB_UNKNOWN_VALUE`.
+- تغيير غير متوافق: تستخدم صفوف WPageSkeleton شبكة Wakeb ذات الأعمدة الاثني عشر بنقاط توقف ثابتة (sm عند 600px وmd عند 960px وlg عند 1280px) بدل VRow وVCol من Vuetify، فلم تعد إعدادات نقاط التوقف في المزوّد تغيّر التخطيط.
+- يصل نطاق الـtheme و`zIndexOverlay` الآن إلى كل طبقة منقولة: تلميحات WButton وWTooltipBtn وWTruncatedText وWAvatarStack، وقائمتا العناصر الإضافية في WAvatarStack وWBadgeStack، وقائمة WExportDropdown. وتبقى الأسبقية لـ`menuStyle` و`tooltipStyle`. يستقبل تلميح WButton على PrimeVue سمات النطاق ويحتفظ بـz-index الخاص بـPrimeVue.
+- أيقونات مملوكة لـWakeb: خيار `icons` في الـplugin (`aliases` و`resolve`) خاص بكل تطبيق، وأيقونات SVG مدمجة للأسهم والإغلاق والتحميل والإتمام ومربعات الاختيار وأزرار الراديو، ومربع بديل مع تحذير التطوير `WAKEB_ICON_UNRESOLVED` خارج Vuetify. تحت Vuetify تبقى الأسماء الأخرى تُرسم عبر `VIcon`، أما `$expand` و`$collapse` فأصبحا يستخدمان أيقونة Wakeb.
+- منفذ `providerProps` غير القابل للنقل في WButton وWDropdown وWModal وWLoading يمرر الخصائص الأصلية إلى primitive المزود المختار، وتُحذف المفاتيح التي يملكها Wakeb مع تحذير التطوير `WAKEB_PROVIDER_PROP_IGNORED`. توثّق صفحة كل مكوّن وجهة سماته، ويحتفظ WLoading الآن بـ`role="status"` واسمه الوصفي.
+- تغيير غير متوافق: أصبح نطاق peer لـ`vue` هو `^3.5.40` لأن التعريفات المولّدة تحتاجه، وأصبح `vite` peer إلزاميًا. يشغّل `npm run check:peers` مصفوفة إصدارات الـpeers المقفلة؛ راجع «الإصدارات المدعومة» في دليل التثبيت.
 
 ## غير منشور (0.7.x)
 

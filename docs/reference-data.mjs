@@ -413,8 +413,8 @@ export default [
     "slug": "page-skeleton",
     "interface": "PageSkeletonProps",
     "summary": [
-      "Responsive Vuetify skeleton rows driven by typed descriptors.",
-      "صفوف Skeleton متجاوبة من Vuetify بوصف بيانات typed."
+      "Responsive skeleton rows on the Wakeb grid, driven by typed descriptors.",
+      "صفوف Skeleton متجاوبة على شبكة Wakeb بوصف بيانات typed."
     ],
     "props": [
       [
@@ -454,8 +454,8 @@ export default [
       ]
     ],
     "limits": [
-      "Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to prevent duplicate announcements. Render this component only while content is loading. Row repeat is floored; missing, nonfinite, zero or negative repeats render one column. cols defaults to 12 when falsy, preserving the app contract; sm/md/lg follow Vuetify. Item and header types use the Wakeb skeleton grammar: portable names, comma sequences and @N repetitions capped at 100. Unknown names are skipped with WAKEB_UNKNOWN_VALUE; Vuetify-only names still render under Vuetify with WAKEB_DEPRECATED_VALUE. No application CSS is required. Current specialized card bone styling targets Vuetify 3 structure.",
-      "يستخدم حالة واحدة باسم role=status وaria-busy=true مع إخفاء الصفوف الزخرفية عن ARIA لمنع تكرار القراءة؛ اعرضه أثناء التحميل فقط. repeat يُقرب لأسفل؛ القيم المفقودة وغير المحدودة والصفر والسالب تنتج عمودًا واحدًا. cols الافتراضي 12 للقيم الفارغة وفق العقد السابق، وsm/md/lg تتبع Vuetify. type يتبع صيغة Skeleton في Wakeb: أسماء قابلة للنقل وتسلسلات بالفواصل وتكرار @N بحد أقصى 100. تُتجاهل الأسماء غير المعروفة مع WAKEB_UNKNOWN_VALUE، وتبقى أسماء Vuetify الخاصة تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. لا يحتاج CSS خاص بالمشروع. تخصيص عظام card يستهدف بنية Vuetify 3."
+      "Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to prevent duplicate announcements. Render this component only while content is loading. Row repeat is floored; missing, nonfinite, zero or negative repeats render one column. cols defaults to 12 when falsy, preserving the app contract. cols, sm, md and lg take 1–12, 'auto' or true (grow) on the Wakeb 12-column grid with fixed breakpoints sm 600px, md 960px and lg 1280px; provider breakpoint settings do not change it. Other spans are ignored (cols uses 12) with WAKEB_UNKNOWN_VALUE. Rows and columns are wakeb-grid-row and wakeb-grid-col elements, not Vuetify VRow/VCol. Item and header types use the Wakeb skeleton grammar: portable names, comma sequences and @N repetitions capped at 100. Unknown names are skipped with WAKEB_UNKNOWN_VALUE; Vuetify-only names still render under Vuetify with WAKEB_DEPRECATED_VALUE. No application CSS is required. Current specialized card bone styling targets Vuetify 3 structure.",
+      "يستخدم حالة واحدة باسم role=status وaria-busy=true مع إخفاء الصفوف الزخرفية عن ARIA لمنع تكرار القراءة؛ اعرضه أثناء التحميل فقط. repeat يُقرب لأسفل؛ القيم المفقودة وغير المحدودة والصفر والسالب تنتج عمودًا واحدًا. cols الافتراضي 12 للقيم الفارغة وفق العقد السابق. تقبل cols وsm وmd وlg القيم من 1 إلى 12 أو 'auto' أو true (تمدد) على شبكة Wakeb ذات الأعمدة الاثني عشر، ونقاط توقفها ثابتة: sm عند 600px وmd عند 960px وlg عند 1280px، ولا تغيّرها إعدادات المزوّد. القيم الأخرى تُتجاهل (وتأخذ cols القيمة 12) مع WAKEB_UNKNOWN_VALUE. الصفوف والأعمدة عناصر wakeb-grid-row وwakeb-grid-col، وليست VRow/VCol من Vuetify. type يتبع صيغة Skeleton في Wakeb: أسماء قابلة للنقل وتسلسلات بالفواصل وتكرار @N بحد أقصى 100. تُتجاهل الأسماء غير المعروفة مع WAKEB_UNKNOWN_VALUE، وتبقى أسماء Vuetify الخاصة تعمل تحت Vuetify مع WAKEB_DEPRECATED_VALUE. لا يحتاج CSS خاص بالمشروع. تخصيص عظام card يستهدف بنية Vuetify 3."
     ],
     "example": "<WPageSkeleton :config=\"[{ repeat: 2, cols: 12, md: 6, variant: 'card', items: [{ type: 'text' }, { type: 'paragraph' }] }]\" label=\"Loading report\" />"
   },

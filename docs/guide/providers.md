@@ -308,6 +308,12 @@ grammar.
 - The other Vuetify 3.13 names (`article`, `actions`, `sentences` and others) still render
   under Vuetify, with `WAKEB_DEPRECATED_VALUE`.
 
+**Grid:** WPageSkeleton rows use a Wakeb 12-column grid. Its breakpoints are fixed: `sm` at
+600px, `md` at 960px and `lg` at 1280px. The provider's breakpoint settings do not change it.
+- `cols`, `sm`, `md` and `lg` take `1`–`12`, `'auto'` or `true`, which makes the column grow.
+- A falsy `cols` means 12.
+- Other spans are ignored, with `WAKEB_UNKNOWN_VALUE`; for `cols` this means 12.
+
 ## Errors
 
 | Code | Cause | Fix |

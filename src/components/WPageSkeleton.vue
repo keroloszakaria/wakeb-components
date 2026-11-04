@@ -2,15 +2,11 @@
   <div class="page-skeleton" :class="`flex-${direction}`" :style="{ flexDirection: direction }" role="status" :aria-label="label" aria-busy="true">
     <!-- Rows -->
     <template v-for="(row, rowIndex) in config" :key="rowIndex">
-      <VRow :class="row.rowClass" aria-hidden="true">
-        <VCol
+      <div class="wakeb-grid-row" :class="row.rowClass" aria-hidden="true">
+        <div
           v-for="(col, colIndex) in repeatCount(row.repeat)"
-          :class="row.colClass"
+          :class="[gridClasses(row), row.colClass]"
           :key="colIndex"
-          :cols="row.cols || 12"
-          :sm="row.sm"
-          :md="row.md"
-          :lg="row.lg"
         >
           <div
             :class="[
@@ -39,18 +35,20 @@
               :class="item.class"
             />
           </div>
-        </VCol>
-      </VRow>
+        </div>
+      </div>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { VRow, VCol } from "vuetify/components/VGrid";
 import { VSkeletonLoader } from "vuetify/components/VSkeletonLoader";
 import type { PageSkeletonProps } from "../types";
 import { useSkeleton } from "../core/vocabulary";
+import { useSkeletonGrid } from "../core/grid";
+import "../styles/grid.css";
 const toSkeleton = useSkeleton("WPageSkeleton", true);
+const gridClasses = useSkeletonGrid("WPageSkeleton");
 withDefaults(defineProps<PageSkeletonProps>(), { direction: "column", label: "Loading content" });
 const repeatCount = (value?: number) => value != null && Number.isFinite(value) && value > 0 ? Math.floor(value) || 1 : 1;
 </script>

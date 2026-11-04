@@ -190,3 +190,39 @@ describe("skeleton grammar", () => {
     expect(page.findAll(".v-skeleton-loader__chip")).toHaveLength(100);
   });
 });
+
+describe.runIf(framework === "vuetify")("skeleton grid", () => {
+  const classes = (row: Record<string, unknown>) =>
+    render(WPageSkeleton, { config: [{ items: [], ...row }] }).get(".wakeb-grid-col").classes().filter((name) => name.startsWith("wakeb-grid-col--"));
+
+  it.each([
+    [{}, ["wakeb-grid-col--12"]],
+    [{ cols: 0 }, ["wakeb-grid-col--12"]],
+    [{ cols: false }, ["wakeb-grid-col--12"]],
+    [{ cols: 4 }, ["wakeb-grid-col--4"]],
+    [{ cols: "6" }, ["wakeb-grid-col--6"]],
+    [{ cols: "auto" }, ["wakeb-grid-col--auto"]],
+    [{ cols: true }, ["wakeb-grid-col--grow"]],
+    [{ cols: 12, sm: 6, md: "auto", lg: true }, ["wakeb-grid-col--12", "wakeb-grid-col--sm-6", "wakeb-grid-col--md-auto", "wakeb-grid-col--lg-grow"]],
+    [{ sm: false, md: "" }, ["wakeb-grid-col--12"]],
+  ])("maps %j to Wakeb grid classes", (row, expected) => expect(classes(row)).toEqual(expected));
+
+  it("ignores spans outside 1–12 with a warning", () => {
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(classes({ cols: 13, md: 0.5 })).toEqual(["wakeb-grid-col--12"]);
+    expect(warnings()).toHaveLength(2);
+    expect(warnings()[0]).toMatch(/^\[WAKEB_UNKNOWN_VALUE\] WPageSkeleton config\[\]\.cols 13 is not a grid span; using 12/);
+  });
+
+  it("does not render Vuetify grid components", () => {
+    const w = render(WPageSkeleton, { config: [{ items: [], cols: 6 }] });
+    expect(w.find(".v-row").exists()).toBe(false);
+    expect(w.find(".v-col-6").exists()).toBe(false);
+  });
+
+  it("uses the fixed Wakeb breakpoints", async () => {
+    const { readFileSync } = await import("node:fs");
+    const css = readFileSync("src/styles/grid.css", "utf8");
+    expect([...css.matchAll(/@media \(min-width: (\d+)px\)/g)].map((match) => Number(match[1]))).toEqual([600, 960, 1280]);
+  });
+});

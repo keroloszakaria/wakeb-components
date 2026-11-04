@@ -44,13 +44,13 @@ describe("WPageSkeleton", () => {
   it("renders responsive row descriptors, headers and repeated cards without Tailwind", async () => {
     const w = render(WPageSkeleton, { props: { label: 'Loading report', direction: 'row', config: [{ repeat: 2, cols: 6, md: 3, variant: 'card', header: [{ type: 'text', width: 120 }], items: [{ type: 'chip', height: 20 }] }] } });
     expect(w.attributes('aria-label')).toBe('Loading report'); expect(w.attributes('aria-busy')).toBe('true');
-    expect(w.element.style.flexDirection).toBe('row'); expect(w.findAll('.v-col-6')).toHaveLength(2); expect(w.get('.v-row').attributes('aria-hidden')).toBe('true'); expect(w.findAll('.v-col-md-3')).toHaveLength(2);
+    expect(w.element.style.flexDirection).toBe('row'); expect(w.findAll('.wakeb-grid-col--6')).toHaveLength(2); expect(w.get('.wakeb-grid-row').attributes('aria-hidden')).toBe('true'); expect(w.findAll('.wakeb-grid-col--md-3')).toHaveLength(2);
     expect(w.findAll('.skeleton-block--card')).toHaveLength(2); expect(w.findAll('.skeleton-block__header')).toHaveLength(2);
-    await w.setProps({ config: [], direction: 'column' }); expect(w.findAll('.v-row')).toHaveLength(0); expect(w.element.style.flexDirection).toBe('column');
+    await w.setProps({ config: [], direction: 'column' }); expect(w.findAll('.wakeb-grid-row')).toHaveLength(0); expect(w.element.style.flexDirection).toBe('column');
   });
   it("handles invalid repeats and forwards consumer attributes", () => {
     const w = render(WPageSkeleton, { props: { config: [{ repeat: -8, items: [] }, { repeat: Number.NaN }, { repeat: 2.8 }] }, attrs: { 'data-owner': 'company', class: 'consumer' } });
-    expect(w.findAll('.v-col')).toHaveLength(4); expect(w.attributes('data-owner')).toBe('company'); expect(w.classes()).toContain('consumer');
+    expect(w.findAll('.wakeb-grid-col')).toHaveLength(4); expect(w.attributes('data-owner')).toBe('company'); expect(w.classes()).toContain('consumer');
   });
 });
 describe("WLoading", () => {

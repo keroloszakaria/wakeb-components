@@ -1,0 +1,77 @@
+/*
+ * Wakeb skeleton grid (SPEC R16): 12 columns, fixed breakpoints sm 600px, md 960px, lg 1280px.
+ * Gutters match the 0.7 layout (12px column padding, -12px row margin).
+ */
+.wakeb-grid-row {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1 1 auto;
+  margin: -12px;
+}
+.wakeb-grid-col {
+  width: 100%;
+  padding: 12px;
+}
+
+.wakeb-grid-col--grow { flex: 1 0 0; max-width: 100%; }
+.wakeb-grid-col--auto { flex: 0 0 auto; width: auto; max-width: 100%; }
+.wakeb-grid-col--1 { flex: 0 0 8.333333333%; max-width: 8.333333333%; }
+.wakeb-grid-col--2 { flex: 0 0 16.66666667%; max-width: 16.66666667%; }
+.wakeb-grid-col--3 { flex: 0 0 25%; max-width: 25%; }
+.wakeb-grid-col--4 { flex: 0 0 33.33333333%; max-width: 33.33333333%; }
+.wakeb-grid-col--5 { flex: 0 0 41.66666667%; max-width: 41.66666667%; }
+.wakeb-grid-col--6 { flex: 0 0 50%; max-width: 50%; }
+.wakeb-grid-col--7 { flex: 0 0 58.33333333%; max-width: 58.33333333%; }
+.wakeb-grid-col--8 { flex: 0 0 66.66666667%; max-width: 66.66666667%; }
+.wakeb-grid-col--9 { flex: 0 0 75%; max-width: 75%; }
+.wakeb-grid-col--10 { flex: 0 0 83.33333333%; max-width: 83.33333333%; }
+.wakeb-grid-col--11 { flex: 0 0 91.66666667%; max-width: 91.66666667%; }
+.wakeb-grid-col--12 { flex: 0 0 100%; max-width: 100%; }
+@media (min-width: 600px) {
+  .wakeb-grid-col--sm-grow { flex: 1 0 0; max-width: 100%; }
+  .wakeb-grid-col--sm-auto { flex: 0 0 auto; width: auto; max-width: 100%; }
+  .wakeb-grid-col--sm-1 { flex: 0 0 8.333333333%; max-width: 8.333333333%; }
+  .wakeb-grid-col--sm-2 { flex: 0 0 16.66666667%; max-width: 16.66666667%; }
+  .wakeb-grid-col--sm-3 { flex: 0 0 25%; max-width: 25%; }
+  .wakeb-grid-col--sm-4 { flex: 0 0 33.33333333%; max-width: 33.33333333%; }
+  .wakeb-grid-col--sm-5 { flex: 0 0 41.66666667%; max-width: 41.66666667%; }
+  .wakeb-grid-col--sm-6 { flex: 0 0 50%; max-width: 50%; }
+  .wakeb-grid-col--sm-7 { flex: 0 0 58.33333333%; max-width: 58.33333333%; }
+  .wakeb-grid-col--sm-8 { flex: 0 0 66.66666667%; max-width: 66.66666667%; }
+  .wakeb-grid-col--sm-9 { flex: 0 0 75%; max-width: 75%; }
+  .wakeb-grid-col--sm-10 { flex: 0 0 83.33333333%; max-width: 83.33333333%; }
+  .wakeb-grid-col--sm-11 { flex: 0 0 91.66666667%; max-width: 91.66666667%; }
+  .wakeb-grid-col--sm-12 { flex: 0 0 100%; max-width: 100%; }
+}
+@media (min-width: 960px) {
+  .wakeb-grid-col--md-grow { flex: 1 0 0; max-width: 100%; }
+  .wakeb-grid-col--md-auto { flex: 0 0 auto; width: auto; max-width: 100%; }
+  .wakeb-grid-col--md-1 { flex: 0 0 8.333333333%; max-width: 8.333333333%; }
+  .wakeb-grid-col--md-2 { flex: 0 0 16.66666667%; max-width: 16.66666667%; }
+  .wakeb-grid-col--md-3 { flex: 0 0 25%; max-width: 25%; }
+  .wakeb-grid-col--md-4 { flex: 0 0 33.33333333%; max-width: 33.33333333%; }
+  .wakeb-grid-col--md-5 { flex: 0 0 41.66666667%; max-width: 41.66666667%; }
+  .wakeb-grid-col--md-6 { flex: 0 0 50%; max-width: 50%; }
+  .wakeb-grid-col--md-7 { flex: 0 0 58.33333333%; max-width: 58.33333333%; }
+  .wakeb-grid-col--md-8 { flex: 0 0 66.66666667%; max-width: 66.66666667%; }
+  .wakeb-grid-col--md-9 { flex: 0 0 75%; max-width: 75%; }
+  .wakeb-grid-col--md-10 { flex: 0 0 83.33333333%; max-width: 83.33333333%; }
+  .wakeb-grid-col--md-11 { flex: 0 0 91.66666667%; max-width: 91.66666667%; }
+  .wakeb-grid-col--md-12 { flex: 0 0 100%; max-width: 100%; }
+}
+@media (min-width: 1280px) {
+  .wakeb-grid-col--lg-grow { flex: 1 0 0; max-width: 100%; }
+  .wakeb-grid-col--lg-auto { flex: 0 0 auto; width: auto; max-width: 100%; }
+  .wakeb-grid-col--lg-1 { flex: 0 0 8.333333333%; max-width: 8.333333333%; }
+  .wakeb-grid-col--lg-2 { flex: 0 0 16.66666667%; max-width: 16.66666667%; }
+  .wakeb-grid-col--lg-3 { flex: 0 0 25%; max-width: 25%; }
+  .wakeb-grid-col--lg-4 { flex: 0 0 33.33333333%; max-width: 33.33333333%; }
+  .wakeb-grid-col--lg-5 { flex: 0 0 41.66666667%; max-width: 41.66666667%; }
+  .wakeb-grid-col--lg-6 { flex: 0 0 50%; max-width: 50%; }
+  .wakeb-grid-col--lg-7 { flex: 0 0 58.33333333%; max-width: 58.33333333%; }
+  .wakeb-grid-col--lg-8 { flex: 0 0 66.66666667%; max-width: 66.66666667%; }
+  .wakeb-grid-col--lg-9 { flex: 0 0 75%; max-width: 75%; }
+  .wakeb-grid-col--lg-10 { flex: 0 0 83.33333333%; max-width: 83.33333333%; }
+  .wakeb-grid-col--lg-11 { flex: 0 0 91.66666667%; max-width: 91.66666667%; }
+  .wakeb-grid-col--lg-12 { flex: 0 0 100%; max-width: 100%; }
+}

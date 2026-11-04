@@ -188,7 +188,7 @@ Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فت
 | `radius` | `--wakeb-ui-radius` | زوايا WButton وWModal |
 | `spacing` | `--wakeb-ui-spacing` | الحشو الداخلي في WModal |
 | `fontFamily` | `--wakeb-ui-font-family` | محتوى WModal |
-| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب الطبقات المنقولة: WModal وWDropdown وWExportDropdown وقائمتا WAvatarStack وWBadgeStack وتلميحات Vuetify |
+| `zIndexOverlay` (رقم) | `--wakeb-ui-z-index-overlay` | ترتيب الطبقات المنقولة: WModal وWDropdown وWExportDropdown وقائمتا WAvatarStack وWBadgeStack وتلميحات Vuetify وWDrawer على PrimeVue |
 
 متغيرات المكونات مثل `--wakeb-button-primary-background` تتقدم على هذه المتغيرات. تقبل
 متغيرات الألوان صيغ hex و`rgb()` و`hsl()` و`var(--…)` وأسماء الألوان، ويقبل `radius`
@@ -413,8 +413,8 @@ Skeleton في Wakeb.
 | WTruncatedText | عنصر `<span>` النصي الذي يفتح الـTooltip. |
 | WTooltipBtn | عنصر `<button>` الأصلي. أما `wrapperAttrs` فتستهدف الـspan الخارجي. |
 | WCarousel | جذر العرض المتتابع (`role="region"`). وكل مؤشر يستقبل `indicatorAttrs`. |
-| WDrawer | جذر اللوحة الجانبية، وهو عنصر `<nav>` يحمل أيضًا `.wakeb-drawer`. |
-| WExportDropdown | طبقة القائمة المنقولة، ولا توجد إلا أثناء فتح القائمة (للتوافق مع الإصدار الأساسي). |
+| WDrawer | العنصر الذي يحمل `.wakeb-drawer`: على Vuetify جذر اللوحة، وهو عنصر `<nav>`؛ وعلى PrimeVue العنصر المنقول الذي يحمل `role="dialog"`، ولا يوجد إلا أثناء فتح اللوحة. |
+| WExportDropdown | طبقة القائمة المنقولة على كل المزودين، ولا توجد إلا أثناء فتح القائمة (للتوافق مع الإصدار الأساسي). |
 | WTree | عنصر `ul` الجذري (`role="tree"`). |
 | بقية المكونات | العنصر الجذري. يرسل WBadge القيمة `chipAttrs` إلى الـchip، ويرسل WBadgeStack القيمة `badgeAttrs` إلى كل شارة. |
 
@@ -553,6 +553,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | WButton وWDropdown وWModal وWLoading | مدعوم | مدعوم |
 | WSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton | مدعوم | مدعوم |
 | WTabs وWTree وWCarousel | مدعوم | مدعوم (markup أصلي من Wakeb) |
+| WExportDropdown وWBaseSidebar وWDrawer | مدعوم | مدعوم |
 | بقية المكونات | مدعوم | ليس بعد: `WAKEB_COMPONENT_UNSUPPORTED` |
 | shadcn-vue | — | مخطط له (المرحلة M5) |
 
@@ -579,15 +580,17 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
   تطبيقان في الصفحة نفسها أنماط الـtheme. يبقى سياق Wakeb منفصلًا لكل تطبيق.
 - **حدود نطاق الـtheme.** تصل سمات الـtheme والاتجاه (`data-wakeb-theme` و`dir` ومتغيرات
   `--wakeb-ui-*`) إلى جذور المكونات وإلى كل طبقة منقولة: نافذة WModal، وقائمتا WDropdown
-  وWExportDropdown، وقائمتا العناصر الإضافية في WAvatarStack وWBadgeStack، وتلميحات WButton
+  وWExportDropdown، واللوحة الجانبية WDrawer على PrimeVue، وقائمتا العناصر الإضافية في WAvatarStack وWBadgeStack، وتلميحات WButton
   وWTooltipBtn وWTruncatedText وWAvatarStack. خصائص تنسيق الطبقة مثل `menuStyle`
   و`tooltipStyle` توضع على محتوى الطبقة داخل هذا النطاق، لذا تتقدم عليه. ويحتفظ كل تطبيق في
   الصفحة نفسها بنطاق طبقاته الخاص.
-- **حدود ترتيب الطبقات.** يُطبَّق `zIndexOverlay` على كل طبقات Vuetify السابقة وعلى قائمة
-  PrimeVue ونافذته. يستقبل تلميح WButton على PrimeVue سمات الـtheme، لكنه يحتفظ بترتيب
-  z-index الخاص بتلميحات PrimeVue. أما WDrawer فلا يُنقل: هو عنصر تخطيط في Vuetify يُرسم في
-  مكانه، فتصل سمات النطاق إلى لوحته كجذر، ويبقى z-index الخاص به للتخطيط في Vuetify الذي
-  يحدد موضع الخلفية المعتمة أيضًا.
+- **حدود ترتيب الطبقات.** يُطبَّق `zIndexOverlay` على كل طبقات Vuetify السابقة وعلى قوائم
+  PrimeVue ونافذته ولوحته الجانبية. يستقبل تلميح WButton على PrimeVue سمات الـtheme، لكنه
+  يحتفظ بترتيب z-index الخاص بتلميحات PrimeVue. على Vuetify لا يُنقل WDrawer: هو عنصر تخطيط
+  في Vuetify يُرسم في مكانه، فتصل سمات النطاق إلى لوحته كجذر، ويبقى z-index الخاص به للتخطيط
+  في Vuetify الذي يحدد موضع الخلفية المعتمة أيضًا. أما على PrimeVue فيُنقل WDrawer تحت طبقة
+  الخلفية الخاصة به، وهي التي تأخذ `zIndexOverlay`؛ وبدونه تتشارك اللوحة وWModal ترتيب
+  z-index الخاص بالنوافذ في PrimeVue، فتظهر النافذة المفتوحة من داخل اللوحة فوقها.
 - **مستخدمو المتغيرات.** تستخدم WButton وWDropdown وWModal هذه المتغيرات، وتحتفظ بقية المكونات
   بمتغيراتها الخاصة حتى يتم نقلها. والمتغيرات الموجودة على الطبقة متاحة لأنماطك الخاصة بمحتواها.
 - **التقدم والمؤشر والخطوات وهيكل الصفحة على PrimeVue.** ترسم WSegmentedProgress
@@ -598,7 +601,21 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 - **غلاف المكوّن.** كل مكوّن مستورد من الجذر غلاف رقيق حول renderer المزود. أدوات الاختبار
   التي تبحث عن المكونات بالاسم، مثل `findAllComponents(WTabs)`، تجد الغلاف والـrenderer معًا.
 - **الأنماط.** ما زال `style.css` يحتوي أنماط كل الـrenderers، وتقسيمه حسب المزود مخطط له.
-- **WDrawer** يحتاج تخطيط تطبيق Vuetify. طبقة overlay محايدة مخطط لها (المرحلة M4).
+- **حاضن WDrawer.** على Vuetify يحتاج WDrawer تخطيط تطبيق Vuetify (`VApp` أو `VLayout`). أما
+  على PrimeVue فلا يحتاج markup حاضنًا ولا غلافًا حول جذر تطبيقك: طبقة الخلفية المنقولة الخاصة
+  بـPrimeVue هي التي تحتضنه.
+- **سلوك WDrawer.** تحقق اللوحة على PrimeVue قواعد اللوحة المؤقتة: هي `role="dialog"` مشروطة
+  (modal)، تنقل التركيز إلى داخلها وتحصر Tab فيها، وتُغلق بـEscape وبالنقر خارجها ما لم تكن
+  `persistent`، وتمنع تمرير الصفحة، وتعيد التركيز إلى العنصر الذي فتحها. يخفي
+  `transparentOverlay` لون الخلفية لكنه يبقيها، فتظل الصفحة خلفها غير قابلة للتفاعل. ويتبع
+  الجانب المنطقي خيار `direction` في Wakeb. أما لوحة Vuetify فتحتفظ بسلوكها الأصلي: لا إغلاق
+  بـEscape، ولا منع للتمرير، والمشروع يدير التركيز عند الفتح والعودة.
+- **هيكل التحميل في WBaseSidebar.** على PrimeVue يقبل هيكل التحميل أسماء الهياكل المحمولة فقط
+  (SPEC R16) ويرسمها بعناصر `Skeleton` من PrimeVue. الأسماء الخاصة بـVuetify تُتجاوز مع
+  التحذير `WAKEB_UNKNOWN_VALUE`.
+- **قائمة WExportDropdown.** على PrimeVue تُرسم الصيغ في `Menu` من PrimeVue، وهو المسؤول عن
+  الموضع والأسهم وEscape والنقر الخارجي. ويُطبَّق `menuStyle` على القائمة التي تحمل
+  `role="menu"`.
 
 ## ما لا يغطيه تبديل المزود
 

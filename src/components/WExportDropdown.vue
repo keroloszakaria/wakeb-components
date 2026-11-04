@@ -5,16 +5,9 @@ import { VIcon } from "vuetify/components/VIcon";
 import { useVuetifyIcon } from "../core/icons";
 import WButton from "./WButton.vue";
 import { useWakebContext } from "../core/runtime";
+import { exportDropdownDefaults, useExportDropdown, EXPORT_ICON_PATH, FORMAT_ICON_PATH } from "../composables/export-dropdown";
 import type { ExportDropdownProps, ExportFormat, ButtonProps } from "../types";
-const props = withDefaults(defineProps<ExportDropdownProps>(), {
-  isLoading: false,
-  disabled: false,
-  title: "Download",
-  formats: () => [
-    { label: "Export as PDF", value: "pdf" },
-    { label: "Export as Excel", value: "xlsx" },
-  ],
-});
+const props = withDefaults(defineProps<ExportDropdownProps>(), exportDropdownDefaults);
 const emit = defineEmits<{ select: [value: string] }>();
 const context = useWakebContext("WExportDropdown");
 defineSlots<{
@@ -25,19 +18,7 @@ defineSlots<{
   "format-icon"?(props: { format: ExportFormat; index: number }): unknown;
   "format-label"?(props: { format: ExportFormat; index: number }): unknown;
 }>();
-const buttonProps = (): ButtonProps => ({
-  type: "outline",
-  icon: "$file",
-  iconPosition: "start",
-  title: props.title,
-  isLoading: props.isLoading,
-  disabled: props.disabled || props.isLoading,
-  iconSize: 20,
-});
-function select(format: ExportFormat) {
-  if (props.disabled || props.isLoading || format.disabled) return;
-  emit("select", format.value);
-}
+const { buttonProps, select } = useExportDropdown(props, emit);
 const toIcon = useVuetifyIcon();
 </script>
 <template>
@@ -55,7 +36,7 @@ const toIcon = useVuetifyIcon();
           ><template #icon
             ><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
               <path
-                d="M12 3v12m-4-4 4 4 4-4M4 16v5h16v-5"
+                :d="EXPORT_ICON_PATH"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
@@ -80,7 +61,7 @@ const toIcon = useVuetifyIcon();
               aria-hidden="true"
             >
               <path
-                d="M5 2h9l5 5v15H5zM14 2v6h5M8 13h8m-8 4h8"
+                :d="FORMAT_ICON_PATH"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="1.5"

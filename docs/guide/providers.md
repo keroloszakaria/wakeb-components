@@ -195,7 +195,7 @@ direction.
 | `radius` | `--wakeb-ui-radius` | WButton and WModal corners |
 | `spacing` | `--wakeb-ui-spacing` | WModal padding |
 | `fontFamily` | `--wakeb-ui-font-family` | WModal content |
-| `zIndexOverlay` (number) | `--wakeb-ui-z-index-overlay` | Stacking of teleported overlays: WModal, WDropdown, WExportDropdown, the WAvatarStack and WBadgeStack menus and the Vuetify tooltips |
+| `zIndexOverlay` (number) | `--wakeb-ui-z-index-overlay` | Stacking of teleported overlays: WModal, WDropdown, WExportDropdown, the WAvatarStack and WBadgeStack menus, the Vuetify tooltips and the PrimeVue WDrawer |
 
 Component variables such as `--wakeb-button-primary-background` still win over these tokens.
 Color tokens accept hex, `rgb()`, `hsl()`, `var(--…)` and named colors. `radius` and `spacing`
@@ -419,8 +419,8 @@ attributes with the same name follow the rules below.
 | WTruncatedText | The text `<span>` that opens the tooltip. |
 | WTooltipBtn | The native `<button>`. `wrapperAttrs` targets the outer span. |
 | WCarousel | The carousel root (`role="region"`). Each indicator takes `indicatorAttrs`. |
-| WDrawer | The drawer root, a `<nav>` that also carries `.wakeb-drawer`. |
-| WExportDropdown | The teleported menu overlay, present only while open (baseline compatibility). |
+| WDrawer | The element that carries `.wakeb-drawer`: on Vuetify the `<nav>` drawer root; on PrimeVue the teleported `role="dialog"` element, present only while open. |
+| WExportDropdown | The teleported menu overlay on every provider, present only while open (baseline compatibility). |
 | WTree | The root `ul` (`role="tree"`). |
 | The other components | Their root element. WBadge sends `chipAttrs` to the chip; WBadgeStack sends `badgeAttrs` to each badge. |
 
@@ -561,6 +561,7 @@ errors, and production builds drop them.
 | WButton, WDropdown, WModal, WLoading | Yes | Yes |
 | WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WPageSkeleton | Yes | Yes |
 | WTabs, WTree, WCarousel | Yes | Yes (native Wakeb markup) |
+| WExportDropdown, WBaseSidebar, WDrawer | Yes | Yes |
 | The other components | Yes | Not yet: `WAKEB_COMPONENT_UNSUPPORTED` |
 | shadcn-vue | — | Planned (milestone M5) |
 
@@ -588,15 +589,19 @@ errors, and production builds drop them.
   apps on one page share theme styles. Wakeb's own context stays isolated per app.
 - **Theme scope reach.** The theme and direction attributes (`data-wakeb-theme`, `dir` and the
   `--wakeb-ui-*` variables) reach component roots and every teleported overlay: the WModal
-  dialog, the WDropdown and WExportDropdown menus, the WAvatarStack and WBadgeStack overflow
-  menus, and the tooltips of WButton, WTooltipBtn, WTruncatedText and WAvatarStack. Overlay
+  dialog, the WDropdown and WExportDropdown menus, the PrimeVue WDrawer, the WAvatarStack and
+  WBadgeStack overflow menus, and the tooltips of WButton, WTooltipBtn, WTruncatedText and
+  WAvatarStack. Overlay
   styling props such as `menuStyle` and `tooltipStyle` sit on the overlay content inside that
   scope, so they win. Two apps on one page keep their own overlay scope.
 - **Overlay stacking limits.** `zIndexOverlay` applies to every Vuetify overlay above and to
-  the PrimeVue menu and dialog. The PrimeVue WButton tooltip receives the theme attributes but
-  keeps PrimeVue's own tooltip z-index stack. WDrawer is not teleported: it is a Vuetify layout
-  item rendered in place, so its panel takes the scope attributes as a root, and its z-index
-  stays with the Vuetify layout, which also places the scrim.
+  the PrimeVue menus, dialog and drawer. The PrimeVue WButton tooltip receives the theme
+  attributes but keeps PrimeVue's own tooltip z-index stack. On Vuetify, WDrawer is not
+  teleported: it is a Vuetify layout item rendered in place, so its panel takes the scope
+  attributes as a root, and its z-index stays with the Vuetify layout, which also places the
+  scrim. On PrimeVue, WDrawer is teleported under its own mask, which takes `zIndexOverlay`;
+  without it, the drawer and WModal share PrimeVue's modal z-index stack, so a dialog opened
+  from a drawer stacks above it.
 - **Token consumers.** The tokens are consumed by WButton, WDropdown and WModal; the other
   components keep their own variables until they migrate. The variables on an overlay are
   available to your own CSS for that overlay content.
@@ -610,8 +615,21 @@ errors, and production builds drop them.
   both the wrapper and the renderer.
 - **Styles.** `style.css` still contains the CSS of every renderer. Splitting it per provider
   is planned.
-- **WDrawer** needs Vuetify's application layout. A provider-neutral overlay host is planned
-  (milestone M4).
+- **WDrawer host.** On Vuetify, WDrawer needs Vuetify's application layout (`VApp` or
+  `VLayout`). On PrimeVue it needs no host markup and no wrapper around your app root: PrimeVue's
+  own teleported mask hosts it.
+- **WDrawer behavior.** The PrimeVue drawer meets the temporary-drawer rules: it is a modal
+  `role="dialog"`, moves focus inside and traps Tab there, closes on Escape and on an outside
+  click unless `persistent`, locks body scrolling, and returns focus to the element that opened
+  it. `transparentOverlay` hides the mask color but keeps the mask, so the background stays
+  inert. The logical side follows the Wakeb `direction` option. The Vuetify drawer keeps its
+  native behavior: no Escape dismissal, no scroll lock, and the host manages launch and return
+  focus.
+- **WBaseSidebar skeleton.** On PrimeVue the loading skeleton accepts the portable skeleton
+  names only (SPEC R16) and renders them with PrimeVue `Skeleton` bones. Vuetify-only names are
+  skipped with `WAKEB_UNKNOWN_VALUE`.
+- **WExportDropdown menu.** On PrimeVue the formats render in PrimeVue's `Menu`, which owns
+  positioning, arrow keys, Escape and outside clicks. `menuStyle` styles the `role="menu"` list.
 
 ## What switching does not cover
 

@@ -27,6 +27,6 @@ export type ComponentName = (typeof COMPONENTS)[number];
 /** Alpha coverage per provider (SPEC R21). Anything missing renders WAKEB_COMPONENT_UNSUPPORTED. */
 export const SUPPORTED: Record<"vuetify" | "primevue" | "shadcn", readonly ComponentName[]> = {
   vuetify: COMPONENTS,
-  primevue: ["WButton", "WDropdown", "WLoading", "WModal", "WSegmentedProgress", "WSemiCircleGauge", "WVerticalSteps", "WPageSkeleton", "WTabs", "WTree", "WCarousel"],
+  primevue: ["WButton", "WDropdown", "WLoading", "WModal", "WSegmentedProgress", "WSemiCircleGauge", "WVerticalSteps", "WPageSkeleton", "WTabs", "WTree", "WCarousel", "WExportDropdown", "WBaseSidebar", "WDrawer"],
   shadcn: [],
 };

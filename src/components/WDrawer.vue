@@ -1,64 +1,21 @@
 <script setup lang="ts">
-import { computed, ref, useAttrs, watch } from "vue";
+import { computed, useAttrs } from "vue";
 import { useLocale } from "vuetify";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
 import WButton from "./WButton.vue";
 import WLoading from "./WLoading.vue";
+import { drawerDefaults, useDrawer } from "../composables/drawer";
 import type { DrawerProps } from "../types";
 defineOptions({ inheritAttrs: false });
-const props = withDefaults(defineProps<DrawerProps>(), {
-  modelValue: false,
-  title: "",
-  width: 420,
-  position: "end",
-  persistent: false,
-  transparentOverlay: false,
-  closable: true,
-  loading: false,
-  dataLoaded: true,
-  closeLabel: "Close",
-  loadingLabel: "Loading",
-  ariaLabel: "Drawer",
-});
+const props = withDefaults(defineProps<DrawerProps>(), drawerDefaults);
 const emit = defineEmits<{
   "update:modelValue": [value: boolean];
   close: [];
 }>();
 const attrs = useAttrs(),
-  open = ref(props.modelValue),
   { isRtl } = useLocale();
-watch(
-  () => props.modelValue,
-  (value) => {
-    open.value = value;
-  },
-);
-const dialog = computed({
-  get: () => open.value,
-  set: (value) => {
-    if (open.value === value) return;
-    open.value = value;
-    emit("update:modelValue", value);
-  },
-});
-const location = computed(() =>
-  props.position === "start"
-    ? isRtl.value
-      ? "right"
-      : "left"
-    : isRtl.value
-      ? "left"
-      : "right",
-);
-const numericWidth = computed(() => {
-  if (typeof props.width === "number") return props.width;
-  const value = parseInt(props.width, 10);
-  return Number.isNaN(value) ? 420 : value;
-});
-const close = () => {
-  dialog.value = false;
-  emit("close");
-};
+const { model: dialog, side, numericWidth, close } = useDrawer(props, emit);
+const location = computed(() => side(isRtl.value));
 defineSlots<{
   title(): unknown;
   "header-actions"(): unknown;

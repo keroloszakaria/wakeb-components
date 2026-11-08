@@ -218,9 +218,12 @@ A color prop now takes a Wakeb intent or a CSS color:
   `WAKEB_DEPRECATED_VALUE`. Under **PrimeVue** and **shadcn-vue** it is not understood: the prop
   falls back to its default, with `WAKEB_UNKNOWN_VALUE`.
 - TypeScript still accepts these names on those three props: the prop type is
-  `WakebColor | WakebDeprecatedColor`, so 0.7 code compiles. `WakebDeprecatedColor` is marked
-  `@deprecated`, and editors keep suggesting the portable values. To reject provider names today,
-  type your own values as `WakebColor`.
+  `WakebColor | WakebDeprecatedColor`, so 0.7 code compiles. `WakebDeprecatedColor` is a closed
+  list of Vuetify's built-in theme and palette names, so a misspelled name is still a type error. A
+  custom Vuetify theme color is not in the list: write it as `rgb(var(--v-theme-brand))`. The type is
+  marked `@deprecated`, but editors cannot mark a string value written in a template; development
+  builds log `WAKEB_DEPRECATED_VALUE` instead. To reject provider names today, type your own values
+  as `WakebColor`.
 - The other color props (WSegmentedProgress `color`, WBadge `dotColor`, WBadgeStack `dotColor`,
   item `color` and item `dotColor`, WAccordion `iconColor`) do not render provider names on any
   provider: a name falls back to the default with `WAKEB_UNKNOWN_VALUE`, and their type,
@@ -248,7 +251,8 @@ WBadge `type` (also WBadgeStack item `type` and WUserBadge `type`) is a Wakeb st
   `primary`, with `WAKEB_UNKNOWN_VALUE`.
 - TypeScript still accepts such a type during the deprecation window: the prop type is
   `WakebBadgeType | WakebDeprecatedBadgeType` (also on WBadgeStack `badgeType`). The deprecated
-  part is marked `@deprecated`; type your own values as `WakebBadgeType` to reject other names.
+  part accepts only Vuetify's built-in color names, so a misspelled type is a type error; type your
+  own values as `WakebBadgeType` to reject other names.
 - `variant="solid"` fills the badge with the type's strong color. Override it with
   `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`.
 
@@ -302,7 +306,7 @@ These changes apply immediately; there is no alias.
   aria-modal="true">` instead of a `<nav>`, outside your app's DOM tree, so update CSS or test
   selectors that relied on `nav.wakeb-drawer` or on the drawer being a descendant of your app.
   `transparentOverlay` now keeps a transparent scrim, so the page behind stays blocked and an
-  outside click closes a non-persistent drawer. The drawer stacks at `zIndexOverlay`, or 2000.
+  outside click closes a non-persistent drawer. The drawer stacks just below `zIndexOverlay` (or 2000), so dialogs and menus opened from it stack above; opened over other Vuetify overlays, it stacks just above them.
 - **Typed neutral contracts.** Every root component's type comes from a provider-neutral
   contract. `vue-tsc` now rejects handlers and slot destructuring that do not match the declared
   payloads, provider color names and badge types outside `WakebBadgeType`. Contract types such as

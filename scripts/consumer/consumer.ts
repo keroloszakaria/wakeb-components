@@ -86,6 +86,10 @@ const legacyBadge: BadgeProps = { type: 'teal', variant: 'outlined' };
 const legacyStack: import('wakeb-components').BadgeStackProps = { badgeType: 'teal', badgeVariant: 'tonal', items: [{ type: 'teal', variant: 'text' }] };
 const deprecatedColor: import('wakeb-components').WakebDeprecatedColor = 'red-darken-2';
 const deprecatedBadgeType: import('wakeb-components').WakebDeprecatedBadgeType = 'teal';
+// @ts-expect-error the deprecated names are a closed Vuetify list, so a misspelled intent is still an error
+const typoLoading: import('wakeb-components').LoadingProps = { color: 'primray' };
+// @ts-expect-error a misspelled badge type is not a Vuetify color name either
+const typoBadge: BadgeProps = { type: 'sucess' };
 // @ts-expect-error a color is a string, not a number
 const numericLoading: import('wakeb-components').LoadingProps = { color: 1 };
 // @ts-expect-error a badge type is a string, not an object
@@ -95,7 +99,7 @@ const unknownVariant: BadgeProps = { variant: 'shiny' };
 // @ts-expect-error colors that only some components still render as provider names stay strict
 const strictDot: BadgeProps = { dotColor: 'red-darken-2' };
 const intentTheme = createWakebComponents({ framework: 'vuetify', theme: { tokens: { success: '#12b76a', neutral: 'var(--gray)' } } });
-void [colors, strictColor, strictBadgeType, loading, legacyLoading, legacyAvatar, legacyUserAvatar, legacyBadge, legacyStack, deprecatedColor, deprecatedBadgeType, numericLoading, objectBadge, unknownVariant, strictDot, intentTheme];
+void [colors, strictColor, strictBadgeType, loading, legacyLoading, legacyAvatar, legacyUserAvatar, legacyBadge, legacyStack, deprecatedColor, deprecatedBadgeType, typoLoading, typoBadge, numericLoading, objectBadge, unknownVariant, strictDot, intentTheme];
 // Wakeb-owned icons (SPEC R15): names resolve to SVG path data or components, never strings.
 const iconPaths: import('wakeb-components').WakebSvgIcon = ['M7 10l5 5 5-5z', ['M0 0h24v24H0z', 0.2]];
 const iconOptions: import('wakeb-components').WakebIconsOptions = { aliases: { brand: iconPaths }, resolve: (name: string) => (name === 'check' ? ['M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z'] : undefined) };

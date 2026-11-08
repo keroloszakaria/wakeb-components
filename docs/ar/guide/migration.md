@@ -213,8 +213,10 @@ WBadgeStack، و`iconColor` في WAccordion.
   `WAKEB_UNKNOWN_VALUE`.
 - ما زال TypeScript يقبل هذه الأسماء في هذه الخصائص الثلاث: نوع الـprop هو
   `WakebColor | WakebDeprecatedColor`، فيُترجَم كود 0.7 دون أخطاء. النوع `WakebDeprecatedColor`
-  موسوم بـ`@deprecated`، ويستمر المحرر في اقتراح القيم القابلة للنقل. ولرفض أسماء المزود من الآن،
-  اجعل نوع قيمك `WakebColor`.
+  قائمة مغلقة بأسماء ألوان الثيم واللوحة المدمجة في Vuetify، فيبقى الاسم المكتوب خطأً خطأً في
+  الأنواع. ولون الثيم المخصص ليس في القائمة، فاكتبه بالشكل `rgb(var(--v-theme-brand))`. النوع موسوم
+  بـ`@deprecated`، لكن المحرر لا يستطيع وسم قيمة نصية مكتوبة في القالب، لذلك يسجّل وضع التطوير
+  `WAKEB_DEPRECATED_VALUE`. ولرفض أسماء المزود من الآن، اجعل نوع قيمك `WakebColor`.
 - لا تعرض خصائص الألوان الأخرى (`color` في WSegmentedProgress، و`dotColor` في WBadge، و`dotColor`
   و`color` العناصر و`dotColor` العناصر في WBadgeStack، و`iconColor` في WAccordion) أسماء المزود
   تحت أي مزود: يرجع الاسم إلى القيمة الافتراضية مع `WAKEB_UNKNOWN_VALUE`، ويرفضه نوعها `WakebColor`.
@@ -238,8 +240,9 @@ Wakeb، نوعه `WakebBadgeType`، وترسمه CSS الخاصة بـWakeb:
 - النوع الذي ليس في هذه القائمة يُعامَل كاسم لون من Vuetify: تحت Vuetify يظل يُمرَّر كلون للـchip مع
   `WAKEB_DEPRECATED_VALUE`. وتحت PrimeVue وshadcn-vue تستخدم الشارة `primary` مع `WAKEB_UNKNOWN_VALUE`.
 - ما زال TypeScript يقبل هذا النوع خلال فترة الإهمال: نوع الـprop هو
-  `WakebBadgeType | WakebDeprecatedBadgeType` (وكذلك `badgeType` في WBadgeStack). الجزء المهمل موسوم
-  بـ`@deprecated`؛ اجعل نوع قيمك `WakebBadgeType` لرفض الأسماء الأخرى.
+  `WakebBadgeType | WakebDeprecatedBadgeType` (وكذلك `badgeType` في WBadgeStack). الجزء المهمل لا
+  يقبل إلا أسماء ألوان Vuetify المدمجة، فيكون النوع المكتوب خطأً خطأً في الأنواع؛ اجعل نوع قيمك
+  `WakebBadgeType` لرفض الأسماء الأخرى.
 - `variant="solid"` يملأ الشارة باللون القوي للنوع. يمكنك تغييره بـ`--wakeb-badge-solid-bg`
   و`--wakeb-badge-solid-text`.
 
@@ -289,7 +292,7 @@ Wakeb، نوعه `WakebBadgeType`، وترسمه CSS الخاصة بـWakeb:
   `<div role="dialog" aria-modal="true">` بدل `<nav>`، ويقع خارج شجرة DOM الخاصة بتطبيقك، فحدّث محددات
   CSS أو الاختبارات التي كانت تعتمد على `nav.wakeb-drawer` أو على وجود اللوحة داخل تطبيقك. ويُبقي
   `transparentOverlay` الآن طبقة خلفية شفافة، فتظل الصفحة خلفها محجوبة ويغلق النقر الخارجي اللوحة غير
-  الـpersistent. وتأخذ اللوحة ترتيب `zIndexOverlay`، أو 2000 عند غيابه.
+  الـpersistent. وتأخذ اللوحة ترتيبًا أقل بواحد من `zIndexOverlay` (أو 2000 عند غيابه)، فتظهر فوقها النوافذ والقوائم المفتوحة منها؛ وإذا فُتحت فوق طبقات Vuetify أخرى أخذت ترتيبًا أعلى منها بواحد.
 - **عقود محايدة مكتوبة بالأنواع.** نوع كل مكون جذري يأتي من عقد محايد لا يرتبط بمزود. يرفض `vue-tsc`
   الآن المعالجات وتفكيك الـslots التي لا تطابق الـpayloads المعلنة، وأسماء ألوان المزود، وأنواع الشارة
   خارج `WakebBadgeType`. أنواع العقود مثل `ButtonEmits` و`ModalSlots` و`WakebComponentEmits` مُصدَّرة.

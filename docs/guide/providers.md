@@ -395,8 +395,9 @@ Provider color names follow the deprecation policy on WLoading `color` and WAvat
 WUserBadge `avatarColor`. Under Vuetify they still render as before and log
 `WAKEB_DEPRECATED_VALUE` in development. Under other providers they fall back to the prop default
 and log `WAKEB_UNKNOWN_VALUE`. During the deprecation window these three props are typed
-`WakebColor | WakebDeprecatedColor`, so 0.7 code still type-checks; `WakebDeprecatedColor` is
-marked `@deprecated`. The other color props stay `WakebColor`: they do not render provider names
+`WakebColor | WakebDeprecatedColor`, so 0.7 code still type-checks. `WakebDeprecatedColor` is a
+closed list of Vuetify's built-in theme and palette names, so a misspelled name is still a type
+error; a custom theme color is written `rgb(var(--v-theme-brand))`. The other color props stay `WakebColor`: they do not render provider names
 in this release, and fall back with `WAKEB_UNKNOWN_VALUE` on every provider.
 
 WBadge `type` is a Wakeb style key (`WakebBadgeType`) painted by Wakeb CSS. It is no longer
@@ -407,8 +408,8 @@ override with `--wakeb-badge-solid-bg` and `--wakeb-badge-solid-text`. Under Pri
 shadcn-vue a type outside the list is not read as a color: the badge uses `primary` and logs
 `WAKEB_UNKNOWN_VALUE` in development. During the deprecation window badge type props (WBadge,
 WUserBadge and WBadgeStack item `type`, WBadgeStack `badgeType`) are typed
-`WakebBadgeType | WakebDeprecatedBadgeType`, so such a type still compiles; the deprecated part is
-marked `@deprecated`.
+`WakebBadgeType | WakebDeprecatedBadgeType`, so such a type still compiles; the deprecated part
+accepts only Vuetify's built-in color names.
 
 ### Skeleton names
 
@@ -660,9 +661,10 @@ errors, and production builds drop them.
   place of PrimeVue's tooltip z-index; a `zIndex` in the WAvatarStack `tooltipStyle` wins. Without
   `zIndexOverlay` they keep PrimeVue's tooltip z-index (`zIndex.tooltip` in the PrimeVue config).
   On Vuetify, WDrawer is teleported to Vuetify's overlay container inside its Wakeb-owned layout
-  host. The panel takes the scope attributes, and the host takes `zIndexOverlay`; without it, the
-  host uses 2000, Vuetify's overlay default. Vuetify menus, tooltips and dialogs opened from the
-  drawer mount later in the same container, so they stack above it. On PrimeVue, WDrawer is teleported under its own mask, which takes `zIndexOverlay`;
+  host. The panel takes the scope attributes. When the drawer opens, the host takes one less than
+  `zIndexOverlay` (or 2000, Vuetify's overlay default), so Vuetify menus, tooltips and dialogs opened
+  from the drawer stack above it even when Vuetify reuses an older overlay element; opened over other
+  Vuetify overlays, it takes one more than the highest of them. On PrimeVue, WDrawer is teleported under its own mask, which takes `zIndexOverlay`;
   without it, the drawer and WModal share PrimeVue's modal z-index stack, so a dialog opened
   from a drawer stacks above it.
 - **Token consumers.** The tokens are consumed by WButton, WDropdown and WModal; the other

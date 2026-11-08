@@ -4,6 +4,7 @@ import { enableAutoUnmount, mount } from "@vue/test-utils";
 import { createVuetify } from "vuetify";
 import { VApp } from "vuetify/components/VApp";
 import { VMain } from "vuetify/components/VMain";
+import { VSnackbar } from "vuetify/components/VSnackbar";
 import PrimeVue from "primevue/config";
 import { WBaseSidebar, WDrawer, WExportDropdown, WModal, type WakebComponentsOptions } from "../src";
 import { framework, shadcnHost, wakeb } from "./wakeb";
@@ -353,10 +354,14 @@ describe.runIf(vuetify)("Vuetify WDrawer layout host (R18, R19)", () => {
     await settle();
     const root = document.querySelector<HTMLElement>(".wakeb-drawer")!;
     expect(root.closest(".v-overlay-container")).not.toBeNull();
-    expect(root.closest<HTMLElement>(".wakeb-drawer-host")!.style.zIndex).toBe("2000");
+    // One below Vuetify's overlay base, so overlays opened from the drawer stack above it.
+    expect(root.closest<HTMLElement>(".wakeb-drawer-host")!.style.zIndex).toBe("1999");
+    // Vuetify's reset makes html the scrolling element, so both html and body are locked.
+    expect(document.documentElement.style.overflow).toBe("hidden");
     expect(document.body.style.overflow).toBe("hidden");
     open.value = false;
     await settle();
+    expect(document.documentElement.style.overflow).toBe("");
     expect(document.body.style.overflow).toBe("");
   });
 
@@ -398,24 +403,57 @@ describe.runIf(vuetify)("Vuetify WDrawer layout host (R18, R19)", () => {
     expect(w.emitted("update:modelValue")).toBeUndefined();
   });
 
-  it("leaves Escape to a newer active overlay even when focus is inside the drawer", async () => {
-    // In a browser, focus can stay in the drawer or fall back to the body while a dialog opened from
-    // it is still open. Vuetify closes the topmost overlay on Escape, so the drawer must not close too.
-    const w = renderDrawer({ modelValue: true, persistent: false, title: "Drawer" }, { content: () => h("button", { type: "button", class: "inner" }, "Inner") });
+  it("leaves Escape to a dialog reopened from the drawer even when Vuetify reuses an earlier element", async () => {
+    const shown = ref(false);
+    const drawer = ref(false);
+    const modal = ref(true);
+    const view = defineComponent(() => () => [
+      // An eager dialog keeps its element after closing (otherwise Vuetify drops it after the leave
+      // transition, and only a reopen during that transition reuses it).
+      h(WModal, { modelValue: modal.value, "onUpdate:modelValue": (value: boolean) => (modal.value = value), persistent: false, title: "Shared", providerProps: { eager: true } }),
+      // The drawer mounts behind a v-if, after Vuetify created the dialog element.
+      shown.value ? h(WDrawer, { modelValue: drawer.value, "onUpdate:modelValue": (value: boolean) => (drawer.value = value), title: "Drawer" }) : null,
+    ]);
+    mount(view, { attachTo: document.body, global: { plugins: plugins(), stubs: { transition: false } } });
     await settle();
-    document.querySelector<HTMLElement>(".inner")!.focus();
+    modal.value = false;
+    await settle();
+    shown.value = true;
+    await settle();
+    drawer.value = true;
+    await settle();
+    modal.value = true;
+    await settle();
+    const dialog = document.querySelector<HTMLElement>(".v-overlay.v-dialog")!;
     const host = document.querySelector<HTMLElement>(".wakeb-drawer-host")!;
-    const above = document.createElement("div");
-    above.className = "v-overlay v-overlay--active";
-    host.after(above);
+    // Vuetify kept the dialog element it created first, so it comes before the drawer host in the DOM.
+    expect(dialog.compareDocumentPosition(host) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(Number(dialog.style.zIndex)).toBeGreaterThan(Number(host.style.zIndex));
+    (document.activeElement as HTMLElement | null)?.blur();
     pressEscape();
     await settle();
-    expect(w.emitted("update:modelValue")).toBeUndefined();
-    above.classList.remove("v-overlay--active");
+    expect(drawer.value).toBe(true);
+  });
+
+  it("still closes on Escape while an unrelated snackbar is showing", async () => {
+    const drawer = ref(false);
+    const snackbar = ref(false);
+    const view = defineComponent(() => () => [
+      h(WDrawer, { modelValue: drawer.value, "onUpdate:modelValue": (value: boolean) => (drawer.value = value), title: "Drawer" }),
+      h(VSnackbar, { modelValue: snackbar.value, timeout: -1 }, () => "Saved"),
+    ]);
+    mount(view, { attachTo: document.body, global: { plugins: plugins(), stubs: { transition: false } } });
+    await settle();
+    drawer.value = true;
+    await settle();
+    // Shown after the drawer opened, so the snackbar sits after the drawer host in the overlay container.
+    snackbar.value = true;
+    await settle();
+    const shown = document.querySelector(".v-snackbar.v-overlay--active")!;
+    expect(document.querySelector(".wakeb-drawer-host")!.compareDocumentPosition(shown) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     pressEscape();
     await settle();
-    expect(w.emitted("update:modelValue")).toEqual([[false]]);
-    above.remove();
+    expect(drawer.value).toBe(false);
   });
 });
 
@@ -490,6 +528,35 @@ describe.runIf(framework === "primevue")("PrimeVue WDrawer overlay host (R18, R1
     pressEscape();
     await settle();
     expect(drawer.value).toBe(false);
+  });
+
+  it("leaves Escape to a menu only while focus is inside it, and ignores a dialog that is already leaving", async () => {
+    const drawer = ref(true);
+    const view = defineComponent(() => () =>
+      h(WDrawer, { modelValue: drawer.value, "onUpdate:modelValue": (value: boolean) => (drawer.value = value), title: "Drawer" }, { content: () => h("button", { type: "button", class: "inner" }, "Inner") }),
+    );
+    mount(view, { attachTo: document.body, global: { plugins: plugins(), stubs: { transition: false } } });
+    await settle();
+    // PrimeVue menus close on Escape only from inside, and appear after the drawer's mask.
+    const menu = document.createElement("div");
+    menu.className = "p-menu p-menu-overlay";
+    menu.innerHTML = '<button type="button">Item</button>';
+    document.body.append(menu);
+    menu.querySelector("button")!.focus();
+    pressEscape();
+    await settle();
+    expect(drawer.value).toBe(true);
+    // In unstyled mode PrimeVue does not mark a leaving mask; Vue's transition class on its dialog does.
+    const leaving = document.createElement("div");
+    leaving.className = "p-overlay-mask";
+    leaving.innerHTML = '<div class="p-dialog-leave-active" role="dialog"></div>';
+    document.body.append(leaving);
+    document.querySelector<HTMLElement>(".inner")!.focus();
+    pressEscape();
+    await settle();
+    expect(drawer.value).toBe(false);
+    menu.remove();
+    leaving.remove();
   });
 
   it("stacks a dialog opened from the drawer above it through PrimeVue's shared modal z-index", async () => {

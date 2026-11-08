@@ -46,6 +46,16 @@
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
+      "id": "WAvatarStack.prop.avatarColor.type",
+      "from": "string",
+      "to": "WakebColor | WakebDeprecatedColor",
+      "changes": [
+        "(self): string -> WakebColor | WakebDeprecatedColor"
+      ],
+      "reason": "The prop takes a WakebColor (an intent or a CSS color, SPEC R23) or, during the deprecation window, a WakebDeprecatedColor: Vuetify's built-in theme and palette names, which still render under Vuetify with WAKEB_DEPRECATED_VALUE. The list is closed, so other strings (custom theme names, typos) no longer type-check; write a custom theme color as rgb(var(--v-theme-name)).",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
       "id": "WBadge.default.dotColor",
       "from": "\"\"",
       "to": "undefined",
@@ -68,6 +78,16 @@
       ],
       "reason": "Color props take a WakebColor (an intent or a CSS color, SPEC R23). This prop does not render provider color names on any provider (they fall back with WAKEB_UNKNOWN_VALUE), so TypeScript keeps rejecting them; only WLoading color and WAvatarStack and WUserBadge avatarColor accept WakebDeprecatedColor during the deprecation window.",
       "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WBadge.prop.type.type",
+      "from": "string",
+      "to": "WakebBadgeType | WakebDeprecatedBadgeType",
+      "changes": [
+        "(self): string -> WakebDeprecatedColor | WakebBadgeType"
+      ],
+      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23) or, during the deprecation window, a Vuetify built-in color name (WakebDeprecatedBadgeType), still passed to Vuetify as the chip color with WAKEB_DEPRECATED_VALUE. Other strings (custom theme names, typos) no longer type-check.",
+      "migration": "docs/guide/migration.md#badge-type"
     },
     {
       "id": "WBadge.slot.icon.payload",
@@ -94,6 +114,16 @@
       "migration": "docs/guide/migration.md#colors"
     },
     {
+      "id": "WBadgeStack.prop.badgeType.type",
+      "from": "string",
+      "to": "WakebBadgeType | WakebDeprecatedBadgeType",
+      "changes": [
+        "(self): string -> WakebDeprecatedColor | WakebBadgeType"
+      ],
+      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23) or, during the deprecation window, a Vuetify built-in color name (WakebDeprecatedBadgeType), still passed to Vuetify as the chip color with WAKEB_DEPRECATED_VALUE. Other strings (custom theme names, typos) no longer type-check.",
+      "migration": "docs/guide/migration.md#badge-type"
+    },
+    {
       "id": "WBadgeStack.prop.dotColor.type",
       "from": "string",
       "to": "WakebColor",
@@ -111,9 +141,10 @@
         "[].badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
         "[].color: string | undefined -> WakebColor | undefined",
         "[].dotColor: string | undefined -> WakebColor | undefined",
+        "[].type: string | undefined -> WakebDeprecatedColor | WakebBadgeType | undefined",
         "[].variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
       ],
-      "reason": "Stack item color and dotColor are WakebColor (SPEC R23); TypeScript rejects provider color names there, which these props do not render on any provider. Item type (WakebBadgeType | WakebDeprecatedBadgeType), variant and badgeIcon only widened, so they accept every 0.7 value.",
+      "reason": "Stack item color and dotColor are WakebColor (SPEC R23); TypeScript rejects provider color names there, which these props do not render on any provider. Item type narrowed from string to WakebBadgeType or a Vuetify built-in color name, so custom names and typos no longer type-check. Item variant and badgeIcon only widened.",
       "migration": "docs/guide/migration.md#colors"
     },
     {
@@ -125,9 +156,10 @@
         "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
         "item.color: string | undefined -> WakebColor | undefined",
         "item.dotColor: string | undefined -> WakebColor | undefined",
+        "item.type: string | undefined -> WakebDeprecatedColor | WakebBadgeType | undefined",
         "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
       ],
-      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type (deprecated badge types type-check) and variant only widened.",
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type narrowed from string to WakebBadgeType or a Vuetify built-in color name. Item variant only widened.",
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
@@ -138,9 +170,10 @@
         "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
         "item.color: string | undefined -> WakebColor | undefined",
         "item.dotColor: string | undefined -> WakebColor | undefined",
+        "item.type: string | undefined -> WakebDeprecatedColor | WakebBadgeType | undefined",
         "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
       ],
-      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type (deprecated badge types type-check) and variant only widened.",
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type narrowed from string to WakebBadgeType or a Vuetify built-in color name. Item variant only widened.",
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
@@ -151,9 +184,10 @@
         "item.badgeIcon: string | JSXComponent<any> | (string | [path: string, opacity: number])[] | undefined -> string | WakebIconDefinition | undefined",
         "item.color: string | undefined -> WakebColor | undefined",
         "item.dotColor: string | undefined -> WakebColor | undefined",
+        "item.type: string | undefined -> WakebDeprecatedColor | WakebBadgeType | undefined",
         "item.variant: \"default\" | \"flat\" | \"text\" | \"elevated\" | \"tonal\" | \"outlined\" | \"plain\" | undefined -> WakebVariant | WakebDeprecatedVariant | undefined"
       ],
-      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type (deprecated badge types type-check) and variant only widened.",
+      "reason": "Stack items and their slot payloads use the portable vocabulary: item color and dotColor are WakebColor (SPEC R23) and item badgeIcon is the provider-neutral SharedIcon (SPEC R15). Item type narrowed from string to WakebBadgeType or a Vuetify built-in color name. Item variant only widened.",
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
@@ -249,6 +283,16 @@
       "migration": "docs/guide/migration.md#icon-types"
     },
     {
+      "id": "WLoading.prop.color.type",
+      "from": "string",
+      "to": "WakebColor | WakebDeprecatedColor",
+      "changes": [
+        "(self): string -> WakebColor | WakebDeprecatedColor"
+      ],
+      "reason": "The prop takes a WakebColor (an intent or a CSS color, SPEC R23) or, during the deprecation window, a WakebDeprecatedColor: Vuetify's built-in theme and palette names, which still render under Vuetify with WAKEB_DEPRECATED_VALUE. The list is closed, so other strings (custom theme names, typos) no longer type-check; write a custom theme color as rgb(var(--v-theme-name)).",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
       "id": "WSegmentedProgress.prop.color.type",
       "from": "string",
       "to": "WakebColor",
@@ -310,6 +354,26 @@
       ],
       "reason": "SharedIcon is provider-neutral (SPEC R15): the Vuetify JSXComponent member became WakebIconComponent and SVG path data is readonly. Prop inputs still accept every 0.7 value, but code that reads an icon from this payload as a Vuetify JSXComponent or mutates its path array no longer type-checks.",
       "migration": "docs/guide/migration.md#icon-types"
+    },
+    {
+      "id": "WUserBadge.prop.avatarColor.type",
+      "from": "string",
+      "to": "WakebColor | WakebDeprecatedColor",
+      "changes": [
+        "(self): string -> WakebColor | WakebDeprecatedColor"
+      ],
+      "reason": "The prop takes a WakebColor (an intent or a CSS color, SPEC R23) or, during the deprecation window, a WakebDeprecatedColor: Vuetify's built-in theme and palette names, which still render under Vuetify with WAKEB_DEPRECATED_VALUE. The list is closed, so other strings (custom theme names, typos) no longer type-check; write a custom theme color as rgb(var(--v-theme-name)).",
+      "migration": "docs/guide/migration.md#colors"
+    },
+    {
+      "id": "WUserBadge.prop.type.type",
+      "from": "string",
+      "to": "WakebBadgeType | WakebDeprecatedBadgeType",
+      "changes": [
+        "(self): string -> WakebDeprecatedColor | WakebBadgeType"
+      ],
+      "reason": "Badge type is a WakebBadgeType style key painted by Wakeb CSS (SPEC R23) or, during the deprecation window, a Vuetify built-in color name (WakebDeprecatedBadgeType), still passed to Vuetify as the chip color with WAKEB_DEPRECATED_VALUE. Other strings (custom theme names, typos) no longer type-check.",
+      "migration": "docs/guide/migration.md#badge-type"
     }
   ]
 }

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, shallowRef, useAttrs } from "vue";
+import { computed, onMounted, ref, shallowRef, useAttrs, watch } from "vue";
 import { useLocale } from "vuetify";
 import { VLayout } from "vuetify/components/VLayout";
 import { VNavigationDrawer } from "vuetify/components/VNavigationDrawer";
 import WButton from "./WButton.vue";
 import WLoading from "./WLoading.vue";
-import { drawerDefaults, useDrawer, useModalDrawer } from "../composables/drawer";
+import { activeVuetifyOverlays, drawerDefaults, useDrawer, useModalDrawer } from "../composables/drawer";
 import { useWakebContext } from "../core/runtime";
 import type { DrawerProps } from "../types";
 defineOptions({ inheritAttrs: false });
@@ -42,23 +42,38 @@ onMounted(() => {
   mounted.value = true;
 });
 /*
- * Stacking: zIndexOverlay when configured, else Vuetify's default overlay z-index (2000). Vuetify
- * overlays opened from the drawer (menus, tooltips, WModal) mount later in the same container, so
- * on an equal z-index they stack above the drawer.
+ * Stacking, set each time the drawer opens. Vuetify gives its first open overlay the base z-index
+ * (zIndexOverlay, else 2000) and each later one more, and it reuses an overlay element once opened,
+ * so DOM order cannot decide. The drawer takes one less than the base, so a dialog, menu or tooltip
+ * opened from it always stacks above; opened over other Vuetify overlays, it takes one more than
+ * the highest of them.
  */
+const base = computed(() => context.zIndexOverlay ?? 2000);
+const hostZ = ref(base.value);
+const hostEl = ref<{ $el?: HTMLElement }>();
 const hostStyle = computed(() => ({
   position: "fixed" as const,
   inset: "0",
-  zIndex: context.zIndexOverlay ?? 2000,
+  zIndex: hostZ.value,
   overflow: "hidden",
   pointerEvents: "none" as const,
 }));
 const panelStyle = computed(() => (context.zIndexOverlay === undefined ? undefined : { zIndex: context.zIndexOverlay }));
 const panel = ref<HTMLElement>();
+watch(
+  () => dialog.value && mounted.value,
+  (visible) => {
+    if (!visible) return;
+    const below = activeVuetifyOverlays(hostEl.value?.$el).map((overlay) => Number(getComputedStyle(overlay).zIndex) || 0);
+    hostZ.value = below.length ? Math.max(...below) + 1 : base.value - 1;
+  },
+  { flush: "sync", immediate: true },
+);
 useModalDrawer({
   open: dialog,
   persistent: () => props.persistent,
   panel: () => panel.value?.closest<HTMLElement>(".wakeb-drawer"),
+  host: () => hostEl.value?.$el,
   mounted,
 });
 defineSlots<{
@@ -76,6 +91,7 @@ defineSlots<{
   <!-- Wakeb owns Escape, initial and return focus, the scroll lock and the dialog role; VNavigationDrawer owns the scrim, slide and Tab trap. -->
   <Teleport :to="target ?? 'body'" :disabled="!target">
     <VLayout
+      ref="hostEl"
       class="wakeb-drawer-host"
       :class="{ 'wakeb-drawer-host--transparent': transparentOverlay }"
       :style="hostStyle"

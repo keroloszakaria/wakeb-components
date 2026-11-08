@@ -12,15 +12,30 @@ export type WakebColor =
   | `lab(${string})` | `lch(${string})` | `oklab(${string})` | `oklch(${string})` | `color(${string})` | `color-mix(${string})`
   | `var(--${string})`
   | "transparent" | "currentColor";
+/** Vuetify 3 built-in palette families (`teal`, `blue-grey`, ...). */
+type VuetifyPalette =
+  | "red" | "pink" | "purple" | "deep-purple" | "indigo" | "blue" | "light-blue" | "cyan" | "teal" | "green"
+  | "light-green" | "lime" | "yellow" | "amber" | "orange" | "deep-orange" | "brown" | "blue-grey" | "grey";
+/** Vuetify 3 built-in theme color names that are not Wakeb intents. */
+type VuetifyThemeName =
+  | "error" | "background" | "surface" | "surface-bright" | "surface-light" | "surface-variant" | "primary-darken-1" | "secondary-darken-1"
+  | `on-${"primary" | "secondary" | "success" | "warning" | "error" | "info" | "background" | "surface" | "surface-bright" | "surface-light" | "surface-variant"}`;
 /**
- * @deprecated A 0.7 provider color name, such as the Vuetify theme name `error` or the palette name
- * `red-darken-2`. It type-checks during the one-major deprecation window only on the props that still
- * render it: WLoading `color`, and WAvatarStack and WUserBadge `avatarColor`. Under Vuetify it renders
- * as before with `WAKEB_DEPRECATED_VALUE`; under PrimeVue and shadcn-vue the prop falls back with
- * `WAKEB_UNKNOWN_VALUE`. Use a {@link WakebColor} (an intent or a CSS color) instead. Removed in the
- * next major release; type a value as `WakebColor` to reject provider names today.
+ * @deprecated A 0.7 Vuetify color name: a built-in theme name such as `error`, or a palette name such
+ * as `teal` or `red-darken-2`. It type-checks during the one-major deprecation window only on the props
+ * that still render it: WLoading `color`, and WAvatarStack and WUserBadge `avatarColor`. Under Vuetify
+ * it renders as before with `WAKEB_DEPRECATED_VALUE`; under PrimeVue and shadcn-vue the prop falls back
+ * with `WAKEB_UNKNOWN_VALUE`. The list is closed, so a misspelled name is a type error; a custom theme
+ * color is not listed, so write it as a CSS color, `rgb(var(--v-theme-brand))`. Editors mark this type
+ * as deprecated, not a string value written in a template. Use a {@link WakebColor} (an intent or a CSS
+ * color) instead. Removed in the next major release; type a value as `WakebColor` to reject provider
+ * names today.
  */
-export type WakebDeprecatedColor = string & {};
+export type WakebDeprecatedColor =
+  | VuetifyThemeName
+  | VuetifyPalette
+  | `${VuetifyPalette}-${`lighten-${1 | 2 | 3 | 4 | 5}` | `darken-${1 | 2 | 3 | 4}` | `accent-${1 | 2 | 3 | 4}`}`
+  | "black" | "white";
 /** Portable skeleton names (SPEC R16). Skeleton props take a comma-separated list of these, each optionally `@N`. */
 export type WakebSkeletonName =
   | "text" | "paragraph" | "heading" | "avatar" | "image" | "button" | "chip" | "list-item" | "list-item-avatar"
@@ -35,9 +50,10 @@ export type WakebBadgeType =
  * as the chip color (for example `teal`). It type-checks during the one-major deprecation window: under
  * Vuetify it is still passed as the chip color with `WAKEB_DEPRECATED_VALUE`; under PrimeVue and
  * shadcn-vue it falls back to `primary` with `WAKEB_UNKNOWN_VALUE`. Use a `WakebBadgeType` instead.
- * Removed in the next major release; type a value as `WakebBadgeType` to reject other names today.
+ * Only the Vuetify color names of {@link WakebDeprecatedColor} are accepted, so a misspelled type is a
+ * type error. Removed in the next major release; type a value as `WakebBadgeType` to reject other names today.
  */
-export type WakebDeprecatedBadgeType = string & {};
+export type WakebDeprecatedBadgeType = WakebDeprecatedColor;
 /**
  * Native props and listeners for the selected provider's primitive (SPEC R12). Not portable: the keys
  * belong to whichever provider the build selected. Wakeb-owned bindings, portable attributes

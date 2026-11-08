@@ -388,7 +388,9 @@ Vuetify أيضًا وبالحجم نفسه. لاستخدام شكلك الخاص
 بـWAvatarStack وWUserBadge. تحت Vuetify تبقى تُرسم كما كانت، وتسجّل `WAKEB_DEPRECATED_VALUE` في وضع
 التطوير. أما تحت المزودات الأخرى فترجع إلى القيمة الافتراضية للخاصية، وتسجّل `WAKEB_UNKNOWN_VALUE`.
 وخلال فترة الإهمال يكون نوع هذه الخصائص الثلاث `WakebColor | WakebDeprecatedColor`، فيظل كود 0.7
-يجتاز فحص الأنواع، والنوع `WakebDeprecatedColor` موسوم بـ`@deprecated`. أما خصائص الألوان الأخرى
+يجتاز فحص الأنواع. والنوع `WakebDeprecatedColor` قائمة مغلقة بأسماء ألوان الثيم واللوحة المدمجة في
+Vuetify، فيبقى الاسم المكتوب خطأً خطأً في الأنواع، ويُكتب لون الثيم المخصص بالشكل
+`rgb(var(--v-theme-brand))`. أما خصائص الألوان الأخرى
 فتبقى من النوع `WakebColor`: فهي لا تعرض أسماء المزود في هذا الإصدار، وترجع إلى القيمة الافتراضية
 مع `WAKEB_UNKNOWN_VALUE` تحت كل المزودات.
 
@@ -399,8 +401,8 @@ Vuetify بوصفه `color` للشارة. لذلك يتبع نص الشارة و�
 أما تحت PrimeVue وshadcn-vue فلا يُقرأ النوع غير الموجود في القائمة كلون: تستخدم الشارة `primary`
 وتسجّل `WAKEB_UNKNOWN_VALUE` في وضع التطوير. وخلال فترة الإهمال يكون نوع خصائص نوع الشارة (`type`
 في WBadge وWUserBadge وعناصر WBadgeStack، و`badgeType` في WBadgeStack) هو
-`WakebBadgeType | WakebDeprecatedBadgeType`، فيظل هذا النوع يجتاز الترجمة، والجزء المهمل موسوم
-بـ`@deprecated`.
+`WakebBadgeType | WakebDeprecatedBadgeType`، فيظل هذا النوع يجتاز الترجمة، والجزء المهمل لا يقبل
+إلا أسماء ألوان Vuetify المدمجة.
 
 ### أسماء الـSkeleton
 
@@ -650,8 +652,8 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
   z-index تلميحات PrimeVue، وتتقدم قيمة `zIndex` في `tooltipStyle` الخاصة بـWAvatarStack عليها.
   وبدون `zIndexOverlay` تحتفظ بقيمة z-index تلميحات PrimeVue ‏(`zIndex.tooltip` في إعدادات
   PrimeVue). على Vuetify يُنقل WDrawer إلى حاوية الطبقات في Vuetify داخل الحاضن الذي يملكه
-  Wakeb. تأخذ اللوحة سمات النطاق، ويأخذ الحاضن `zIndexOverlay`؛ وبدونه يستخدم الحاضن 2000، وهي
-  القيمة الافتراضية لطبقات Vuetify. وتُركَّب القوائم والتلميحات والنوافذ المفتوحة من داخل اللوحة
+  Wakeb. تأخذ اللوحة سمات النطاق، وعند فتح اللوحة يأخذ الحاضن قيمة أقل بواحد من `zIndexOverlay` (أو 2000، وهي
+  القيمة الافتراضية لطبقات Vuetify)، وإذا فُتحت فوق طبقات Vuetify أخرى أخذ قيمة أعلى من أعلاها بواحد. وتُركَّب القوائم والتلميحات والنوافذ المفتوحة من داخل اللوحة
   لاحقًا في الحاوية نفسها، فتظهر فوقها. أما على
   PrimeVue فيُنقل WDrawer تحت طبقة الخلفية الخاصة به، وهي التي تأخذ `zIndexOverlay`؛ وبدونه
   تتشارك اللوحة وWModal ترتيب z-index الخاص بالنوافذ في PrimeVue، فتظهر النافذة المفتوحة من

@@ -44,7 +44,7 @@ run([process.env.npm_execpath,"pack","--ignore-scripts","--pack-destination",dow
 const skillFiles = {};
 function collectSkill(dir, prefix) { for (const item of readdirSync(dir, { withFileTypes: true })) { const path = join(dir, item.name), key = prefix + item.name; if (item.isDirectory()) collectSkill(path, key + '/'); else skillFiles[key] = new Uint8Array(readFileSync(path)); } }
 collectSkill(join(root, '.agents/skills/wakeb-components'), 'wakeb-components/');
-writeFileSync(join(downloads, 'wakeb-components-skill.zip'), zipSync(skillFiles));
+writeFileSync(join(downloads, 'wakeb-components-skill.zip'), zipSync(skillFiles, { mtime: new Date(2000, 0, 1) }));
 console.log(run([join(root,"node_modules/vitepress/bin/vitepress.js"),"build","docs"]));
 const out=join(root,"docs/.vitepress/dist"), files={};
 function walk(dir,prefix="") { for(const item of readdirSync(dir,{withFileTypes:true})) { const path=prefix+item.name; if(item.isDirectory()) walk(join(dir,item.name),path+"/"); else if(path!=="deployment-proof.json") files[path]=createHash("sha256").update(readFileSync(join(dir,item.name))).digest("hex"); } }

@@ -7,8 +7,9 @@ import recipes, { keyboard } from '../docs/recipes.mjs'
 import { exampleSource } from './component-examples.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const readText = path => readFileSync(path, 'utf8').replace(/\r\n?/g, '\n')
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'))
-const source = ts.createSourceFile('contracts.ts', readFileSync(join(root, 'src/contracts.ts'), 'utf8'), ts.ScriptTarget.Latest, true)
+const source = ts.createSourceFile('contracts.ts', readText(join(root, 'src/contracts.ts')), ts.ScriptTarget.Latest, true)
 const declarations = Object.fromEntries(source.statements.filter(node => ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)).map(node => [node.name.text, node]))
 export function contractMembers(map, component) {
   const key = declarations[map].members.find(node => node.name.getText(source) === component)
@@ -24,7 +25,7 @@ export const components = reference.map(entry => ({
   keyboard: keyboard[entry.name] ?? [],
 }))
 export function generateAgentArtifacts() {
-  const guides = Object.fromEntries(['installation', 'providers', 'customization', 'ssr', 'data-models', 'agents', 'verification'].map(slug => [slug, ['', 'ar/'].map(locale => readFileSync(join(root, 'docs', locale, 'guide', slug + '.md'), 'utf8'))]))
+  const guides = Object.fromEntries(['installation', 'providers', 'customization', 'ssr', 'data-models', 'agents', 'verification'].map(slug => [slug, ['', 'ar/'].map(locale => readText(join(root, 'docs', locale, 'guide', slug + '.md')))]))
   const catalog = { schemaVersion: 1, package: pkg.name, version: pkg.version, status: 'unreleased', providers: ['vuetify', 'primevue', 'shadcn'], components, guides }
   writeFileSync(join(root, 'packages/mcp/catalog.json'), JSON.stringify(catalog, null, 2) + '\n')
   writeFileSync(join(root, 'packages/mcp/LICENSE'), readFileSync(join(root, 'LICENSE')))
@@ -38,7 +39,7 @@ export function generateAgentArtifacts() {
   }
   // Keep guide cross-references useful when the skill is used offline in another project.
   for (const file of readdirSync(join(root, 'docs/guide')).filter(file => file.endsWith('.md'))) {
-    let markdown = readFileSync(join(root, 'docs/guide', file), 'utf8');
+    let markdown = readText(join(root, 'docs/guide', file));
     markdown = markdown.replace(/\]\(\.\/([\w-]+)(#[^)]*)?\)/g, ']($1.md$2)')
       .replace(/\]\(\.\.\/components\/([^)]*)\)/g, ']($1.md)');
     writeFileSync(join(folder, file), markdown);

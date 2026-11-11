@@ -1,12 +1,13 @@
 /* WAccordion styles shared by every provider renderer; provider DOM selectors are no-ops elsewhere. */
 .accordion {
+  color: var(--wakeb-ui-on-surface, #101828);
   border: 1px solid
     var(--wakeb-accordion-border, var(--wakeb-accordion-fallback, #d0d5dd));
   border-radius: var(--wakeb-accordion-radius, 12px);
   overflow: hidden;
   background: var(
     --wakeb-accordion-background,
-    var(--wakeb-accordion-fallback, #fff)
+    var(--wakeb-accordion-fallback, var(--wakeb-ui-surface, #fff))
   );
 
   &--no-border {
@@ -51,7 +52,7 @@
     font-size: 1rem;
     color: var(
       --wakeb-accordion-title,
-      var(--wakeb-accordion-fallback, #101828)
+      var(--wakeb-accordion-fallback, var(--wakeb-ui-on-surface, #101828))
     );
   }
 
@@ -64,7 +65,7 @@
   &__body {
     background-color: var(
       --wakeb-accordion-body-background,
-      var(--wakeb-accordion-fallback, #fff)
+      var(--wakeb-accordion-fallback, var(--wakeb-ui-surface, #fff))
     );
     padding: 1rem;
     margin: 0.5rem;

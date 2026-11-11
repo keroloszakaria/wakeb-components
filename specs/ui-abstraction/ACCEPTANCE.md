@@ -1,6 +1,6 @@
 # Acceptance and verification matrix
 
-Status: acceptance plan with recorded status at `92f4657` (`feat/m1-selector-packaging`), updated for the M2–M6 release review. **No row is fully met for a stable release.** Real-browser verification (section C) and a Jervis DevOps pipeline run are not recorded for any milestone. The release is alpha at most (see "Completion evidence format"). Nothing has been published.
+Status: acceptance plan with historical evidence at `92f4657`, updated with the 2026-11-05 Chromium browser/hydration work in [BROWSER-VERIFICATION.md](./BROWSER-VERIFICATION.md) and the real [Aware pilot](./AWARE-INTEGRATION.md). The automated harness covers all three providers and 24 visual contexts. Manual accessibility, exhaustive style-value acceptance and a Jervis DevOps release/publication run remain separate gates; the package stays alpha.
 
 Status values:
 
@@ -33,60 +33,60 @@ Commands at `92f4657`:
 | R13 | Exact event payload/order/count, model synchronization, item changes/clear state, disabled behavior | Partial | `tests/contract.test.ts`, `tests/navigation-contract.test.ts`, `tests/compositions-contract.test.ts`, `tests/stacks-contract.test.ts`, `tests/badge-tooltip-contract.test.ts` (jsdom). All of them run in the vuetify, primevue and shadcn Vitest projects. |
 | R14 | Slot inference/runtime payloads, attrs targets, class/style merge and exactly-once native handlers | Partial | `vue-tsc` on `Templates.vue` in the packed consumers; `tests/provider-props.test.ts`; attribute targets documented in `docs/guide/providers.md`. The shared suites run on all three providers. |
 | R15 | Built-in icons/resolver/slots on every provider; neutral root declarations without Vuetify types | Met (jsdom) | `tests/icons.test.ts` on all three projects; commit `c250d4b`. |
-| R16 | Skeleton grammar/repetition/grid fixtures; customHTML trusted-only documentation and escaped normal text | Met (jsdom) | `tests/colors.test.ts`, `tests/extracted.test.ts` (commits `7ab2025`, `0aacfd6`); customHTML deprecation in `tests/navigation-contract.test.ts` (commit `ed1666b`). Breakpoint behavior has not been checked in a real browser. |
-| R17 | Token extraction/docs coverage and computed-state colors; dark/RTL/Teleport/multi-app checks | Partial | `docs:build` token scan; `tests/overlay-scope.test.ts`, `tests/colors.test.ts` (commit `2894dea`). One earlier manual browser check on the packed PrimeVue consumer (M2-PROGRESS.md). Missing: a recorded browser matrix (section C). PrimeVue tooltips take `zIndexOverlay` and keep a global `pt.directives.tooltip.root` style (owner decision; `tests/badge-tooltip-contract.test.ts`). |
-| R18 | Automated browser semantics and keyboard/focus suites plus targeted manual accessibility review | **Not met** | jsdom keyboard and focus tests exist (`tests/shadcn-adapter.test.ts`, `tests/primevue-adapter.test.ts`, `tests/navigation.test.ts`), but they are not browser execution. Manual smoke check in Chromium on the packed consumers at `d5904ac` (2026-11-04): all 20 rendered components mount without console errors on PrimeVue and shadcn-vue; keyboard focus opens the WTruncatedText tooltip with `role="tooltip"` and `aria-describedby` on both; WDropdown opens with Enter, focuses the first item, and Escape closes it and returns focus to the activator on both; shadcn-vue tooltips close when the page scrolls (reka-ui behavior, documented). This is not the automated suite. Needed: a versioned browser harness running the section C regressions on three providers × light/dark × LTR/RTL, plus a recorded manual review. |
-| R19 | SSR import/render, server-client hydration and concurrent-request/multi-app isolation fixtures | Partial | `renderToString` and concurrent-request isolation: `tests/navigation-ssr.test.ts`, `tests/stacks-ssr.test.ts`, `tests/badge-tooltip-ssr.test.ts`, `tests/accordion-shadcn-ssr.test.ts`, `tests/defaults.test.ts`; packed SSR builds (`scripts/consumer/server.js`). **Not met:** server-to-client hydration in a browser, with warnings captured (section D). |
-| R20 | EN/AR breaking migration checklist and external Aware compatibility evidence or explicit blocker | Partial | `docs/guide/migration.md`, `docs/ar/guide/migration.md` (commit `a8e6979`). Missing: external Aware compatibility evidence, or an explicit blocker recorded by the owner. |
+| R16 | Skeleton grammar/repetition/grid fixtures; customHTML trusted-only documentation and escaped normal text | Met (unit + viewport samples) | `tests/colors.test.ts`, `tests/extracted.test.ts`, customHTML deprecation tests, plus actual skeleton column ratios at 390px and 1280px in `tests/browser/contracts.spec.ts`. See BROWSER-VERIFICATION.md. |
+| R17 | Token extraction/docs coverage and computed-state colors; dark/RTL/Teleport/multi-app checks | Partial | The versioned Chromium matrix now checks computed button state colors, dark-mode foreground/surface tokens, RTL, Teleport and independent app scopes. Gallery screenshots are retained. `docs:build` still scans documented tokens; the unit suites cover broader token/override contracts. See BROWSER-VERIFICATION.md for exact scope, versions and results. |
+| R18 | Automated browser semantics and keyboard/focus suites plus targeted manual accessibility review | Partial | `tests/browser/contracts.spec.ts` and `playwright.config.ts` execute real Chromium keyboard/focus, dropdown/tab/tree, overlay/persistence/Escape, geometry, tooltip and reduced-motion regressions on three providers × light/dark × LTR/RTL × small/wide. Earlier manual smoke evidence remains historical. Missing: targeted manual screen-reader/accessibility review; gallery images are not pixel-diff parity baselines. See BROWSER-VERIFICATION.md. |
+| R19 | SSR import/render, server-client hydration and concurrent-request/multi-app isolation fixtures | Met (Chromium / Vue+Vite) | The packed browser harness runs raw Node SSR, deterministic concurrent-request IDs, actual server-client hydration without root replacement, repeated references, initially closed/open modal and drawer states, focus and Teleport cleanup, and two roots with independent plugins/idPrefix values. Browser errors and Vue server/client warnings fail the tests. Scope and run evidence: BROWSER-VERIFICATION.md. |
+| R20 | EN/AR breaking migration checklist and external Aware compatibility evidence or explicit blocker | Met (scoped pilot) | `docs/guide/migration.md`, `docs/ar/guide/migration.md`; actual Aware Active Sessions integration on `codex/aware-wakeb-components-alpha`, packed archive and host build. Follow-up `npm test` passes all 126 integration tests, 4 helper tests and 4 Chromium locale/theme tests, including all 43 StreamingHandle tests without exclusions. Scope, preservation and remaining theme warnings: AWARE-INTEGRATION.md. This is not full-application migration or release approval. |
 | R21 | Capability manifests accurately reflect coverage; unsupported mandatory features block stable adapter status | Met for alpha | `SUPPORTED` in `src/adapters/manifest.ts` matches the renderers in `src/adapters/*`; unsupported rows raise `WAKEB_COMPONENT_UNSUPPORTED`. shadcn stays alpha. |
 | R22 | EN/AR VitePress build; Jervis DevOps evidence; archive freshness/trusted deployment receipt verification | Partial | EN/AR `docs:build` inside `npm run check` (reported passing); `scripts/verify-deployment.mjs` compares against the local receipt. **Not met:** no Jervis DevOps pipeline run and no verified publication at wakeb-components.surge.sh for this branch. |
-| R23 | Type tests reject provider-native style values; every portable value renders on every provider with expected computed styles; each alias maps correctly and warns once in development only; mapping tables match tested versions | Partial | `tests/vocabulary.test.ts`, `tests/colors.test.ts`; consumer `@ts-expect-error` cases; production bundle check for stripped warnings (commits `d6f7b4f`, `7ab2025`). Missing: browser computed-style checks on every provider. Owner decision (2026-11-04): during the one-major deprecation window, TypeScript accepts the deprecated values the runtime still renders and flags them with `@deprecated` (`WakebDeprecatedColor` on WLoading `color` and WAvatarStack and WUserBadge `avatarColor`; `WakebDeprecatedBadgeType` on badge `type` and WBadgeStack `badgeType`; `WakebDeprecatedVariant` on variants). Strict `WakebColor` and `WakebBadgeType` stay exported unchanged. Consumer cases: the deprecated values compile, and the strict types still reject them with `@ts-expect-error`. |
+| R23 | Type tests reject provider-native style values; every portable value renders on every provider with expected computed styles; each alias maps correctly and warns once in development only; mapping tables match tested versions | Partial | Unit vocabulary/color, alias and production-warning tests and strict packed type consumers remain. Chromium now checks secondary normal/hover/disabled/loading colors, dark surfaces/foregrounds and override precedence. Missing: an exhaustive browser computed-style matrix for every portable style value and deprecated alias. The one-major deprecated-type policy remains unchanged; see the migration guide and BROWSER-VERIFICATION.md. |
 | R24 | auto/reuse/install on each provider in both install orders; host theme/defaults unchanged after reuse; WAKEB_HOST_PROVIDER_MISSING and WAKEB_INSTALL_CONFLICT triggered; two apps isolated | Met (jsdom) | `tests/plugin.test.ts` on all three projects; shadcn modes in M5-DECISION.md. |
 | R25 | EN/AR install, switching and migration pages contain the disclosure and checklist; no "zero changes" claim without it | Met (docs content) | `docs/guide/{installation,switching,migration}.md` and `docs/ar/guide/{installation,switching,migration}.md` (commits `a8e6979`, `ccdf74d`). The published site is not verified (R22). |
 
-Milestone summary at `92f4657`:
+Milestone summary (historical implementation, browser work updated 2026-11-05):
 
 | Milestone | Status |
 | --- | --- |
-| M0 | Fixes landed (`d8c75ad`); the 0.7.x patch release has not been cut (CHANGELOG "Unreleased (0.7.x)"); real-browser regression cases not recorded |
+| M0 | Fixes landed (`d8c75ad`); the 0.7.x patch release has not been cut (CHANGELOG "Unreleased (0.7.x)"); automated Chromium regressions now recorded in BROWSER-VERIFICATION.md |
 | M1 | Accepted (M1-DECISION.md) |
 | M2 | Exit criteria met (M2-PROGRESS.md) |
-| M3, M4 | Implemented and passing shared jsdom/SSR suites on Vuetify and PrimeVue; **browser exit evidence missing** |
-| M5 | 21/21 in jsdom and SSR; real-browser evidence pending; **not exited** |
+| M3, M4 | Shared jsdom/SSR suites plus the packed Chromium regression/hydration matrix; manual accessibility and complete style-value acceptance remain open (R18, R23) |
+| M5 | 21/21 gallery mounting/hydration in Chromium plus shared browser regressions; remains alpha pending the remaining acceptance gates; see BROWSER-VERIFICATION.md |
 | M6 | Docs and migration guides written; release notes drafted (RELEASE-NOTES-DRAFT.md); **Jervis DevOps and publication evidence missing** |
 
 ## Provider/component completion grid
 
 A stable release requires every cell to pass shared portable behavior, type/slot/model contracts and applicable browser/SSR checks. Native/shared components still run inside each provider fixture to detect style/integration conflicts.
 
-Cell values at `92f4657`:
+Cell values (updated 2026-11-05):
 
-- **jsdom+SSR:** the renderer exists, and the shared contract and SSR (`renderToString`) suites pass in jsdom. Real-browser and hydration checks are still pending, so no cell is browser-verified and no cell is stable.
+- **unit+SSR+Chromium gallery:** the renderer has shared unit/SSR coverage and actual packed-consumer gallery hydration in Chromium. The named browser regressions have the coverage detailed in BROWSER-VERIFICATION.md. This is not an exhaustive per-prop browser certification or stable-release status.
 - Every provider now has a renderer for every component; no cell is unsupported.
 
 | Component | Vuetify | PrimeVue | shadcn |
 | --- | --- | --- | --- |
-| WTruncatedText | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WSegmentedProgress | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WSemiCircleGauge | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WAvatarStack | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WLoading | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WPageSkeleton | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WVerticalSteps | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WButton | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WBadge | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WAccordion | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WBadgeStack | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WUserBadge | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WTooltipBtn | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WTabs | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WTree | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WDropdown | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WCarousel | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WExportDropdown | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WBaseSidebar | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WModal | jsdom+SSR | jsdom+SSR | jsdom+SSR |
-| WDrawer | jsdom+SSR (Wakeb-owned layout host, no `VApp`/`VLayout`; Escape close; packed SSR) | jsdom+SSR (packed SSR) | jsdom+SSR (packed SSR) |
+| WTruncatedText | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WSegmentedProgress | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WSemiCircleGauge | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WAvatarStack | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WLoading | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WPageSkeleton | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WVerticalSteps | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WButton | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WBadge | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WAccordion | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WBadgeStack | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WUserBadge | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WTooltipBtn | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WTabs | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WTree | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WDropdown | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WCarousel | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WExportDropdown | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WBaseSidebar | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WModal | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery | unit+SSR+Chromium gallery |
+| WDrawer | unit+SSR+Chromium gallery/overlays | unit+SSR+Chromium gallery/overlays | unit+SSR+Chromium gallery/overlays |
 
 
 ## Required fixtures

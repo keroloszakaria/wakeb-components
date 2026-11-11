@@ -6,6 +6,9 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { PROVIDER_PEERS } from "./peer-matrix.mjs";
+import vuePlugin from "@vitejs/plugin-vue";
+import { examples } from "./component-examples.mjs";
+import { splitSelectorList } from "./css-selectors.mjs";
 
 /*
  * Shared machinery for packed-consumer checks (SPEC R09, R10): pack once, install one isolated consumer
@@ -56,6 +59,10 @@ export function packTarball(work) {
 export function writeConsumerSources(dir, framework) {
   mkdirSync(join(dir, "plugins"), { recursive: true });
   for (const file of sharedFiles) copyFileSync(join(SHARED, file), join(dir, file));
+  mkdirSync(join(dir, 'docs-examples'), { recursive: true });
+  for (const example of examples) writeFileSync(join(dir, 'docs-examples', example.name + '.vue'), example.source);
+  writeFileSync(join(dir, 'docs-examples/tsconfig.json'), JSON.stringify({ compilerOptions: { noEmit: true, strict: true, target: 'ES2022', module: 'ESNext', moduleResolution: 'Bundler', lib: ['ES2022', 'DOM'] }, vueCompilerOptions: { strictTemplates: true }, include: ['*.vue'] }));
+  writeFileSync(join(dir, 'docs-examples.js'), `import { createApp, h } from 'vue'\nimport wakeb from './plugins/wakeb-components.js'\nimport 'wakeb-components/style.css'\n${examples.map((entry, i) => `import Example${i} from './docs-examples/${entry.name}.vue'`).join('\n')}\ncreateApp({render:()=>h('main', [${examples.map((_, i) => `h(Example${i})`).join(',')}])}).use(wakeb).mount('#app')\n`);
   writeFileSync(join(dir, "plugins/wakeb-components.js"), `import { createWakebComponents } from 'wakeb-components'\n\nexport default createWakebComponents({ framework: '${framework}' })\n`);
 }
 
@@ -82,7 +89,7 @@ const OVERLAY_MODULE = {
  */
 function assertScopedAdapterCss(css, js) {
   const rules = css.replace(/\/\*[\s\S]*?\*\//g, "").replace(/@keyframes[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/g, "");
-  const selectors = [...rules.matchAll(/(?:^|[{};])\s*([^{};@]+)\{/g)].flatMap(([, list]) => list.split(",").map((part) => part.trim()));
+  const selectors = [...rules.matchAll(/(?:^|[{};])\s*([^{};@]+)\{/g)].flatMap(([, list]) => splitSelectorList(list));
   assert(selectors.length > 50, "shipped CSS has rules");
   // A rule's first compound selector must hold a class or attribute, never a bare element.
   const unscoped = selectors.filter((selector) => !/^([a-z][\w-]*)?[.[]/.test(selector));
@@ -116,17 +123,21 @@ export async function verifyConsumer(dir, framework) {
   }
   // Template slot payloads and handler types as vue-tsc infers them from the facades (SPEC R14).
   run([join(root, "node_modules/vue-tsc/bin/vue-tsc.js"), ...compilerFlags, "Templates.vue"], dir);
+  run([join(root, "node_modules/vue-tsc/bin/vue-tsc.js"), '-p', 'docs-examples/tsconfig.json'], dir);
 
   const vite = await import(pathToFileURL(join(dir, "node_modules/vite/dist/node/index.js")).href);
   const { wakebComponents } = await import(pathToFileURL(join(dir, "node_modules/wakeb-components/dist/vite.js")).href);
-  const browserBuild = async (entry, outDir) => {
+  // Exercise TS selection as well as JS on each installed Vite generation, without a host esbuild dependency.
+  writeFileSync(join(dir, "plugins/wakeb-components.ts"), `import { createWakebComponents, type WakebFramework } from 'wakeb-components'\nexport default createWakebComponents({ framework: '${framework}' satisfies WakebFramework })\n`);
+  const browserBuild = async (entry, outDir, configFile) => {
     const modules = new Set();
     writeFileSync(join(dir, `${outDir}.html`), `<div id="app"></div><script type="module" src="/${entry}"></script>\n`);
-    await vite.build({ root: dir, configFile: false, logLevel: "warn", plugins: [wakebComponents(), collector(modules)], build: { outDir, rollupOptions: { input: join(dir, `${outDir}.html`) } } });
+    await vite.build({ root: dir, configFile: false, logLevel: "warn", plugins: [vuePlugin(), wakebComponents({ configFile }), collector(modules)], build: { outDir, rollupOptions: { input: join(dir, `${outDir}.html`) } } });
     const assets = (ext) => readdirSync(join(dir, outDir, "assets")).filter((file) => file.endsWith(ext)).map((file) => readFileSync(join(dir, outDir, "assets", file), "utf8")).join("\n");
     return { modules: [...modules], css: assets(".css"), js: assets(".js") };
   };
   const full = await browserBuild("browser.js", "browser-dist");
+  await browserBuild("docs-examples.js", "docs-examples-dist");
   // Development warnings sit behind process.env.NODE_ENV, so a production bundle drops their text (SPEC R07).
   assert(!/WAKEB_(DEPRECATED_VALUE|UNKNOWN_VALUE|ICON_UNRESOLVED|PROVIDER_PROP_IGNORED)/.test(full.js), `${framework} production bundle keeps development warning text`);
   // providerProps filtering still runs in production; only its diagnostics are dropped.
@@ -135,7 +146,7 @@ export async function verifyConsumer(dir, framework) {
   assert(full.js.includes("M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z"), `${framework} bundle contains the built-in $expand icon`);
   if (framework !== "vuetify") assert(full.js.includes("M3,3H21V21H3V3M5,5V19H19V5H5Z"), `${framework} bundle contains the icon fallback box`);
   if (framework === "vuetify") assert(full.modules.some((id) => /adapters\/vuetify\/WBadge\.js$/.test(id)), "vuetify bundle renders WBadge, which warns in development");
-  const button = await browserBuild("button-only.js", "button-dist");
+  const button = await browserBuild("button-only.js", "button-dist", "plugins/wakeb-components.ts");
 
   await vite.build({ root: dir, configFile: false, logLevel: "warn", plugins: [wakebComponents()], build: { ssr: join(dir, "server.js"), outDir: "ssr-dist" } });
   const server = await import(pathToFileURL(join(dir, "ssr-dist/server.js")).href);

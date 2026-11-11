@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WCarousel
 
 عرض شرائح بمحتوى مخصص وتحكم في التشغيل ومؤشرات قابلة للوصول.
+
+::: info نسخة تجريبية 0.8.0-alpha.0
+تصف الصفحة الواجهة المحلية غير المنشورة للمزودات الثلاثة. ثبّت [الأرشيف التجريبي](../guide/installation) وأكمل [إعداد المزود](../guide/providers) أولًا؛ واجهة 0.7 العامة مختلفة.
+:::
+
+## معاينة
+
+تستخدم المعاينة Vuetify. تُفحص الواجهة العامة نفسها بصورة مستقلة على PrimeVue وshadcn-vue؛ راجع [التحقق](../guide/verification).
+
+<CompositionPlayground initial="carousel" />
 
 ## الاستخدام
 
@@ -9,14 +19,34 @@
 <script setup lang="ts">
 import { WCarousel } from 'wakeb-components'
 </script>
+
 <template>
   <div style="position:relative;height:240px"><WCarousel :slides="['First', 'Second']" :cycle="false" show-indicators><template #slide="{slide}">{{slide}}</template></WCarousel></div>
 </template>
 ```
 
-## المدخلات
+## أمثلة
 
-| المعامل | النوع | الافتراضي | الوصف |
+### شرائح يدوية
+
+أوقف التشغيل التلقائي واربط رقم الشريحة الذي يبدأ بصفر.
+
+```vue
+<script setup lang="ts">
+import { WCarousel } from 'wakeb-components'
+import { ref } from 'vue'
+const slide = ref(0)
+</script>
+
+<template>
+  <div style="position:relative;height:160px"><WCarousel v-model="slide" :slides="['One', 'Two']" :cycle="false" show-indicators><template #slide="{ slide }">{{ slide }}</template></WCarousel></div>
+  <p>Slide: {{ slide }}</p>
+</template>
+```
+
+## الخصائص
+
+| الخاصية | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `slides` | `readonly unknown[]` | `[]` | عناصر تمر كما هي إلى slot الشريحة. |
 | `modelValue` | `number` | `undefined` | فهرس خارجي اختياري؛ الاختيار المحلي يبدأ من صفر. |
@@ -34,9 +64,19 @@ import { WCarousel } from 'wakeb-components'
 
 `update:modelValue(index: number)` مرة عند تغيير الفهرس محليًا؛ مزامنة قيمة الأب الصالحة لا تكرر الحدث.
 
+```ts
+"update:modelValue": [index: number];
+```
+
 ## Slots
 
 `slide`: يستقبل `{slide,index}`؛ `prev` و`next`: يستقبلان `{props}` بالمفاتيح `icon` و`class` و`onClick` و`aria-label` (يمرر Vuetify قيم نافذته الخاصة)؛ اربطها بأزرار التنقل.
+
+```ts
+slide?(props: { slide: unknown; index: number }): unknown;
+prev?(props: { props: Record<string, unknown> }): unknown;
+next?(props: { props: Record<string, unknown> }): unknown;
+```
 
 ## متغيرات CSS
 
@@ -51,10 +91,18 @@ import { WCarousel } from 'wakeb-components'
 
 جذر العرض المتتابع (VCarousel الذي يحمل `role="region"`). حاوية المؤشرات عقدة جذرية ثانية لا تستقبلها، وكل مؤشر يستقبل `indicatorAttrs`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
+## التفاعل بالكيبورد
+
+| المفتاح | السلوك |
+| --- | --- |
+| `Left / Right` | الانتقال بين أزرار المؤشرات؛ ينعكس الاتجاه مع RTL. |
+| `Home / End` | اختيار المؤشر الأول أو الأخير. |
+| `Enter / Space` | تفعيل زر مؤشر أو سهم. |
+
 ## الوصول وحدود السلوك
 
 المكوّن يحتفظ بجذرين دون حاوية إضافية. ضعه داخل أب position:relative لأن المؤشرات موضوعة absolute على بعد 2rem من أسفله. الخصائص العادية تستهدف VCarousel. مؤشرات Vuetify الأصلية مخفية، وshowIndicators يتحكم في المؤشرات المخصصة. المؤشرات العامة type=button ولها أسماء وحالة حالية وتدعم اليمين واليسار مع عكس RTL وHome/End وEnter/Space. أزرار السابق والتالي تحتفظ بسلوك Vuetify. الشرائح تُركب عند الحاجة. استخدم فهارس محدودة ضمن النطاق وفواصل زمنية موجبة. Wakeb يملك مؤقت التشغيل التلقائي على كل المزودين (مؤقت VCarousel الخاص معطل): يتقدم مرة كل فاصل ويلتف، ويعيد بدء الفاصل بعد كل تغيير للفهرس، ويتوقف أثناء وجود المؤشر فوق العرض أو مؤشراته، وأثناء وجود التركيز داخل أي منهما، وعندما تكون الصفحة مخفية، وكلما فضّل المستخدم تقليل الحركة. يبدأ المؤقت بعد التركيب فقط ويُزال مع مستمعيه عند الإزالة؛ المثال يبدأ متوقفًا ويوفر تحكمًا في cycle. استخدم cycle=false للتجارب الثابتة أو قليلة الحركة؛ حركة المؤشرات تحترم reduced-motion وانتقالات الشرائح من خصائص Vuetify. المحتوى من المشروع. Aware يحتفظ بعكس معنى hideDelimiters=true وبسلوك type القديم للمؤشرات. Aware يعطل مفاتيح المؤشرات وتنسيق التركيز الإضافيين للاحتفاظ بالسلوك الأصلي. على PrimeVue يرسم Wakeb المنطقة والشرائح والأسهم بنفسه، لأن Carousel في PrimeVue يعرض صفحات من عدة عناصر بمؤقته الخاص. الشرائح تُركَّب عند أول زيارة وتبقى مركّبة وتتبدل دون حركة انتقال أو إيماءات سحب. الأسهم الافتراضية أزرار أصلية بأيقونتي $prev و$next المدمجتين وبالاسمين Previous visual وNext visual (وبالعربية مع locale ar)؛ ومفاتيح الأسهم يمينًا ويسارًا عليها تنقل الشريحة وتُبقي التركيز كما في Vuetify. الخصائص تستهدف div المنطقة الذي يرسمه Wakeb. على shadcn-vue تُستخدم المنطقة والشرائح والأسهم والمؤشرات وقواعد إيقاف التشغيل التلقائي نفسها كما في PrimeVue، لأن Carousel في shadcn-vue يحتاج إلى Embla ولا يوفّر تشغيلًا تلقائيًا ولا مؤشرات.
 
-## جرّب بنفسك
+---
 
-<CompositionPlayground initial="carousel" />
+لاستخدام هذا العقد مع agent يكتب الكود، راجع [الـskill وMCP](../guide/agents).

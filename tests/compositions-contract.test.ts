@@ -119,6 +119,10 @@ describe(`WExportDropdown contract (${framework})`, () => {
 
   it("carries the theme scope and zIndexOverlay into the teleported menu while menuStyle wins", async () => {
     const w = render(WExportDropdown, { props: { menuStyle: { "--wakeb-ui-primary": "#abcdef" } }, wakeb: { theme, direction: "rtl" } });
+    const activator = w.get("button");
+    expect(activator.attributes("data-wakeb-theme")).toBe("dark");
+    expect(activator.attributes("dir")).toBe("rtl");
+    expect((activator.element as HTMLElement).style.getPropertyValue("--wakeb-ui-primary")).toBe("#123456");
     await open(w.get("button"));
     const menu = document.querySelector<HTMLElement>('[role="menu"]')!;
     const scoped = menu.closest<HTMLElement>("[data-wakeb-theme]")!;
@@ -127,6 +131,22 @@ describe(`WExportDropdown contract (${framework})`, () => {
     expect(scoped.style.getPropertyValue("--wakeb-ui-primary")).toBe("#123456");
     expect(stackedZ(menu)).toBe("3100");
     expect(getComputedStyle(menu).getPropertyValue("--wakeb-ui-primary")).toBe("#abcdef");
+  });
+
+  it("forwards location and offset to the provider menu, or keeps opening where the provider cannot place it", async () => {
+    const w = render(WExportDropdown, { props: { location: "bottom end", offset: 8 } });
+    await open(w.get("button"));
+    if (vuetify) {
+      const menu = w.findComponent({ name: "VMenu" });
+      expect(menu.props("location")).toBe("bottom end");
+      expect(Number(menu.props("offset"))).toBe(8);
+    } else if (framework === "shadcn") {
+      const menu = document.querySelector<HTMLElement>('[role="menu"]')!;
+      expect(menu.getAttribute("data-side")).toBe("bottom");
+      expect(menu.getAttribute("data-align")).toBe("end");
+    }
+    await clickRow("PDF");
+    expect(w.emitted("select")).toEqual([["pdf"]]);
   });
 
   it("uses localized default formats under the Arabic locale", async () => {
@@ -569,5 +589,26 @@ describe.runIf(framework === "primevue")("PrimeVue WDrawer overlay host (R18, R1
     const dialogZ = Number(stackedZ(document.querySelector<HTMLElement>(".wakeb-modal")));
     expect(drawerZ).toBeGreaterThan(0);
     expect(dialogZ).toBeGreaterThan(drawerZ);
+  });
+});
+
+describe(`WModal bare mode (${framework})`, () => {
+  it("renders only the default slot and keeps the dialog name and Escape dismissal", async () => {
+    const w = render(WModal, {
+      props: { modelValue: true, bare: true, persistent: false, title: "Camera preview", closable: true },
+      slots: { default: () => h("section", { class: "caller-surface" }, "Own layout"), actions: () => h("button", "Never") },
+    });
+    await settle();
+    const dialog = document.querySelector<HTMLElement>(".wakeb-modal--bare")!;
+    expect(dialog).not.toBeNull();
+    expect(document.querySelector(".caller-surface")?.textContent).toBe("Own layout");
+    expect(document.querySelector(".wakeb-modal__header")).toBeNull();
+    expect(document.querySelector(".wakeb-modal__content")).toBeNull();
+    expect(document.querySelector(".wakeb-modal__actions")).toBeNull();
+    expect(document.querySelector('[aria-label="Camera preview"]')).not.toBeNull();
+    (document.querySelector<HTMLElement>(".caller-surface") ?? dialog).focus();
+    pressEscape();
+    await settle();
+    expect(w.emitted("update:modelValue")).toEqual([[false]]);
   });
 });

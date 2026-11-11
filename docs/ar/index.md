@@ -3,7 +3,7 @@ layout: home
 hero:
   name: Wakeb Components
   text: واجهة مشتركة. بعقد واضح.
-  tagline: واحد وعشرون مكونًا Vue 3 مع Vuetify، وتفاعل قابل للوصول، ومساحة لتصميم مشروعك.
+  tagline: 39 مكونًا Vue 3 بعقد موحد عبر Vuetify وPrimeVue وshadcn-vue، وتوثيق باللغتين وأدوات للـagents.
   actions:
     - theme: brand
       text: ابدأ الاستخدام
@@ -15,7 +15,7 @@ features:
   - title: جاهزة للاستخدام
     details: استيراد مباشر وprops typed، بدون store أو router أو إعدادات خاصة بشركة.
   - title: جاهزة للتخصيص
-    details: slots وattributes ومتغيرات CSS مستقلة، مع الاحتفاظ بثيم Vuetify وهويتك.
+    details: slots وattributes ومتغيرات CSS مستقلة، مع الاحتفاظ بثيم مزودك وهويتك.
   - title: تحقق من الحزمة نفسها
     details: اختبارات Tooltip بالكيبورد والتحديث التفاعلي وعرّافات SVG وبناء المستهلك والمتصفح وSSR.
 ---
@@ -35,3 +35,9 @@ features:
 الإصدار 0.7.0 منشور على npm، أما الإصدار التجريبي 0.8.0-alpha.0 بمزودات Vuetify وPrimeVue وshadcn-vue فلم يُنشر بعد. راجع [دليل التثبيت](/ar/guide/installation).
 
 <OverlayPlayground />
+
+<FormsPlayground />
+
+<ElementsPlayground />
+
+[أدوات الـagents: Skill وMCP](/ar/guide/agents) · [التوافق والتغطية](/ar/guide/verification)

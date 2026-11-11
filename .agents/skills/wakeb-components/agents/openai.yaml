@@ -1,0 +1,4 @@
+interface:
+  display_name: "Wakeb Components"
+  short_description: "Build Vue interfaces with verified Wakeb contracts"
+  default_prompt: "Use $wakeb-components to build a typed, accessible Vue interface on the selected provider."

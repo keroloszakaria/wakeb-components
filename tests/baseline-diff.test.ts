@@ -31,8 +31,9 @@ beforeAll(() => {
 describe("baseline-to-current API diff (R12)", () => {
   it("covers every baseline component with a compiled renderer", () => {
     expect(baseline.packageVersion).toBe("0.7.0");
-    expect(Object.keys(renderers).map((file) => file.match(/(W\w+)\.vue$/)![1]).sort()).toEqual(
-      baseline.components.map((component: { name: string }) => component.name).sort(),
+    // Components added after 0.7.0 (WTextField, WPopover) are additive; every baseline one keeps a renderer.
+    expect(Object.keys(renderers).map((file) => file.match(/(W\w+)\.vue$/)![1])).toEqual(
+      expect.arrayContaining(baseline.components.map((component: { name: string }) => component.name)),
     );
     for (const component of baseline.components) {
       const ids = new Set(differences.map((d) => d.id));

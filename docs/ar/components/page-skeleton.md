@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WPageSkeleton
 
 صفوف Skeleton متجاوبة على شبكة Wakeb بوصف بيانات typed.
+
+::: info نسخة تجريبية 0.8.0-alpha.0
+تصف الصفحة الواجهة المحلية غير المنشورة للمزودات الثلاثة. ثبّت [الأرشيف التجريبي](../guide/installation) وأكمل [إعداد المزود](../guide/providers) أولًا؛ واجهة 0.7 العامة مختلفة.
+:::
+
+## معاينة
+
+تستخدم المعاينة Vuetify. تُفحص الواجهة العامة نفسها بصورة مستقلة على PrimeVue وshadcn-vue؛ راجع [التحقق](../guide/verification).
+
+<ComponentPlayground initial="page-skeleton" />
 
 ## الاستخدام
 
@@ -9,22 +19,47 @@
 <script setup lang="ts">
 import { WPageSkeleton } from 'wakeb-components'
 </script>
+
 <template>
   <WPageSkeleton :config="[{ repeat: 2, cols: 12, md: 6, variant: 'card', items: [{ type: 'text' }, { type: 'paragraph' }] }]" label="Loading report" />
 </template>
 ```
 
-## المدخلات
+## أمثلة
 
-| المعامل | النوع | الافتراضي | الوصف |
+### أعمدة متجاوبة
+
+عمودان عند md ويتراصان على الشاشات الأصغر.
+
+```vue
+<script setup lang="ts">
+import { WPageSkeleton } from 'wakeb-components'
+</script>
+
+<template>
+  <WPageSkeleton :config="[{ repeat: 2, cols: 12, md: 6, items: [{ type: 'heading, paragraph' }] }]" label="Loading cards" />
+</template>
+```
+
+## الخصائص
+
+| الخاصية | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `config` | `readonly SkeletonRow[]` | `required` | وصف الصفوف؛ المصفوفة الفارغة تعرض حالة فارغة. راجع نماذج البيانات. |
 | `direction` | `"row" \| "column"` | `"column"` | اتجاه flex للحاوية دون الاعتماد على Tailwind. |
 | `label` | `string` | `"Loading content"` | اسم الحالة لقارئ الشاشة؛ ترجمه داخل المشروع. |
 
+## الأحداث
+
+لا توجد أحداث مخصصة معلنة. تتبع أحداث DOM وجهة السمات أدناه.
+
+
+
 ## Slots
 
 لا توجد slots؛ التكوين عبر config وheader/items وclasses ونقاط توقف Vuetify.
+
+
 
 ## متغيرات CSS
 
@@ -36,6 +71,10 @@ import { WPageSkeleton } from 'wakeb-components'
 ## وجهة السمات
 
 العنصر الجذري `div.page-skeleton` الذي يحمل `role="status"` على كل المزودين. قيمتا `role` و`aria-busy` ملك لـWakeb وتغلبان على سمات المستخدم؛ سمِّ الحالة عبر `label`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
+
+## التفاعل بالكيبورد
+
+لا يضيف المكون أمر كيبورد خاصًا بـWakeb. تحتفظ العناصر التفاعلية الأصلية أو المضافة عبر slots بسلوكها. راجع تفاصيل التركيز والأدوار واختلافات المزودات أدناه.
 
 ## الوصول وحدود السلوك
 
@@ -62,6 +101,6 @@ import { WPageSkeleton } from 'wakeb-components'
 | `table-row` | ست خلايا |
 | `card` | كتلة صورة بارتفاع 150px وعنوان | في shadcn-vue تطابق القواعد والشبكة وأشكال العظام ما في PrimeVue؛ وكل عظمة هي Skeleton من shadcn-vue (data-slot="skeleton" مع aria-hidden)، تنبض بـ--accent و--radius بدل موجة Wakeb، ويتوقف النبض مع reduced motion.
 
-## جرّب بنفسك
+---
 
-<ComponentPlayground initial="page-skeleton" />
+لاستخدام هذا العقد مع agent يكتب الكود، راجع [الـskill وMCP](../guide/agents).

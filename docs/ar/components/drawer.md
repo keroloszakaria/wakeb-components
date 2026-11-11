@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WDrawer
 
 حاوية جانبية مؤقتة مشروطة باتجاهات RTL ومحتوى قابل للتمرير وإجراءات قابلة للتركيب. لا تحتاج layout حاضنًا على أي مزود.
+
+::: info نسخة تجريبية 0.8.0-alpha.0
+تصف الصفحة الواجهة المحلية غير المنشورة للمزودات الثلاثة. ثبّت [الأرشيف التجريبي](../guide/installation) وأكمل [إعداد المزود](../guide/providers) أولًا؛ واجهة 0.7 العامة مختلفة.
+:::
+
+## معاينة
+
+تستخدم المعاينة Vuetify. تُفحص الواجهة العامة نفسها بصورة مستقلة على PrimeVue وshadcn-vue؛ راجع [التحقق](../guide/verification).
+
+<OverlayPlayground initial="drawer" />
 
 ## الاستخدام
 
@@ -11,15 +21,35 @@ import { WDrawer } from 'wakeb-components'
 import { ref } from 'vue'
 const open = ref(false)
 </script>
+
 <template>
   <button type="button" @click="open = true">Open</button>
   <WDrawer v-model="open" title="Details"><template #content>Details content</template></WDrawer>
 </template>
 ```
 
-## المدخلات
+## أمثلة
 
-| المعامل | النوع | الافتراضي | الوصف |
+### جهة منطقية
+
+تتبع end اتجاه LTR أو RTL المضبوط.
+
+```vue
+<script setup lang="ts">
+import { WButton, WDrawer } from 'wakeb-components'
+import { ref } from 'vue'
+const open = ref(false)
+</script>
+
+<template>
+  <WButton title="Open details" @click="open = true" />
+  <WDrawer v-model="open" position="end" title="Details"><p>Drawer content</p></WDrawer>
+</template>
+```
+
+## الخصائص
+
+| الخاصية | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `modelValue` | `boolean` | `false` | حالة الفتح؛ التغيير المحلي يرسل حدثًا واحدًا. |
 | `title` | `string` | `""` | عنوان مترجم من المشروع. |
@@ -38,9 +68,25 @@ const open = ref(false)
 
 `update:modelValue(value: boolean)` للتغييرات المحلية. `close()` من دالة زر الإغلاق فقط بعد تحديث الموديل؛ الخلفية وتغيير الأب لا يرسلان close.
 
+```ts
+"update:modelValue": [value: boolean];
+close: [];
+```
+
 ## Slots
 
 `title` و`header-actions` و`close-button {close,label}` و`content` و`default` و`actions` و`loading {label}` و`loading-overlay {label}`. content وdefault يظهران بالتتابع؛ القدم تظهر فقط عند توفير actions.
+
+```ts
+title(): unknown;
+"header-actions"(): unknown;
+"close-button"(props: { close: () => void; label: string }): unknown;
+content(): unknown;
+default(): unknown;
+actions(): unknown;
+loading(props: { label: string }): unknown;
+"loading-overlay"(props: { label: string }): unknown;
+```
 
 ## متغيرات CSS
 
@@ -59,10 +105,17 @@ const open = ref(false)
 
 العنصر الذي يحمل `.wakeb-drawer`: على Vuetify جذر VNavigationDrawer، وهو عنصر `<div role="dialog">` منقول يبقى في DOM تحت `inert` أثناء إغلاق اللوحة، وعلى PrimeVue العنصر المنقول الذي يحمل `role="dialog"` ولا يوجد إلا أثناء فتح اللوحة. يسميه `title` ثم `ariaLabel` على كل المزودين. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر. وعلى shadcn-vue هو عنصر reka-ui المنقول الذي يحمل `role="dialog"`، ولا يوجد إلا أثناء فتح اللوحة، ويسميه أيضًا `title` ثم `ariaLabel`.
 
+## التفاعل بالكيبورد
+
+| المفتاح | السلوك |
+| --- | --- |
+| `Tab / Shift+Tab` | نقل التركيز داخل اللوحة المفتوحة. |
+| `Escape` | الإغلاق إلا مع persistent. |
+
 ## الوصول وحدود السلوك
 
-على Vuetify: تُرسم بـVNavigationDrawer داخل VLayout خاص بـWakeb يُنقل إلى حاوية الطبقات الخاصة بـVuetify في body، فلا تحتاج VApp ولا VLayout. وداخل VApp تُسجَّل اللوحة في هذا التخطيط الداخلي وحده، فلا يتغير تخطيط التطبيق ولا موضع VMain. هي role=dialog مشروطة مع aria-modal=true: ينتقل التركيز إلى داخلها ويُبقي حاصر التركيز في Vuetify مفتاح Tab فيها، ويغلقها Escape والنقر على الخلفية ما لم تكن persistent، ويُمنع تمرير الصفحة أثناء فتحها، ويعود التركيز إلى زر الفتح بعد إغلاقها. ويُتجاهل Escape ما دام التركيز في طبقة أخرى، مثل نافذة فُتحت من داخل اللوحة. يبقى المحتوى المغلق في DOM تحت جذر inert. يخفي transparentOverlay لون الخلفية ويبقيها، فتظل الصفحة محجوبة. عند فتح اللوحة يأخذ الحاضن قيمة أقل بواحد من zIndexOverlay (والقيمة الافتراضية 2000، وهي القيمة الافتراضية لطبقات Vuetify)، أو أعلى بواحد من طبقات Vuetify المفتوحة، وتظهر قوائم Vuetify وتلميحاته ونوافذه المفتوحة من داخل اللوحة فوقها. الخصائص تستهدف VNavigationDrawer؛ ويغلق السحب باللمس ومراقبة المسار الأصليان اللوحة أيضًا ويرسلان update:modelValue فقط. end يمين في LTR ويسار في RTL وفق لغة Vuetify. العرض "50%" يتحول إلى 50px للحفاظ على سلوك Aware؛ استخدم أرقامًا أو بكسل. المحتوى يتمرر والرأس والقدم خارجه. عدم جاهزية البيانات يزيل المحتوى؛ طبقة التحميل مستقلة دون حفظ أو form. Aware يحتفظ بزر الأيقونة وترجمة المحتوى وربط الثيم ونقاط تنسيق drawer-panel. AddEditModal وschema والتحقق والصلاحيات تبقى في Aware. على PrimeVue: تُرسم بـDrawer من PrimeVue، وهو يُنقل إلى body تحت طبقة خلفية خاصة به، فلا يحتاج layout حاضنًا ولا غلافًا حول جذر التطبيق. هي role=dialog مشروطة: ينتقل التركيز إلى داخلها ويبقى Tab فيها، ويغلقها Escape والنقر خارجها ما لم تكن persistent، ويُمنع تمرير الصفحة أثناء فتحها، ويعود التركيز إلى زر الفتح بعد إغلاقها. المحتوى المغلق لا يُرسم. يخفي transparentOverlay لون الخلفية ويبقيها، فتظل الصفحة غير قابلة للتفاعل ويغلق النقر الخارجي اللوحة غير الـpersistent. يتبع الجانب المنطقي خيار direction في Wakeb لا dir الصفحة. تأخذ الخلفية zIndexOverlay، وبدونه تتشارك اللوحة مع WModal ترتيب z-index الخاص بنوافذ PrimeVue. خصائص Vuetify الأصلية للوحة (rail واللمس ومراقبة المسار) لا تنطبق. على shadcn-vue: تُرسم بـSheet من shadcn-vue فوق Dialog من reka-ui، وتُنقل إلى body مع طبقة خلفية خاصة بها، فلا تحتاج layout حاضنًا. هي role=dialog مشروطة مع aria-modal=true: تنقل reka-ui التركيز إلى داخلها وتبقي Tab فيها، وتخفي بقية الصفحة عن التقنيات المساعدة وتمنع تمرير الصفحة؛ ويغلقها Escape والضغط خارجها ما لم تكن persistent، ويعيد Wakeb التركيز إلى العنصر الذي كان مركّزًا قبل فتحها. المحتوى المغلق لا يُرسم. يُبقي transparentOverlay طبقة خلفية شفافة، فتظل الصفحة محجوبة. يتبع الجانب خيار direction في Wakeb، ولا يوجد إلا الجانبان الأيسر والأيمن. تأخذ الطبقة الخلفية واللوحة معًا zIndexOverlay؛ وبدونه تستخدمان z-index الافتراضي 50 في Sheet، وتعلو الطبقات اللاحقة على السابقة. على كل المزودات، يغلق Escape داخل نافذة أو قائمة فُتحت من اللوحة تلك الطبقة وحدها، ويغلق Escape التالي اللوحة.
+على Vuetify: تُرسم بـVNavigationDrawer داخل VLayout خاص بـWakeb يُنقل إلى حاوية الطبقات الخاصة بـVuetify في body، فلا تحتاج VApp ولا VLayout. وداخل VApp تُسجَّل اللوحة في هذا التخطيط الداخلي وحده، فلا يتغير تخطيط التطبيق ولا موضع VMain. هي role=dialog مشروطة مع aria-modal=true: ينتقل التركيز إلى داخلها ويُبقي حاصر التركيز في Vuetify مفتاح Tab فيها، ويغلقها Escape والنقر على الخلفية ما لم تكن persistent، ويُمنع تمرير الصفحة أثناء فتحها، ويعود التركيز إلى زر الفتح بعد إغلاقها. ويُتجاهل Escape ما دام التركيز في طبقة أخرى، مثل نافذة فُتحت من داخل اللوحة. يبقى المحتوى المغلق في DOM تحت جذر inert. يخفي transparentOverlay لون الخلفية ويبقيها، فتظل الصفحة محجوبة. عند فتح اللوحة يأخذ الحاضن قيمة أقل بواحد من zIndexOverlay (والقيمة الافتراضية 2000، وهي القيمة الافتراضية لطبقات Vuetify)، أو أعلى بواحد من طبقات Vuetify المفتوحة، وتظهر قوائم Vuetify وتلميحاته ونوافذه المفتوحة من داخل اللوحة فوقها. الخصائص تستهدف VNavigationDrawer؛ ويغلق السحب باللمس ومراقبة المسار الأصليان اللوحة أيضًا ويرسلان update:modelValue فقط. end يمين في LTR ويسار في RTL؛ يُطبّق direction الصريح في Wakeb داخل نطاق المكوّن دون تغيير لغة Vuetify في التطبيق. العرض "50%" يتحول إلى 50px للحفاظ على سلوك Aware؛ استخدم أرقامًا أو بكسل. المحتوى يتمرر والرأس والقدم خارجه. عدم جاهزية البيانات يزيل المحتوى؛ طبقة التحميل مستقلة دون حفظ أو form. Aware يحتفظ بزر الأيقونة وترجمة المحتوى وربط الثيم ونقاط تنسيق drawer-panel. AddEditModal وschema والتحقق والصلاحيات تبقى في Aware. على PrimeVue: تُرسم بـDrawer من PrimeVue، وهو يُنقل إلى body تحت طبقة خلفية خاصة به، فلا يحتاج layout حاضنًا ولا غلافًا حول جذر التطبيق. هي role=dialog مشروطة: ينتقل التركيز إلى داخلها ويبقى Tab فيها، ويغلقها Escape والنقر خارجها ما لم تكن persistent، ويُمنع تمرير الصفحة أثناء فتحها، ويعود التركيز إلى زر الفتح بعد إغلاقها. المحتوى المغلق لا يُرسم. يخفي transparentOverlay لون الخلفية ويبقيها، فتظل الصفحة غير قابلة للتفاعل ويغلق النقر الخارجي اللوحة غير الـpersistent. يتبع الجانب المنطقي خيار direction في Wakeb لا dir الصفحة. تأخذ الخلفية zIndexOverlay، وبدونه تتشارك اللوحة مع WModal ترتيب z-index الخاص بنوافذ PrimeVue. خصائص Vuetify الأصلية للوحة (rail واللمس ومراقبة المسار) لا تنطبق. على shadcn-vue: تُرسم بـSheet من shadcn-vue فوق Dialog من reka-ui، وتُنقل إلى body مع طبقة خلفية خاصة بها، فلا تحتاج layout حاضنًا. هي role=dialog مشروطة مع aria-modal=true: تنقل reka-ui التركيز إلى داخلها وتبقي Tab فيها، وتخفي بقية الصفحة عن التقنيات المساعدة وتمنع تمرير الصفحة؛ ويغلقها Escape والضغط خارجها ما لم تكن persistent، ويعيد Wakeb التركيز إلى العنصر الذي كان مركّزًا قبل فتحها. المحتوى المغلق لا يُرسم. يُبقي transparentOverlay طبقة خلفية شفافة، فتظل الصفحة محجوبة. يتبع الجانب خيار direction في Wakeb، ولا يوجد إلا الجانبان الأيسر والأيمن. تأخذ الطبقة الخلفية واللوحة معًا zIndexOverlay؛ وبدونه تستخدمان z-index الافتراضي 50 في Sheet، وتعلو الطبقات اللاحقة على السابقة. على كل المزودات، يغلق Escape داخل نافذة أو قائمة فُتحت من اللوحة تلك الطبقة وحدها، ويغلق Escape التالي اللوحة.
 
-## جرّب بنفسك
+---
 
-<OverlayPlayground initial="drawer" />
+لاستخدام هذا العقد مع agent يكتب الكود، راجع [الـskill وMCP](../guide/agents).

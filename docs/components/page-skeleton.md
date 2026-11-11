@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WPageSkeleton
 
 Responsive skeleton rows on the Wakeb grid, driven by typed descriptors.
+
+::: info 0.8.0-alpha.0 candidate
+This page describes the local, unreleased three-provider API. Install the [candidate archive](../guide/installation) and complete [provider setup](../guide/providers) first. The public 0.7 API differs.
+:::
+
+## Preview
+
+Live preview uses Vuetify. The same public API is checked separately on PrimeVue and shadcn-vue; see [verification](../guide/verification).
+
+<ComponentPlayground initial="page-skeleton" />
 
 ## Usage
 
@@ -9,8 +19,25 @@ Responsive skeleton rows on the Wakeb grid, driven by typed descriptors.
 <script setup lang="ts">
 import { WPageSkeleton } from 'wakeb-components'
 </script>
+
 <template>
   <WPageSkeleton :config="[{ repeat: 2, cols: 12, md: 6, variant: 'card', items: [{ type: 'text' }, { type: 'paragraph' }] }]" label="Loading report" />
+</template>
+```
+
+## Examples
+
+### Responsive columns
+
+Two half-width columns at md, stacked on smaller screens.
+
+```vue
+<script setup lang="ts">
+import { WPageSkeleton } from 'wakeb-components'
+</script>
+
+<template>
+  <WPageSkeleton :config="[{ repeat: 2, cols: 12, md: 6, items: [{ type: 'heading, paragraph' }] }]" label="Loading cards" />
 </template>
 ```
 
@@ -22,9 +49,17 @@ import { WPageSkeleton } from 'wakeb-components'
 | `direction` | `"row" \| "column"` | `"column"` | Root flex direction, independent of Tailwind. |
 | `label` | `string` | `"Loading content"` | Accessible status name; localize in the host. |
 
+## Events
+
+No declared component events. DOM listeners follow the attribute target below.
+
+
+
 ## Slots
 
 No slots; compose rows with config, header/items, classes and Vuetify grid breakpoints.
+
+
 
 ## CSS variables
 
@@ -36,6 +71,10 @@ No slots; compose rows with config, header/items, classes and Vuetify grid break
 ## Attribute target
 
 The root `div.page-skeleton` with `role="status"` on every provider. `role` and `aria-busy` are Wakeb-owned and win over caller attributes; name the status with `label`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
+
+## Keyboard interaction
+
+This component adds no Wakeb keyboard command. Native or slotted interactive content keeps its own keyboard behavior. See the exact focus, role and provider notes below.
 
 ## Accessibility and limits
 
@@ -62,6 +101,6 @@ Uses one named role=status and aria-busy=true; skeleton rows are aria-hidden to 
 | `table-row` | Six cells |
 | `card` | 150px image block and a heading | Under shadcn-vue the grammar, grid and bone shapes match PrimeVue; each bone is the shadcn-vue Skeleton (data-slot="skeleton", aria-hidden), which pulses with --accent and --radius instead of the Wakeb wave and stops under reduced motion.
 
-## Try it
+---
 
-<ComponentPlayground initial="page-skeleton" />
+Need this contract in your coding agent? Use the [skill and MCP](../guide/agents).

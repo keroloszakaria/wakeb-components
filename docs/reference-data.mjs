@@ -612,8 +612,8 @@ export default [
         "isLoading",
         "boolean",
         "false",
-        "Vuetify loading indicator plus the shared loading style.",
-        "مؤشر تحميل Vuetify مع تنسيق التحميل العام."
+        "Loading indicator plus the shared loading style. Sets aria-busy=\"true\" on the native button on every provider while loading, overriding a conflicting caller value.",
+        "مؤشر تحميل Vuetify مع تنسيق التحميل العام. يضبط aria-busy=\"true\" على الزر الأصلي في كل مزود أثناء التحميل، ويتقدم على قيمة متعارضة من المستهلك."
       ],
       [
         "isDropdown",
@@ -1125,8 +1125,8 @@ export default [
       "عنصر `<button>` الأصلي على كل المزودين، وليس الـdiv الخارجي المخصص للتخطيط؛ استخدم `wrapperAttrs` لذلك الـdiv. تبقى معالجة type وdisabled وloading الخاصة بـWakeb هي الغالبة، و`onClick` من المستخدم هو حدث click القابل للنقل ويُرسل مرة واحدة. يصل `providerProps` إلى primitive الزر نفسه بأولوية أقل من سمات المستخدم. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "The native element keeps form/type, disabled state and Vuetify aria-busy behavior. Click emits its original MouseEvent once; .stop/.prevent can be used by the host. Native keyboard activation is left to the browser. Icon-only buttons need an aria-label; tooltip buttons use title as a fallback accessible name. Tooltip focus listeners are composed with consumer listeners. Loading acts like disabled for activation in standard and tooltip modes: no click event and no native submit/reset. It is still not a request lock; the host owns request state. A native loading attr also reaches VBtn and does not add the isLoading style class. Reduced-motion settings remove shared transitions. The outer div is retained for layout; wrapperAttrs does not redirect native attrs. Unknown variants/sizes are extension classes. The compatibility-only --wakeb-button-fallback switch is reserved for adapters; leave it undefined for normal defaults.",
-      "الزر يحتفظ بـform/type والتعطيل وaria-busy من Vuetify. click يمرر MouseEvent الأصلي مرة واحدة ويدعم .stop/.prevent. التفعيل بالكيبورد يتبع المتصفح. زر الأيقونة يحتاج aria-label؛ زر Tooltip يستخدم title كاسم بديل. أحداث التركيز تُدمج مع أحداث Vuetify. التحميل يعمل مثل التعطيل في الوضع العادي ووضع Tooltip: لا يرسل click ولا يرسل الفورم أو يعيد ضبطه. ومع ذلك ليس قفلًا للطلبات؛ المشروع يملك حالة الطلب. attribute باسم loading يصل أيضًا إلى VBtn دون إضافة class الخاصة بـisLoading. reduced-motion يلغي transitions المشتركة. div الخارجية مخصصة للتخطيط؛ wrapperAttrs لا يغيّر وجهة attributes العادية. الأنواع والمقاسات غير المعروفة classes للتوسعة. متغير --wakeb-button-fallback مخصص للتوافق؛ اتركه غير معرف لاستخدام القيم الافتراضية."
+      "The native element keeps form/type, disabled state and aria-busy loading state on every provider. Click emits its original MouseEvent once; .stop/.prevent can be used by the host. Native keyboard activation is left to the browser. Icon-only buttons need an aria-label; tooltip and loading buttons use title as a fallback accessible name; an explicit aria-label wins. Tooltip focus listeners are composed with consumer listeners. Loading acts like disabled for activation in standard and tooltip modes: no click event and no native submit/reset. It is still not a request lock; the host owns request state. A native loading attr also reaches VBtn and does not add the isLoading style class. Reduced-motion settings remove shared transitions. The outer div is retained for layout; wrapperAttrs does not redirect native attrs. Unknown variants/sizes are extension classes. The compatibility-only --wakeb-button-fallback switch is reserved for adapters; leave it undefined for normal defaults. Transparent outline/icon buttons use --wakeb-ui-on-surface as a foreground fallback, including in dark mode; component color variables still win. Built-in SVGs retain iconSize, custom SVG dimensions remain caller-owned, and native paragraph/font resets do not override the shared button size.",
+      "الزر يحتفظ بـform/type والتعطيل وaria-busy من Vuetify. click يمرر MouseEvent الأصلي مرة واحدة ويدعم .stop/.prevent. التفعيل بالكيبورد يتبع المتصفح. زر الأيقونة يحتاج aria-label؛ زر Tooltip والزر أثناء التحميل يستخدمان title كاسم بديل، وتتقدم قيمة aria-label الصريحة. أحداث التركيز تُدمج مع أحداث Vuetify. التحميل يعمل مثل التعطيل في الوضع العادي ووضع Tooltip: لا يرسل click ولا يرسل الفورم أو يعيد ضبطه. ومع ذلك ليس قفلًا للطلبات؛ المشروع يملك حالة الطلب. attribute باسم loading يصل أيضًا إلى VBtn دون إضافة class الخاصة بـisLoading. reduced-motion يلغي transitions المشتركة. div الخارجية مخصصة للتخطيط؛ wrapperAttrs لا يغيّر وجهة attributes العادية. الأنواع والمقاسات غير المعروفة classes للتوسعة. متغير --wakeb-button-fallback مخصص للتوافق؛ اتركه غير معرف لاستخدام القيم الافتراضية. تستخدم أزرار outline وicon الشفافة --wakeb-ui-on-surface كلون نص بديل، بما فيه الوضع الداكن، وتتقدم متغيرات ألوان المكوّن. تحتفظ أيقونات SVG المدمجة بقيمة iconSize وتبقى أبعاد SVG المخصصة بيد المستخدم، ولا تتغلب هوامش الفقرات أو إعادة ضبط الخط الأصلية على مقاس الزر المشترك. تعلن كل المزودات aria-busy=\"true\" على الزر الأصلي أثناء isLoading."
     ],
     "example": "<WButton title=\"Save changes\" action=\"submit\" type=\"primary\" />",
     "playground": "FoundationPlayground",
@@ -1542,8 +1542,8 @@ export default [
       "العنصر الجذري `div.accordion`. يحتفظ زر الفتح والطي بقيم aria-expanded وaria-controls التي يضعها Wakeb. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "The default title is a native button with aria-expanded/aria-controls; pointer clicks elsewhere on the header also toggle. Icon toggles stop propagation so one activation emits one update. Actions never toggle the panel. Custom headers must supply their own accessible control via triggerProps; stop unrelated interactive header controls from bubbling. The body uses v-show, retaining nested form state. Parent modelValue changes synchronize local state without echoing an update event; local clicks also work when a parent supplies a constant value. Vue useId is stable per application/SSR request; use unique app.config.idPrefix values for multiple independent Vue apps. Motion respects reduced-motion preferences. Indicator rotation preserves 180deg when closed and 0deg when open. The compatibility --wakeb-accordion-fallback switch is reserved for adapters. When a title is set, the panel is a region named by it. PrimeVue renders the same Wakeb disclosure markup and uses the PrimeVue WButton for the icon toggles; it does not use PrimeVue's Accordion component, so there is no PrimeVue panel model or header DOM. Under shadcn-vue the same Wakeb disclosure renders; the indicators are WButton (the shadcn-vue Button, data-slot=\"button\") and the closed panel stays mounted with v-show. reka-ui Collapsible is not used because it unmounts a closed panel.",
-      "العنوان الافتراضي زر HTML يحمل aria-expanded/aria-controls؛ النقر على باقي الـheader يفتح ويغلق أيضًا. أزرار المؤشرات توقف تصاعد الحدث فكل تفعيل يرسل تحديثًا واحدًا. actions لا يفتح اللوحة. الـheader المخصص يحتاج زرًا قابلًا للوصول عبر triggerProps مع إيقاف تصاعد أحداث التحكم غير المرتبطة. المحتوى يستخدم v-show للاحتفاظ بحالة الفورم. تحديث modelValue الخارجي يزامن الحالة دون إعادة إرسال الحدث، والنقر يعمل حتى مع قيمة ثابتة من الوالد. Vue useId ثابت لكل تطبيق/طلب SSR؛ استخدم app.config.idPrefix مختلفًا للتطبيقات المستقلة المتعددة. الحركة تحترم reduced-motion. دوران المؤشر 180deg عند الإغلاق و0deg عند الفتح كما في العقد المستخرج. --wakeb-accordion-fallback مخصص للتوافق. عند تحديد title تصبح اللوحة region يحمل اسمه. يرسم PrimeVue نفس عناصر الفتح والإغلاق الخاصة بـWakeb ويستخدم WButton الخاص بـPrimeVue لأزرار المؤشرات؛ ولا يستخدم مكوّن Accordion من PrimeVue، فلا يوجد نموذج لوحات أو DOM للـheader من PrimeVue. في shadcn-vue يُرسم عنصر الإفصاح نفسه من Wakeb؛ والمؤشرات هي WButton (زر shadcn-vue مع data-slot=\"button\")، وتبقى اللوحة المغلقة مركّبة عبر v-show. لا يُستخدم Collapsible من reka-ui لأنه يزيل اللوحة المغلقة."
+      "The default title is a native button with aria-expanded/aria-controls; pointer clicks elsewhere on the header also toggle. Icon toggles stop propagation so one activation emits one update. Actions never toggle the panel. Custom headers must supply their own accessible control via triggerProps; stop unrelated interactive header controls from bubbling. The body uses v-show, retaining nested form state. Parent modelValue changes synchronize local state without echoing an update event; local clicks also work when a parent supplies a constant value. Vue useId is stable per application/SSR request; use unique app.config.idPrefix values for multiple independent Vue apps. Motion respects reduced-motion preferences. Indicator rotation preserves 180deg when closed and 0deg when open. The compatibility --wakeb-accordion-fallback switch is reserved for adapters. When a title is set, the panel is a region named by it. PrimeVue renders the same Wakeb disclosure markup and uses the PrimeVue WButton for the icon toggles; it does not use PrimeVue's Accordion component, so there is no PrimeVue panel model or header DOM. Under shadcn-vue the same Wakeb disclosure renders; the indicators are WButton (the shadcn-vue Button, data-slot=\"button\") and the closed panel stays mounted with v-show. reka-ui Collapsible is not used because it unmounts a closed panel. Default surfaces and text use the scoped Wakeb surface/on-surface tokens, including dark mode; component-specific CSS variables still win.",
+      "العنوان الافتراضي زر HTML يحمل aria-expanded/aria-controls؛ النقر على باقي الـheader يفتح ويغلق أيضًا. أزرار المؤشرات توقف تصاعد الحدث فكل تفعيل يرسل تحديثًا واحدًا. actions لا يفتح اللوحة. الـheader المخصص يحتاج زرًا قابلًا للوصول عبر triggerProps مع إيقاف تصاعد أحداث التحكم غير المرتبطة. المحتوى يستخدم v-show للاحتفاظ بحالة الفورم. تحديث modelValue الخارجي يزامن الحالة دون إعادة إرسال الحدث، والنقر يعمل حتى مع قيمة ثابتة من الوالد. Vue useId ثابت لكل تطبيق/طلب SSR؛ استخدم app.config.idPrefix مختلفًا للتطبيقات المستقلة المتعددة. الحركة تحترم reduced-motion. دوران المؤشر 180deg عند الإغلاق و0deg عند الفتح كما في العقد المستخرج. --wakeb-accordion-fallback مخصص للتوافق. عند تحديد title تصبح اللوحة region يحمل اسمه. يرسم PrimeVue نفس عناصر الفتح والإغلاق الخاصة بـWakeb ويستخدم WButton الخاص بـPrimeVue لأزرار المؤشرات؛ ولا يستخدم مكوّن Accordion من PrimeVue، فلا يوجد نموذج لوحات أو DOM للـheader من PrimeVue. في shadcn-vue يُرسم عنصر الإفصاح نفسه من Wakeb؛ والمؤشرات هي WButton (زر shadcn-vue مع data-slot=\"button\")، وتبقى اللوحة المغلقة مركّبة عبر v-show. لا يُستخدم Collapsible من reka-ui لأنه يزيل اللوحة المغلقة. تستخدم الخلفيات والنص افتراضيًا tokens السطح والنص المحلية في Wakeb، بما فيها الوضع الداكن، وتتقدم متغيرات CSS الخاصة بالمكوّن."
     ],
     "example": "<WAccordion title=\"Details\" after-icon :model-value=\"true\"><p>Persistent panel content</p></WAccordion>",
     "playground": "FoundationPlayground",
@@ -1842,7 +1842,7 @@ export default [
       "Ordinary attrs/listeners target the WBadge wrapper. WBadge variables control the chip. HTTP-prefixed, root-relative and data URLs use VImg; other values use initials. There is no network-error initials fallback, matching the original component. Missing/empty name or an em dash uses ?, whitespace-only uses an empty initial; initials preserve charAt(0) UTF-16 behavior and use the first two words. Supply a user object with string fields; null is not supported. Avatars are decorative because the adjacent name identifies the user. Actions bubble naturally; stop propagation in the action if its parent has a click handler. No Tailwind dependency is required for the 8px initials. Under PrimeVue: the badge is the PrimeVue WBadge renderer and the avatar is a PrimeVue Avatar (.wakeb-avatar) with a decorative img (alt=\"\") or the initials; Wakeb CSS gives it the round VAvatar box, so it looks the same in PrimeVue styled or unstyled mode. avatarColor resolves Wakeb intents through --wakeb-ui-* and then the PrimeVue primary color for primary; provider color names fall back to primary with WAKEB_UNKNOWN_VALUE. Under shadcn-vue: the avatar is Wakeb markup (data-slot=avatar) with a plain decorative image, so it renders at once and on the server; reka-ui's AvatarImage is not used because it waits for the image to load. avatarSize numbers and Vuetify size names become pixels. Provider color names fall back to primary with WAKEB_UNKNOWN_VALUE.",
       "الخصائص والأحداث تستهدف حاوية WBadge ومتغيراته تخصص الشارة. الصور التي تبدأ بـhttp أو / أو data تعرض عبر VImg؛ الباقي يستخدم الأحرف. لا يوجد بديل تلقائي عند فشل تحميل الصورة، مثل الأصل. الاسم الفارغ أو — يعطي ?؛ المسافات فقط تعطي حرفًا فارغًا. الأحرف تحافظ على charAt(0) بوحدات UTF-16 لأول كلمتين. مرر كائنًا بحقول نصية؛ null غير مدعوم. الصورة زخرفية لأن الاسم بجوارها. الإجراءات تتصاعد طبيعيًا؛ أوقف التصاعد عند الحاجة. حجم الأحرف 8px يعمل دون Tailwind. تحت PrimeVue: الشارة هي renderer ‏WBadge الخاص بـPrimeVue، والصورة مكوّن Avatar من PrimeVue ‏(.wakeb-avatar) يحوي img زخرفيًا (alt=\"\") أو الأحرف؛ وتمنحه Wakeb CSS شكل VAvatar الدائري، فيبدو بالشكل نفسه في وضعي PrimeVue بأنماط أو دونها. يحل avatarColor قيم intent من Wakeb عبر --wakeb-ui-* ثم عبر اللون الأساسي في PrimeVue لقيمة primary؛ وترجع أسماء ألوان المزود إلى primary مع WAKEB_UNKNOWN_VALUE. تحت shadcn-vue: الصورة الرمزية markup من Wakeb ‏(data-slot=avatar) بصورة زخرفية عادية، فتظهر فورًا وعلى الخادم أيضًا؛ ولا يُستخدم AvatarImage من reka-ui لأنه ينتظر تحميل الصورة. تتحول أرقام avatarSize وأسماء أحجام Vuetify إلى pixels. وترجع أسماء ألوان المزوّد إلى primary مع WAKEB_UNKNOWN_VALUE."
     ],
-    "example": "<WUserBadge :user=\"{ name: 'Ada Lovelace', avatar: '/avatars/ada.png' }\"><template #actions><button type=\"button\">Remove</button></template></WUserBadge>",
+    "example": "<WUserBadge :user=\"{ name: 'Ada Lovelace' }\"><template #actions><button type=\"button\">Remove</button></template></WUserBadge>",
     "playground": "IdentityPlayground",
     "events": [
       "No custom events. Native listeners target the outer badge wrapper.",
@@ -2150,8 +2150,8 @@ export default [
       "حاوية التخطيط الجذرية `div.wakeb-tabs`. تحتفظ التبويبات واللوحات بالمعرفات والأدوار وروابط aria-controls وaria-labelledby التي يضعها Wakeb. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation. Each tab has an id unique within the app; the selected tab references its rendered role=tabpanel wrapper (div.wakeb-tabs__panel) through aria-controls, and the panel is labelled by its tab; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content. A vertical rail sets aria-orientation=vertical on the tablist. PrimeVue: Wakeb renders the tablist itself (a div with role=tablist and button role=tab items) because PrimeVue Tabs generates its own ids and mounts all panels or unmounts hidden ones. Selection, ids and events come from the same shared code as Vuetify. Keys follow the Vuetify slide group: manual activation with click, Enter or Space; arrows move focus along the orientation, wrap, and reverse horizontally when the tablist is RTL; Home/End jump to the ends; the selected tab, or the first tab when none is selected, is the single tab stop. Panels mount on first selection and stay mounted, switching without a transition. Icons render through the Wakeb icon resolver. The tab look comes from the same --wakeb-tabs-* variables on Wakeb markup, not from PrimeVue styles. shadcn-vue: the same Wakeb markup, CSS, keys and lazy panels as PrimeVue, because the shadcn-vue Tabs (reka-ui) selects on arrow focus by default. The tabs carry no data-slot or wakeb-sc-* classes; providerProps is dropped with WAKEB_PROVIDER_PROP_IGNORED.",
-      "الخصائص على الحاوية. Vue وVuetify هما peers ولا تحتاج Tailwind. الارتفاع والمسافة يضيفان px؛ لا تمرر وحدات CSS. عناوين الأقسام والـheader داخل الشريط. Vuetify يوفر tablist والتركيز والأسهم. لكل تبويب id فريد داخل التطبيق، والتبويب المحدد يشير عبر aria-controls إلى لوحته المعروضة (div.wakeb-tabs__panel بدور tabpanel) واللوحة تأخذ اسمها من التبويب؛ اللوحات تُركب عند الحاجة وتحتفظ بحالة Vue بعد التركيب. selectedTab الفارغ في switcher يلغي التحديد. المزامنة تخص selectedTab وisSwitcherOnly؛ تغيير قائمة العناصر يترك سلوك المجموعة لـVuetify. الصفر في content أو notification يتبع فحص truthy القديم. customHTML يدخل كما هو عبر v-html ويجب أن يكون موثوقًا أو منقّى من المشروع؛ سياق الدالة {value,isSelected}. استخدم tab-label للبيانات غير الموثوقة. الأيقونات عبر VIcon أو slot دون تعديل shadow DOM داخل الحزمة. التبويب المصور فقط يستخدم label كاسم ARIA؛ وفر اسمًا واضحًا حتى مع المحتوى المخصص. الشريط العمودي يضع aria-orientation=vertical على قائمة التبويبات. على PrimeVue يرسم Wakeb قائمة التبويبات بنفسه (div بدور tablist وعناصر button بدور tab) لأن Tabs في PrimeVue يولّد معرفاته الخاصة ويركّب كل اللوحات أو يزيل المخفية منها. التحديد والمعرفات والأحداث من الكود المشترك نفسه مع Vuetify. المفاتيح تتبع سلوك Vuetify: التفعيل يدوي بالنقر أو Enter أو Space، والأسهم تنقل التركيز حسب الاتجاه وتلتف وتنعكس أفقيًا عندما تكون القائمة RTL، وHome/End للطرفين، والتبويب المحدد (أو الأول إن لم يُحدد شيء) هو محطة Tab الوحيدة. اللوحات تُركَّب عند أول اختيار وتبقى مركّبة وتتبدل دون حركة انتقال. الأيقونات عبر محلل أيقونات Wakeb. شكل التبويبات من متغيرات --wakeb-tabs-* نفسها على markup يملكه Wakeb، وليس من أنماط PrimeVue. على shadcn-vue يُستخدم markup ‏Wakeb وأنماطه ومفاتيحه ولوحاته المؤجلة نفسها كما في PrimeVue، لأن Tabs في shadcn-vue ‏(reka-ui) يحدد التبويب عند نقل التركيز بالأسهم افتراضيًا. لا تحمل التبويبات data-slot ولا أصناف wakeb-sc-*، وتُهمَل providerProps مع WAKEB_PROVIDER_PROP_IGNORED."
+      "Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation. Each tab has an id unique within the app; the selected tab references its rendered role=tabpanel wrapper (div.wakeb-tabs__panel) through aria-controls, and the panel is labelled by its tab; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content. A vertical rail sets aria-orientation=vertical on the tablist. PrimeVue: Wakeb renders the tablist itself (a div with role=tablist and button role=tab items) because PrimeVue Tabs generates its own ids and mounts all panels or unmounts hidden ones. Selection, ids and events come from the same shared code as Vuetify. Keys follow the Vuetify slide group: manual activation with click, Enter or Space; arrows move focus along the orientation, wrap, and reverse horizontally when the tablist is RTL; Home/End jump to the ends; the selected tab, or the first tab when none is selected, is the single tab stop. Panels mount on first selection and stay mounted, switching without a transition. Icons render through the Wakeb icon resolver. The tab look comes from the same --wakeb-tabs-* variables on Wakeb markup, not from PrimeVue styles. shadcn-vue: the same Wakeb markup, CSS, keys and lazy panels as PrimeVue, because the shadcn-vue Tabs (reka-ui) selects on arrow focus by default. The tabs carry no data-slot or wakeb-sc-* classes; providerProps is dropped with WAKEB_PROVIDER_PROP_IGNORED. Unselected tab labels use --wakeb-ui-on-surface when configured, including the dark-mode default; --wakeb-tabs-item-color still wins.",
+      "الخصائص على الحاوية. Vue وVuetify هما peers ولا تحتاج Tailwind. الارتفاع والمسافة يضيفان px؛ لا تمرر وحدات CSS. عناوين الأقسام والـheader داخل الشريط. Vuetify يوفر tablist والتركيز والأسهم. لكل تبويب id فريد داخل التطبيق، والتبويب المحدد يشير عبر aria-controls إلى لوحته المعروضة (div.wakeb-tabs__panel بدور tabpanel) واللوحة تأخذ اسمها من التبويب؛ اللوحات تُركب عند الحاجة وتحتفظ بحالة Vue بعد التركيب. selectedTab الفارغ في switcher يلغي التحديد. المزامنة تخص selectedTab وisSwitcherOnly؛ تغيير قائمة العناصر يترك سلوك المجموعة لـVuetify. الصفر في content أو notification يتبع فحص truthy القديم. customHTML يدخل كما هو عبر v-html ويجب أن يكون موثوقًا أو منقّى من المشروع؛ سياق الدالة {value,isSelected}. استخدم tab-label للبيانات غير الموثوقة. الأيقونات عبر VIcon أو slot دون تعديل shadow DOM داخل الحزمة. التبويب المصور فقط يستخدم label كاسم ARIA؛ وفر اسمًا واضحًا حتى مع المحتوى المخصص. الشريط العمودي يضع aria-orientation=vertical على قائمة التبويبات. على PrimeVue يرسم Wakeb قائمة التبويبات بنفسه (div بدور tablist وعناصر button بدور tab) لأن Tabs في PrimeVue يولّد معرفاته الخاصة ويركّب كل اللوحات أو يزيل المخفية منها. التحديد والمعرفات والأحداث من الكود المشترك نفسه مع Vuetify. المفاتيح تتبع سلوك Vuetify: التفعيل يدوي بالنقر أو Enter أو Space، والأسهم تنقل التركيز حسب الاتجاه وتلتف وتنعكس أفقيًا عندما تكون القائمة RTL، وHome/End للطرفين، والتبويب المحدد (أو الأول إن لم يُحدد شيء) هو محطة Tab الوحيدة. اللوحات تُركَّب عند أول اختيار وتبقى مركّبة وتتبدل دون حركة انتقال. الأيقونات عبر محلل أيقونات Wakeb. شكل التبويبات من متغيرات --wakeb-tabs-* نفسها على markup يملكه Wakeb، وليس من أنماط PrimeVue. على shadcn-vue يُستخدم markup ‏Wakeb وأنماطه ومفاتيحه ولوحاته المؤجلة نفسها كما في PrimeVue، لأن Tabs في shadcn-vue ‏(reka-ui) يحدد التبويب عند نقل التركيز بالأسهم افتراضيًا. لا تحمل التبويبات data-slot ولا أصناف wakeb-sc-*، وتُهمَل providerProps مع WAKEB_PROVIDER_PROP_IGNORED. تستخدم عناوين التبويبات غير المختارة --wakeb-ui-on-surface عند ضبطه، بما فيه الافتراضي للوضع الداكن، وتتقدم --wakeb-tabs-item-color."
     ],
     "example": "<WTabs :tabs=\"[{ slot: 'overview', label: 'Overview' }, { slot: 'details', label: 'Details' }]\"><template #overview>Overview panel</template><template #details>Details panel</template></WTabs>",
     "playground": "NavigationPlayground"
@@ -2322,8 +2322,8 @@ export default [
       "عنصر `ul` الجذري الذي يحمل `role=\"tree\"`. المجموعات الفرعية لا تستقبلها. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "Root attrs target ul. Data must be acyclic with globally unique string/number keys; only loaded children are considered. Field keys are direct properties, not dotted paths. activeKey uses strict identity; editingNodeId also supports string equivalence. Root computes active ancestors; nonroot groups use activePath. Collapsing unmounts descendant DOM through v-if and transition, so keep editable drafts in host state. Arrow Up/Down traverse visible nodes; Home/End move to bounds; expand/collapse arrows reverse in RTL; Enter/Space request selection. Expansion remains controlled. Nested controls keep their own keys. There is one roving tab target per tree; when a row disappears the target moves to its nearest visible ancestor, otherwise the previous visible row, and DOM focus follows only when focus was inside the tree. No typeahead, virtualization, drag/drop, checkbox selection or remote loading is built in. Default labels propagate to every level. Empty named slots use Vue fallback content, including branch toggles. Motion respects reduced-motion preferences. PrimeVue: the same Wakeb markup, CSS and shared tree code render on both providers, because PrimeVue Tree uses key maps for expansion and selection; the default branch toggle is the PrimeVue WButton. shadcn-vue: the same Wakeb markup and shared tree code, because shadcn-vue has no Tree and reka-ui Tree uses a flattened item model with its own selection; the default branch toggle is the shadcn-vue WButton (data-slot=button).",
-      "الخصائص تستهدف ul. البيانات دون دورات وبمفاتيح نصية أو رقمية فريدة في الشجرة، والأبناء المحمّلون فقط هم المعروضون. مفاتيح الحقول مباشرة دون dotted paths. activeKey يقارن بدقة وeditingNodeId يدعم تمثيل المفتاح النصي. الجذر يستنتج مسار العنصر؛ المجموعة الداخلية تستخدم activePath. الإغلاق يزيل DOM الأبناء عبر v-if؛ احفظ مسودات التعديل في حالة المشروع. أعلى/أسفل للتنقل وHome/End للحدود وأسهم الفروع تنعكس في RTL وEnter/Space لطلب الاختيار. الفتح يظل بتحكم الأب. عناصر التحكم الداخلية تحتفظ بمفاتيحها. يوجد هدف Tab واحد لكل شجرة وعند اختفاء العنصر ينتقل لأقرب أب ظاهر أو للعنصر الظاهر السابق، والتركيز الفعلي ينتقل فقط لو كان داخل الشجرة. لا يوجد typeahead أو virtualization أو سحب أو checkboxes أو تحميل بعيد. الأسماء الافتراضية تظهر بكل المستويات؛ slots الفارغة تستخدم بديل Vue، بما فيها أزرار الفروع. الحركة تحترم reduced-motion. على PrimeVue يُستخدم markup ‏Wakeb وأنماطه وكود الشجرة المشترك نفسه على المزودين، لأن Tree في PrimeVue يعتمد خرائط مفاتيح للفتح والاختيار؛ وزر فتح الفرع الافتراضي هو WButton الخاص بـPrimeVue. على shadcn-vue يُستخدم markup ‏Wakeb وكود الشجرة المشترك نفسه، لأن shadcn-vue لا يحتوي على Tree، وTree في reka-ui يعتمد قائمة عناصر مسطّحة واختيارًا خاصًا به؛ وزر فتح الفرع الافتراضي هو WButton الخاص بـshadcn-vue ‏(data-slot=button)."
+      "Root attrs target ul. Data must be acyclic with globally unique string/number keys; only loaded children are considered. Field keys are direct properties, not dotted paths. activeKey uses strict identity; editingNodeId also supports string equivalence. Root computes active ancestors; nonroot groups use activePath. Collapsing unmounts descendant DOM through v-if and transition, so keep editable drafts in host state. Arrow Up/Down traverse visible nodes; Home/End move to bounds; expand/collapse arrows reverse in RTL; Enter/Space request selection. Expansion remains controlled. Nested controls keep their own keys. There is one roving tab target per tree; when a row disappears the target moves to its nearest visible ancestor, otherwise the previous visible row, and DOM focus follows only when focus was inside the tree. No typeahead, virtualization, drag/drop, checkbox selection or remote loading is built in. Default labels propagate to every level. Empty named slots use Vue fallback content, including branch toggles. Motion respects reduced-motion preferences. PrimeVue: the same Wakeb markup, CSS and shared tree code render on both providers, because PrimeVue Tree uses key maps for expansion and selection; the default branch toggle is the PrimeVue WButton. shadcn-vue: the same Wakeb markup and shared tree code, because shadcn-vue has no Tree and reka-ui Tree uses a flattened item model with its own selection; the default branch toggle is the shadcn-vue WButton (data-slot=button). Default label/description colors and the hover surface use scoped Wakeb theme tokens when present, including dark mode; component CSS variables still win.",
+      "الخصائص تستهدف ul. البيانات دون دورات وبمفاتيح نصية أو رقمية فريدة في الشجرة، والأبناء المحمّلون فقط هم المعروضون. مفاتيح الحقول مباشرة دون dotted paths. activeKey يقارن بدقة وeditingNodeId يدعم تمثيل المفتاح النصي. الجذر يستنتج مسار العنصر؛ المجموعة الداخلية تستخدم activePath. الإغلاق يزيل DOM الأبناء عبر v-if؛ احفظ مسودات التعديل في حالة المشروع. أعلى/أسفل للتنقل وHome/End للحدود وأسهم الفروع تنعكس في RTL وEnter/Space لطلب الاختيار. الفتح يظل بتحكم الأب. عناصر التحكم الداخلية تحتفظ بمفاتيحها. يوجد هدف Tab واحد لكل شجرة وعند اختفاء العنصر ينتقل لأقرب أب ظاهر أو للعنصر الظاهر السابق، والتركيز الفعلي ينتقل فقط لو كان داخل الشجرة. لا يوجد typeahead أو virtualization أو سحب أو checkboxes أو تحميل بعيد. الأسماء الافتراضية تظهر بكل المستويات؛ slots الفارغة تستخدم بديل Vue، بما فيها أزرار الفروع. الحركة تحترم reduced-motion. على PrimeVue يُستخدم markup ‏Wakeb وأنماطه وكود الشجرة المشترك نفسه على المزودين، لأن Tree في PrimeVue يعتمد خرائط مفاتيح للفتح والاختيار؛ وزر فتح الفرع الافتراضي هو WButton الخاص بـPrimeVue. على shadcn-vue يُستخدم markup ‏Wakeb وكود الشجرة المشترك نفسه، لأن shadcn-vue لا يحتوي على Tree، وTree في reka-ui يعتمد قائمة عناصر مسطّحة واختيارًا خاصًا به؛ وزر فتح الفرع الافتراضي هو WButton الخاص بـshadcn-vue ‏(data-slot=button). تستخدم ألوان النص والوصف وخلفية المرور افتراضيًا tokens الثيم المحلية في Wakeb عند وجودها، بما فيها الوضع الداكن، وتتقدم متغيرات CSS الخاصة بالمكوّن."
     ],
     "example": "<WTree :nodes=\"[{ id: 1, name: 'Team', children: [{ id: 2, name: 'Member' }] }]\" :expanded-keys=\"[1]\" aria-label=\"Teams\" />",
     "playground": "NavigationPlayground"
@@ -2524,8 +2524,8 @@ export default [
       "العنصر الجذري `div` على كل المزودين، وليس زر الفتح ولا القائمة المنقولة. خصص القائمة عبر `menuStyle`، ويستقبل slot الـactivator خصائصه الخاصة. أما `providerProps` فيذهب إلى primitive القائمة. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "Attrs target the outer div. VMenu/VList own click-away, Escape and keyboard movement; the WButton activator uses action=button. No i18n/router instance is imported. Format title: label through labelFormatter as one string, matching the legacy composite-label contract. modelValue synchronization runs when the value or menuItems change, so replaced records refresh the label; null clears the selection and undefined leaves an uncontrolled selection unchanged. Initial showSelected falls back to title or the first label without marking it active. An exact value match always wins; label matching is only a fallback; zero is supported. Raw CSS colors work on option icons/text; activator text accepts semantic keys and var()/hex values, preserving the old contract. Semantic WButton icon colors have their own WButton variables. Bind colors to menuStyle or colorMap for teleported lists. Rows use role=menuitem inside a role=menu list. With isLinks each enabled row is itself an anchor using href or a string to; disabled or loading rows have no href and set aria-disabled. Route objects require an item-label slot. Clicking an enabled row emits selection. Disabled/loading suppress normal menu interaction.",
-      "الخصائص على div الخارجي. Vuetify يدير النقر الخارجي وEscape والكيبورد وزر WButton من نوع button. لا يوجد اعتماد على i18n أو router. عنوان showBoth يمر إلى labelFormatter كنص واحد مثل الأصل. مزامنة modelValue تعمل عند تغير القيمة أو menuItems فيتحدث الاسم مع البيانات الجديدة؛ null يمسح الاختيار وundefined يترك الاختيار غير المتحكم فيه كما هو. showSelected الأولي يختار عنوانًا أو أول اسم دون تمييز عنصر active. المطابقة الدقيقة للقيمة تكسب دائمًا ومقارنة الاسم بديل فقط، والصفر مدعوم. ألوان CSS الخام تعمل للعناصر؛ نص الزر يقبل المفاتيح الدلالية وvar() وhex مثل القديم. ألوان أيقونة WButton لها متغيراته المستقلة. menuStyle وcolorMap يخصصان القائمة المنقولة. الصفوف بدور menuitem داخل قائمة بدور menu. مع isLinks كل صف مفعل هو نفسه رابط من href أو to النصي، والصف المعطل أو أثناء التحميل بلا href ومعه aria-disabled. كائنات router تحتاج slot. نقر الصف المفعل يرسل الاختيار. التعطيل والتحميل يمنعان تفاعل القائمة الطبيعي."
+      "Attrs target the outer div. VMenu/VList own click-away, Escape and keyboard movement; the WButton activator uses action=button. No i18n/router instance is imported. Format title: label through labelFormatter as one string, matching the legacy composite-label contract. modelValue synchronization runs when the value or menuItems change, so replaced records refresh the label; null clears the selection and undefined leaves an uncontrolled selection unchanged. Initial showSelected falls back to title or the first label without marking it active. An exact value match always wins; label matching is only a fallback; zero is supported. Raw CSS colors work on option icons/text; activator text accepts semantic keys and var()/hex values, preserving the old contract. Semantic WButton icon colors have their own WButton variables. Bind colors to menuStyle or colorMap for teleported lists. Rows use role=menuitem inside a role=menu list. With isLinks each enabled row is itself an anchor using href or a string to; disabled or loading rows have no href and set aria-disabled. Route objects require an item-label slot. Clicking an enabled row emits selection. Disabled/loading suppress normal menu interaction. On shadcn-vue, the popup anchors to the actual activator before its first mount, including on scrolled pages; keyboard and mouse selection use the same event contract.",
+      "الخصائص على div الخارجي. Vuetify يدير النقر الخارجي وEscape والكيبورد وزر WButton من نوع button. لا يوجد اعتماد على i18n أو router. عنوان showBoth يمر إلى labelFormatter كنص واحد مثل الأصل. مزامنة modelValue تعمل عند تغير القيمة أو menuItems فيتحدث الاسم مع البيانات الجديدة؛ null يمسح الاختيار وundefined يترك الاختيار غير المتحكم فيه كما هو. showSelected الأولي يختار عنوانًا أو أول اسم دون تمييز عنصر active. المطابقة الدقيقة للقيمة تكسب دائمًا ومقارنة الاسم بديل فقط، والصفر مدعوم. ألوان CSS الخام تعمل للعناصر؛ نص الزر يقبل المفاتيح الدلالية وvar() وhex مثل القديم. ألوان أيقونة WButton لها متغيراته المستقلة. menuStyle وcolorMap يخصصان القائمة المنقولة. الصفوف بدور menuitem داخل قائمة بدور menu. مع isLinks كل صف مفعل هو نفسه رابط من href أو to النصي، والصف المعطل أو أثناء التحميل بلا href ومعه aria-disabled. كائنات router تحتاج slot. نقر الصف المفعل يرسل الاختيار. التعطيل والتحميل يمنعان تفاعل القائمة الطبيعي. على shadcn-vue ترتبط القائمة بالزر الفعلي قبل أول عرض، بما فيه الصفحات التي تم تمريرها؛ ويحافظ الاختيار بالفأرة ولوحة المفاتيح على عقد الأحداث نفسه."
     ],
     "example": "<WDropdown title=\"Status\" :menu-items=\"[{ label: 'Pending', value: 0 }, { label: 'Approved', value: 1 }]\" show-selected />",
     "playground": "NavigationPlayground"
@@ -2697,6 +2697,20 @@ export default [
         "undefined",
         "Direct styles on the teleported list.",
         "أنماط على القائمة المنقولة خارج الحاوية."
+      ],
+      [
+        "location",
+        "WakebPopoverLocation",
+        "undefined",
+        "Menu side and logical alignment relative to the activator; start and end follow the direction. Unset keeps the provider placement.",
+        "جانب القائمة ومحاذاتها المنطقية بالنسبة لزر الفتح؛ start وend يتبعان الاتجاه. بدون قيمة يبقى موضع المزود."
+      ],
+      [
+        "offset",
+        "number",
+        "undefined",
+        "Gap in pixels between the activator and the menu. Unset keeps the provider gap.",
+        "المسافة بالبكسل بين زر الفتح والقائمة. بدون قيمة تبقى مسافة المزود."
       ]
     ],
     "slots": [
@@ -2718,8 +2732,8 @@ export default [
       "للتوافق مع الإصدار الأساسي: تصل السمات العادية إلى طبقة القائمة المنقولة (VMenu على Vuetify وجذر Menu على PrimeVue)، وهي موجودة فقط أثناء فتح القائمة. لا تصل إلى زر الفتح؛ استخدم slot الـactivator لذلك. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر. وعلى shadcn-vue هي عنصر يغلّف عنصر reka-ui الذي يحمل `role=\"menu\"`."
     ],
     "limits": [
-      "The root is VMenu, preserving its attrs/teleport contract. Default formats are PDF/pdf and Excel/xlsx with English labels; supply localized records. Inline SVG fallbacks need no icon font; optional format.icon resolves through the icons plugin option and the Wakeb built-ins, then the host Vuetify icon configuration. Loading disables the public default activator and menu; custom activators receive buttonProps and may preserve their existing loading contract. Permission checks, export state, network requests, MIME handling and download services stay in the host. Use the activator slot for directives; the package has no permission prop or auth dependency. menuStyle targets the actual teleported list and wins over the plugin theme scope and zIndexOverlay that the menu carries. VMenu/VList provide outside-click, Escape and keyboard behavior; rows use role=menuitem in a role=menu list and disabled formats set aria-disabled. The default native action is button, and its default height is 44px. PrimeVue: the formats render in PrimeVue Menu (popup), which owns positioning, arrow keys, Enter/Space, Escape, outside clicks and focus return; the activator carries aria-haspopup, aria-expanded and aria-controls. Attrs, the theme scope and zIndexOverlay reach the teleported Menu root; menuStyle reaches the role=menu list. Format icons resolve through the icons option and the Wakeb built-ins (PrimeIcons class names also work), not a Vuetify icon set. shadcn-vue: the formats render in reka-ui DropdownMenu (non-modal), which owns positioning, arrow keys that skip disabled formats, Enter/Space, Escape and outside clicks; Wakeb returns focus to the activator unless the menu closed from an outside click. The menu takes aria-label from title, zIndexOverlay and menuStyle; attrs and the theme scope reach the wrapper, which is removed after the menu closes.",
-      "الجذر VMenu ويحتفظ بعقد الخصائص وteleport. الافتراضي PDF/pdf وExcel/xlsx بأسماء إنجليزية؛ مرر بيانات مترجمة. أيقونات SVG الافتراضية لا تحتاج خط أيقونات؛ format.icon الاختيارية تُحل عبر الخيار icons والأيقونات المدمجة ثم إعداد Vuetify للمشروع. التحميل يعطل الزر العام والقائمة؛ الـactivator المخصص يمكنه الحفاظ على سلوكه القديم. الصلاحيات وحالة التصدير والشبكة وتوليد الملف والتنزيل في المشروع. استخدم activator للصلاحيات؛ الحزمة لا تستقبل permission ولا تعتمد على auth. menuStyle يستهدف القائمة المنقولة ويتقدم على نطاق theme الخاص بالـplugin وzIndexOverlay اللذين تحملهما القائمة. Vuetify يدير النقر الخارجي وEscape والكيبورد؛ الصفوف بدور menuitem داخل menu والصيغ المعطلة معها aria-disabled. نوع الزر button وارتفاعه الافتراضي 44px. على PrimeVue: تُرسم الصيغ في Menu المنبثقة من PrimeVue، وهي المسؤولة عن الموضع والأسهم وEnter/Space وEscape والنقر الخارجي وإعادة التركيز؛ ويحمل زر الفتح aria-haspopup وaria-expanded وaria-controls. تصل الخصائص ونطاق theme وzIndexOverlay إلى جذر Menu المنقول، ويصل menuStyle إلى القائمة التي تحمل role=menu. أيقونات الصيغ تُحل عبر الخيار icons والأيقونات المدمجة في Wakeb (وتعمل أسماء PrimeIcons أيضًا)، لا عبر أيقونات Vuetify. على shadcn-vue: تُرسم الصيغ في DropdownMenu من reka-ui (غير modal)، وهي المسؤولة عن الموضع ومفاتيح الأسهم التي تتخطى الصيغ المعطلة وEnter/Space وEscape والنقر الخارجي؛ ويعيد Wakeb التركيز إلى زر الفتح إلا إذا أُغلقت القائمة بنقر خارجها. تأخذ القائمة aria-label من title وتأخذ zIndexOverlay وmenuStyle؛ وتصل الخصائص ونطاق theme إلى العنصر المغلّف الذي يُزال بعد إغلاق القائمة."
+      "The root is VMenu, preserving its attrs/teleport contract. Default formats are PDF/pdf and Excel/xlsx with English labels; supply localized records. Inline SVG fallbacks need no icon font; optional format.icon resolves through the icons plugin option and the Wakeb built-ins, then the host Vuetify icon configuration. Loading disables the public default activator and menu; custom activators receive buttonProps and may preserve their existing loading contract. Permission checks, export state, network requests, MIME handling and download services stay in the host. Use the activator slot for directives; the package has no permission prop or auth dependency. menuStyle targets the actual teleported list and wins over the plugin theme scope and zIndexOverlay that the menu carries. VMenu/VList provide outside-click, Escape and keyboard behavior; rows use role=menuitem in a role=menu list and disabled formats set aria-disabled. The default native action is button, and its default height is 44px. location and offset reach VMenu; unset keeps the VMenu defaults. PrimeVue: the formats render in PrimeVue Menu (popup), which owns positioning, arrow keys, Enter/Space, Escape, outside clicks and focus return; the activator carries aria-haspopup, aria-expanded and aria-controls. Attrs, the theme scope and zIndexOverlay reach the teleported Menu root; menuStyle reaches the role=menu list. Format icons resolve through the icons option and the Wakeb built-ins (PrimeIcons class names also work), not a Vuetify icon set. Menu positions the list below the activator and flips it above when there is no room, so location and offset do not apply. shadcn-vue: the formats render in reka-ui DropdownMenu (non-modal), which owns positioning, arrow keys that skip disabled formats, Enter/Space, Escape and outside clicks; Wakeb returns focus to the activator unless the menu closed from an outside click. location sets the reka-ui side and align, and offset its side offset (4px when unset). The menu takes aria-label from title, zIndexOverlay and menuStyle; attrs and the theme scope reach the wrapper, which is removed after the menu closes. The default activator and the activator slot props carry the Wakeb plugin theme/direction scope as well as the teleported menu; caller attributes still target only the menu overlay.",
+      "الجذر VMenu ويحتفظ بعقد الخصائص وteleport. الافتراضي PDF/pdf وExcel/xlsx بأسماء إنجليزية؛ مرر بيانات مترجمة. أيقونات SVG الافتراضية لا تحتاج خط أيقونات؛ format.icon الاختيارية تُحل عبر الخيار icons والأيقونات المدمجة ثم إعداد Vuetify للمشروع. التحميل يعطل الزر العام والقائمة؛ الـactivator المخصص يمكنه الحفاظ على سلوكه القديم. الصلاحيات وحالة التصدير والشبكة وتوليد الملف والتنزيل في المشروع. استخدم activator للصلاحيات؛ الحزمة لا تستقبل permission ولا تعتمد على auth. menuStyle يستهدف القائمة المنقولة ويتقدم على نطاق theme الخاص بالـplugin وzIndexOverlay اللذين تحملهما القائمة. Vuetify يدير النقر الخارجي وEscape والكيبورد؛ الصفوف بدور menuitem داخل menu والصيغ المعطلة معها aria-disabled. نوع الزر button وارتفاعه الافتراضي 44px. يصل location وoffset إلى VMenu؛ وبدون قيمة تبقى إعدادات VMenu الافتراضية. على PrimeVue: تُرسم الصيغ في Menu المنبثقة من PrimeVue، وهي المسؤولة عن الموضع والأسهم وEnter/Space وEscape والنقر الخارجي وإعادة التركيز؛ ويحمل زر الفتح aria-haspopup وaria-expanded وaria-controls. تصل الخصائص ونطاق theme وzIndexOverlay إلى جذر Menu المنقول، ويصل menuStyle إلى القائمة التي تحمل role=menu. أيقونات الصيغ تُحل عبر الخيار icons والأيقونات المدمجة في Wakeb (وتعمل أسماء PrimeIcons أيضًا)، لا عبر أيقونات Vuetify. تضع Menu القائمة أسفل زر الفتح وتقلبها للأعلى عند ضيق المساحة، فلا ينطبق location وoffset. على shadcn-vue: تُرسم الصيغ في DropdownMenu من reka-ui (غير modal)، وهي المسؤولة عن الموضع ومفاتيح الأسهم التي تتخطى الصيغ المعطلة وEnter/Space وEscape والنقر الخارجي؛ ويعيد Wakeb التركيز إلى زر الفتح إلا إذا أُغلقت القائمة بنقر خارجها. يضبط location قيمتي side وalign في reka-ui، ويضبط offset المسافة الجانبية (4px بدون قيمة). تأخذ القائمة aria-label من title وتأخذ zIndexOverlay وmenuStyle؛ وتصل الخصائص ونطاق theme إلى العنصر المغلّف الذي يُزال بعد إغلاق القائمة. يحمل زر الفتح الافتراضي وprops الخاصة بـslot activator نطاق ثيم واتجاه Wakeb إلى جانب القائمة المنقولة، وتبقى سمات المستخدم موجهة إلى طبقة القائمة وحدها."
     ],
     "example": "<WExportDropdown title=\"Download report\" @select=\"format => console.log(format)\" />",
     "playground": "CompositionPlayground"
@@ -2854,8 +2868,8 @@ export default [
       "العنصر الجذري `div.wakeb-base-sidebar`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
     ],
     "limits": [
-      "Attrs target the outer div. The package owns no form/schema, store, translations or filter modal. Supply a native input or your form library through search and call search(payload). Aware retains GenericForm and updateSchema in its adapter. Without a search slot, the public component renders no search control. The header remains while content is replaced. Loading wins over empty/list. The default list keeps min-height 400px and max-height 60dvh, with a 340px minimum shell width; override root min-width for narrower responsive layouts. The bottom 72px fade is decorative and does not intercept pointers. Use namespaced CSS variables for gradients/body/title colors and loading/empty slots for custom states. Legacy global card-gradient/sidebar rules remain in Aware only; package styles are scoped. List item identity uses a direct field or index, and slots own item interactions. PrimeVue: the same markup, slots and variables; the filter buttons are the PrimeVue WButton. The loading skeleton renders the portable skeleton names with PrimeVue Skeleton bones inside one polite role=alert region named \"Loading...\" (Arabic: \"جارٍ التحميل...\"), matching the Vuetify loader semantics. Vuetify-only skeleton names are skipped there with WAKEB_UNKNOWN_VALUE; the loading slot receives the normalized sequence on both providers. shadcn-vue: the same markup, slots and variables; the filter buttons are the shadcn-vue WButton, and the loading skeleton uses shadcn-vue Skeleton bones in the same named role=alert region, with Vuetify-only names skipped the same way.",
-      "الخصائص على div الخارجي. الحزمة لا تملك form أو schema أو store أو ترجمة أو نافذة فلتر. وفر input أو مكتبة الفورم في search واستدعِ search(payload). Aware يحتفظ بـGenericForm وupdateSchema في adapter. دون search لا يظهر بحث افتراضي. يبقى الـheader عند استبدال المحتوى. التحميل له أولوية على الحالة الفارغة والقائمة. القائمة تحتفظ بحد أدنى 400px وأقصى 60dvh والحاوية بحد أدنى 340px؛ استبدل min-width للتصميم الأضيق. التلاشي السفلي 72px زخرفي ولا يمنع النقر. خصص الألوان عبر CSS والتحميل والحالة الفارغة عبر slots. أنماط card-gradient العامة القديمة تبقى في Aware فقط، وأنماط الحزمة scoped. هوية العنصر من حقل مباشر أو الفهرس وslot يملك التفاعل معه. على PrimeVue: نفس الـmarkup والـslots والمتغيرات، وأزرار الفلتر هي WButton على PrimeVue. يرسم هيكل التحميل أسماء الهياكل المحمولة بعناصر Skeleton من PrimeVue داخل منطقة واحدة بدور role=alert وaria-live=polite واسمها \"Loading...\" (وبالعربية \"جارٍ التحميل...\")، مطابقة لدلالات محمّل Vuetify. الأسماء الخاصة بـVuetify تُتجاوز هناك مع WAKEB_UNKNOWN_VALUE، ويستقبل slot التحميل التسلسل الموحد على المزودين. على shadcn-vue: نفس الـmarkup والـslots والمتغيرات، وأزرار الفلتر هي WButton على shadcn-vue، ويستخدم هيكل التحميل عناصر Skeleton من shadcn-vue داخل منطقة role=alert نفسها وبالاسم نفسه، وتُتجاوز الأسماء الخاصة بـVuetify بالطريقة نفسها."
+      "Attrs target the outer div. The package owns no form/schema, store, translations or filter modal. Supply a native input or your form library through search and call search(payload). Aware retains GenericForm and updateSchema in its adapter. Without a search slot, the public component renders no search control. The header remains while content is replaced. Loading wins over empty/list. The default list keeps min-height 400px and max-height 60dvh, with a 340px minimum shell width; override root min-width for narrower responsive layouts. The bottom 72px fade is decorative and does not intercept pointers. Use namespaced CSS variables for gradients/body/title colors and loading/empty slots for custom states. Legacy global card-gradient/sidebar rules remain in Aware only; package styles are scoped. List item identity uses a direct field or index, and slots own item interactions. PrimeVue: the same markup, slots and variables; the filter buttons are the PrimeVue WButton. The loading skeleton renders the portable skeleton names with PrimeVue Skeleton bones inside one polite role=alert region named \"Loading...\" (Arabic: \"جارٍ التحميل...\"), matching the Vuetify loader semantics. Vuetify-only skeleton names are skipped there with WAKEB_UNKNOWN_VALUE; the loading slot receives the normalized sequence on both providers. shadcn-vue: the same markup, slots and variables; the filter buttons are the shadcn-vue WButton, and the loading skeleton uses shadcn-vue Skeleton bones in the same named role=alert region, with Vuetify-only names skipped the same way. The body surface and foreground use the scoped Wakeb surface/on-surface tokens when present, including dark mode; --wakeb-sidebar-body still wins.",
+      "الخصائص على div الخارجي. الحزمة لا تملك form أو schema أو store أو ترجمة أو نافذة فلتر. وفر input أو مكتبة الفورم في search واستدعِ search(payload). Aware يحتفظ بـGenericForm وupdateSchema في adapter. دون search لا يظهر بحث افتراضي. يبقى الـheader عند استبدال المحتوى. التحميل له أولوية على الحالة الفارغة والقائمة. القائمة تحتفظ بحد أدنى 400px وأقصى 60dvh والحاوية بحد أدنى 340px؛ استبدل min-width للتصميم الأضيق. التلاشي السفلي 72px زخرفي ولا يمنع النقر. خصص الألوان عبر CSS والتحميل والحالة الفارغة عبر slots. أنماط card-gradient العامة القديمة تبقى في Aware فقط، وأنماط الحزمة scoped. هوية العنصر من حقل مباشر أو الفهرس وslot يملك التفاعل معه. على PrimeVue: نفس الـmarkup والـslots والمتغيرات، وأزرار الفلتر هي WButton على PrimeVue. يرسم هيكل التحميل أسماء الهياكل المحمولة بعناصر Skeleton من PrimeVue داخل منطقة واحدة بدور role=alert وaria-live=polite واسمها \"Loading...\" (وبالعربية \"جارٍ التحميل...\")، مطابقة لدلالات محمّل Vuetify. الأسماء الخاصة بـVuetify تُتجاوز هناك مع WAKEB_UNKNOWN_VALUE، ويستقبل slot التحميل التسلسل الموحد على المزودين. على shadcn-vue: نفس الـmarkup والـslots والمتغيرات، وأزرار الفلتر هي WButton على shadcn-vue، ويستخدم هيكل التحميل عناصر Skeleton من shadcn-vue داخل منطقة role=alert نفسها وبالاسم نفسه، وتُتجاوز الأسماء الخاصة بـVuetify بالطريقة نفسها. يستخدم سطح المحتوى ولون النص tokens السطح والنص المحلية في Wakeb عند وجودها، بما فيها الوضع الداكن، وتتقدم --wakeb-sidebar-body."
     ],
     "example": "<WBaseSidebar title=\"People\" :items=\"[{id:1,name:'Ada'}]\" :has-filter=\"false\"><template #item=\"{item}\">{{item.name}}</template></WBaseSidebar>",
     "playground": "CompositionPlayground"
@@ -2968,6 +2982,13 @@ export default [
         "اسم بديل للنافذة عند غياب العنوان."
       ],
       [
+        "bare",
+        "boolean",
+        "false",
+        "Renders only the default slot inside the dialog, on a transparent surface with no border, margin, header, close button, content padding, loading views or actions. The caller owns the whole layout and must provide its own close control when needed; the model, accessible name, focus trap, Escape and persistent behavior stay the same.",
+        "يرسم الـslot الافتراضي وحده داخل النافذة على سطح شفاف بلا حدود أو هامش أو رأس أو زر إغلاق أو حشو للمحتوى أو عروض تحميل أو أزرار. يملك المستخدم التخطيط كله ويضيف زر إغلاق خاصًا به عند الحاجة؛ ويبقى الربط بـv-model والاسم المتاح وحصر التركيز وEscape وسلوك persistent كما هي."
+      ],
+      [
         "providerProps",
         "WakebProviderProps",
         "undefined",
@@ -3034,12 +3055,12 @@ export default [
       "`activator {props,isActive}`: اربط props بزر الفتح لإعادة التركيز أصليًا. `header {close}` يستبدل الرأس بالكامل. `title` و`header-icon` و`header-decoration` و`header-actions` لتركيب الرأس الافتراضي. `close-button {close,label}` يستبدل زر الإغلاق. `content` وبديله `default` للمحتوى؛ `actions` للقدم. `loading {label}` بديل المحتوى؛ `loading-overlay {label}` لطبقة تحميل مستقلة."
     ],
     "attrs": [
-      "The element with `role=\"dialog\"`, which also carries `.wakeb-modal`, on every provider. It is teleported, so it exists only while the dialog is rendered. Wakeb's accessible name (`title`, then `ariaLabel`) wins over a caller `aria-label`. `providerProps` goes to the dialog primitive. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.",
-      "العنصر الذي يحمل `role=\"dialog\"`، ويحمل أيضًا `.wakeb-modal`، على كل المزودين. هذا العنصر منقول خارج المكوّن، فلا يوجد إلا أثناء رسم النافذة. الاسم الذي يضعه Wakeb (`title` ثم `ariaLabel`) يغلب `aria-label` من المستخدم. أما `providerProps` فيذهب إلى primitive النافذة. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر."
+      "The element with `role=\"dialog\"`, which also carries `.wakeb-modal`, on every provider. It is teleported, so it exists only while the dialog is rendered. Wakeb's accessible name (`title`, then `ariaLabel`) wins over a caller `aria-label`. `providerProps` goes to the dialog primitive. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element. Every provider renders the same styling classes inside it: `.wakeb-modal__card`, `.wakeb-modal__header`, `.wakeb-modal__title` (the default title only), `.wakeb-modal__content` and `.wakeb-modal__actions` (the footer, when `showActions` is true). Style through these classes, not provider classes such as `.v-card` or `.p-dialog`, so the same CSS works on Vuetify, PrimeVue and shadcn-vue.",
+      "العنصر الذي يحمل `role=\"dialog\"`، ويحمل أيضًا `.wakeb-modal`، على كل المزودين. هذا العنصر منقول خارج المكوّن، فلا يوجد إلا أثناء رسم النافذة. الاسم الذي يضعه Wakeb (`title` ثم `ariaLabel`) يغلب `aria-label` من المستخدم. أما `providerProps` فيذهب إلى primitive النافذة. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر. كل المزودين يرسمون داخله أصناف التنسيق نفسها: `.wakeb-modal__card` و`.wakeb-modal__header` و`.wakeb-modal__title` (العنوان الافتراضي فقط) و`.wakeb-modal__content` و`.wakeb-modal__actions` (منطقة الأزرار السفلية عندما تكون `showActions` بقيمة true). نسّق عبر هذه الأصناف، لا عبر أصناف المزود مثل `.v-card` أو `.p-dialog`، حتى يعمل الـCSS نفسه على Vuetify وPrimeVue وshadcn-vue."
     ],
     "limits": [
-      "Attrs target VDialog; its native transition, scrim, scrollStrategy and focus behavior remain available. Persistent defaults true, so Escape/outside clicks do not close it. Native focus capture/trap, scroll blocking and overlay stacking are delegated to Vuetify. Use the activator slot for focus return; programmatic launchers own restoration if no activator exists. Mount within your Vuetify application. Header slots are trusted Vue content: no raw SVG injection is built into the package. Aware retains its raw header decoration, SvgIcon, translated close button and legacy title/header visibility through header replacement; customAction maps to !showActions. Data-not-ready content is unmounted, not merely hidden. loading is presentation only; the host decides whether close/save is allowed and owns submission/permissions. The shared default loading overlay covers the card; Aware retains its existing loader markup through a slot. A description alone renders the default header. width wins over a native max-width attr, which applies only when width is absent. Modal radius is 4px, matching Vuetify dialog cards.",
-      "الخصائص تستهدف VDialog؛ خصائص الانتقال وscrim وscrollStrategy والتركيز الأصلية متاحة. persistent افتراضيًا true فيمنع Escape والنقر خارج النافذة من إغلاقها. Vuetify يدير التركيز وحصره وحجب التمرير وتراص النوافذ. استخدم activator لإعادة التركيز؛ زر الفتح البرمجي دون activator مسؤول عن استعادته. استخدمها داخل تطبيق Vuetify. slots محتوى Vue موثوق؛ الحزمة لا تحقن SVG خامًا. Aware يحتفظ بزخرفة الرأس وSvgIcon وترجمة الإغلاق وقواعد ظهور الرأس القديمة؛ customAction يقابل عكس showActions. المحتوى يزال أثناء عدم جاهزية البيانات. loading للعرض فقط؛ المشروع يقرر الإغلاق والحفظ ويملك الصلاحيات والإرسال. الطبقة العامة تغطي البطاقة؛ Aware يحتفظ بعناصر التحميل القديمة عبر slot. الوصف وحده يكفي لإظهار الرأس الافتراضي. width يكسب على max-width الأصلية التي تُستخدم فقط عند غياب width. حافة البطاقة 4px مثل Dialog في Vuetify."
+      "Attrs target VDialog; its native transition, scrim, scrollStrategy and focus behavior remain available. Persistent defaults true, so Escape/outside clicks do not close it. Native focus capture/trap, scroll blocking and overlay stacking are delegated to Vuetify. Focus returns to the opener after closing, including an external button that changes modelValue. Focus deliberately moved elsewhere is not stolen. Mount within your Vuetify application. Header slots are trusted Vue content: no raw SVG injection is built into the package. Aware retains its raw header decoration, SvgIcon, translated close button and legacy title/header visibility through header replacement; customAction maps to !showActions. Data-not-ready content is unmounted, not merely hidden. loading is presentation only; the host decides whether close/save is allowed and owns submission/permissions. The shared default loading overlay covers the card; Aware retains its existing loader markup through a slot. A description alone renders the default header. width wins over a native max-width attr, which applies only when width is absent. Modal radius is 4px, matching Vuetify dialog cards.",
+      "الخصائص تستهدف VDialog؛ خصائص الانتقال وscrim وscrollStrategy والتركيز الأصلية متاحة. persistent افتراضيًا true فيمنع Escape والنقر خارج النافذة من إغلاقها. Vuetify يدير التركيز وحصره وحجب التمرير وتراص النوافذ. يعود التركيز إلى زر الفتح بعد الإغلاق، بما فيه زر خارجي يغيّر modelValue، ولا يُسحب التركيز إذا نقله المستخدم عمدًا إلى عنصر آخر. استخدمها داخل تطبيق Vuetify. slots محتوى Vue موثوق؛ الحزمة لا تحقن SVG خامًا. Aware يحتفظ بزخرفة الرأس وSvgIcon وترجمة الإغلاق وقواعد ظهور الرأس القديمة؛ customAction يقابل عكس showActions. المحتوى يزال أثناء عدم جاهزية البيانات. loading للعرض فقط؛ المشروع يقرر الإغلاق والحفظ ويملك الصلاحيات والإرسال. الطبقة العامة تغطي البطاقة؛ Aware يحتفظ بعناصر التحميل القديمة عبر slot. الوصف وحده يكفي لإظهار الرأس الافتراضي. width يكسب على max-width الأصلية التي تُستخدم فقط عند غياب width. حافة البطاقة 4px مثل Dialog في Vuetify."
     ],
     "example": "<button type=\"button\" @click=\"open = true\">Open</button>\n  <WModal v-model=\"open\" title=\"Report\" width=\"640\"><template #content>Report content</template></WModal>",
     "playground": "OverlayPlayground",
@@ -3186,11 +3207,1405 @@ export default [
       "العنصر الذي يحمل `.wakeb-drawer`: على Vuetify جذر VNavigationDrawer، وهو عنصر `<div role=\"dialog\">` منقول يبقى في DOM تحت `inert` أثناء إغلاق اللوحة، وعلى PrimeVue العنصر المنقول الذي يحمل `role=\"dialog\"` ولا يوجد إلا أثناء فتح اللوحة. يسميه `title` ثم `ariaLabel` على كل المزودين. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر. وعلى shadcn-vue هو عنصر reka-ui المنقول الذي يحمل `role=\"dialog\"`، ولا يوجد إلا أثناء فتح اللوحة، ويسميه أيضًا `title` ثم `ariaLabel`."
     ],
     "limits": [
-      "Vuetify: rendered with VNavigationDrawer inside a Wakeb-owned VLayout that is teleported to Vuetify's overlay container in the body, so it needs no VApp or VLayout. Inside a VApp the drawer registers with that internal layout only, so the app layout and VMain do not shift. It is a modal role=dialog with aria-modal=true: focus moves into the drawer and Vuetify's focus trap keeps Tab inside, Escape and scrim clicks close it unless persistent, body scrolling is locked while open, and focus returns to the opener after it closes. Escape is ignored while focus is in another overlay, such as a dialog opened from the drawer. Closed content stays in the DOM under an inert root. transparentOverlay hides the scrim color but keeps the scrim, so the background stays blocked. When the drawer opens, the host takes one less than zIndexOverlay (default 2000, the Vuetify overlay default), or one more than the Vuetify overlays already open, so Vuetify menus, tooltips and dialogs opened from the drawer stack above it. Attrs target VNavigationDrawer; its native touch swipe and route watcher also close the drawer and emit only update:modelValue. end maps to right in LTR/left in RTL, following the Vuetify locale. Width \"50%\" parses to 50px, preserving Aware behavior; use numeric/pixel widths. Content scrolls, header/footer stay outside its scroll area. Data-not-ready unmounts content; loading overlays are independent and contain no form or save logic. Aware keeps its icon button, translated slot content, theme-token aliases and per-screen drawer-panel hooks. AddEditModal, schemas, validation and permissions remain in Aware. PrimeVue: rendered with PrimeVue Drawer, which teleports to the body under its own mask, so it needs no layout host and no wrapper around the app root. It is a modal role=dialog: focus moves into the drawer and Tab stays inside, Escape and outside clicks close it unless persistent, body scrolling is locked while open, and focus returns to the opener after it closes. Closed content is not rendered. transparentOverlay hides the mask color but keeps the mask, so the background stays inert and an outside click still closes a non-persistent drawer. The logical side follows the Wakeb direction option, not the page dir. The mask takes zIndexOverlay; without it, the drawer shares PrimeVue's modal z-index stack with WModal. Vuetify-native drawer attrs (rail, touch, route watcher) do not apply. shadcn-vue: rendered with the shadcn-vue Sheet on reka-ui Dialog, teleported to the body with its own overlay, so it needs no layout host. It is a modal role=dialog with aria-modal=true: reka-ui moves focus inside and keeps Tab there, hides the rest of the page from assistive technology and locks body scroll; Escape and outside presses close it unless persistent, and Wakeb returns focus to the element focused before it opened. Closed content is not rendered. transparentOverlay keeps a transparent overlay, so the background stays blocked. The side follows the Wakeb direction option; only left and right sides exist. Both the overlay and the panel take zIndexOverlay; without it they use the Sheet default z-index 50, and later overlays stack above earlier ones. On every provider, Escape pressed in a dialog or menu opened from the drawer closes only that overlay; the next Escape closes the drawer.",
-      "على Vuetify: تُرسم بـVNavigationDrawer داخل VLayout خاص بـWakeb يُنقل إلى حاوية الطبقات الخاصة بـVuetify في body، فلا تحتاج VApp ولا VLayout. وداخل VApp تُسجَّل اللوحة في هذا التخطيط الداخلي وحده، فلا يتغير تخطيط التطبيق ولا موضع VMain. هي role=dialog مشروطة مع aria-modal=true: ينتقل التركيز إلى داخلها ويُبقي حاصر التركيز في Vuetify مفتاح Tab فيها، ويغلقها Escape والنقر على الخلفية ما لم تكن persistent، ويُمنع تمرير الصفحة أثناء فتحها، ويعود التركيز إلى زر الفتح بعد إغلاقها. ويُتجاهل Escape ما دام التركيز في طبقة أخرى، مثل نافذة فُتحت من داخل اللوحة. يبقى المحتوى المغلق في DOM تحت جذر inert. يخفي transparentOverlay لون الخلفية ويبقيها، فتظل الصفحة محجوبة. عند فتح اللوحة يأخذ الحاضن قيمة أقل بواحد من zIndexOverlay (والقيمة الافتراضية 2000، وهي القيمة الافتراضية لطبقات Vuetify)، أو أعلى بواحد من طبقات Vuetify المفتوحة، وتظهر قوائم Vuetify وتلميحاته ونوافذه المفتوحة من داخل اللوحة فوقها. الخصائص تستهدف VNavigationDrawer؛ ويغلق السحب باللمس ومراقبة المسار الأصليان اللوحة أيضًا ويرسلان update:modelValue فقط. end يمين في LTR ويسار في RTL وفق لغة Vuetify. العرض \"50%\" يتحول إلى 50px للحفاظ على سلوك Aware؛ استخدم أرقامًا أو بكسل. المحتوى يتمرر والرأس والقدم خارجه. عدم جاهزية البيانات يزيل المحتوى؛ طبقة التحميل مستقلة دون حفظ أو form. Aware يحتفظ بزر الأيقونة وترجمة المحتوى وربط الثيم ونقاط تنسيق drawer-panel. AddEditModal وschema والتحقق والصلاحيات تبقى في Aware. على PrimeVue: تُرسم بـDrawer من PrimeVue، وهو يُنقل إلى body تحت طبقة خلفية خاصة به، فلا يحتاج layout حاضنًا ولا غلافًا حول جذر التطبيق. هي role=dialog مشروطة: ينتقل التركيز إلى داخلها ويبقى Tab فيها، ويغلقها Escape والنقر خارجها ما لم تكن persistent، ويُمنع تمرير الصفحة أثناء فتحها، ويعود التركيز إلى زر الفتح بعد إغلاقها. المحتوى المغلق لا يُرسم. يخفي transparentOverlay لون الخلفية ويبقيها، فتظل الصفحة غير قابلة للتفاعل ويغلق النقر الخارجي اللوحة غير الـpersistent. يتبع الجانب المنطقي خيار direction في Wakeb لا dir الصفحة. تأخذ الخلفية zIndexOverlay، وبدونه تتشارك اللوحة مع WModal ترتيب z-index الخاص بنوافذ PrimeVue. خصائص Vuetify الأصلية للوحة (rail واللمس ومراقبة المسار) لا تنطبق. على shadcn-vue: تُرسم بـSheet من shadcn-vue فوق Dialog من reka-ui، وتُنقل إلى body مع طبقة خلفية خاصة بها، فلا تحتاج layout حاضنًا. هي role=dialog مشروطة مع aria-modal=true: تنقل reka-ui التركيز إلى داخلها وتبقي Tab فيها، وتخفي بقية الصفحة عن التقنيات المساعدة وتمنع تمرير الصفحة؛ ويغلقها Escape والضغط خارجها ما لم تكن persistent، ويعيد Wakeb التركيز إلى العنصر الذي كان مركّزًا قبل فتحها. المحتوى المغلق لا يُرسم. يُبقي transparentOverlay طبقة خلفية شفافة، فتظل الصفحة محجوبة. يتبع الجانب خيار direction في Wakeb، ولا يوجد إلا الجانبان الأيسر والأيمن. تأخذ الطبقة الخلفية واللوحة معًا zIndexOverlay؛ وبدونه تستخدمان z-index الافتراضي 50 في Sheet، وتعلو الطبقات اللاحقة على السابقة. على كل المزودات، يغلق Escape داخل نافذة أو قائمة فُتحت من اللوحة تلك الطبقة وحدها، ويغلق Escape التالي اللوحة."
+      "Vuetify: rendered with VNavigationDrawer inside a Wakeb-owned VLayout that is teleported to Vuetify's overlay container in the body, so it needs no VApp or VLayout. Inside a VApp the drawer registers with that internal layout only, so the app layout and VMain do not shift. It is a modal role=dialog with aria-modal=true: focus moves into the drawer and Vuetify's focus trap keeps Tab inside, Escape and scrim clicks close it unless persistent, body scrolling is locked while open, and focus returns to the opener after it closes. Escape is ignored while focus is in another overlay, such as a dialog opened from the drawer. Closed content stays in the DOM under an inert root. transparentOverlay hides the scrim color but keeps the scrim, so the background stays blocked. When the drawer opens, the host takes one less than zIndexOverlay (default 2000, the Vuetify overlay default), or one more than the Vuetify overlays already open, so Vuetify menus, tooltips and dialogs opened from the drawer stack above it. Attrs target VNavigationDrawer; its native touch swipe and route watcher also close the drawer and emit only update:modelValue. end maps to right in LTR/left in RTL; an explicit Wakeb direction is scoped to the component without changing the host Vuetify locale. Width \"50%\" parses to 50px, preserving Aware behavior; use numeric/pixel widths. Content scrolls, header/footer stay outside its scroll area. Data-not-ready unmounts content; loading overlays are independent and contain no form or save logic. Aware keeps its icon button, translated slot content, theme-token aliases and per-screen drawer-panel hooks. AddEditModal, schemas, validation and permissions remain in Aware. PrimeVue: rendered with PrimeVue Drawer, which teleports to the body under its own mask, so it needs no layout host and no wrapper around the app root. It is a modal role=dialog: focus moves into the drawer and Tab stays inside, Escape and outside clicks close it unless persistent, body scrolling is locked while open, and focus returns to the opener after it closes. Closed content is not rendered. transparentOverlay hides the mask color but keeps the mask, so the background stays inert and an outside click still closes a non-persistent drawer. The logical side follows the Wakeb direction option, not the page dir. The mask takes zIndexOverlay; without it, the drawer shares PrimeVue's modal z-index stack with WModal. Vuetify-native drawer attrs (rail, touch, route watcher) do not apply. shadcn-vue: rendered with the shadcn-vue Sheet on reka-ui Dialog, teleported to the body with its own overlay, so it needs no layout host. It is a modal role=dialog with aria-modal=true: reka-ui moves focus inside and keeps Tab there, hides the rest of the page from assistive technology and locks body scroll; Escape and outside presses close it unless persistent, and Wakeb returns focus to the element focused before it opened. Closed content is not rendered. transparentOverlay keeps a transparent overlay, so the background stays blocked. The side follows the Wakeb direction option; only left and right sides exist. Both the overlay and the panel take zIndexOverlay; without it they use the Sheet default z-index 50, and later overlays stack above earlier ones. On every provider, Escape pressed in a dialog or menu opened from the drawer closes only that overlay; the next Escape closes the drawer.",
+      "على Vuetify: تُرسم بـVNavigationDrawer داخل VLayout خاص بـWakeb يُنقل إلى حاوية الطبقات الخاصة بـVuetify في body، فلا تحتاج VApp ولا VLayout. وداخل VApp تُسجَّل اللوحة في هذا التخطيط الداخلي وحده، فلا يتغير تخطيط التطبيق ولا موضع VMain. هي role=dialog مشروطة مع aria-modal=true: ينتقل التركيز إلى داخلها ويُبقي حاصر التركيز في Vuetify مفتاح Tab فيها، ويغلقها Escape والنقر على الخلفية ما لم تكن persistent، ويُمنع تمرير الصفحة أثناء فتحها، ويعود التركيز إلى زر الفتح بعد إغلاقها. ويُتجاهل Escape ما دام التركيز في طبقة أخرى، مثل نافذة فُتحت من داخل اللوحة. يبقى المحتوى المغلق في DOM تحت جذر inert. يخفي transparentOverlay لون الخلفية ويبقيها، فتظل الصفحة محجوبة. عند فتح اللوحة يأخذ الحاضن قيمة أقل بواحد من zIndexOverlay (والقيمة الافتراضية 2000، وهي القيمة الافتراضية لطبقات Vuetify)، أو أعلى بواحد من طبقات Vuetify المفتوحة، وتظهر قوائم Vuetify وتلميحاته ونوافذه المفتوحة من داخل اللوحة فوقها. الخصائص تستهدف VNavigationDrawer؛ ويغلق السحب باللمس ومراقبة المسار الأصليان اللوحة أيضًا ويرسلان update:modelValue فقط. end يمين في LTR ويسار في RTL؛ يُطبّق direction الصريح في Wakeb داخل نطاق المكوّن دون تغيير لغة Vuetify في التطبيق. العرض \"50%\" يتحول إلى 50px للحفاظ على سلوك Aware؛ استخدم أرقامًا أو بكسل. المحتوى يتمرر والرأس والقدم خارجه. عدم جاهزية البيانات يزيل المحتوى؛ طبقة التحميل مستقلة دون حفظ أو form. Aware يحتفظ بزر الأيقونة وترجمة المحتوى وربط الثيم ونقاط تنسيق drawer-panel. AddEditModal وschema والتحقق والصلاحيات تبقى في Aware. على PrimeVue: تُرسم بـDrawer من PrimeVue، وهو يُنقل إلى body تحت طبقة خلفية خاصة به، فلا يحتاج layout حاضنًا ولا غلافًا حول جذر التطبيق. هي role=dialog مشروطة: ينتقل التركيز إلى داخلها ويبقى Tab فيها، ويغلقها Escape والنقر خارجها ما لم تكن persistent، ويُمنع تمرير الصفحة أثناء فتحها، ويعود التركيز إلى زر الفتح بعد إغلاقها. المحتوى المغلق لا يُرسم. يخفي transparentOverlay لون الخلفية ويبقيها، فتظل الصفحة غير قابلة للتفاعل ويغلق النقر الخارجي اللوحة غير الـpersistent. يتبع الجانب المنطقي خيار direction في Wakeb لا dir الصفحة. تأخذ الخلفية zIndexOverlay، وبدونه تتشارك اللوحة مع WModal ترتيب z-index الخاص بنوافذ PrimeVue. خصائص Vuetify الأصلية للوحة (rail واللمس ومراقبة المسار) لا تنطبق. على shadcn-vue: تُرسم بـSheet من shadcn-vue فوق Dialog من reka-ui، وتُنقل إلى body مع طبقة خلفية خاصة بها، فلا تحتاج layout حاضنًا. هي role=dialog مشروطة مع aria-modal=true: تنقل reka-ui التركيز إلى داخلها وتبقي Tab فيها، وتخفي بقية الصفحة عن التقنيات المساعدة وتمنع تمرير الصفحة؛ ويغلقها Escape والضغط خارجها ما لم تكن persistent، ويعيد Wakeb التركيز إلى العنصر الذي كان مركّزًا قبل فتحها. المحتوى المغلق لا يُرسم. يُبقي transparentOverlay طبقة خلفية شفافة، فتظل الصفحة محجوبة. يتبع الجانب خيار direction في Wakeb، ولا يوجد إلا الجانبان الأيسر والأيمن. تأخذ الطبقة الخلفية واللوحة معًا zIndexOverlay؛ وبدونه تستخدمان z-index الافتراضي 50 في Sheet، وتعلو الطبقات اللاحقة على السابقة. على كل المزودات، يغلق Escape داخل نافذة أو قائمة فُتحت من اللوحة تلك الطبقة وحدها، ويغلق Escape التالي اللوحة."
     ],
     "example": "<button type=\"button\" @click=\"open = true\">Open</button>\n  <WDrawer v-model=\"open\" title=\"Details\"><template #content>Details content</template></WDrawer>",
     "playground": "OverlayPlayground",
     "setup": "import { ref } from 'vue'\nconst open = ref(false)"
+  },
+  {
+    "name": "WTextField",
+    "slug": "text-field",
+    "interface": "TextFieldProps",
+    "summary": [
+      "A labelled single-line text input with portable validation rules and start/end adornments.",
+      "حقل إدخال نصي بسطر واحد له عنوان وقواعد تحقق موحدة وعناصر في بدايته ونهايته."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "string | number | null",
+        "undefined",
+        "Current value; typing emits update:modelValue with the input string.",
+        "القيمة الحالية؛ الكتابة ترسل update:modelValue بنص الحقل."
+      ],
+      [
+        "type",
+        "\"text\" | \"search\" | \"email\" | \"tel\" | \"url\" | \"password\" | \"number\"",
+        "\"text\"",
+        "Native input type.",
+        "نوع الإدخال الأصلي."
+      ],
+      [
+        "label",
+        "string",
+        "undefined",
+        "Already translated visible label, linked to the input.",
+        "عنوان ظاهر مترجم من المشروع ومربوط بالحقل."
+      ],
+      [
+        "placeholder",
+        "string",
+        "undefined",
+        "Already translated placeholder.",
+        "نص توضيحي مترجم من المشروع."
+      ],
+      [
+        "variant",
+        "\"outline\" | \"filled\"",
+        "\"outline\"",
+        "Outlined or filled field surface.",
+        "حقل بإطار أو بخلفية ممتلئة."
+      ],
+      [
+        "disabled",
+        "boolean",
+        "false",
+        "Native disabled input; no events.",
+        "حقل معطل أصليًا ولا يرسل أحداثًا."
+      ],
+      [
+        "readonly",
+        "boolean",
+        "false",
+        "Native readonly input; it stays focusable.",
+        "حقل للقراءة فقط ويبقى قابلًا للتركيز."
+      ],
+      [
+        "required",
+        "boolean",
+        "false",
+        "Adds the native required attribute; pair it with a rule for a message.",
+        "يضيف خاصية required الأصلية؛ أضف قاعدة لإظهار رسالة."
+      ],
+      [
+        "rules",
+        "readonly WakebFieldRule[]",
+        "[]",
+        "Rules run on every value; the first one that does not return true shows its message.",
+        "تُنفذ القواعد مع كل قيمة، وتظهر رسالة أول قاعدة لا ترجع true."
+      ],
+      [
+        "hideDetails",
+        "boolean | \"auto\"",
+        "false",
+        "true hides the message row; \"auto\" shows it only while there is a message.",
+        "true يخفي سطر الرسالة؛ و\"auto\" يظهره فقط عند وجود رسالة."
+      ],
+      [
+        "density",
+        "\"default\" | \"comfortable\" | \"compact\"",
+        "undefined",
+        "Field height. Unset keeps the provider default: Vuetify uses its configured VTextField density; PrimeVue and shadcn-vue use their normal size.",
+        "ارتفاع الحقل. بدون قيمة يبقى الافتراضي للمزود: Vuetify يستخدم density المضبوطة لـVTextField، وPrimeVue وshadcn-vue يستخدمان الحجم العادي."
+      ],
+      [
+        "errorMessages",
+        "string | readonly string[]",
+        "undefined",
+        "Messages from outside the field, such as server errors. While one is set the field is invalid at once and the first message shows before any rule message.",
+        "رسائل من خارج الحقل مثل أخطاء السيرفر. طالما فيه رسالة يصبح الحقل غير صالح فورًا وتظهر أول رسالة قبل رسائل القواعد."
+      ]
+    ],
+    "variables": [],
+    "events": [
+      "`update:modelValue(value: string)` on every input. Number fields also emit the input string.",
+      "`update:modelValue(value: string)` مع كل إدخال. حقول الأرقام ترسل نص الحقل أيضًا."
+    ],
+    "slots": [
+      "`start` and `end` (no payload) render inside the field before and after the input, for icons or buttons.",
+      "`start` و`end` (بدون بيانات) يظهران داخل الحقل قبل الإدخال وبعده، للأيقونات أو الأزرار."
+    ],
+    "attrs": [
+      "Like Vuetify's VTextField on every provider: `class`, `style`, `id`, `inert`, `dir`, `data-*` and all listeners reach the field root (`.wakeb-text-field`); every other attribute (`name`, `autocomplete`, `aria-*`, `maxlength`, `inputmode`) reaches the native input, with the focus and blur listeners.",
+      "مثل VTextField في Vuetify على كل المزودات: `class` و`style` و`id` و`inert` و`dir` و`data-*` وكل المستمعات تصل إلى جذر الحقل (`.wakeb-text-field`)، وباقي السمات (`name` و`autocomplete` و`aria-*` و`maxlength` و`inputmode`) تصل إلى الإدخال الأصلي مع مستمعي focus وblur."
+    ],
+    "limits": [
+      "The label is a real `<label for>`, so the input has an accessible name. Validation messages appear after the first input or blur, sit in a role=alert element and are linked through aria-describedby with aria-invalid=true. A rule that returns false marks the field invalid without a message. errorMessages show without waiting for input and only the first one is displayed. density: Vuetify maps it to VTextField density (56, 48 and 40px); PrimeVue renders compact as the small InputText and the other values at the normal size; shadcn-vue renders compact at 2rem and the other values at 2.25rem. Vuetify: rendered with VTextField (outlined or filled) and its own validation, so it also registers with a surrounding VForm. PrimeVue: rendered with InputText (outlined or filled) and the Wakeb label and message markup; it does not register with any form. shadcn-vue: the shadcn-vue Input styles on a native input with the Wakeb label and message markup. Floating labels, counters, clearable, prefix/suffix text and multi-line input are not part of the contract.",
+      "العنوان عنصر `<label for>` حقيقي، فيحصل الحقل على اسم مقروء. تظهر رسائل التحقق بعد أول إدخال أو مغادرة للحقل، داخل عنصر role=alert، وتُربط بالحقل عبر aria-describedby مع aria-invalid=true. القاعدة التي ترجع false تجعل الحقل غير صالح دون رسالة. رسائل errorMessages تظهر دون انتظار الإدخال، وتُعرض أول رسالة فقط. density: على Vuetify تُمرَّر إلى density في VTextField (56 و48 و40 بكسل)؛ على PrimeVue تُرسم compact بحجم InputText الصغير وباقي القيم بالحجم العادي؛ على shadcn-vue تُرسم compact بارتفاع 2rem وباقي القيم بـ2.25rem. على Vuetify: يُرسم بـVTextField (بإطار أو ممتلئ) مع التحقق الخاص به، فيُسجَّل أيضًا في VForm المحيط. على PrimeVue: يُرسم بـInputText (بإطار أو ممتلئ) مع عنوان Wakeb ورسالته، ولا يُسجَّل في أي form. على shadcn-vue: تنسيق Input من shadcn-vue على إدخال أصلي مع عنوان Wakeb ورسالته. العنوان العائم والعدّاد وزر المسح ونص البادئة واللاحقة والإدخال متعدد الأسطر ليست جزءًا من العقد."
+    ],
+    "example": "<WTextField v-model=\"email\" type=\"email\" label=\"Email\" :rules=\"[v => !!v || 'Required']\" hide-details=\"auto\" />",
+    "playground": "FormsPlayground",
+    "setup": "import { ref } from 'vue'\nconst email = ref('')"
+  },
+  {
+    "name": "WPopover",
+    "slug": "popover",
+    "interface": "PopoverProps",
+    "summary": [
+      "A non-modal panel anchored to an activator, for filters and small forms that stay open while you work in them.",
+      "لوحة غير مشروطة مرتبطة بزر فتح، للفلاتر والنماذج الصغيرة التي تبقى مفتوحة أثناء العمل فيها."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "boolean",
+        "undefined",
+        "Open state. Without it the popover keeps its own state; each local change emits once.",
+        "حالة الفتح. بدونها يحتفظ المكوّن بحالته، وكل تغيير محلي يرسل حدثًا واحدًا."
+      ],
+      [
+        "location",
+        "WakebPopoverLocation",
+        "\"bottom start\"",
+        "Side and logical alignment relative to the activator; start and end follow the direction.",
+        "الجانب والمحاذاة المنطقية بالنسبة لزر الفتح؛ start وend يتبعان الاتجاه."
+      ],
+      [
+        "offset",
+        "number",
+        "0",
+        "Gap in pixels between the activator and the panel.",
+        "المسافة بالبكسل بين زر الفتح واللوحة."
+      ],
+      [
+        "disabled",
+        "boolean",
+        "false",
+        "Never opens; disabling an open popover closes it.",
+        "لا يفتح؛ وتعطيله أثناء الفتح يغلقه."
+      ],
+      [
+        "closeOnContentClick",
+        "boolean",
+        "false",
+        "Close after any click inside the panel.",
+        "الإغلاق بعد أي نقرة داخل اللوحة."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "undefined",
+        "Already translated accessible name of the dialog panel.",
+        "اسم مقروء ومترجم للوحة."
+      ],
+      [
+        "contentClass",
+        "ComponentClass",
+        "undefined",
+        "Classes on the panel.",
+        "أصناف CSS على اللوحة."
+      ],
+      [
+        "contentStyle",
+        "CSSProperties",
+        "undefined",
+        "Inline styles on the panel, applied last.",
+        "أنماط مباشرة على اللوحة، تُطبّق أخيرًا."
+      ]
+    ],
+    "variables": [
+      [
+        "--wakeb-popover-background",
+        "var(--wakeb-ui-surface, rgb(var(--v-theme-surface, 255, 255, 255)))"
+      ],
+      [
+        "--wakeb-popover-border",
+        "0"
+      ],
+      [
+        "--wakeb-popover-radius",
+        "4px"
+      ],
+      [
+        "--wakeb-popover-shadow",
+        "Vuetify menu elevation"
+      ]
+    ],
+    "events": [
+      "`update:modelValue(value: boolean)` when the activator, the `close` callback, Escape, an outside click or `disabled` changes the open state. Parent model changes do not emit.",
+      "`update:modelValue(value: boolean)` عندما يغيّر زر الفتح أو دالة `close` أو Escape أو النقر خارج اللوحة أو `disabled` حالة الفتح. تغيير الأب للموديل لا يرسل حدثًا."
+    ],
+    "slots": [
+      "`activator {props,isActive}`: bind `props` on your button; they toggle the panel and carry aria-haspopup=\"dialog\", aria-expanded and aria-controls. `default {close}`: the panel content; call `close()` to dismiss it.",
+      "`activator {props,isActive}`: اربط `props` على الزر؛ فهي تفتح اللوحة وتغلقها وتحمل aria-haspopup=\"dialog\" وaria-expanded وaria-controls. `default {close}`: محتوى اللوحة؛ استدعِ `close()` لإغلاقها."
+    ],
+    "attrs": [
+      "Vuetify attributes fall through to VMenu. On PrimeVue and shadcn-vue they bind to the inline activator anchor span, including class, style, id, data-* and DOM listeners; they do not reach the panel or the slotted button. Use contentClass and contentStyle for the panel and the activator slot props for the button. The panel (.wakeb-popover) is teleported to the body with the Wakeb theme scope and zIndexOverlay.",
+      "على Vuetify تمر السمات إلى VMenu. على PrimeVue وshadcn-vue تصل السمات إلى span المحيط بزر الفتح، وتشمل class وstyle وid وdata-* ومستمعي DOM؛ ولا تصل إلى اللوحة أو الزر داخل slot. استخدم contentClass وcontentStyle للوحة وprops الخاصة بـactivator للزر. تُنقل اللوحة (.wakeb-popover) إلى body مع نطاق الثيم وzIndexOverlay."
+    ],
+    "limits": [
+      "The panel is a non-modal role=dialog with aria-modal=false and the ariaLabel name. Focus moves into the panel when it opens, Tab is not trapped, Escape and outside clicks close it, and focus returns to the activator when it closes from inside. Content clicks keep it open unless closeOnContentClick is set. Vuetify: rendered with VMenu. PrimeVue: rendered with Popover, which positions the panel below the activator and flips it above when there is no room, so location and offset only partly apply; the activator is wrapped in an inline-block span. shadcn-vue: rendered with reka-ui Popover and the shadcn-vue PopoverContent; the activator is wrapped in an inline-block span. Hover opening, arrows and nested modal behavior are not part of the contract.",
+      "اللوحة role=dialog غير مشروطة مع aria-modal=false واسم ariaLabel. ينتقل التركيز إلى اللوحة عند فتحها، ولا يُحصر Tab داخلها، ويغلقها Escape والنقر خارجها، ويعود التركيز إلى زر الفتح عند إغلاقها من داخلها. النقر داخل اللوحة لا يغلقها إلا مع closeOnContentClick. على Vuetify: تُرسم بـVMenu. على PrimeVue: تُرسم بـPopover الذي يضع اللوحة أسفل زر الفتح ويقلبها للأعلى عند ضيق المساحة، فلا ينطبق location وoffset إلا جزئيًا، ويُلف زر الفتح في span من نوع inline-block. على shadcn-vue: تُرسم بـPopover من reka-ui وPopoverContent من shadcn-vue، ويُلف زر الفتح في span من نوع inline-block. الفتح بالمرور والسهم والسلوك المشروط المتداخل ليست جزءًا من العقد."
+    ],
+    "example": "<WPopover v-model=\"open\" aria-label=\"Filters\">\n    <template #activator=\"{ props }\"><button type=\"button\" v-bind=\"props\">Filters</button></template>\n    <template #default=\"{ close }\"><button type=\"button\" @click=\"close\">Done</button></template>\n  </WPopover>",
+    "playground": "FormsPlayground",
+    "setup": "import { ref } from 'vue'\nconst open = ref(false)"
+  },
+  {
+    "name": "WSwitch",
+    "slug": "switch",
+    "interface": "SwitchProps",
+    "summary": [
+      "An on/off switch with a boolean model and a linked label.",
+      "مفتاح تشغيل وإيقاف بقيمة boolean وعنوان مربوط به."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "boolean",
+        "false",
+        "On state; a toggle emits update:modelValue with the new boolean.",
+        "حالة التشغيل؛ كل تبديل يرسل update:modelValue بالقيمة الجديدة."
+      ],
+      [
+        "label",
+        "string",
+        "undefined",
+        "Already translated visible label, linked to the control.",
+        "عنوان ظاهر مترجم من المشروع ومربوط بعنصر التحكم."
+      ],
+      [
+        "disabled",
+        "boolean",
+        "false",
+        "Native disabled control; clicks do not change the model.",
+        "عنصر تحكم معطل أصليًا؛ النقر لا يغيّر القيمة."
+      ],
+      [
+        "color",
+        "WakebColor",
+        "\"primary\"",
+        "Checked color: a Wakeb intent or a CSS color.",
+        "لون الحالة المحددة: intent من Wakeb أو لون CSS."
+      ],
+      [
+        "density",
+        "\"default\" | \"comfortable\" | \"compact\"",
+        "undefined",
+        "Control spacing. Unset keeps the provider default; Vuetify uses its configured density.",
+        "المسافات حول عنصر التحكم. بدون قيمة يبقى الافتراضي للمزود؛ Vuetify يستخدم density المضبوطة."
+      ],
+      [
+        "inset",
+        "boolean",
+        "false",
+        "Vuetify inset style: a wide track with the thumb inside. PrimeVue and shadcn-vue switches already look this way.",
+        "شكل inset في Vuetify: مسار عريض والمقبض بداخله. مفاتيح PrimeVue وshadcn-vue لها هذا الشكل أصلًا."
+      ],
+      [
+        "loading",
+        "boolean",
+        "false",
+        "Marks the control aria-busy=true while work is pending. It stays operable; disable it yourself to block changes.",
+        "يضع aria-busy=true على عنصر التحكم أثناء انتظار عملية. يبقى قابلًا للاستخدام؛ عطّله بنفسك لمنع التغيير."
+      ]
+    ],
+    "variables": [],
+    "events": [
+      "`update:modelValue(value: boolean)` when the user toggles the switch.",
+      "`update:modelValue(value: boolean)` عندما يبدّل المستخدم المفتاح."
+    ],
+    "slots": [
+      "`label` (no payload) replaces the label text and stays linked to the control.",
+      "`label` (بدون بيانات) يستبدل نص العنوان ويبقى مربوطًا بعنصر التحكم."
+    ],
+    "attrs": [
+      "Like Vuetify's selection controls on every provider: `class`, `style`, `id`, `inert`, `dir`, `data-*` and all listeners reach the root (`.wakeb-switch` / `.wakeb-checkbox`); every other attribute (`name`, `aria-label`, `aria-describedby`) reaches the control element, with the focus and blur listeners.",
+      "مثل عناصر الاختيار في Vuetify على كل المزودات: `class` و`style` و`id` و`inert` و`dir` و`data-*` وكل المستمعات تصل إلى الجذر (`.wakeb-switch` / `.wakeb-checkbox`)، وباقي السمات (`name` و`aria-label` و`aria-describedby`) تصل إلى عنصر التحكم مع مستمعي focus وblur."
+    ],
+    "limits": [
+      "The control has role=switch and its checked state, and the label is a `<label for>` linked to it. Without a visible label, pass `aria-label`. Space toggles it; there is no message row, rules or indeterminate state. Vuetify: rendered with VSwitch (hide-details), its native checkbox gets role=switch, and loading also shows the Vuetify thumb spinner. PrimeVue: rendered with ToggleSwitch; the color sets its checked track tokens, density and inset change nothing and loading dims the switch. shadcn-vue: the shadcn-vue Switch styles on the reka-ui SwitchRoot button; density and inset change nothing and loading dims the switch.",
+      "عنصر التحكم له role=switch وحالة التحديد، والعنوان عنصر `<label for>` مربوط به. بدون عنوان ظاهر مرّر `aria-label`. زر المسافة يبدّله؛ لا يوجد سطر رسائل ولا قواعد ولا حالة غير محددة. على Vuetify: يُرسم بـVSwitch (hide-details)، ويأخذ الإدخال الأصلي role=switch، وloading يعرض أيضًا مؤشر Vuetify داخل المقبض. على PrimeVue: يُرسم بـToggleSwitch؛ اللون يضبط tokens المسار المحدد، وdensity وinset لا يغيّران شيئًا، وloading يخفّت المفتاح. على shadcn-vue: تنسيق Switch من shadcn-vue على زر SwitchRoot من reka-ui؛ density وinset لا يغيّران شيئًا، وloading يخفّت المفتاح."
+    ],
+    "example": "<WSwitch v-model=\"notify\" label=\"Notifications\" />",
+    "playground": "FormsPlayground",
+    "setup": "import { ref } from 'vue'\nconst notify = ref(true)"
+  },
+  {
+    "name": "WCheckbox",
+    "slug": "checkbox",
+    "interface": "CheckboxProps",
+    "summary": [
+      "A checkbox with a boolean model, or with an array model that holds the checked values.",
+      "مربع اختيار بقيمة boolean، أو بقائمة تحتوي القيم المحددة."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "boolean | readonly unknown[]",
+        "false",
+        "Checked state. With an array, the box is checked while it includes `value`, and toggling emits a new array with `value` added or removed.",
+        "حالة التحديد. مع قائمة يكون المربع محددًا طالما تحتوي `value`، وكل تبديل يرسل قائمة جديدة بإضافة `value` أو حذفها."
+      ],
+      [
+        "value",
+        "unknown",
+        "undefined",
+        "The item this box adds to or removes from an array model; compared with ===.",
+        "العنصر الذي يضيفه المربع إلى القائمة أو يحذفه منها؛ تتم المقارنة بـ===."
+      ],
+      [
+        "label",
+        "string",
+        "undefined",
+        "Already translated visible label, linked to the control.",
+        "عنوان ظاهر مترجم من المشروع ومربوط بعنصر التحكم."
+      ],
+      [
+        "disabled",
+        "boolean",
+        "false",
+        "Native disabled control; clicks do not change the model.",
+        "عنصر تحكم معطل أصليًا؛ النقر لا يغيّر القيمة."
+      ],
+      [
+        "color",
+        "WakebColor",
+        "\"primary\"",
+        "Checked color: a Wakeb intent or a CSS color.",
+        "لون الحالة المحددة: intent من Wakeb أو لون CSS."
+      ],
+      [
+        "density",
+        "\"default\" | \"comfortable\" | \"compact\"",
+        "undefined",
+        "Control spacing. Unset keeps the provider default; Vuetify uses its configured density.",
+        "المسافات حول عنصر التحكم. بدون قيمة يبقى الافتراضي للمزود؛ Vuetify يستخدم density المضبوطة."
+      ]
+    ],
+    "variables": [],
+    "events": [
+      "`update:modelValue(value: boolean | unknown[])` when the user toggles the box: a boolean, or a new array for an array model.",
+      "`update:modelValue(value: boolean | unknown[])` عندما يبدّل المستخدم المربع: قيمة boolean، أو قائمة جديدة عند استخدام قائمة."
+    ],
+    "slots": [
+      "`label` (no payload) replaces the label text and stays linked to the control.",
+      "`label` (بدون بيانات) يستبدل نص العنوان ويبقى مربوطًا بعنصر التحكم."
+    ],
+    "attrs": [
+      "Like Vuetify's selection controls on every provider: `class`, `style`, `id`, `inert`, `dir`, `data-*` and all listeners reach the root (`.wakeb-switch` / `.wakeb-checkbox`); every other attribute (`name`, `aria-label`, `aria-describedby`) reaches the control element, with the focus and blur listeners.",
+      "مثل عناصر الاختيار في Vuetify على كل المزودات: `class` و`style` و`id` و`inert` و`dir` و`data-*` وكل المستمعات تصل إلى الجذر (`.wakeb-switch` / `.wakeb-checkbox`)، وباقي السمات (`name` و`aria-label` و`aria-describedby`) تصل إلى عنصر التحكم مع مستمعي focus وblur."
+    ],
+    "limits": [
+      "The control is a checkbox with its checked state, and the label is a `<label for>` linked to it. Space toggles it. Wakeb owns the array model on every provider, so the providers' own group and true/false value options are not used. There is no message row, rules or indeterminate state. Vuetify: rendered with VCheckbox (hide-details). PrimeVue: rendered with the binary Checkbox; the color sets its checked tokens and density changes nothing. shadcn-vue: the shadcn-vue Checkbox styles on the reka-ui CheckboxRoot button (role=checkbox); density changes nothing.",
+      "عنصر التحكم مربع اختيار له حالة التحديد، والعنوان عنصر `<label for>` مربوط به. زر المسافة يبدّله. Wakeb يدير القائمة على كل المزودات، فلا تُستخدم خيارات المجموعات وقيم true/false الخاصة بالمزودات. لا يوجد سطر رسائل ولا قواعد ولا حالة غير محددة. على Vuetify: يُرسم بـVCheckbox (hide-details). على PrimeVue: يُرسم بـCheckbox في الوضع binary؛ اللون يضبط tokens الحالة المحددة، وdensity لا يغيّر شيئًا. على shadcn-vue: تنسيق Checkbox من shadcn-vue على زر CheckboxRoot من reka-ui (role=checkbox)؛ density لا يغيّر شيئًا."
+    ],
+    "example": "<WCheckbox v-for=\"name in ['read', 'write']\" :key=\"name\" v-model=\"permissions\" :value=\"name\" :label=\"name\" />",
+    "playground": "FormsPlayground",
+    "setup": "import { ref } from 'vue'\nconst permissions = ref<boolean | unknown[]>(['read'])"
+  },
+  {
+    "name": "WSkeleton",
+    "slug": "skeleton",
+    "interface": "SkeletonProps",
+    "summary": [
+      "A loading placeholder drawn from the portable skeleton grammar; when loading ends it renders its default slot.",
+      "عنصر تحميل مؤقت يُرسم بقواعد skeleton المحمولة؛ وعند انتهاء التحميل يعرض الـslot الافتراضي."
+    ],
+    "props": [
+      [
+        "type",
+        "string",
+        "\"text\"",
+        "Comma-separated portable skeleton names (text, paragraph, heading, avatar, image, button, chip, list-item, list-item-avatar, list-item-two-line, list-item-three-line, list-item-avatar-two-line, list-item-avatar-three-line, table, table-row, card), each optionally followed by @N (capped at 100).",
+        "أسماء skeleton محمولة مفصولة بفواصل (text وparagraph وheading وavatar وimage وbutton وchip وlist-item وlist-item-avatar وlist-item-two-line وlist-item-three-line وlist-item-avatar-two-line وlist-item-avatar-three-line وtable وtable-row وcard)، ويمكن أن يتبع كل اسم ‎@N (بحد أقصى 100)."
+      ],
+      [
+        "width",
+        "string | number",
+        "undefined",
+        "Box width; numbers and numeric strings are px.",
+        "عرض الصندوق؛ الأرقام والنصوص الرقمية بالبكسل."
+      ],
+      [
+        "height",
+        "string | number",
+        "undefined",
+        "Box height; numbers and numeric strings are px.",
+        "ارتفاع الصندوق؛ الأرقام والنصوص الرقمية بالبكسل."
+      ],
+      [
+        "loading",
+        "boolean",
+        "true",
+        "While true the bones render; false renders the default slot instead (nothing without one).",
+        "طالما القيمة true تُرسم العظام؛ وfalse يعرض الـslot الافتراضي بدلًا منها (ولا شيء بدونه)."
+      ],
+      [
+        "label",
+        "string",
+        "\"Loading...\"",
+        "Accessible name of the status; the default follows the plugin locale (Arabic: جارٍ التحميل...).",
+        "الاسم المساعد لحالة التحميل؛ الافتراضي يتبع لغة الـplugin (بالعربية: جارٍ التحميل...)."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "`default` (no payload) is the loaded content, rendered while `loading` is false.",
+      "`default` (بدون بيانات) هو المحتوى بعد التحميل، ويُعرض عندما تكون `loading` بقيمة false."
+    ],
+    "attrs": [
+      "Attributes and listeners reach the skeleton root while loading. Wakeb binds role, aria-busy and aria-label after them, so those stay Wakeb-owned. When loading is false nothing of the skeleton renders and attrs are not applied to the slot content.",
+      "تصل السمات والمستمعات إلى جذر الـskeleton أثناء التحميل. يربط Wakeb السمات role وaria-busy وaria-label بعدها، فتبقى تحت تحكم Wakeb. وعندما تكون loading بقيمة false لا يُرسم شيء من الـskeleton ولا تُطبق السمات على محتوى الـslot."
+    ],
+    "limits": [
+      "The root is role=status with aria-busy=true and an aria-label; the bones are decorative. Unknown names are skipped with WAKEB_UNKNOWN_VALUE, and an empty result draws `text`. Vuetify: rendered with VSkeletonLoader, which also accepts Vuetify-only names (divider, article, sentences...) with WAKEB_DEPRECATED_VALUE; its own role=alert is replaced by the Wakeb status. PrimeVue: the shared Wakeb bone shapes drawn with PrimeVue Skeleton in unstyled mode and the Wakeb wave; Vuetify-only names are skipped. shadcn-vue: the same shapes with the shadcn-vue Skeleton look (accent color, radius, pulse); Vuetify-only names are skipped. Shapes approximate the Vuetify layouts; sizes are close, not pixel-identical.",
+      "الجذر role=status مع aria-busy=true وaria-label، والعظام زخرفية. الأسماء غير المعروفة تُتخطى مع WAKEB_UNKNOWN_VALUE، وإذا لم يبق شيء يُرسم `text`. على Vuetify: يُرسم بـVSkeletonLoader الذي يقبل أيضًا أسماء Vuetify الخاصة (divider وarticle وsentences...) مع WAKEB_DEPRECATED_VALUE، ويُستبدل role=alert الخاص به بحالة Wakeb. على PrimeVue: أشكال العظام المشتركة في Wakeb مرسومة بـSkeleton من PrimeVue في الوضع unstyled مع موجة Wakeb؛ وتُتخطى أسماء Vuetify الخاصة. على shadcn-vue: نفس الأشكال بشكل Skeleton من shadcn-vue (لون accent وradius ونبض)؛ وتُتخطى أسماء Vuetify الخاصة. الأشكال تقارب تخطيطات Vuetify؛ الأحجام قريبة وليست مطابقة بالبكسل."
+    ],
+    "example": "<WSkeleton type=\"list-item-avatar-two-line@3\" width=\"320\" />",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WRow",
+    "slug": "row",
+    "interface": "RowProps",
+    "summary": [
+      "A row of the Wakeb 12-column grid; place WCol children inside it.",
+      "صف في شبكة Wakeb ذات الاثني عشر عمودًا؛ ضع داخله عناصر WCol."
+    ],
+    "props": [
+      [
+        "dense",
+        "boolean",
+        "false",
+        "4px gutters instead of 12px.",
+        "مسافات 4px بدل 12px."
+      ],
+      [
+        "noGutters",
+        "boolean",
+        "false",
+        "No gutters; wins over dense.",
+        "بدون مسافات؛ وتتقدم على dense."
+      ],
+      [
+        "align",
+        "\"start\" | \"center\" | \"end\" | \"baseline\" | \"stretch\"",
+        "undefined",
+        "Cross-axis alignment of the columns (align-items).",
+        "محاذاة الأعمدة على المحور العرضي (align-items)."
+      ],
+      [
+        "justify",
+        "\"start\" | \"center\" | \"end\" | \"space-between\" | \"space-around\" | \"space-evenly\"",
+        "undefined",
+        "Main-axis distribution of the columns (justify-content); start and end follow the direction.",
+        "توزيع الأعمدة على المحور الرئيسي (justify-content)؛ start وend يتبعان الاتجاه."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "`default` (no payload): the WCol columns.",
+      "`default` (بدون بيانات): أعمدة WCol."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the row element (`.wakeb-grid-row`) on every provider.",
+      "تصل السمات والمستمعات العادية إلى عنصر الصف (`.wakeb-grid-row`) على كل المزودات."
+    ],
+    "limits": [
+      "The grid is Wakeb markup on every provider, so a provider's breakpoint or grid settings never change it. The row is a wrapping flex container with a negative margin equal to the column padding (12px, dense 4px). Unknown align or justify values are ignored with WAKEB_UNKNOWN_VALUE. There is no tag prop, no xl/xxl breakpoint and no per-breakpoint alignment.",
+      "الشبكة markup من Wakeb على كل المزودات، فلا تغيّرها إعدادات نقاط التوقف أو الشبكة في المزود. الصف حاوية flex تلتف بهامش سالب يساوي padding العمود (12px، أو 4px مع dense). القيم غير المعروفة في align أو justify تُتجاهل مع WAKEB_UNKNOWN_VALUE. لا توجد خاصية tag ولا نقاط توقف xl/xxl ولا محاذاة لكل نقطة توقف."
+    ],
+    "example": "<WRow dense align=\"center\">\n  <WCol cols=\"12\" md=\"6\">Start</WCol>\n  <WCol cols=\"12\" md=\"6\">End</WCol>\n</WRow>",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WCol",
+    "slug": "col",
+    "interface": "ColProps",
+    "summary": [
+      "A column of the Wakeb 12-column grid with responsive spans.",
+      "عمود في شبكة Wakeb ذات الاثني عشر عمودًا بعرض متجاوب."
+    ],
+    "props": [
+      [
+        "cols",
+        "string | number | boolean",
+        "undefined",
+        "Span below 600px and up, as a span from 1 to 12, 'auto' (content width) or true (grow). Unset grows to share the row, like VCol.",
+        "العرض من الصفر فما فوق: عرض من 1 إلى 12، أو 'auto' (عرض المحتوى) أو true (يتمدد). بدون قيمة يتمدد ليتقاسم الصف، مثل VCol."
+      ],
+      [
+        "sm",
+        "string | number | boolean",
+        "undefined",
+        "Span from 600px: a span from 1 to 12, 'auto' (content width) or true (grow).",
+        "العرض من 600px: عرض من 1 إلى 12، أو 'auto' (عرض المحتوى) أو true (يتمدد)."
+      ],
+      [
+        "md",
+        "string | number | boolean",
+        "undefined",
+        "Span from 960px: a span from 1 to 12, 'auto' (content width) or true (grow).",
+        "العرض من 960px: عرض من 1 إلى 12، أو 'auto' (عرض المحتوى) أو true (يتمدد)."
+      ],
+      [
+        "lg",
+        "string | number | boolean",
+        "undefined",
+        "Span from 1280px: a span from 1 to 12, 'auto' (content width) or true (grow).",
+        "العرض من 1280px: عرض من 1 إلى 12، أو 'auto' (عرض المحتوى) أو true (يتمدد)."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "`default` (no payload): the column content.",
+      "`default` (بدون بيانات): محتوى العمود."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the column element (`.wakeb-grid-col`) on every provider.",
+      "تصل السمات والمستمعات العادية إلى عنصر العمود (`.wakeb-grid-col`) على كل المزودات."
+    ],
+    "limits": [
+      "Breakpoints are fixed at sm 600px, md 960px and lg 1280px, the Vuetify 3 defaults, on every provider. Columns use border-box sizing and 12px padding (4px or 0 from the row). false or an empty string adds nothing; other invalid spans are ignored with WAKEB_UNKNOWN_VALUE (an invalid cols grows). There are no offset, order or xl props.",
+      "نقاط التوقف ثابتة على sm ‏600px وmd ‏960px وlg ‏1280px، وهي قيم Vuetify 3 الافتراضية، على كل المزودات. الأعمدة بحجم border-box وpadding ‏12px (أو 4px أو 0 حسب الصف). القيمة false أو النص الفارغ لا يضيفان شيئًا؛ والقيم غير الصالحة الأخرى تُتجاهل مع WAKEB_UNKNOWN_VALUE (وcols غير الصالحة تتمدد). لا توجد خصائص offset أو order أو xl."
+    ],
+    "example": "<WRow>\n  <WCol cols=\"12\" sm=\"6\" lg=\"4\">Card</WCol>\n</WRow>",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WProgressLinear",
+    "slug": "progress-linear",
+    "interface": "ProgressLinearProps",
+    "summary": [
+      "A horizontal progress bar, determinate or indeterminate, that can sit absolutely on the top or bottom edge of its container.",
+      "شريط تقدم أفقي محدد أو غير محدد، ويمكن تثبيته على الحافة العليا أو السفلى للحاوية."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "number | string",
+        "0",
+        "Progress from 0 to 100; values outside are clamped and non-numbers become 0.",
+        "التقدم من 0 إلى 100؛ القيم خارج المدى تُقص وغير الأرقام تصبح 0."
+      ],
+      [
+        "indeterminate",
+        "boolean",
+        "false",
+        "Animated bar without a value; aria-valuenow is removed.",
+        "شريط متحرك بدون قيمة؛ ويُحذف aria-valuenow."
+      ],
+      [
+        "active",
+        "boolean",
+        "true",
+        "false hides the bar (opacity 0) and sets aria-hidden=true; the element stays in place.",
+        "false يخفي الشريط (opacity 0) ويضع aria-hidden=true؛ ويبقى العنصر في مكانه."
+      ],
+      [
+        "color",
+        "WakebColor",
+        "\"primary\"",
+        "Bar color: a Wakeb intent or a CSS color.",
+        "لون الشريط: intent من Wakeb أو لون CSS."
+      ],
+      [
+        "height",
+        "number | string",
+        "4",
+        "Bar height; numbers and numeric strings are px, other strings are CSS lengths.",
+        "ارتفاع الشريط؛ الأرقام والنصوص الرقمية بالبكسل، والنصوص الأخرى أطوال CSS."
+      ],
+      [
+        "absolute",
+        "boolean",
+        "false",
+        "Positions the bar absolutely across the nearest positioned ancestor.",
+        "يضع الشريط بموضع absolute بعرض أقرب أب له موضع."
+      ],
+      [
+        "location",
+        "\"top\" | \"bottom\"",
+        "\"top\"",
+        "Edge used with absolute.",
+        "الحافة المستخدمة مع absolute."
+      ],
+      [
+        "label",
+        "string",
+        "undefined",
+        "Accessible name. Unset uses \"Loading...\" while indeterminate and \"Progress\" otherwise, following the plugin locale.",
+        "الاسم المساعد. بدون قيمة يُستخدم \"Loading...\" في الوضع غير المحدد و\"Progress\" في غيره، حسب لغة الـplugin."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "None.",
+      "لا يوجد."
+    ],
+    "attrs": [
+      "Attributes and listeners reach the progressbar element. Wakeb binds role, aria-label, aria-valuemin, aria-valuemax, aria-valuenow and aria-hidden after them, so those stay Wakeb-owned.",
+      "تصل السمات والمستمعات إلى عنصر شريط التقدم. يربط Wakeb السمات role وaria-label وaria-valuemin وaria-valuemax وaria-valuenow وaria-hidden بعدها، فتبقى تحت تحكم Wakeb."
+    ],
+    "limits": [
+      "The root is role=progressbar with min 0 and max 100 on every provider. There is no buffer, stream, striped, reverse or clickable mode. Vuetify: rendered with VProgressLinear; non-numeric heights are applied as an inline style. PrimeVue: rendered with ProgressBar (showValue off); the color and height set its value-background and height tokens. shadcn-vue: the shadcn-vue Progress styles on the reka-ui ProgressRoot, with a Wakeb sliding animation for indeterminate (still under prefers-reduced-motion) that follows the direction.",
+      "الجذر role=progressbar مع min ‏0 وmax ‏100 على كل المزودات. لا يوجد وضع buffer أو stream أو striped أو reverse أو clickable. على Vuetify: يُرسم بـVProgressLinear، والارتفاعات غير الرقمية تُطبق كنمط inline. على PrimeVue: يُرسم بـProgressBar (بدون عرض القيمة)؛ واللون والارتفاع يضبطان tokens لون القيمة والارتفاع. على shadcn-vue: تنسيق Progress من shadcn-vue على ProgressRoot من reka-ui، مع حركة انزلاق من Wakeb للوضع غير المحدد (تتوقف مع prefers-reduced-motion) وتتبع الاتجاه."
+    ],
+    "example": "<WProgressLinear :active=\"saving\" indeterminate absolute location=\"bottom\" />",
+    "playground": "ElementsPlayground",
+    "setup": "import { ref } from 'vue'\nconst saving = ref(true)"
+  },
+  {
+    "name": "WTextarea",
+    "slug": "textarea",
+    "interface": "TextareaProps",
+    "summary": [
+      "A labelled multi-line text field with the WTextField validation rules.",
+      "حقل نص متعدد الأسطر بعنوان، بنفس قواعد التحقق في WTextField."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "string | null",
+        "undefined",
+        "Field value; typing emits update:modelValue with the string.",
+        "قيمة الحقل؛ الكتابة ترسل update:modelValue بالنص."
+      ],
+      [
+        "label",
+        "string",
+        "undefined",
+        "Already translated label, linked to the textarea.",
+        "عنوان مترجم من المشروع ومربوط بالحقل."
+      ],
+      [
+        "placeholder",
+        "string",
+        "undefined",
+        "Placeholder text.",
+        "نص توضيحي داخل الحقل."
+      ],
+      [
+        "variant",
+        "\"outline\" | \"filled\"",
+        "\"outline\"",
+        "Field style.",
+        "شكل الحقل."
+      ],
+      [
+        "disabled",
+        "boolean",
+        "false",
+        "Native disabled textarea.",
+        "حقل معطل أصليًا."
+      ],
+      [
+        "readonly",
+        "boolean",
+        "false",
+        "Native read-only textarea.",
+        "حقل للقراءة فقط."
+      ],
+      [
+        "required",
+        "boolean",
+        "false",
+        "Native required attribute; add a rule for a message.",
+        "السمة required الأصلية؛ أضف قاعدة لعرض رسالة."
+      ],
+      [
+        "rules",
+        "readonly WakebFieldRule[]",
+        "[]",
+        "Rules run on every value; the first failure is shown once the field was typed in or left.",
+        "القواعد تعمل مع كل قيمة؛ وأول فشل يظهر بعد الكتابة في الحقل أو مغادرته."
+      ],
+      [
+        "hideDetails",
+        "boolean | \"auto\"",
+        "false",
+        "true hides the message row; auto shows it only with a message.",
+        "true يخفي سطر الرسائل؛ وauto يعرضه فقط عند وجود رسالة."
+      ],
+      [
+        "density",
+        "\"default\" | \"comfortable\" | \"compact\"",
+        "undefined",
+        "Field spacing. Unset keeps the provider default.",
+        "المسافات داخل الحقل. بدون قيمة يبقى الافتراضي للمزود."
+      ],
+      [
+        "errorMessages",
+        "string | readonly string[]",
+        "undefined",
+        "External messages (for example from the server); they show at once and mark the field invalid.",
+        "رسائل خارجية (مثل رسائل الخادم)؛ تظهر فورًا وتجعل الحقل غير صالح."
+      ],
+      [
+        "rows",
+        "number | string",
+        "5",
+        "Visible rows.",
+        "عدد الأسطر الظاهرة."
+      ],
+      [
+        "autoGrow",
+        "boolean",
+        "false",
+        "Grows with the content instead of scrolling.",
+        "يتمدد مع المحتوى بدل التمرير."
+      ],
+      [
+        "noResize",
+        "boolean",
+        "false",
+        "Removes the resize handle.",
+        "يزيل مقبض تغيير الحجم."
+      ]
+    ],
+    "variables": [],
+    "events": [
+      "`update:modelValue(value: string)` while the user types.",
+      "`update:modelValue(value: string)` أثناء الكتابة."
+    ],
+    "slots": [
+      "None.",
+      "لا يوجد."
+    ],
+    "attrs": [
+      "Like WTextField on every provider: `class`, `style`, `id`, `inert`, `dir`, `data-*` and all listeners reach the field root (`.wakeb-textarea`); every other attribute (`name`, `maxlength`, `autocomplete`, `aria-*`) reaches the native textarea, with the focus and blur listeners.",
+      "مثل WTextField على كل المزودات: `class` و`style` و`id` و`inert` و`dir` و`data-*` وكل المستمعات تصل إلى جذر الحقل (`.wakeb-textarea`)، وباقي السمات (`name` و`maxlength` و`autocomplete` و`aria-*`) تصل إلى عنصر textarea الأصلي مع مستمعي focus وblur."
+    ],
+    "limits": [
+      "The label is a `<label for>` linked to the textarea; invalid fields set aria-invalid=true and the message row is role=alert (aria-describedby on PrimeVue and shadcn-vue). There is no counter, clearable or prepend/append slot. Vuetify: rendered with VTextarea; Vuetify draws its floating label and message row. PrimeVue: rendered with Textarea (autoResize for autoGrow) under a Wakeb label and message row. shadcn-vue: the shadcn-vue Textarea styles on a native textarea; autoGrow uses CSS field-sizing, so browsers without it keep the rows height.",
+      "العنوان عنصر `<label for>` مربوط بالحقل؛ والحقل غير الصالح يأخذ aria-invalid=true، وسطر الرسائل role=alert (ومربوط عبر aria-describedby على PrimeVue وshadcn-vue). لا يوجد عداد ولا زر مسح ولا slot قبل الحقل أو بعده. على Vuetify: يُرسم بـVTextarea مع العنوان العائم وسطر الرسائل من Vuetify. على PrimeVue: يُرسم بـTextarea (وautoResize مع autoGrow) تحت عنوان وسطر رسائل من Wakeb. على shadcn-vue: تنسيق Textarea من shadcn-vue على textarea أصلي؛ وautoGrow يستخدم CSS field-sizing، فالمتصفحات التي لا تدعمه تبقي ارتفاع rows."
+    ],
+    "example": "<WTextarea v-model=\"notes\" label=\"Notes\" rows=\"3\" density=\"compact\" />",
+    "playground": "ElementsPlayground",
+    "setup": "import { ref } from 'vue'\nconst notes = ref('')"
+  },
+  {
+    "name": "WButtonToggle",
+    "slug": "button-toggle",
+    "interface": "ButtonToggleProps",
+    "summary": [
+      "A segmented group of toggle buttons with single or multiple selection.",
+      "مجموعة أزرار تبديل متلاصقة باختيار واحد أو متعدد."
+    ],
+    "props": [
+      [
+        "modelValue",
+        "string | number | readonly (string | number)[] | null",
+        "null",
+        "Selected value, or an array of values with multiple.",
+        "القيمة المحددة، أو قائمة قيم مع multiple."
+      ],
+      [
+        "items",
+        "readonly ButtonToggleItem[]",
+        "[]",
+        "Buttons: `{ label, value, disabled? }`; labels are already translated.",
+        "الأزرار: `{ label, value, disabled? }`؛ والأسماء مترجمة من المشروع."
+      ],
+      [
+        "multiple",
+        "boolean",
+        "false",
+        "Allows several selected items; the model is an array in item order.",
+        "يسمح بتحديد أكثر من عنصر؛ والقيمة قائمة بترتيب العناصر."
+      ],
+      [
+        "mandatory",
+        "boolean",
+        "false",
+        "Keeps the last selection: pressing it again does nothing. It never selects an item by itself.",
+        "يحافظ على آخر اختيار: الضغط عليه مرة أخرى لا يفعل شيئًا. ولا يحدد عنصرًا من تلقاء نفسه."
+      ],
+      [
+        "color",
+        "WakebColor",
+        "\"primary\"",
+        "Selected button color: a Wakeb intent or a CSS color.",
+        "لون الزر المحدد: intent من Wakeb أو لون CSS."
+      ],
+      [
+        "density",
+        "\"default\" | \"comfortable\" | \"compact\"",
+        "undefined",
+        "Button spacing. Unset keeps the provider default.",
+        "المسافات في الأزرار. بدون قيمة يبقى الافتراضي للمزود."
+      ],
+      [
+        "disabled",
+        "boolean",
+        "false",
+        "Disables every button.",
+        "يعطل كل الأزرار."
+      ],
+      [
+        "block",
+        "boolean",
+        "false",
+        "Fills the width; buttons share it equally.",
+        "يملأ العرض وتتقاسمه الأزرار بالتساوي."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "undefined",
+        "Accessible name of the group.",
+        "الاسم المساعد للمجموعة."
+      ]
+    ],
+    "variables": [],
+    "events": [
+      "`update:modelValue(value)` with the new value, null when cleared, or a new array with multiple.",
+      "`update:modelValue(value)` بالقيمة الجديدة، أو null عند الإلغاء، أو قائمة جديدة مع multiple."
+    ],
+    "slots": [
+      "`item` `{ item, selected }` replaces a button's label.",
+      "`item` يستقبل `{ item, selected }` ويستبدل نص الزر."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the group element (role=group).",
+      "تصل السمات والمستمعات العادية إلى عنصر المجموعة (role=group)."
+    ],
+    "limits": [
+      "Every provider renders a role=group of native buttons with aria-pressed, and Wakeb owns the model, so mandatory, multiple and disabled behave the same everywhere. Arrow keys do not move between buttons; Tab does. Item values are compared with ===. Vuetify: VBtnGroup (outlined, divided) of VBtn; the selected button is active and takes the color. PrimeVue: one ToggleButton per item, joined into a group; the color sets the checked ToggleButton tokens. shadcn-vue: native buttons with the shadcn-vue ToggleGroup look; the selected button is filled with the color.",
+      "كل المزودات ترسم مجموعة role=group من أزرار أصلية مع aria-pressed، وWakeb يدير القيمة، فتعمل mandatory وmultiple وdisabled بنفس الطريقة في كل مكان. مفاتيح الأسهم لا تتنقل بين الأزرار؛ Tab هو الذي يتنقل. تتم مقارنة القيم بـ===. على Vuetify: ‏VBtnGroup (outlined وdivided) من VBtn؛ الزر المحدد active ويأخذ اللون. على PrimeVue: زر ToggleButton لكل عنصر مضمومة في مجموعة؛ واللون يضبط tokens الحالة المحددة. على shadcn-vue: أزرار أصلية بشكل ToggleGroup من shadcn-vue؛ والزر المحدد يمتلئ باللون."
+    ],
+    "example": "<WButtonToggle v-model=\"position\" mandatory block aria-label=\"Legend position\" :items=\"[{ label: 'Top', value: 'top' }, { label: 'Bottom', value: 'bottom' }]\" />",
+    "playground": "ElementsPlayground",
+    "setup": "import { ref } from 'vue'\nconst position = ref<string | number | (string | number)[] | null>('top')"
+  },
+  {
+    "name": "WCard",
+    "slug": "card",
+    "interface": "CardProps",
+    "summary": [
+      "A surface with an optional title, subtitle and actions row.",
+      "سطح بعنوان وعنوان فرعي وصف أزرار اختيارية."
+    ],
+    "props": [
+      [
+        "title",
+        "string",
+        "undefined",
+        "Already translated title.",
+        "عنوان مترجم من المشروع."
+      ],
+      [
+        "subtitle",
+        "string",
+        "undefined",
+        "Already translated subtitle under the title.",
+        "عنوان فرعي مترجم تحت العنوان."
+      ],
+      [
+        "variant",
+        "\"elevated\" | \"flat\" | \"outlined\"",
+        "\"elevated\"",
+        "Shadow, no shadow or a border without a shadow.",
+        "ظل، أو بدون ظل، أو إطار بدون ظل."
+      ],
+      [
+        "padded",
+        "boolean",
+        "true",
+        "Pads the default slot; false lets the content reach the edges (images, tables).",
+        "يضيف مسافات حول الـslot الافتراضي؛ وfalse يجعل المحتوى يصل للحواف (صور وجداول)."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "`default` (no payload): the content. `title` (no payload) replaces the title text. `actions` (no payload) is a row at the bottom.",
+      "`default` (بدون بيانات): المحتوى. `title` (بدون بيانات) يستبدل نص العنوان. `actions` (بدون بيانات) صف في الأسفل."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the card root (`.wakeb-card`) on every provider.",
+      "تصل السمات والمستمعات العادية إلى جذر البطاقة (`.wakeb-card`) على كل المزودات."
+    ],
+    "limits": [
+      "The title is a styled text block, not a heading; put a heading element in the title slot when the page outline needs one. There is no image, loading or link mode. Vuetify: rendered with VCard (VCardTitle, VCardSubtitle, VCardText, VCardActions) and its elevation, flat and outlined variants. PrimeVue: rendered with Card; flat removes the shadow and outlined draws a border. shadcn-vue: the shadcn-vue Card markup and styles.",
+      "العنوان نص منسق وليس عنصر heading؛ ضع عنصر heading داخل slot العنوان إذا احتاجه هيكل الصفحة. لا يوجد وضع صورة أو تحميل أو رابط. على Vuetify: يُرسم بـVCard (‏VCardTitle وVCardSubtitle وVCardText وVCardActions) بأشكال elevated وflat وoutlined. على PrimeVue: يُرسم بـCard؛ flat يزيل الظل وoutlined يرسم إطارًا. على shadcn-vue: markup وتنسيق Card من shadcn-vue."
+    ],
+    "example": "<WCard title=\"Camera\" subtitle=\"Gate 3\" variant=\"outlined\">Online</WCard>",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WDivider",
+    "slug": "divider",
+    "interface": "DividerProps",
+    "summary": [
+      "A horizontal or vertical separator line.",
+      "خط فاصل أفقي أو رأسي."
+    ],
+    "props": [
+      [
+        "vertical",
+        "boolean",
+        "false",
+        "Vertical line that stretches to the row height.",
+        "خط رأسي يمتد بارتفاع الصف."
+      ],
+      [
+        "thickness",
+        "number | string",
+        "1",
+        "Line thickness; numbers are px.",
+        "سمك الخط؛ الأرقام بالبكسل."
+      ],
+      [
+        "color",
+        "WakebColor",
+        "undefined",
+        "Line color: a Wakeb intent or a CSS color. Unset keeps the provider border color.",
+        "لون الخط: intent من Wakeb أو لون CSS. بدون قيمة يبقى لون الإطار في المزود."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "None.",
+      "لا يوجد."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the separator element.",
+      "تصل السمات والمستمعات العادية إلى عنصر الفاصل."
+    ],
+    "limits": [
+      "The element is role=separator (an hr on Vuetify) with aria-orientation=vertical when vertical. It has no margin; add spacing with classes. There is no inset or label text. Vuetify: VDivider; a color also sets full opacity. PrimeVue: Divider, with its margins removed. shadcn-vue: the reka-ui Separator with the shadcn-vue styles.",
+      "العنصر role=separator ‏(hr على Vuetify) مع aria-orientation=vertical في الوضع الرأسي. ليس له هامش؛ أضف المسافات بالـclasses. لا يوجد inset ولا نص داخل الخط. على Vuetify: ‏VDivider؛ واللون يضبط الشفافية كاملة أيضًا. على PrimeVue: ‏Divider بدون هوامشه. على shadcn-vue: ‏Separator من reka-ui بتنسيق shadcn-vue."
+    ],
+    "example": "<WDivider class=\"my-2\" />",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WList",
+    "slug": "list",
+    "interface": "ListProps",
+    "summary": [
+      "A list of titled rows, optionally clickable.",
+      "قائمة صفوف بعناوين، ويمكن جعلها قابلة للنقر."
+    ],
+    "props": [
+      [
+        "items",
+        "readonly ListItem[]",
+        "[]",
+        "Rows: `{ title, subtitle?, value?, icon?, disabled? }`; texts are already translated.",
+        "الصفوف: `{ title, subtitle?, value?, icon?, disabled? }`؛ والنصوص مترجمة من المشروع."
+      ],
+      [
+        "density",
+        "\"default\" | \"comfortable\" | \"compact\"",
+        "undefined",
+        "Row height. Unset keeps the provider default.",
+        "ارتفاع الصف. بدون قيمة يبقى الافتراضي للمزود."
+      ],
+      [
+        "interactive",
+        "boolean",
+        "false",
+        "Makes enabled rows clickable; they emit select.",
+        "يجعل الصفوف المتاحة قابلة للنقر وترسل select."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "undefined",
+        "Accessible name of the list.",
+        "الاسم المساعد للقائمة."
+      ]
+    ],
+    "variables": [],
+    "events": [
+      "`select(item: ListItem)` when an enabled row of an interactive list is activated.",
+      "`select(item: ListItem)` عند تفعيل صف متاح في قائمة قابلة للنقر."
+    ],
+    "slots": [
+      "`item` `{ item, index }` replaces a row's text. `prepend` `{ item, index }` replaces its leading icon.",
+      "`item` يستقبل `{ item, index }` ويستبدل نص الصف. `prepend` يستقبل `{ item, index }` ويستبدل الأيقونة في بدايته."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the list element (role=list).",
+      "تصل السمات والمستمعات العادية إلى عنصر القائمة (role=list)."
+    ],
+    "limits": [
+      "The list is role=list with listitem rows; it is not a selection control (no active or selected state) and not a menu. Rows are keyed by value, else by index. Vuetify: VList and VListItem; interactive rows are clickable list items that Vuetify moves focus between with the arrow keys. PrimeVue and shadcn-vue: Wakeb markup, a ul of li rows; interactive rows are native buttons reached with Tab, and disabled rows are disabled buttons. Item icons resolve like other Wakeb icons.",
+      "القائمة role=list وصفوفها listitem؛ وليست أداة اختيار (لا توجد حالة active أو selected) وليست قائمة أوامر. مفتاح الصف هو value وإلا ترتيبه. على Vuetify: ‏VList وVListItem؛ والصفوف القابلة للنقر عناصر قائمة ينقل Vuetify التركيز بينها بالأسهم. على PrimeVue وshadcn-vue: ‏markup من Wakeb، ‏ul من صفوف li؛ والصفوف القابلة للنقر أزرار أصلية يُوصل إليها بـTab، والصفوف المعطلة أزرار معطلة. أيقونات الصفوف تُحل مثل باقي أيقونات Wakeb."
+    ],
+    "example": "<WList interactive aria-label=\"Account\" :items=\"[{ title: 'Profile', value: 'profile' }]\" @select=\"open\" />",
+    "playground": "ElementsPlayground",
+    "setup": "import { ref } from 'vue'\nimport type { ListItem } from 'wakeb-components'\nconst selected = ref<ListItem | null>(null)\nconst open = (item: ListItem) => { selected.value = item }"
+  },
+  {
+    "name": "WIcon",
+    "slug": "icon",
+    "interface": "IconProps",
+    "summary": [
+      "One icon from the Wakeb icon resolver, decorative or named.",
+      "أيقونة واحدة من محلل أيقونات Wakeb، زخرفية أو باسم مساعد."
+    ],
+    "props": [
+      [
+        "icon",
+        "SharedIcon",
+        "required",
+        "An icon name (icons option, Wakeb built-ins, then the provider set), SVG path data or a Vue component.",
+        "اسم أيقونة (الخيار icons ثم أيقونات Wakeb المدمجة ثم مجموعة المزود)، أو بيانات مسار SVG، أو مكوّن Vue."
+      ],
+      [
+        "size",
+        "number | string",
+        "24",
+        "Icon size; numbers are px.",
+        "حجم الأيقونة؛ الأرقام بالبكسل."
+      ],
+      [
+        "color",
+        "WakebColor",
+        "undefined",
+        "Icon color: a Wakeb intent or a CSS color. Unset inherits the text color.",
+        "لون الأيقونة: intent من Wakeb أو لون CSS. بدون قيمة يرث لون النص."
+      ],
+      [
+        "label",
+        "string",
+        "undefined",
+        "Accessible name; the icon becomes role=img. Unset marks it aria-hidden.",
+        "الاسم المساعد؛ وتصبح الأيقونة role=img. بدون قيمة تكون aria-hidden."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "None.",
+      "لا يوجد."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the icon root (the VIcon element on Vuetify, a span on the other providers).",
+      "تصل السمات والمستمعات العادية إلى جذر الأيقونة (عنصر VIcon على Vuetify، وspan على باقي المزودات)."
+    ],
+    "limits": [
+      "Vuetify: VIcon; names the Wakeb resolver does not know go to the host Vuetify icon set (for example mdi- names with the MDI font). PrimeVue and shadcn-vue: the Wakeb renderer; PrimeIcons class names also work on PrimeVue, and an unknown name draws the Wakeb fallback box with WAKEB_ICON_UNRESOLVED. An icon is not a button; wrap it in WButton for actions.",
+      "على Vuetify: ‏VIcon؛ والأسماء التي لا يعرفها محلل Wakeb تذهب إلى مجموعة أيقونات Vuetify في المشروع (مثل أسماء mdi- مع خط MDI). على PrimeVue وshadcn-vue: عارض Wakeb؛ وتعمل أسماء PrimeIcons على PrimeVue، والاسم غير المعروف يرسم صندوق Wakeb البديل مع WAKEB_ICON_UNRESOLVED. الأيقونة ليست زرًا؛ ضعها داخل WButton للأوامر."
+    ],
+    "example": "<WIcon icon=\"$close\" size=\"16\" label=\"Close\" />",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WImage",
+    "slug": "image",
+    "interface": "ImageProps",
+    "summary": [
+      "A responsive image with an aspect ratio, cover fitting, lazy loading and a placeholder slot.",
+      "صورة متجاوبة بنسبة أبعاد وملء cover وتحميل كسول وslot للصورة المؤقتة."
+    ],
+    "props": [
+      [
+        "src",
+        "string",
+        "undefined",
+        "Image URL: http(s), relative, blob or data:image; other schemes are not rendered.",
+        "رابط الصورة: http(s) أو نسبي أو blob أو data:image؛ والأنواع الأخرى لا تُعرض."
+      ],
+      [
+        "alt",
+        "string",
+        "\"\"",
+        "Already translated alternative text; empty makes the image decorative.",
+        "نص بديل مترجم؛ والقيمة الفارغة تجعل الصورة زخرفية."
+      ],
+      [
+        "width",
+        "number | string",
+        "undefined",
+        "Box width; numbers are px.",
+        "عرض الصندوق؛ الأرقام بالبكسل."
+      ],
+      [
+        "height",
+        "number | string",
+        "undefined",
+        "Box height; numbers are px.",
+        "ارتفاع الصندوق؛ الأرقام بالبكسل."
+      ],
+      [
+        "aspectRatio",
+        "number | string",
+        "undefined",
+        "Width / height as a number (1.5) or a ratio (16/9).",
+        "العرض / الارتفاع كرقم (1.5) أو نسبة (16/9)."
+      ],
+      [
+        "cover",
+        "boolean",
+        "false",
+        "Fills the box and crops (object-fit cover) instead of fitting inside it.",
+        "يملأ الصندوق ويقص (object-fit cover) بدل الاحتواء داخله."
+      ],
+      [
+        "lazy",
+        "boolean",
+        "true",
+        "Loads when near the viewport; false loads at once.",
+        "يحمّل عند الاقتراب من الشاشة؛ وfalse يحمّل فورًا."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "`placeholder` (no payload) shows while the image loads and when it fails.",
+      "`placeholder` (بدون بيانات) يظهر أثناء تحميل الصورة وعند فشلها."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the image box (`.wakeb-image`), not the img element.",
+      "تصل السمات والمستمعات العادية إلى صندوق الصورة (`.wakeb-image`) وليس إلى عنصر img."
+    ],
+    "limits": [
+      "No srcset, gradient or zoom preview. Vuetify: VImg, which names the box role=img with the alt text and lazy-loads with IntersectionObserver unless lazy is false. PrimeVue and shadcn-vue: Wakeb markup, a box around a native img with loading=lazy|eager and decoding=async.",
+      "لا يوجد srcset ولا تدرج ولا معاينة مكبرة. على Vuetify: ‏VImg الذي يسمي الصندوق role=img بالنص البديل ويحمّل كسولًا عبر IntersectionObserver إلا إذا كانت lazy بقيمة false. على PrimeVue وshadcn-vue: ‏markup من Wakeb، صندوق حول img أصلي مع loading=lazy|eager وdecoding=async."
+    ],
+    "example": "<WImage src=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%23087f8c'/%3E%3C/svg%3E\" alt=\"Camera placeholder\" aspect-ratio=\"16/9\" cover />",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WAvatar",
+    "slug": "avatar",
+    "interface": "AvatarProps",
+    "summary": [
+      "One person's avatar: a photo, or initials on a color.",
+      "صورة شخص واحد: صورة فعلية أو الحروف الأولى على لون."
+    ],
+    "props": [
+      [
+        "image",
+        "string",
+        "undefined",
+        "Photo URL (http(s), relative, blob or data:image).",
+        "رابط الصورة (http(s) أو نسبي أو blob أو data:image)."
+      ],
+      [
+        "name",
+        "string",
+        "undefined",
+        "The person's name: the accessible name and the source of the initials (first letter of the first two words).",
+        "اسم الشخص: الاسم المساعد ومصدر الحروف الأولى (أول حرف من أول كلمتين)."
+      ],
+      [
+        "size",
+        "number | string",
+        "40",
+        "Size in px, or x-small, small, default, large or x-large (24–56px).",
+        "الحجم بالبكسل، أو x-small وsmall وdefault وlarge وx-large (‏24–56px)."
+      ],
+      [
+        "color",
+        "WakebColor",
+        "\"primary\"",
+        "Background behind the initials: a Wakeb intent or a CSS color.",
+        "الخلفية خلف الحروف: intent من Wakeb أو لون CSS."
+      ],
+      [
+        "rounded",
+        "boolean",
+        "true",
+        "Circle; false gives a rounded square.",
+        "دائرة؛ وfalse يعطي مربعًا بحواف دائرية."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "`default` (no payload) replaces the initials when there is no image.",
+      "`default` (بدون بيانات) يستبدل الحروف عندما لا توجد صورة."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the avatar root.",
+      "تصل السمات والمستمعات العادية إلى جذر الصورة الرمزية."
+    ],
+    "limits": [
+      "With a name the avatar is role=img named by it and the photo and initials are hidden from assistive technology; without a name it is aria-hidden. Initials text is white over the color. Vuetify: VAvatar with VImg. PrimeVue: Avatar sized and colored by Wakeb. shadcn-vue: the reka-ui Avatar with the shadcn-vue styles; initials show until the photo has loaded and when it fails.",
+      "مع name تكون الصورة role=img باسم الشخص وتُخفى الصورة والحروف عن التقنيات المساعدة؛ وبدونه تكون aria-hidden. لون الحروف أبيض فوق اللون. على Vuetify: ‏VAvatar مع VImg. على PrimeVue: ‏Avatar بحجم وألوان من Wakeb. على shadcn-vue: ‏Avatar من reka-ui بتنسيق shadcn-vue؛ وتظهر الحروف حتى تُحمّل الصورة وعند فشلها."
+    ],
+    "example": "<WAvatar name=\"Grace Hopper\" size=\"32\" />",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WCountBadge",
+    "slug": "count-badge",
+    "interface": "CountBadgeProps",
+    "summary": [
+      "A count or dot pinned to a corner of the element it wraps, such as unread notifications on a bell.",
+      "عدد أو نقطة مثبتة على ركن العنصر الذي تغلفه، مثل الإشعارات غير المقروءة على أيقونة الجرس."
+    ],
+    "props": [
+      [
+        "content",
+        "number | string",
+        "undefined",
+        "The count or short text. Whole numbers above max show as max+; an empty value hides the indicator unless dot is set.",
+        "العدد أو نص قصير. الأعداد الصحيحة الأكبر من max تظهر بالشكل max+؛ والقيمة الفارغة تخفي المؤشر إلا مع dot."
+      ],
+      [
+        "max",
+        "number",
+        "99",
+        "Largest count shown as is.",
+        "أكبر عدد يظهر كما هو."
+      ],
+      [
+        "dot",
+        "boolean",
+        "false",
+        "Shows a small dot without text instead of the count.",
+        "يعرض نقطة صغيرة بلا نص بدلًا من العدد."
+      ],
+      [
+        "color",
+        "WakebColor",
+        "\"danger\"",
+        "Indicator color: a Wakeb intent or a CSS color.",
+        "لون المؤشر: intent من Wakeb أو لون CSS."
+      ],
+      [
+        "visible",
+        "boolean",
+        "true",
+        "false hides the indicator and keeps the wrapped element.",
+        "القيمة false تخفي المؤشر وتبقي العنصر المغلف."
+      ],
+      [
+        "label",
+        "string",
+        "undefined",
+        "Accessible name of the indicator, for example \"5 unread notifications\". Without it the name is the shown text.",
+        "الاسم المساعد للمؤشر، مثل \"5 إشعارات غير مقروءة\". وبدونه يكون الاسم هو النص الظاهر."
+      ],
+      [
+        "location",
+        "CountBadgeLocation",
+        "\"top end\"",
+        "Corner: top end, top start, bottom end or bottom start. end and start follow the text direction; unknown values fall back to top end.",
+        "الركن: top end أو top start أو bottom end أو bottom start. يتبع end وstart اتجاه النص؛ والقيم غير المعروفة تعود إلى top end."
+      ]
+    ],
+    "variables": [],
+    "slots": [
+      "`default` (no payload) is the wrapped element, such as an icon button.",
+      "`default` (بدون بيانات) هو العنصر المغلف، مثل زر أيقونة."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the wrapper root.",
+      "تصل السمات والمستمعات العادية إلى جذر الغلاف."
+    ],
+    "limits": [
+      "The indicator is role=status with aria-live=polite, so screen readers announce count changes; it does not name the wrapped element, which still needs its own name. Vuetify: VBadge; an unlabelled dot keeps Vuetify's default \"Badge\" name and a hidden indicator stays in the DOM with display none. PrimeVue: the PrimeVue Badge positioned by Wakeb. shadcn-vue: a shadcn-vue style badge positioned by Wakeb. On PrimeVue and shadcn-vue an unlabelled dot is aria-hidden and a hidden indicator is not rendered.",
+      "المؤشر role=status مع aria-live=polite، فتعلن قارئات الشاشة تغيّر العدد؛ ولا يسمي العنصر المغلف الذي يحتاج اسمًا خاصًا به. على Vuetify: ‏VBadge؛ والنقطة بلا label تبقي اسم Vuetify الافتراضي \"Badge\"، والمؤشر المخفي يبقى في DOM مع display none. على PrimeVue: ‏Badge من PrimeVue بموضع من Wakeb. على shadcn-vue: شارة بتنسيق shadcn-vue بموضع من Wakeb. على PrimeVue وshadcn-vue تكون النقطة بلا label مخفية عن التقنيات المساعدة (aria-hidden) ولا يُرسم المؤشر المخفي."
+    ],
+    "example": "<WCountBadge content=\"5\" label=\"5 unread notifications\"><WButton type=\"outline\" aria-label=\"Notifications\">🔔</WButton></WCountBadge>",
+    "playground": "ElementsPlayground"
+  },
+  {
+    "name": "WDataTable",
+    "slug": "data-table",
+    "interface": "DataTableProps",
+    "summary": [
+      "A server-driven data table: column headers, rows as given, single-column sorting, row selection, row clicks and loading and empty views. Paging and sorting the data are the caller's job.",
+      "جدول بيانات يقوده الخادم: رؤوس أعمدة وصفوف كما تُمرَّر وفرز بعمود واحد وتحديد صفوف ونقر على الصف وعرض للتحميل وللحالة الفارغة. ترقيم الصفحات وفرز البيانات من مسؤولية المستخدم."
+    ],
+    "props": [
+      [
+        "headers",
+        "readonly DataTableHeader[]",
+        "[]",
+        "Columns: key (item field, dot paths such as owner.name read nested values), title, align (start, center or end), sortable (true unless false) and width (px number or CSS length).",
+        "الأعمدة: key (حقل العنصر، والمسارات بالنقاط مثل owner.name تقرأ القيم المتداخلة) وtitle وalign (‏start أو center أو end) وsortable (‏true ما لم تكن false) وwidth (رقم بالبكسل أو طول CSS)."
+      ],
+      [
+        "items",
+        "readonly DataTableItem[]",
+        "[]",
+        "Rows of the current page, shown in the given order. The table neither sorts nor slices them.",
+        "صفوف الصفحة الحالية، تظهر بالترتيب المُمرَّر. لا يفرزها الجدول ولا يقتطع منها."
+      ],
+      [
+        "itemValue",
+        "string",
+        "\"id\"",
+        "Item field (or dot path) that identifies a row for selection.",
+        "حقل العنصر (أو مسار بالنقاط) الذي يميز الصف عند التحديد."
+      ],
+      [
+        "modelValue",
+        "readonly (string | number)[]",
+        "[]",
+        "Selected row values (v-model). The table also keeps its own selection when v-model is not bound.",
+        "قيم الصفوف المحددة (v-model). ويحتفظ الجدول بتحديده الخاص إذا لم يُربط v-model."
+      ],
+      [
+        "selectable",
+        "boolean",
+        "false",
+        "Adds a checkbox column with a select-all checkbox for the current rows.",
+        "يضيف عمود مربعات اختيار مع مربع لتحديد كل الصفوف الحالية."
+      ],
+      [
+        "loading",
+        "boolean",
+        "false",
+        "Replaces the rows with the loading view and sets aria-busy=true.",
+        "يستبدل الصفوف بعرض التحميل ويضبط aria-busy=true."
+      ],
+      [
+        "sortBy",
+        "readonly DataTableSortItem[]",
+        "[]",
+        "Current sort as [{ key, order }] (v-model:sort-by). Only one column sorts at a time.",
+        "الفرز الحالي بالشكل [{ key, order }] (‏v-model:sort-by). يُفرز عمود واحد فقط في كل مرة."
+      ],
+      [
+        "page",
+        "number",
+        "1",
+        "Current page, echoed in update:options. The table has no footer; render your own pagination.",
+        "الصفحة الحالية، وتُعاد في update:options. لا يحتوي الجدول على تذييل؛ أضف ترقيم الصفحات الخاص بك."
+      ],
+      [
+        "itemsPerPage",
+        "number",
+        "10",
+        "Page size, echoed in update:options.",
+        "حجم الصفحة، ويُعاد في update:options."
+      ],
+      [
+        "noDataText",
+        "string",
+        "undefined",
+        "Text of the empty view; defaults to \"No data available\" or \"لا توجد بيانات\" by locale.",
+        "نص العرض الفارغ؛ والافتراضي \"No data available\" أو \"لا توجد بيانات\" حسب اللغة."
+      ],
+      [
+        "selectAllLabel",
+        "string",
+        "undefined",
+        "Accessible name of the select-all checkbox; defaults to \"Select all rows\" or \"تحديد كل الصفوف\".",
+        "الاسم المساعد لمربع تحديد الكل؛ والافتراضي \"Select all rows\" أو \"تحديد كل الصفوف\"."
+      ],
+      [
+        "selectRowLabel",
+        "string",
+        "undefined",
+        "Accessible name of each row checkbox; defaults to \"Select row\" or \"تحديد الصف\".",
+        "الاسم المساعد لمربع اختيار كل صف؛ والافتراضي \"Select row\" أو \"تحديد الصف\"."
+      ],
+      [
+        "ariaLabel",
+        "string",
+        "undefined",
+        "Accessible name of the table element.",
+        "الاسم المساعد لعنصر الجدول."
+      ]
+    ],
+    "variables": [],
+    "events": [
+      "`update:modelValue` sends the selected row values. `update:sortBy` sends the new sort. `update:options` sends { page, itemsPerPage, sortBy } once on mount and after every change, so you can load the first page from it; a sort change returns page to 1. `click:row` sends (item, event) for a row click; clicks on the selection checkboxes do not emit it.",
+      "يرسل `update:modelValue` قيم الصفوف المحددة. ويرسل `update:sortBy` الفرز الجديد. ويرسل `update:options` القيم { page, itemsPerPage, sortBy } مرة عند التركيب وبعد كل تغيير، فيمكن تحميل الصفحة الأولى منه؛ وتغيير الفرز يعيد page إلى 1. ويرسل `click:row` القيمتين (item, event) عند النقر على صف؛ ولا يرسله النقر على مربعات التحديد."
+    ],
+    "slots": [
+      "`item.<key>` ({ item, value, index }) replaces one column's cell, for example `#item.status=\"{ value }\"`. `loading` (no payload) replaces the default skeleton rows (WSkeleton table-row@5). `no-data` (no payload) replaces the empty text.",
+      "`item.<key>` (‏{ item, value, index }) يستبدل خلية عمود واحد، مثل `#item.status=\"{ value }\"`. و`loading` (بدون بيانات) يستبدل صفوف الهيكل الافتراضية (‏WSkeleton table-row@5). و`no-data` (بدون بيانات) يستبدل النص الفارغ."
+    ],
+    "attrs": [
+      "Ordinary attrs and listeners reach the table root: VDataTableServer on Vuetify, DataTable on PrimeVue and the wrapper div on shadcn-vue.",
+      "تصل السمات والمستمعات العادية إلى جذر الجدول: ‏VDataTableServer على Vuetify و DataTable على PrimeVue وعنصر div المغلف على shadcn-vue."
+    ],
+    "limits": [
+      "Sortable headers are keyboard operable and expose aria-sort (ascending or descending) on the sorted column. Rows are not focusable, so a row click needs another keyboard path, such as a link or button in a cell. No expandable rows, grouping, multi-column sort, column resizing, virtual scrolling or built-in footer. Vuetify: VDataTableServer with hide-default-footer; it also shows its loader line under the header while loading. PrimeVue: a lazy DataTable with removable sort; selection uses Wakeb checkbox columns, and the loading and no-data views use PrimeVue's empty row. shadcn-vue: the shadcn-vue Table markup with Wakeb sort buttons and native checkboxes.",
+      "رؤوس الأعمدة القابلة للفرز تعمل بلوحة المفاتيح وتعرض aria-sort (‏ascending أو descending) على العمود المفروز. الصفوف لا تأخذ التركيز، لذا يحتاج النقر على الصف طريقًا آخر بلوحة المفاتيح مثل رابط أو زر داخل خلية. لا توجد صفوف قابلة للتوسيع ولا تجميع ولا فرز بعدة أعمدة ولا تغيير لعرض الأعمدة ولا تمرير افتراضي ولا تذييل مدمج. على Vuetify: ‏VDataTableServer مع hide-default-footer؛ ويعرض أيضًا خط التحميل تحت الرأس أثناء التحميل. على PrimeVue: ‏DataTable بوضع lazy مع removable sort؛ ويستخدم التحديد أعمدة مربعات اختيار من Wakeb، ويستخدم عرضا التحميل والحالة الفارغة الصف الفارغ في PrimeVue. على shadcn-vue: بنية Table من shadcn-vue مع أزرار فرز من Wakeb ومربعات اختيار أصلية."
+    ],
+    "example": "<WDataTable v-model=\"selected\" :headers=\"[{ key: 'id', title: 'ID' }, { key: 'name', title: 'Name' }]\" :items=\"rows\" selectable aria-label=\"Cameras\" @update:options=\"load\" />",
+    "setup": "import { ref } from 'vue'\nimport type { DataTableOptions } from 'wakeb-components'\nconst selected = ref<(string | number)[]>([])\nconst rows = ref([{ id: 1, name: 'Gate 3' }])\nconst load = (options: DataTableOptions) => console.log(options)",
+    "playground": "ElementsPlayground"
   }
 ];

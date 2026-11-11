@@ -102,7 +102,8 @@ const onContentUnmounted = () => {
     <DialogContent
       v-bind="mergeProps(native, stacking, $attrs)"
       :overlay-attrs="overlayAttrs"
-      class="wakeb-modal wakeb-sc-modal"
+      :class="{ 'wakeb-modal--bare': bare }"
+    class="wakeb-modal wakeb-sc-modal"
       :style="width === undefined ? undefined : { maxWidth: `min(calc(100% - 2rem), ${size(width)})` }"
       :aria-label="title || ariaLabel"
       :aria-labelledby="undefined"
@@ -114,6 +115,8 @@ const onContentUnmounted = () => {
       <!-- reka-ui's development check expects its title element; the name itself is aria-label above. -->
       <DialogTitle as="span" hidden />
       <div class="wakeb-modal__card" :aria-busy="loading || !dataLoaded" @vue:unmounted="onContentUnmounted">
+        <slot v-if="bare" />
+        <template v-else>
         <slot name="header" :close="close">
           <div
             v-if="title || description || $slots.title || $slots['header-actions'] || closable || headerIcon || $slots['header-icon']"
@@ -146,6 +149,7 @@ const onContentUnmounted = () => {
         <slot v-if="loading" name="loading-overlay" :label="loadingLabel">
           <div class="wakeb-modal__loading-overlay"><WLoading :label="loadingLabel" /></div>
         </slot>
+        </template>
       </div>
     </DialogContent>
   </DialogRoot>
@@ -242,5 +246,14 @@ const onContentUnmounted = () => {
   inset: 0;
   z-index: 2;
   background: var(--wakeb-modal-loading-bg, color-mix(in srgb, var(--wakeb-ui-surface, var(--background, #fff)) 72%, transparent));
+}
+
+.wakeb-sc-modal.wakeb-modal--bare.wakeb-sc-dialog-content {
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 </style>

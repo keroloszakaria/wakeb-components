@@ -1,9 +1,15 @@
-import { parseAst, transformWithEsbuild } from "vite";
+import * as vite from "vite";
 import { WakebError } from "../core/errors";
 import { FRAMEWORKS, type WakebFramework } from "../core/options";
 
 /* Minimal ESTree shapes; only the nodes the selector inspects are typed. */
 type Node = { type: string; [key: string]: any };
+
+// Vite 8 ships Oxc instead of esbuild. Keep the Vite 6 path without requiring a second compiler in hosts.
+const api = vite as typeof vite & {
+  transformWithOxc?: (code: string, file: string) => Promise<{ code: string }>;
+  parseSync?: (file: string, code: string, options: { sourceType: "module" }) => { program: Node; errors?: { message: string }[] };
+};
 
 export const SUPPORTED_PATTERN = `import { createWakebComponents } from 'wakeb-components'
 
@@ -42,10 +48,16 @@ function describe(value: Node) {
  * Only `export default createWakebComponents({ framework: '<literal>' })` is accepted.
  */
 export async function readFramework(code: string, file: string): Promise<WakebFramework> {
-  const js = /\.[cm]?tsx?$/.test(file) ? (await transformWithEsbuild(code, file, { loader: "ts" })).code : code;
+  const js = /\.[cm]?tsx?$/.test(file)
+    ? (await (api.transformWithOxc ? api.transformWithOxc(code, file) : api.transformWithEsbuild(code, file, { loader: "ts" }))).code
+    : code;
   let program: Node;
   try {
-    program = parseAst(js) as unknown as Node;
+    if (api.parseSync) {
+      const parsed = api.parseSync(`${file}.js`, js, { sourceType: "module" });
+      if (parsed.errors?.length) throw new Error(parsed.errors.map(error => error.message).join("; "));
+      program = parsed.program;
+    } else program = api.parseAst(js) as unknown as Node;
   } catch (error) {
     throw fail(file, `the file could not be parsed (${(error as Error).message}).`);
   }

@@ -1,6 +1,6 @@
 import { computed, useId } from "vue";
 import { useColor } from "../core/vocabulary";
-import type { SegmentedProgressProps, SemiCircleGaugeProps } from "../types";
+import type { ProgressLinearProps, SegmentedProgressProps, SemiCircleGaugeProps } from "../types";
 
 /*
  * Provider-neutral progress and gauge behavior shared by every renderer (SPEC R03, M3): value
@@ -52,4 +52,53 @@ export function useSemiCircleGauge(props: Readonly<Required<SemiCircleGaugeProps
   const needleAngle = computed(() => -90 + (value.value / 100) * 180);
   const name = computed(() => props.ariaLabel || `${value.value}%`);
   return { ids, value, size, band, center, needleWidth, arcLength, arcPath, dashOffset, needleAngle, name };
+}
+
+export const progressLinearDefaults = {
+  modelValue: 0,
+  indeterminate: false,
+  active: true,
+  color: "primary",
+  height: 4,
+  absolute: false,
+  location: "top",
+  label: undefined,
+} as const;
+
+/**
+ * WProgressLinear: the clamped value (undefined while indeterminate), the bar height as a CSS length,
+ * the accessible name (caller label, else a localized loading or progress name), the root ARIA and
+ * the shared layout classes.
+ */
+export function useProgressLinear(props: Readonly<ProgressLinearProps>, locale: () => "en" | "ar") {
+  const value = computed(() => (props.indeterminate ? undefined : clampPercent(props.modelValue)));
+  const height = computed(() => {
+    const raw = props.height ?? 4;
+    const number = Number(raw);
+    return String(raw).trim() !== "" && Number.isFinite(number) ? `${Math.max(0, number)}px` : String(raw);
+  });
+  const name = computed(() => {
+    if (props.label) return props.label;
+    const ar = locale() === "ar";
+    if (props.indeterminate) return ar ? "جارٍ التحميل..." : "Loading...";
+    return ar ? "التقدم" : "Progress";
+  });
+  const aria = computed(() => ({
+    role: "progressbar",
+    "aria-label": name.value,
+    "aria-valuemin": "0",
+    "aria-valuemax": "100",
+    "aria-valuenow": value.value === undefined ? undefined : String(value.value),
+    "aria-hidden": props.active ? undefined : "true",
+  }));
+  const classes = computed(() => [
+    "wakeb-progress-linear",
+    props.location === "bottom" ? "wakeb-progress-linear--bottom" : "wakeb-progress-linear--top",
+    {
+      "wakeb-progress-linear--absolute": props.absolute,
+      "wakeb-progress-linear--inactive": !props.active,
+      "wakeb-progress-linear--indeterminate": props.indeterminate,
+    },
+  ]);
+  return { value, height, name, aria, classes };
 }

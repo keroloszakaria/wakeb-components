@@ -7,6 +7,7 @@ import WakebIcon from "../../icons/WakebIcon";
 import { modalDefaults, useDisclosure } from "../../composables/disclosure";
 import { useWakebContext } from "../../core/runtime";
 import { useProviderProps } from "../../core/provider-props";
+import { usePrimeOverlayEscape } from "./overlay";
 import type { ModalProps } from "../../types";
 defineOptions({ name: "WModal", inheritAttrs: false });
 const props = withDefaults(defineProps<ModalProps>(), modalDefaults);
@@ -49,6 +50,7 @@ const activatorProps = computed(() => ({
 }));
 const size = (value: string | number | undefined) => (typeof value === "number" ? `${value}px` : value);
 const card = ref<HTMLElement>();
+usePrimeOverlayEscape(dialog, () => props.persistent, () => card.value);
 /*
  * PrimeVue focuses [autofocus] or its own close button, and the container slot has neither.
  * Like VDialog, move focus to the dialog itself unless content already took it; PrimeVue's
@@ -64,18 +66,19 @@ const focusDialog = () =>
 </script>
 <template>
   <slot name="activator" :props="activatorProps" :is-active="dialog" />
-  <!-- PrimeVue owns the mask, focus trap, Escape key and scroll lock; persistent maps to both dismissal paths. -->
+  <!-- PrimeVue owns the mask, focus trap and scroll lock; Wakeb owns reactive, topmost Escape dismissal. -->
   <Dialog
     v-model:visible="dialog"
     modal
     block-scroll
     :draggable="false"
-    :close-on-escape="!persistent"
+    :close-on-escape="false"
     :dismissable-mask="!persistent"
     :auto-z-index="context.zIndexOverlay === undefined"
     :pt="context.zIndexOverlay === undefined ? undefined : { mask: { style: { zIndex: context.zIndexOverlay } } }"
     :style="{ width: '100%', maxWidth: size(width) }"
     v-bind="mergeProps(native, $attrs)"
+    :class="{ 'wakeb-modal--bare': bare }"
     class="wakeb-modal wakeb-pv-modal"
     :dir="context.direction"
     :aria-label="title || ariaLabel"
@@ -85,6 +88,8 @@ const focusDialog = () =>
   >
     <template #container>
       <div ref="card" class="wakeb-modal__card" :aria-busy="loading || !dataLoaded">
+        <slot v-if="bare" />
+        <template v-else>
         <slot name="header" :close="close">
           <div
             v-if="title || description || $slots.title || $slots['header-actions'] || closable || headerIcon || $slots['header-icon']"
@@ -117,6 +122,7 @@ const focusDialog = () =>
         <slot v-if="loading" name="loading-overlay" :label="loadingLabel">
           <div class="wakeb-modal__loading-overlay"><WLoading :label="loadingLabel" /></div>
         </slot>
+        </template>
       </div>
     </template>
   </Dialog>
@@ -211,5 +217,14 @@ const focusDialog = () =>
   inset: 0;
   z-index: 2;
   background: var(--wakeb-modal-loading-bg, color-mix(in srgb, var(--p-dialog-background) 72%, transparent));
+}
+
+.wakeb-pv-modal.wakeb-modal--bare.p-dialog {
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
 }
 </style>

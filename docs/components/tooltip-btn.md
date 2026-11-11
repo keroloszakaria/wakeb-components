@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WTooltipBtn
 
 An icon button with host-translated tooltip text and native button attributes.
+
+::: info 0.8.0-alpha.0 candidate
+This page describes the local, unreleased three-provider API. Install the [candidate archive](../guide/installation) and complete [provider setup](../guide/providers) first. The public 0.7 API differs.
+:::
+
+## Preview
+
+Live preview uses Vuetify. The same public API is checked separately on PrimeVue and shadcn-vue; see [verification](../guide/verification).
+
+<IdentityPlayground initial="tooltip-btn" />
 
 ## Usage
 
@@ -9,8 +19,25 @@ An icon button with host-translated tooltip text and native button attributes.
 <script setup lang="ts">
 import { WTooltipBtn } from 'wakeb-components'
 </script>
+
 <template>
   <WTooltipBtn text="Save changes" icon="$complete" btn-icon aria-label="Save changes" @click="() => {}" />
+</template>
+```
+
+## Examples
+
+### Custom button content
+
+Use the icon slot and keep an explicit accessible name.
+
+```vue
+<script setup lang="ts">
+import { WTooltipBtn } from 'wakeb-components'
+</script>
+
+<template>
+  <WTooltipBtn text="More information" aria-label="More information"><template #icon><span>Info</span></template></WTooltipBtn>
 </template>
 ```
 
@@ -33,24 +60,36 @@ import { WTooltipBtn } from 'wakeb-components'
 
 No custom events. Native click/keyboard/form attrs are forwarded to the native button without an extra wrapper listener.
 
+
+
 ## Slots
 
 `icon`: `{ icon }`, replacing the default icon. There is no default content slot; use WButton for text actions.
 
+```ts
+icon?(props: { icon: SharedIcon | undefined }): unknown;
+```
+
 ## CSS variables
 
-| Variable | Default |
-| --- | --- |
-
+No component-specific CSS variables. Use [shared theme tokens](../guide/customization), supported props or slots.
 
 ## Attribute target
 
 The native `<button>` (VBtn on Vuetify, an unstyled PrimeVue Button on PrimeVue), not the outer span; use `wrapperAttrs` for the span. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
+## Keyboard interaction
+
+| Key | Behavior |
+| --- | --- |
+| `Tab` | Focus enabled actions. |
+| `Enter / Space` | Activate the focused native button. |
+| `Escape` | Dismiss the tooltip. |
+
 ## Accessibility and limits
 
 VBtn receives ordinary attrs and native listeners once; use wrapperAttrs for the outer span. Defaults keep the original look: the ghost variant (Vuetify text), bottom placement and 200ms opening delay. Pass text=t(key) from the host; the package has no i18n dependency or path prop. VTooltip uses activator=parent, preserving Vuetify focus, hover, Escape and aria-describedby. Provide ariaLabel or meaningful text for icon-only controls. Disabled native buttons retain their disabled behavior and do not offer a keyboard tooltip target; use a deliberate separate help element if needed. Icon names resolve through the icons plugin option and the Wakeb built-ins first; other names need your Vuetify icon configuration. The icon slot can supply an inline SVG. Tooltip styles belong in tooltipStyle, not inherited variables, because of teleport; the tooltip carries only the plugin theme scope and zIndexOverlay, and tooltipStyle wins over it. VBtn styling uses your existing Vuetify theme; there are no additional package-specific CSS variables. Under PrimeVue: the button is an unstyled PrimeVue Button with type=button by default; caller attrs such as type, form, disabled and aria-label win, and native listeners fire once. Wakeb CSS paints the four variants with currentColor (solid uses --wakeb-ui-primary and --wakeb-ui-on-primary) in the VBtn box: 36px high with a 64px minimum width, or a 48px circle with btnIcon; there are no PrimeVue severities or sizes. The PrimeVue tooltip directive opens on hover and keyboard focus after openDelay, closes on blur, click and Escape, and is linked through aria-describedby with a useId id. start and end follow the plugin direction option. tooltipStyle styles the tooltip text bubble and contentClass the tooltip root, which carries the plugin theme scope and zIndexOverlay in place of PrimeVue's tooltip z-index; a global PrimeVue pt.directives.tooltip.root style stays under them. Without an icon nothing renders inside the button; Vuetify renders an empty VIcon. Under shadcn-vue: the button is Wakeb's copy of the shadcn-vue Button without a native variant, so Wakeb CSS paints the portable variants (wakeb-tooltip-btn--*); type defaults to button. reka-ui Tooltip opens on keyboard focus and hover (openDelay applies to hover), stays open while the pointer is over it, and closes on blur and Escape; aria-describedby points to it only while it is open, so server output has none. tooltipStyle styles the tooltip text; the tooltip root carries the theme scope, contentClass and zIndexOverlay.
 
-## Try it
+---
 
-<IdentityPlayground initial="tooltip-btn" />
+Need this contract in your coding agent? Use the [skill and MCP](../guide/agents).

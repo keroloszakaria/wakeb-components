@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WBadge
 
 شارات بألوان دلالية ونقطة قابلة للتخصيص وترتيب ثابت للأيقونة والـactions.
+
+::: info نسخة تجريبية 0.8.0-alpha.0
+تصف الصفحة الواجهة المحلية غير المنشورة للمزودات الثلاثة. ثبّت [الأرشيف التجريبي](../guide/installation) وأكمل [إعداد المزود](../guide/providers) أولًا؛ واجهة 0.7 العامة مختلفة.
+:::
+
+## معاينة
+
+تستخدم المعاينة Vuetify. تُفحص الواجهة العامة نفسها بصورة مستقلة على PrimeVue وshadcn-vue؛ راجع [التحقق](../guide/verification).
+
+<FoundationPlayground initial="badge" />
 
 ## الاستخدام
 
@@ -9,14 +19,32 @@
 <script setup lang="ts">
 import { WBadge } from 'wakeb-components'
 </script>
+
 <template>
   <WBadge label="Approved" type="success" is-dot />
 </template>
 ```
 
-## المدخلات
+## أمثلة
 
-| المعامل | النوع | الافتراضي | الوصف |
+### أشكال الحالة
+
+استخدم أنواع وأشكال Wakeb المشتركة بين المزودات.
+
+```vue
+<script setup lang="ts">
+import { WBadge } from 'wakeb-components'
+</script>
+
+<template>
+  <WBadge label="Needs review" type="warning" variant="outline" />
+  <WBadge label="Approved" type="success" variant="solid" />
+</template>
+```
+
+## الخصائص
+
+| الخاصية | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `label` | `string` | `""` | النص الافتراضي الآمن. |
 | `classList` | `ComponentClass` | `""` | classes على الشارة. |
@@ -32,9 +60,21 @@ import { WBadge } from 'wakeb-components'
 | `iconPosition` | `"before" \| "after"` | `"before"` | موضع الأيقونة والـactions قبل أو بعد المحتوى. |
 | `chipAttrs` | `Record<string, unknown>` | `{}` | attributes صريحة لعنصر الشارة (VChip في Vuetify، وTag من PrimeVue دون أنماطه في PrimeVue)؛ العادية تصل للحاوية الخارجية. |
 
+## الأحداث
+
+لا توجد أحداث مخصصة معلنة. تتبع أحداث DOM وجهة السمات أدناه.
+
+
+
 ## Slots
 
 `default`: يستبدل label. `icon`: يستقبل `{ icon, size }` مع أيقونة المزود كافتراضي. `actions`: يلي الأيقونة. الترتيب before: أيقونة/actions/نقطة/محتوى؛ after: نقطة/محتوى/أيقونة/actions.
+
+```ts
+icon(props: { icon: SharedIcon; size: string | number }): unknown;
+actions(): unknown;
+default(): unknown;
+```
 
 ## متغيرات CSS
 
@@ -76,10 +116,14 @@ import { WBadge } from 'wakeb-components'
 
 الحاوية الجذرية `div`. الـchip الداخلي يستقبل `chipAttrs` فقط. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
+## التفاعل بالكيبورد
+
+لا يضيف المكون أمر كيبورد خاصًا بـWakeb. تحتفظ العناصر التفاعلية الأصلية أو المضافة عبر slots بسلوكها. راجع تفاصيل التركيز والأدوار واختلافات المزودات أدناه.
+
 ## الوصول وحدود السلوك
 
 الشارة للعرض ما لم تجعلها chipAttrs تفاعلية. قدم نص حالة واضحًا؛ اللون والنقطة وحدهما لا يمثلان اسمًا لقارئ الشاشة. أحداث الحاوية هي أحداث DOM المتصاعدة ولا توجد emits مخصصة. التنسيق يحتفظ بخلفيات descendants للنوع outline وclasses الخاصة. ضع الأيقونات المخصصة في icon slot. الألوان الدلالية مستقلة عن tokens المشروع. متغيرات اللون الحالي داخلية؛ استخدم dotColor أو tokens الموثقة. اترك --wakeb-badge-fallback غير معرف في الاستخدام العادي. كل renderer يضع على الشارة class ‏.wakeb-badge وclass نوع Wakeb وواحدًا من .wakeb-badge--soft و--solid و--outline و--ghost. تحت PrimeVue: الشارة مكوّن Tag من PrimeVue دون أنماطه (span)، ومحتواها داخل span.wakeb-badge__content؛ وملف أنماط Wakeb نفسه المستخدم في Vuetify يرسم الأنواع والنمط solid ونصف القطر والـpadding والنقطة، وتضيف Wakeb CSS مظهري VChip في soft (طبقة سفلية من currentColor بنسبة 12%) وoutline (حد بعرض 1px من currentColor). تصل chipAttrs إلى عنصر Tag كسمات DOM، فلا أثر لخصائص VChip فيها. الأنواع غير التابعة لـWakeb ليست ألوانًا: يُستخدم primary مع WAKEB_UNKNOWN_VALUE. تُرسم الأيقونات عبر عارض أيقونات Wakeb، وتحتاج أسماء MDI إلى alias في الخيار icons. لا يقبل أي من المزودين providerProps. تحت shadcn-vue: الشارة markup من Wakeb ‏(span مع data-slot=badge) تنسّقها أنماط الشارة المشتركة في Wakeb كما في PrimeVue، وترجع أسماء ألوان المزوّد إلى primary مع WAKEB_UNKNOWN_VALUE.
 
-## جرّب بنفسك
+---
 
-<FoundationPlayground initial="badge" />
+لاستخدام هذا العقد مع agent يكتب الكود، راجع [الـskill وMCP](../guide/agents).

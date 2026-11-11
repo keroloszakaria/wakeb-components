@@ -1,0 +1,14 @@
+{
+  "name": "wakeb-components-mcp",
+  "version": "0.8.0-alpha.0",
+  "description": "Read-only Wakeb Components contracts, examples and provider setup for coding agents",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=22.14.0" },
+  "bin": { "wakeb-components-mcp": "server.mjs" },
+  "files": ["server.mjs", "catalog.json", "LICENSE"],
+  "scripts": { "start": "node server.mjs", "test": "node --test test.mjs" },
+  "dependencies": { "@modelcontextprotocol/server": "2.4.0", "zod": "4.3.6" },
+  "devDependencies": { "@modelcontextprotocol/client": "2.4.0" }
+}

@@ -16,6 +16,7 @@ export const modalDefaults = {
   closeLabel: "Close",
   loadingLabel: "Loading",
   ariaLabel: "Dialog",
+  bare: false,
 } as const;
 
 /**

@@ -1,0 +1,41 @@
+# Wakeb Components 0.8.0-alpha.0 (unreleased)
+
+- [WTruncatedText](truncated-text.md): Readable shortened text with a tooltip that opens on hover and keyboard focus.
+- [WSegmentedProgress](segmented-progress.md): A striped progress display with numeric accessibility semantics.
+- [WSemiCircleGauge](semi-circle-gauge.md): A responsive SVG gauge with isolated gradient IDs and a value slot.
+- [WAvatarStack](avatar-stack.md): Overlapping avatars with nested data fields and an accessible overflow menu.
+- [WLoading](loading.md): A named loading status with a Vuetify circular indicator.
+- [WPageSkeleton](page-skeleton.md): Responsive skeleton rows on the Wakeb grid, driven by typed descriptors.
+- [WVerticalSteps](vertical-steps.md): Presentational steps with replaceable icons, title slots and a plain data contract.
+- [WButton](button.md): Vuetify buttons with explicit states, icon slots and semantic style variables.
+- [WBadge](badge.md): Semantic chips with independent colors, dot styles and ordered icon/action slots.
+- [WAccordion](accordion.md): Disclosure panels with preserved content, scoped headers and keyboard-ready default triggers.
+- [WBadgeStack](badge-stack.md): Badges with per-item styling, image slots and an optional overflow menu.
+- [WUserBadge](user-badge.md): A compact user badge with avatar/initials and an actions slot.
+- [WTooltipBtn](tooltip-btn.md): An icon button with host-translated tooltip text and native button attributes.
+- [WTabs](tabs.md): Styled tab rails and lazily mounted panels with explicit selection events.
+- [WTree](tree.md): A controlled recursive tree with connector lines, composable rows and keyboard navigation.
+- [WDropdown](dropdown.md): A selection/action menu with native button integration and host-owned labels, colors and links.
+- [WCarousel](carousel.md): A carousel with scoped slides, host-owned playback and accessible custom indicators.
+- [WExportDropdown](export-dropdown.md): An export-format picker that emits intent while the host owns permissions and file generation.
+- [WBaseSidebar](base-sidebar.md): A gradient sidebar shell with search/content slots, filter actions and loading/empty/list states.
+- [WModal](modal.md): A Vuetify dialog shell with independent data/loading states, header composition and explicit action slots.
+- [WDrawer](drawer.md): A temporary modal side drawer with logical RTL positions, scrolling content and composable actions. It needs no layout host on any provider.
+- [WTextField](text-field.md): A labelled single-line text input with portable validation rules and start/end adornments.
+- [WPopover](popover.md): A non-modal panel anchored to an activator, for filters and small forms that stay open while you work in them.
+- [WSwitch](switch.md): An on/off switch with a boolean model and a linked label.
+- [WCheckbox](checkbox.md): A checkbox with a boolean model, or with an array model that holds the checked values.
+- [WSkeleton](skeleton.md): A loading placeholder drawn from the portable skeleton grammar; when loading ends it renders its default slot.
+- [WRow](row.md): A row of the Wakeb 12-column grid; place WCol children inside it.
+- [WCol](col.md): A column of the Wakeb 12-column grid with responsive spans.
+- [WProgressLinear](progress-linear.md): A horizontal progress bar, determinate or indeterminate, that can sit absolutely on the top or bottom edge of its container.
+- [WTextarea](textarea.md): A labelled multi-line text field with the WTextField validation rules.
+- [WButtonToggle](button-toggle.md): A segmented group of toggle buttons with single or multiple selection.
+- [WCard](card.md): A surface with an optional title, subtitle and actions row.
+- [WDivider](divider.md): A horizontal or vertical separator line.
+- [WList](list.md): A list of titled rows, optionally clickable.
+- [WIcon](icon.md): One icon from the Wakeb icon resolver, decorative or named.
+- [WImage](image.md): A responsive image with an aspect ratio, cover fitting, lazy loading and a placeholder slot.
+- [WAvatar](avatar.md): One person's avatar: a photo, or initials on a color.
+- [WCountBadge](count-badge.md): A count or dot pinned to a corner of the element it wraps, such as unread notifications on a bell.
+- [WDataTable](data-table.md): A server-driven data table: column headers, rows as given, single-column sorting, row selection, row clicks and loading and empty views. Paging and sorting the data are the caller's job.

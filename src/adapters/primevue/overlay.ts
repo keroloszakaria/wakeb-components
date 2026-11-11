@@ -1,8 +1,40 @@
-import { computed, onBeforeUnmount, ref, type CSSProperties } from "vue";
+import { computed, onBeforeUnmount, ref, watch, type CSSProperties } from "vue";
 import { usePrimeVue } from "primevue/config";
 import type Popover from "primevue/popover";
 import type { WakebContext } from "../../core/runtime";
 import { tooltipRoot } from "./tooltip";
+import { hasOverlayAbove, useDrawerEscape } from "../../composables/drawer";
+
+/*
+ * Menus and popovers close on Escape only while focus is inside them, so they keep the key only then.
+ * A mask whose dialog is leaving belongs to an overlay that already closed: PrimeVue marks the mask
+ * only in styled mode, while Vue's `-leave-active` transition class on its dialog is set in both modes.
+ */
+const MENU = ".p-menu-overlay, .p-popover, .p-tieredmenu-overlay";
+const leaving = (mask: Element) =>
+  mask.classList.contains("p-overlay-mask-leave-active") || [...mask.children].some((child) => /-leave-active\b/.test(child.getAttribute("class") ?? ""));
+
+/**
+ * PrimeVue only binds Escape on entry. Wakeb keeps persistence reactive and dismisses the top overlay
+ * only: PrimeVue appends a mask each time a dialog opens, so an open mask after this one belongs to a
+ * dialog opened from it and keeps Escape.
+ */
+export function usePrimeOverlayEscape(open: { value: boolean }, persistent: () => boolean, panel: () => HTMLElement | undefined) {
+  const escape = useDrawerEscape(open, persistent, (event) => {
+    if (event.target instanceof Element && event.target.closest(MENU)) return true;
+    const root = panel()?.closest<HTMLElement>(".p-overlay-mask") ?? panel()?.closest<HTMLElement>('[role="dialog"]');
+    if (!root) return false;
+    return hasOverlayAbove(root, ".p-overlay-mask", (mask) => !leaving(mask));
+  });
+  watch(() => open.value, (visible) => {
+    if (typeof document === "undefined") return;
+    if (visible) escape.listen();
+    else escape.stop();
+  }, { immediate: true });
+  onBeforeUnmount(() => {
+    if (typeof document !== "undefined") escape.stop();
+  });
+}
 
 /*
  * Overlay helpers shared by the PrimeVue renderers that open informational overlays (WAvatarStack,

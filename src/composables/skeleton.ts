@@ -1,3 +1,4 @@
+import { h, type VNode } from "vue";
 import type { WakebSkeletonName } from "../types";
 
 /* Provider-neutral WPageSkeleton behavior shared by every renderer (SPEC R03, R16, M3). */
@@ -65,3 +66,26 @@ export const skeletonParts = (sequence: string): WakebSkeletonName[] =>
     const [name, count] = raw.trim().split("@") as [WakebSkeletonName, string | undefined];
     return Object.prototype.hasOwnProperty.call(SKELETON_SHAPES, name) ?Array.from({ length: count === undefined ? 1 : Number(count) }, () => name) : [];
   });
+
+/**
+ * Draws a normalized skeleton sequence as Wakeb bones: a box sized by width and height (numbers are
+ * px, as with VSkeletonLoader) holding one part per name, each an optional avatar and rows of bones.
+ * `bone` is the provider's bone renderer.
+ */
+export const renderSkeleton = (bone: (shape: SkeletonBone) => VNode, sequence: string, width?: string | number, height?: string | number, attrs: Record<string, unknown> = {}) =>
+  h(
+    "div",
+    { ...attrs, class: ["wakeb-skeleton", attrs.class], style: [attrs.style as never, { width: toUnit(width), height: toUnit(height) }] },
+    skeletonParts(sequence).map((name) => {
+      const shape = SKELETON_SHAPES[name];
+      return h("div", { class: ["wakeb-skeleton__part", `wakeb-skeleton__part--${name}`] }, [
+        shape.avatar && bone(shape.avatar),
+        h("div", { class: "wakeb-skeleton__lines" }, shape.rows.map((bones) => h("div", { class: "wakeb-skeleton__row" }, bones.map(bone)))),
+      ]);
+    }),
+  );
+
+/** WSkeleton defaults shared by every renderer. */
+export const skeletonDefaults = { type: "text", loading: true, label: undefined } as const;
+/** The accessible name of a loading WSkeleton: the caller label, else the localized default. */
+export const skeletonLabel = (label: string | undefined, locale: "en" | "ar") => label ?? (locale === "ar" ? "جارٍ التحميل..." : "Loading...");

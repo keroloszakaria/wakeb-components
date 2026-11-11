@@ -353,7 +353,7 @@ const toIcon = useVuetifyIcon();
         background-color: transparent !important;
         color: var(
           --wakeb-tabs-item-color,
-          var(--wakeb-tabs-fallback, #344054)
+          var(--wakeb-tabs-fallback, var(--wakeb-ui-on-surface, #344054))
         ) !important;
         &:not(:first-child) {
           &::before {

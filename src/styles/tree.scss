@@ -109,7 +109,7 @@
       &:hover:not(.tree__node-content--active) {
         background: var(
           --wakeb-tree-hover-bg,
-          var(--wakeb-tree-fallback, #f2f4f7)
+          var(--wakeb-tree-fallback, var(--wakeb-ui-surface, #f2f4f7))
         );
       }
 
@@ -176,7 +176,7 @@
       font-size: 0.875rem;
       color: var(
         --wakeb-tree-paragraph-primary,
-        var(--wakeb-tree-fallback, #101828)
+        var(--wakeb-tree-fallback, var(--wakeb-ui-on-surface, #101828))
       );
       white-space: nowrap;
       overflow: hidden;
@@ -187,7 +187,7 @@
       font-size: 0.75rem;
       color: var(
         --wakeb-tree-paragraph-tertiary,
-        var(--wakeb-tree-fallback, #667085)
+        var(--wakeb-tree-fallback, var(--wakeb-ui-muted, #667085))
       );
       white-space: nowrap;
       overflow: hidden;

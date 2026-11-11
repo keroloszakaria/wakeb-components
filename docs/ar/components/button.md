@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WButton
 
 زر Vuetify بحالات واضحة وslots للأيقونات ومتغيرات ألوان مستقلة.
+
+::: info نسخة تجريبية 0.8.0-alpha.0
+تصف الصفحة الواجهة المحلية غير المنشورة للمزودات الثلاثة. ثبّت [الأرشيف التجريبي](../guide/installation) وأكمل [إعداد المزود](../guide/providers) أولًا؛ واجهة 0.7 العامة مختلفة.
+:::
+
+## معاينة
+
+تستخدم المعاينة Vuetify. تُفحص الواجهة العامة نفسها بصورة مستقلة على PrimeVue وshadcn-vue؛ راجع [التحقق](../guide/verification).
+
+<FoundationPlayground initial="button" />
 
 ## الاستخدام
 
@@ -9,14 +19,32 @@
 <script setup lang="ts">
 import { WButton } from 'wakeb-components'
 </script>
+
 <template>
   <WButton title="Save changes" action="submit" type="primary" />
 </template>
 ```
 
-## المدخلات
+## أمثلة
 
-| المعامل | النوع | الافتراضي | الوصف |
+### التعطيل والتحميل
+
+يمنع التحميل التفعيل ويعلن aria-busy.
+
+```vue
+<script setup lang="ts">
+import { WButton } from 'wakeb-components'
+</script>
+
+<template>
+  <WButton title="Saving" is-loading />
+  <WButton title="Unavailable" disabled type="outline" />
+</template>
+```
+
+## الخصائص
+
+| الخاصية | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `isTooltip` | `boolean` | `false` | فرع زر الأيقونة مع Tooltip نصه title. |
 | `location` | `"top" \| "bottom" \| "start" \| "end"` | `"top"` | موضع Tooltip. |
@@ -25,7 +53,7 @@ import { WButton } from 'wakeb-components'
 | `iconPosition` | `"start" \| "end"` | `"start"` | موضع الأيقونة حول العنوان. |
 | `type` | `string` | `"primary"` | الأنواع primary/secondary/outline/danger/tertiary/link/icon/table-icon/text؛ القيم الأخرى تضيف classes فقط. |
 | `size` | `string` | `"lg"` | المقاسات xl/lg/md/sm؛ القيم الأخرى تحتاج CSS من المستهلك. |
-| `isLoading` | `boolean` | `false` | مؤشر تحميل Vuetify مع تنسيق التحميل العام. |
+| `isLoading` | `boolean` | `false` | مؤشر تحميل Vuetify مع تنسيق التحميل العام. يضبط aria-busy="true" على الزر الأصلي في كل مزود أثناء التحميل، ويتقدم على قيمة متعارضة من المستهلك. |
 | `isDropdown` | `boolean` | `false` | إضافة dropdown slot أو السهم المدمج $expand. |
 | `action` | `"button" \| "submit" \| "reset"` | `"button"` | نوع زر HTML الفعلي. |
 | `disabled` | `boolean` | `false` | حالة تعطيل HTML. |
@@ -41,9 +69,20 @@ import { WButton } from 'wakeb-components'
 
 `click(event: MouseEvent)` — الحدث الأصلي مرة واحدة لكل تفعيل.
 
+```ts
+click: [event: MouseEvent];
+```
+
 ## Slots
 
 `icon` و`dropdown`: يستقبلان `{ icon, size, color, maxWidth }`. `content` أو `default` كبديل: محتوى عند فراغ title وisTooltip=false. وضع Tooltip يعرض الأيقونة فقط. تُحل الأيقونات عبر الخيار icons والأيقونات المدمجة في Wakeb؛ وبقية الأسماء تُرسم عبر VIcon تحت Vuetify (جهز مجموعة/خط أيقوناته) وكمربع بديل مع المزودات الأخرى.
+
+```ts
+icon(props: IconSlotProps): unknown;
+dropdown(props: IconSlotProps): unknown;
+content(): unknown;
+default(): unknown;
+```
 
 ## متغيرات CSS
 
@@ -161,10 +200,17 @@ import { WButton } from 'wakeb-components'
 
 عنصر `<button>` الأصلي على كل المزودين، وليس الـdiv الخارجي المخصص للتخطيط؛ استخدم `wrapperAttrs` لذلك الـdiv. تبقى معالجة type وdisabled وloading الخاصة بـWakeb هي الغالبة، و`onClick` من المستخدم هو حدث click القابل للنقل ويُرسل مرة واحدة. يصل `providerProps` إلى primitive الزر نفسه بأولوية أقل من سمات المستخدم. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
+## التفاعل بالكيبورد
+
+| المفتاح | السلوك |
+| --- | --- |
+| `Tab` | التركيز على الإجراءات المفعلة. |
+| `Enter / Space` | تفعيل الزر الأصلي الحالي. |
+
 ## الوصول وحدود السلوك
 
-الزر يحتفظ بـform/type والتعطيل وaria-busy من Vuetify. click يمرر MouseEvent الأصلي مرة واحدة ويدعم .stop/.prevent. التفعيل بالكيبورد يتبع المتصفح. زر الأيقونة يحتاج aria-label؛ زر Tooltip يستخدم title كاسم بديل. أحداث التركيز تُدمج مع أحداث Vuetify. التحميل يعمل مثل التعطيل في الوضع العادي ووضع Tooltip: لا يرسل click ولا يرسل الفورم أو يعيد ضبطه. ومع ذلك ليس قفلًا للطلبات؛ المشروع يملك حالة الطلب. attribute باسم loading يصل أيضًا إلى VBtn دون إضافة class الخاصة بـisLoading. reduced-motion يلغي transitions المشتركة. div الخارجية مخصصة للتخطيط؛ wrapperAttrs لا يغيّر وجهة attributes العادية. الأنواع والمقاسات غير المعروفة classes للتوسعة. متغير --wakeb-button-fallback مخصص للتوافق؛ اتركه غير معرف لاستخدام القيم الافتراضية.
+الزر يحتفظ بـform/type والتعطيل وaria-busy من Vuetify. click يمرر MouseEvent الأصلي مرة واحدة ويدعم .stop/.prevent. التفعيل بالكيبورد يتبع المتصفح. زر الأيقونة يحتاج aria-label؛ زر Tooltip والزر أثناء التحميل يستخدمان title كاسم بديل، وتتقدم قيمة aria-label الصريحة. أحداث التركيز تُدمج مع أحداث Vuetify. التحميل يعمل مثل التعطيل في الوضع العادي ووضع Tooltip: لا يرسل click ولا يرسل الفورم أو يعيد ضبطه. ومع ذلك ليس قفلًا للطلبات؛ المشروع يملك حالة الطلب. attribute باسم loading يصل أيضًا إلى VBtn دون إضافة class الخاصة بـisLoading. reduced-motion يلغي transitions المشتركة. div الخارجية مخصصة للتخطيط؛ wrapperAttrs لا يغيّر وجهة attributes العادية. الأنواع والمقاسات غير المعروفة classes للتوسعة. متغير --wakeb-button-fallback مخصص للتوافق؛ اتركه غير معرف لاستخدام القيم الافتراضية. تستخدم أزرار outline وicon الشفافة --wakeb-ui-on-surface كلون نص بديل، بما فيه الوضع الداكن، وتتقدم متغيرات ألوان المكوّن. تحتفظ أيقونات SVG المدمجة بقيمة iconSize وتبقى أبعاد SVG المخصصة بيد المستخدم، ولا تتغلب هوامش الفقرات أو إعادة ضبط الخط الأصلية على مقاس الزر المشترك. تعلن كل المزودات aria-busy="true" على الزر الأصلي أثناء isLoading.
 
-## جرّب بنفسك
+---
 
-<FoundationPlayground initial="button" />
+لاستخدام هذا العقد مع agent يكتب الكود، راجع [الـskill وMCP](../guide/agents).

@@ -17,10 +17,10 @@ const label = computed(() => `${value.value}%`);
   <section class="w-demo" :aria-label="ar ? 'تجربة المكونات' : 'Component playground'">
     <div class="w-demo__top"><strong>{{ ar ? 'المكونات الفعلية' : 'ACTUAL COMPONENTS' }}</strong><span>Vue 3 + Vuetify 3</span></div>
     <div class="w-demo__controls">
-      <label>{{ ar ? 'النص' : 'Label' }}<input v-model="text" /></label>
-      <label>{{ ar ? 'حد النص' : 'Text length' }}<input v-model.number="length" type="number" min="0" max="100" /></label>
-      <label>{{ ar ? 'القيمة' : 'Value' }}: {{ value }}<input v-model.number="value" type="range" min="0" max="100" /></label>
-      <label>{{ ar ? 'اللون' : 'Accent color' }}<input v-model="color" type="color" /></label>
+      <label v-if="initial === 'all' || initial === 'truncated-text'">{{ ar ? 'النص' : 'Label' }}<input v-model="text" /></label>
+      <label v-if="initial === 'all' || initial === 'truncated-text'">{{ ar ? 'حد النص' : 'Text length' }}<input v-model.number="length" type="number" min="0" max="100" /></label>
+      <label v-if="initial === 'all' || ['segmented-progress', 'semi-circle-gauge', 'vertical-steps'].includes(initial)">{{ ar ? 'القيمة' : 'Value' }}: {{ value }}<input v-model.number="value" type="range" min="0" max="100" /></label>
+      <label v-if="initial === 'all' || ['segmented-progress', 'loading'].includes(initial)">{{ ar ? 'اللون' : 'Accent color' }}<input v-model="color" type="color" /></label>
       <label v-if="initial === 'avatar-stack' || initial === 'all'">{{ ar ? 'الصور الظاهرة' : 'Visible avatars' }}<input v-model.number="max" type="number" min="0" max="4" /></label>
       <label v-if="initial === 'avatar-stack' || initial === 'all'">{{ ar ? 'قائمة الباقي' : 'Overflow menu' }}<select v-model="menu"><option :value="true">{{ ar ? 'مفعلة' : 'Enabled' }}</option><option :value="false">{{ ar ? 'مخفية' : 'Disabled' }}</option></select></label>
       <label>{{ ar ? 'الاتجاه' : 'Direction' }}<select v-model="direction"><option value="ltr">LTR</option><option value="rtl">RTL</option></select></label>

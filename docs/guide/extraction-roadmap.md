@@ -1,5 +1,10 @@
 # Extraction roadmap
 
+::: info Historical 0.7 extraction plan
+The following records earlier extraction decisions. The current 0.8.0-alpha.0 candidate now has 39 components, including fields, selection, layout and WDataTable. See [current coverage](./verification) for implemented contracts and limits; the planning entries below are not a list of currently unavailable components.
+:::
+
+
 Twenty-one display/action/disclosure components are extracted, with Aware paths retained as adapters. Reviewing the remaining common components identified the following contracts to separate before moving them.
 
 | Group | Components | Prerequisite |

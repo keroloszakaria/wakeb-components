@@ -1,7 +1,7 @@
 # wakeb-components
 
-Twenty-one typed Vue 3 components, extracted for reuse with Vuetify 3:
-WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps, WButton, WBadge, WAccordion, WBadgeStack, WUserBadge, WTooltipBtn, WTabs, WTree, WDropdown, WCarousel, WExportDropdown, WBaseSidebar, WModal and WDrawer.
+39 typed Vue 3 components, with one API across Vuetify, PrimeVue and shadcn-vue in the local 0.8.0-alpha.0 candidate:
+WTruncatedText, WSegmentedProgress, WSemiCircleGauge, WAvatarStack, WLoading, WPageSkeleton, WVerticalSteps, WButton, WBadge, WAccordion, WBadgeStack, WUserBadge, WTooltipBtn, WTabs, WTree, WDropdown, WCarousel, WExportDropdown, WBaseSidebar, WModal, WDrawer, WTextField, WPopover, WSwitch, WCheckbox, WSkeleton, WRow, WCol, WProgressLinear, WTextarea, WButtonToggle, WCard, WDivider, WList, WIcon, WImage, WAvatar, WCountBadge and WDataTable.
 
 [Documentation](https://wakeb-components.surge.sh) · [العربية](https://wakeb-components.surge.sh/ar/)
 
@@ -41,10 +41,14 @@ Vuetify icon values use your existing icon set/font. Icon slots let you supply y
 
 ## Verification
 
-Use Node 22.14+ and run `npm ci` then `npm run check`. The check builds the
+Use Node 22.14+, run `npm ci`, install Chromium with `npx playwright install chromium`,
+then run `npm run check`. The check builds the
 ESM library and declarations, runs actual Vuetify/SSR tests, installs a packed
 archive in an isolated Vite consumer, checks types, builds browser and server
-consumers, and builds bilingual VitePress documentation.
+consumers, executes real Chromium interaction and SSR hydration tests for all three
+providers across light/dark, LTR/RTL and small/wide viewports, and builds bilingual
+VitePress documentation. `npm run test:browser` runs the browser suite alone;
+reports, screenshots and diagnostics are saved in `.audit/browser`.
 
 This is an ESM library for Vue bundlers. Vite SSR consumers bundle this package
 and Vuetify using `ssr.noExternal`; see the SSR guide. It is not a plain Node
@@ -63,3 +67,7 @@ until their separate contracts are reviewed.
 MIT. See LICENSE.
 
 WModal and WDrawer provide dialog and temporary drawer shells with typed models, explicit loading slots and no form, router or permission dependency. WDrawer is a modal dialog drawer that needs no VApp or layout host. See the bilingual overlay examples and native behavior limits in the docs.
+
+## Coding agents
+
+See [the agent guide](docs/guide/agents.md) and [verification scope](docs/guide/verification.md). `npm run agents:build` generates the skill under `.agents/skills/wakeb-components` and the independent MCP catalog under `packages/mcp`. `npm run test:agents` verifies stdio discovery and contracts. The MCP is read-only and has no workspace, shell or network tools. Its candidate archive is not published to npm.

@@ -27,6 +27,18 @@ afterEach(() => {
 });
 
 describe(`WButton contract (${framework})`, () => {
+  it.each([false, true])("announces portable loading for tooltip=%s and updates busy state", async (isTooltip) => {
+    const w = render(WButton, { props: { title: "Save", isLoading: true, isTooltip } });
+    expect(w.get("button").attributes("aria-busy")).toBe("true");
+    expect(w.get("button").attributes("aria-label")).toBe("Save");
+    await w.setProps({ isLoading: false });
+    expect(w.get("button").attributes("aria-busy")).not.toBe("true");
+    await w.setProps({ isLoading: true });
+    await w.setProps({ "aria-busy": "false" });
+    expect(w.get("button").attributes("aria-busy")).toBe("true");
+    w.unmount();
+  });
+
   it("renders the title and emits one MouseEvent per click", async () => {
     const w = render(WButton, { props: { title: "Save" } });
     const button = w.get("button");
@@ -63,6 +75,14 @@ describe(`WButton contract (${framework})`, () => {
     expect(button.attributes("data-test")).toBe("action");
     expect(button.classes()).toEqual(expect.arrayContaining(["btn", "btn--primary", "btn--lg", "extra"]));
     expect(w.get("[data-wrapper]").element.contains(button.element)).toBe(true);
+  });
+
+  it.each([false, true])("retains a loading button's name and explicit label (tooltip: %s)", async (isTooltip) => {
+    const w = render(WButton, { props: { title: "Send", isLoading: true, isTooltip } });
+    expect(w.get("button").attributes("aria-label")).toBe("Send");
+    await w.setProps({ "aria-label": "Send report" });
+    expect(w.get("button").attributes("aria-label")).toBe("Send report");
+    w.unmount();
   });
 
   it("passes the documented icon slot payload", () => {
@@ -169,6 +189,19 @@ describe(`WModal contract (${framework})`, () => {
     await settle();
     expect(document.querySelector(".wakeb-modal__description")?.textContent).toContain("Only a description");
     expect(w.emitted("update:modelValue")).toBeUndefined();
+  });
+
+  it("renders the same styling classes on every provider", async () => {
+    render(WModal, {
+      props: { modelValue: true, title: "Edit user", titleClass: "caller-title" },
+      slots: { default: () => "Body", actions: () => h("button", { class: "save" }, "Save") },
+    });
+    await settle();
+    const card = document.querySelector(".wakeb-modal__card")!;
+    expect(card).not.toBeNull();
+    expect(card.querySelector(".wakeb-modal__header .wakeb-modal__title.caller-title")?.textContent).toBe("Edit user");
+    expect(card.querySelector(".wakeb-modal__content")?.textContent).toContain("Body");
+    expect(card.querySelector(".wakeb-modal__actions .save")).not.toBeNull();
   });
 
   it("shows the loading slot until data is loaded", async () => {

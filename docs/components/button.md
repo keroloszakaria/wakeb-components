@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WButton
 
 Vuetify buttons with explicit states, icon slots and semantic style variables.
+
+::: info 0.8.0-alpha.0 candidate
+This page describes the local, unreleased three-provider API. Install the [candidate archive](../guide/installation) and complete [provider setup](../guide/providers) first. The public 0.7 API differs.
+:::
+
+## Preview
+
+Live preview uses Vuetify. The same public API is checked separately on PrimeVue and shadcn-vue; see [verification](../guide/verification).
+
+<FoundationPlayground initial="button" />
 
 ## Usage
 
@@ -9,8 +19,26 @@ Vuetify buttons with explicit states, icon slots and semantic style variables.
 <script setup lang="ts">
 import { WButton } from 'wakeb-components'
 </script>
+
 <template>
   <WButton title="Save changes" action="submit" type="primary" />
+</template>
+```
+
+## Examples
+
+### Disabled and loading
+
+Loading prevents activation and exposes aria-busy.
+
+```vue
+<script setup lang="ts">
+import { WButton } from 'wakeb-components'
+</script>
+
+<template>
+  <WButton title="Saving" is-loading />
+  <WButton title="Unavailable" disabled type="outline" />
 </template>
 ```
 
@@ -25,7 +53,7 @@ import { WButton } from 'wakeb-components'
 | `iconPosition` | `"start" \| "end"` | `"start"` | Icon location around a nonempty title. |
 | `type` | `string` | `"primary"` | primary/secondary/outline/danger/tertiary/link/icon/table-icon/text; custom strings add classes. |
 | `size` | `string` | `"lg"` | xl/lg/md/sm; custom strings need consumer CSS. |
-| `isLoading` | `boolean` | `false` | Vuetify loading indicator plus the shared loading style. |
+| `isLoading` | `boolean` | `false` | Loading indicator plus the shared loading style. Sets aria-busy="true" on the native button on every provider while loading, overriding a conflicting caller value. |
 | `isDropdown` | `boolean` | `false` | Append the dropdown slot or the built-in $expand chevron. |
 | `action` | `"button" \| "submit" \| "reset"` | `"button"` | Native HTML button type. |
 | `disabled` | `boolean` | `false` | Native disabled state. |
@@ -41,9 +69,20 @@ import { WButton } from 'wakeb-components'
 
 `click(event: MouseEvent)` — original native event, once per activation.
 
+```ts
+click: [event: MouseEvent];
+```
+
 ## Slots
 
 `icon` and `dropdown`: `{ icon, size, color, maxWidth }`. `content` (or `default` fallback): content when title is empty and isTooltip=false. Tooltip mode renders the icon only. Icons resolve through the icons plugin option and the Wakeb built-ins; other names render through VIcon under Vuetify (configure its icon set/font) and as the fallback box under other providers.
+
+```ts
+icon(props: IconSlotProps): unknown;
+dropdown(props: IconSlotProps): unknown;
+content(): unknown;
+default(): unknown;
+```
 
 ## CSS variables
 
@@ -161,10 +200,17 @@ import { WButton } from 'wakeb-components'
 
 The native `<button>` on every provider, not the outer layout div; use `wrapperAttrs` for that div. Wakeb's type, disabled and loading handling win, and a caller `onClick` is the portable click, emitted once. `providerProps` reaches the same button primitive below the caller attributes. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
+## Keyboard interaction
+
+| Key | Behavior |
+| --- | --- |
+| `Tab` | Focus enabled actions. |
+| `Enter / Space` | Activate the focused native button. |
+
 ## Accessibility and limits
 
-The native element keeps form/type, disabled state and Vuetify aria-busy behavior. Click emits its original MouseEvent once; .stop/.prevent can be used by the host. Native keyboard activation is left to the browser. Icon-only buttons need an aria-label; tooltip buttons use title as a fallback accessible name. Tooltip focus listeners are composed with consumer listeners. Loading acts like disabled for activation in standard and tooltip modes: no click event and no native submit/reset. It is still not a request lock; the host owns request state. A native loading attr also reaches VBtn and does not add the isLoading style class. Reduced-motion settings remove shared transitions. The outer div is retained for layout; wrapperAttrs does not redirect native attrs. Unknown variants/sizes are extension classes. The compatibility-only --wakeb-button-fallback switch is reserved for adapters; leave it undefined for normal defaults.
+The native element keeps form/type, disabled state and aria-busy loading state on every provider. Click emits its original MouseEvent once; .stop/.prevent can be used by the host. Native keyboard activation is left to the browser. Icon-only buttons need an aria-label; tooltip and loading buttons use title as a fallback accessible name; an explicit aria-label wins. Tooltip focus listeners are composed with consumer listeners. Loading acts like disabled for activation in standard and tooltip modes: no click event and no native submit/reset. It is still not a request lock; the host owns request state. A native loading attr also reaches VBtn and does not add the isLoading style class. Reduced-motion settings remove shared transitions. The outer div is retained for layout; wrapperAttrs does not redirect native attrs. Unknown variants/sizes are extension classes. The compatibility-only --wakeb-button-fallback switch is reserved for adapters; leave it undefined for normal defaults. Transparent outline/icon buttons use --wakeb-ui-on-surface as a foreground fallback, including in dark mode; component color variables still win. Built-in SVGs retain iconSize, custom SVG dimensions remain caller-owned, and native paragraph/font resets do not override the shared button size.
 
-## Try it
+---
 
-<FoundationPlayground initial="button" />
+Need this contract in your coding agent? Use the [skill and MCP](../guide/agents).

@@ -23,7 +23,7 @@ import Skeleton from "./ui/Skeleton.vue";
 import type { PageSkeletonProps, SkeletonItem } from "../../types";
 import { useSkeleton } from "../../core/vocabulary";
 import { useSkeletonGrid } from "../../core/grid";
-import { SKELETON_SHAPES, pageSkeletonDefaults, repeatCount, skeletonParts, toUnit, type SkeletonBone } from "../../composables/skeleton";
+import { pageSkeletonDefaults, renderSkeleton, repeatCount, type SkeletonBone } from "../../composables/skeleton";
 import "../../styles/grid.css";
 /*
  * Same R16 grammar, Wakeb grid and bone shapes as the PrimeVue renderer. Vuetify-only names are
@@ -41,22 +41,9 @@ const bone = (b: SkeletonBone) =>
     class: ["wakeb-skeleton__bone", "wakeb-sc-skeleton-bone", { "wakeb-skeleton__bone--circle": b.circle }],
     style: { width: b.width, height: b.height, borderRadius: b.circle ? "50%" : b.radius },
   });
-/*
- * One item: a box sized by width and height (numbers are px, as with VSkeletonLoader) holding one
- * part per parsed name. A part is an optional avatar followed by rows of bones.
- */
+/* One item: the shared Wakeb bones for its parsed names, sized by its width and height. */
 const SkeletonItemView: FunctionalComponent<{ item: SkeletonItem; prop: string }> = ({ item, prop }) =>
-  h(
-    "div",
-    { class: "wakeb-skeleton", style: { width: toUnit(item.width), height: toUnit(item.height) } },
-    skeletonParts(toSkeleton(item.type, prop)).map((name) => {
-      const shape = SKELETON_SHAPES[name];
-      return h("div", { class: ["wakeb-skeleton__part", `wakeb-skeleton__part--${name}`] }, [
-        shape.avatar && bone(shape.avatar),
-        h("div", { class: "wakeb-skeleton__lines" }, shape.rows.map((bones) => h("div", { class: "wakeb-skeleton__row" }, bones.map(bone)))),
-      ]);
-    }),
-  );
+  renderSkeleton(bone, toSkeleton(item.type, prop), item.width, item.height);
 SkeletonItemView.props = ["item", "prop"];
 </script>
 <style lang="scss" scoped>

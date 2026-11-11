@@ -4,7 +4,7 @@
 >
 > - No npm version, git tag or dist-tag has been created.
 > - The documentation has not been published to wakeb-components.surge.sh from this branch.
-> - `package.json` is still `0.7.0`.
+> - The working-tree package version is `0.8.0-alpha.0`; it has not been published.
 >
 > This draft does not authorize publication (SPEC R20, R22; AGENTS.md).
 
@@ -56,10 +56,10 @@ Upgrading needs the migration guide. Root imports alone no longer work.
 
 ## Known limits
 
-- **No real-browser verification has been recorded.**
-  - M3–M5 keyboard, focus, positioning and visual parity have no browser evidence.
-  - Server-to-client hydration has no browser evidence.
-  - All component evidence is jsdom, `renderToString` or packed-consumer builds (ACCEPTANCE.md R18, R19).
+- **Chromium browser/hydration verification is now versioned.**
+  - See BROWSER-VERIFICATION.md for the completed run status, exact peer/browser versions, artifacts and limits.
+  - The same packed fixture covers all three providers across light/dark, LTR/RTL and small/wide viewports.
+  - Targeted manual screen-reader review, exhaustive style-alias browser checks and other browser engines remain outside this evidence (ACCEPTANCE.md R18, R23).
 - **No Jervis DevOps pipeline run is recorded** for this branch, and the docs are not published from it (ACCEPTANCE.md R22).
 - **Vuetify WDrawer** keeps closed content in the DOM under `inert`, and also closes on touch swipe and route change (PrimeVue and shadcn-vue do not render closed content). Its root is now a `div role="dialog"`, not a `nav`.
 - **WDropdown `colorMap` keys** are open strings.
@@ -78,11 +78,11 @@ Each of these must be decided before a stable release. They can be deferred for 
 3. **WDropdown `colorMap`.** Either keep keys as open strings, or narrow them to `WakebIntent | string` with documented semantics.
 4. ~~**Deprecated Vuetify values.**~~ **Decided.** TypeScript accepts the deprecated values the runtime still renders, flagged with `@deprecated`, for the one-major deprecation window.
 5. ~~**Release version and dist-tag.**~~ **Decided:** `0.8.0-alpha.0` under the `alpha` dist-tag (`publishConfig.tag`). Not published yet.
-6. **Aware compatibility.** R20 needs external Aware evidence or a recorded blocker.
+6. **Aware compatibility.** The scoped Active Sessions pilot now supplies external R20 evidence; see AWARE-INTEGRATION.md for the host branch, commands, archive hash, baseline failures and limits. Broader migration and release approval remain separate.
 
 ## Version proposal
 
-Current version: `0.7.0`.
+Current working-tree version: `0.8.0-alpha.0` (unpublished).
 
 SPEC R20 requires four things:
 
@@ -97,7 +97,7 @@ The reasons:
 
 - **The change is breaking.** Under semver 0.x, a minor bump is the conventional breaking release, and a prerelease suffix keeps `^0.7.0` ranges from resolving to it.
 - **1.0.0 promises a stable API across providers, and the SPEC definition of done is not met.**
-  - No real-browser or hydration suites have run.
+  - Automated Chromium/hydration coverage is recorded in BROWSER-VERIFICATION.md; the remaining manual/style-value acceptance gates are still open.
   - No Jervis DevOps evidence is recorded.
   - Calling this `1.0.0-alpha.0` would anchor the 1.0 line before the owner decisions above are settled. Any of them could change public types again.
 - **The default must stay `0.7.0`.** With the `alpha` dist-tag, `npm install wakeb-components` keeps returning `0.7.0` (R20: do not silently change the package default). `package.json` sets `publishConfig.tag` to `alpha`, so a plain `npm publish` cannot move `latest`; switch it back only for the stable release.
@@ -116,7 +116,7 @@ Every item needs a recorded result (commit, command, exit code, versions, artifa
 - [ ] `package.json` version set to the approved prerelease and the CHANGELOG heading renamed from "Unreleased (framework alpha)". Not done; out of scope for this record.
 - [ ] `npm run check` passes from a clean checkout. This covers typecheck, build, Vitest on three projects, `check:package` and the EN/AR `docs:build`.
 - [ ] `npm run check:peers` passes all six cells (vuetify, primevue and shadcn × min and current), and `tests/fixtures/peers/results.json` is current.
-- [ ] Real-browser matrix (ACCEPTANCE.md section C) on three providers × light/dark × LTR/RTL, with keyboard, focus, Teleport and reduced motion, plus hydration (section D). The browser and version are recorded with the artifacts.
+- [ ] Review the recorded automated Chromium matrix and hydration evidence in BROWSER-VERIFICATION.md, then complete the remaining targeted manual accessibility and exhaustive style-value checks. Other browser engines have not been certified.
 - [ ] A Jervis DevOps pipeline run on the release commit, covering check, check:peers and the browser suite. No GitHub Actions.
 - [ ] Documentation published at wakeb-components.surge.sh through Jervis DevOps, and `scripts/verify-deployment.mjs` passes against the local receipt for the same commit.
 - [ ] Tarball checksum recorded; contents checked, including `THIRD-PARTY-NOTICES.txt` and no tests or secrets.

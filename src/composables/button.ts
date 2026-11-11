@@ -62,6 +62,6 @@ export function useButton(props: Required<Omit<ButtonProps, "icon" | "providerPr
   };
   /** Native provider props first, so tooltip bindings, the fallback name and caller attrs win over them. */
   const actualAttrs = (tooltip: Record<string, unknown> = {}, native: Record<string, unknown> = {}) =>
-    mergeProps(native, tooltip, props.isTooltip && !attrs["aria-label"] ? { "aria-label": props.title || undefined } : {}, attrs);
+    mergeProps(native, tooltip, (props.isTooltip || props.isLoading) && !attrs["aria-label"] ? { "aria-label": props.title || undefined } : {}, attrs, props.isLoading ? { "aria-busy": "true" } : {});
   return { classes, iconColor, iconProps, pixelSize, iconStyle, onClick, actualAttrs };
 }

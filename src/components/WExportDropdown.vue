@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { mergeProps } from "vue";
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem, VListItemTitle } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
@@ -23,14 +24,14 @@ const toIcon = useVuetifyIcon();
 </script>
 <template>
   <!-- The root VMenu already receives the theme scope as attrs; only its stacking is set here. -->
-  <VMenu :disabled="disabled || isLoading" :z-index="context.zIndexOverlay">
+  <VMenu :disabled="disabled || isLoading" :z-index="context.zIndexOverlay" :location="location" :offset="offset">
     <template #activator="{ props: activatorProps }"
       ><slot
         name="activator"
-        :props="activatorProps"
+        :props="mergeProps(context.scope, activatorProps)"
         :button-props="buttonProps()"
         ><WButton
-          v-bind="{ ...activatorProps, ...buttonProps() }"
+          v-bind="mergeProps(context.scope, activatorProps, { ...buttonProps() })"
           :aria-label="title"
           :style="{ height: 'var(--wakeb-export-button-height, 44px)' }"
           ><template #icon

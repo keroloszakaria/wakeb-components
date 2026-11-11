@@ -3,6 +3,7 @@ import { LOCALE_DEFAULTS, clone } from "./defaults";
 import { WAKEB_CONTEXT } from "./runtime";
 import { reportUnsupportedProviderProps } from "./provider-props";
 import type { WakebComponentName } from "./options";
+import services from "wakeb-components/_internal/selected/services";
 
 type PropOptions = Record<string, { type?: unknown; required?: boolean } | null>;
 type Renderer = { props?: PropOptions; emits?: string[] | Record<string, unknown> };
@@ -58,7 +59,8 @@ export function defineWakebFacade(name: WakebComponentName, renderer: Component)
           }
           resolved[key] = value !== undefined ? value : fallback[key];
         }
-        return h(renderer, mergeProps(context?.scope ?? {}, resolved, attrs, forward), slots);
+        const node = h(renderer, mergeProps(context?.scope ?? {}, resolved, attrs, forward), slots);
+        return context?.scope.dir && services.withDirection ? services.withDirection(node, context.direction) : node;
       };
     },
   });

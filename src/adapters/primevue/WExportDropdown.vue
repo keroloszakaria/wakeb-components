@@ -30,6 +30,7 @@ const model = computed(() =>
 /* menuStyle targets the role="menu" list, inside the overlay that carries the theme scope, so it wins. */
 const pt = computed(() => (props.menuStyle ? { list: { style: props.menuStyle } } : undefined));
 const activatorProps = computed(() => ({
+  ...context.scope,
   "aria-haspopup": "menu",
   "aria-expanded": String(isActive.value),
   // PrimeVue puts role="menu" on the inner list, `${id}_list`, not on the overlay root.

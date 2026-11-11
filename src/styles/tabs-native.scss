@@ -44,7 +44,7 @@
   border: 1px solid transparent;
   border-radius: 0;
   background: transparent;
-  color: var(--wakeb-tabs-item-color, var(--wakeb-tabs-fallback, #344054));
+  color: var(--wakeb-tabs-item-color, var(--wakeb-tabs-fallback, var(--wakeb-ui-on-surface, #344054)));
   font: inherit;
   font-size: 14px;
   font-weight: 600;

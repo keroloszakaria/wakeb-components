@@ -1,0 +1,77 @@
+/* Shared WCountBadge markup for renderers without an anchored badge primitive (PrimeVue and shadcn-vue). */
+.wakeb-count-badge-native {
+  --wakeb-count-badge-shift: 50%;
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  vertical-align: middle;
+
+  &:dir(rtl) {
+    --wakeb-count-badge-shift: -50%;
+  }
+
+  .wakeb-count-badge__badge {
+    position: absolute;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    margin: 0;
+    padding: 0 0.375rem;
+    border-radius: 999px;
+    background: var(--wakeb-count-badge-color, #f04438);
+    color: var(--wakeb-ui-on-primary, #fff);
+    font-family: var(--wakeb-ui-font-family, inherit);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .wakeb-count-badge__badge--dot {
+    width: 0.5rem;
+    min-width: 0.5rem;
+    height: 0.5rem;
+    padding: 0;
+  }
+
+  &.wakeb-count-badge--top-end .wakeb-count-badge__badge,
+  &.wakeb-count-badge--top-start .wakeb-count-badge__badge {
+    inset-block-start: 0;
+  }
+
+  &.wakeb-count-badge--bottom-end .wakeb-count-badge__badge,
+  &.wakeb-count-badge--bottom-start .wakeb-count-badge__badge {
+    inset-block-end: 0;
+  }
+
+  &.wakeb-count-badge--top-end .wakeb-count-badge__badge,
+  &.wakeb-count-badge--bottom-end .wakeb-count-badge__badge {
+    inset-inline-end: 0;
+  }
+
+  &.wakeb-count-badge--top-start .wakeb-count-badge__badge,
+  &.wakeb-count-badge--bottom-start .wakeb-count-badge__badge {
+    inset-inline-start: 0;
+  }
+
+  &.wakeb-count-badge--top-end .wakeb-count-badge__badge {
+    transform: translate(var(--wakeb-count-badge-shift), -50%);
+  }
+
+  &.wakeb-count-badge--top-start .wakeb-count-badge__badge {
+    transform: translate(calc(var(--wakeb-count-badge-shift) * -1), -50%);
+  }
+
+  &.wakeb-count-badge--bottom-end .wakeb-count-badge__badge {
+    transform: translate(var(--wakeb-count-badge-shift), 50%);
+  }
+
+  &.wakeb-count-badge--bottom-start .wakeb-count-badge__badge {
+    transform: translate(calc(var(--wakeb-count-badge-shift) * -1), 50%);
+  }
+}

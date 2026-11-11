@@ -12,8 +12,11 @@ bundled; they are installed by the consuming application under their own license
 
 Source:   https://github.com/unovue/shadcn-vue, release v2.9.0
           (commit 39cb0b277f009e47de2dc62c4217755fb9a27eec),
-          apps/v4/registry/new-york-v4/ui/{button,dialog,dropdown-menu,popover,sheet,skeleton,spinner,tooltip}
-Used in:  src/adapters/shadcn/ui/*.vue, compiled into dist/_internal/adapters/shadcn/*.js and
+          apps/v4/registry/new-york-v4/ui/{avatar,button,card,checkbox,dialog,dropdown-menu,input,popover,progress,
+          separator,sheet,skeleton,spinner,switch,table,textarea,toggle-group,tooltip}
+Used in:  src/adapters/shadcn/ui/*.vue and the styles of src/adapters/shadcn/{WTextField,WSwitch,WCheckbox,
+          WTextarea,WProgressLinear,WButtonToggle,WCard,WDivider,WAvatar,WDataTable}.vue,
+          compiled into dist/_internal/adapters/shadcn/*.js and
           dist/wakeb-components.css
 Changes:  The Tailwind CSS utility classes are translated into precompiled, namespaced
           `wakeb-sc-*` CSS rules; cn(), class-variance-authority and reactiveOmit are removed;
@@ -46,9 +49,10 @@ SOFTWARE.
 2. Lucide
 ---------
 
-Source:   https://github.com/lucide-icons/lucide, icon `loader-circle` (Loader2Icon), the icon that
-          the shadcn-vue Spinner renders
-Used in:  src/adapters/shadcn/ui/Spinner.vue (one SVG path, inlined)
+Source:   https://github.com/lucide-icons/lucide, icons `loader-circle` (Loader2Icon) and `check`
+          (CheckIcon), the icons that the shadcn-vue Spinner and Checkbox render
+Used in:  src/adapters/shadcn/ui/Spinner.vue and src/adapters/shadcn/WCheckbox.vue (one SVG path
+          each, inlined)
 
 ISC License
 

@@ -1,0 +1,27 @@
+/* Shared WProgressLinear layout on every provider: absolute placement and the inactive state. */
+.wakeb-progress-linear {
+  width: 100%;
+  overflow: hidden;
+  transition: opacity 0.2s;
+
+  &.wakeb-progress-linear--absolute {
+    position: absolute;
+    inset-inline: 0;
+    z-index: 1;
+  }
+
+  &.wakeb-progress-linear--absolute.wakeb-progress-linear--top {
+    top: 0;
+    bottom: auto;
+  }
+
+  &.wakeb-progress-linear--absolute.wakeb-progress-linear--bottom {
+    top: auto;
+    bottom: 0;
+  }
+
+  &.wakeb-progress-linear--inactive {
+    opacity: 0;
+    pointer-events: none;
+  }
+}

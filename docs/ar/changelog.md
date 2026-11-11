@@ -2,8 +2,15 @@
 
 ## 0.8.0-alpha.0 (إصدار تجريبي للإطار، غير منشور)
 
+- إصلاح اعتماد الحزمة على أرشيف محلي لنفسها، وتمرير السمات في Popover الخاص بـPrimeVue، وإرجاع التركيز من Popover الخاص بـshadcn-vue.
+- قبول سمات DOM وARIA ومستمعي الأحداث الأصلية في قوالب المستهلك الصارمة مع الحفاظ على أنواع الأحداث وslots المعلنة. دعم selectors الاتجاه المتداخلة الناتجة من Vite 8 داخل فحص عزل CSS.
+- توسيع اختبارات المتصفح إلى المكونات الـ39 مع تفاعلات النماذج والـPopover والجدول والقائمة.
+- إضافة مثالَي Vue كاملين typed لكل مكون، وتوقيعات API والكيبورد باللغتين، ودليل التغطية وأدوات الـagents. تُولّد skill وحزمة MCP مستقلة للقراءة فقط من نفس المرجع والعقود. الأرشيفات المحلية لا تعني نشرًا على npm.
+
 تغيير غير متوافق: الاستيراد من جذر الحزمة يتطلب الآن ملف plugin والدالة `wakebComponents()` من `wakeb-components/vite`. استمر على 0.7.x لاستخدام Vuetify وحده دون تكامل في البناء.
 
+- إضافة 14 مكونًا على المزودات الثلاثة: WSkeleton وWRow وWCol وWProgressLinear وWTextarea وWButtonToggle وWCard وWDivider وWList وWIcon وWImage وWAvatar وWCountBadge وWDataTable (يقوده الخادم: صفوف كما تُمرَّر وفرز بعمود واحد وتحديد صفوف و`click:row` وعرضا التحميل والحالة الفارغة و`update:options` عند التركيب). لكل منها صفحة مرجعية بالعربية والإنجليزية ومجموعة اختبارات عقد واحدة تعمل على كل مزود.
+- إضافة الخاصية `bare` إلى WModal، وهي ترسم الـslot الافتراضي وحده على سطح بلا تنسيق مع بقاء الـmodel والاسم المساعد وحصر التركيز وEscape وسلوك `persistent`.
 - إضافة `createWakebComponents({ framework })` وتكامل البناء `wakeb-components/vite` ورموز أخطاء `WakebError` وبيانات `capabilities`.
 - يقرأ تكامل البناء قيمة framework من ملف الـplugin دون تشغيله، ولا يضم إلا renderers المزود المختار. الصيغ غير المدعومة تفشل برسالة واضحة.
 - أوضاع المزود `auto` و`reuse` و`install` تعيد استخدام نسخة Vuetify أو PrimeVue في التطبيق دون تغيير الـtheme أو القيم الافتراضية.
@@ -24,6 +31,10 @@
 - renderers لـPrimeVue لكل المكونات الـ21. تستخدم WTabs وWTree وWCarousel markup يملكه Wakeb، وتستخدم البقية primitives من PrimeVue. السلوك المشترك في composables محايدة للمزود، وتعمل مجموعة اختبارات عقد وSSR واحدة على كل المزودات.
 - لا يحتاج WDrawer على PrimeVue إلى layout حاضن: يحصر التركيز، ويُغلق بـEscape وبالنقر خارجه ما لم يكن `persistent`، ويمنع تمرير الصفحة، ويعيد التركيز إلى زر الفتح، ويأخذ `zIndexOverlay`.
 - إصلاح: على كل المزودات، يغلق Escape داخل نافذة أو قائمة فُتحت من WDrawer تلك الطبقة وحدها، ويغلق Escape التالي اللوحة. كان Drawer في PrimeVue يغلق الاثنين بضغطة واحدة، وكذلك لوحة Vuetify إذا عاد التركيز إلى body.
+- يرسم WModal أصناف التنسيق نفسها على كل المزودين: أصبح Vuetify يضيف `.wakeb-modal__title` إلى العنوان الافتراضي و`.wakeb-modal__actions` إلى منطقة الأزرار السفلية، كما يفعل PrimeVue وshadcn-vue. نسّق النافذة عبر أصناف `.wakeb-modal__*` بدلًا من `.v-card` أو `.v-card-title` أو `.v-card-actions`.
+- إضافة WTextField، حقل نصي له عنوان وخصائص `rules` و`errorMessages` و`density` و`hideDetails` موحدة وslots `start`/`end` (VTextField في Vuetify وInputText في PrimeVue وInput في shadcn-vue)، وWPopover، لوحة غير مشروطة لها slot `activator {props,isActive}` وslot `default {close}` (VMenu في Vuetify وPopover في PrimeVue وPopover من reka-ui).
+- إضافة WSwitch، مفتاح تشغيل وإيقاف مع `inset` و`loading` (VSwitch في Vuetify وToggleSwitch في PrimeVue وSwitch في shadcn-vue)، وWCheckbox، مربع اختيار بقيمة boolean أو قائمة (VCheckbox في Vuetify وCheckbox في PrimeVue وCheckbox في shadcn-vue). يشتركان في `label` و`disabled` و`color` و`density` وslot باسم `label`.
+- إضافة `location` و`offset` إلى WExportDropdown (بنفس قيم location في WPopover) لموضع القائمة على Vuetify وshadcn-vue؛ بدون قيمة يبقى موضع كل مزود، وتحتفظ Menu في PrimeVue بموضعها.
 - تغيير غير متوافق: لم يعد WDrawer على Vuetify يحتاج `VApp` أو `VLayout`؛ فهو يرسم حاضن `VLayout` يملكه Wakeb ويُنقل إلى حاوية الطبقات في Vuetify، ولا يحرّك تخطيط التطبيق أبدًا. وأصبح عنصر `<div role="dialog" aria-modal="true">` مشروطًا (بدل `<nav>`) يُغلق بـEscape ما لم يكن `persistent`، ويمنع تمرير الصفحة، وينقل التركيز إلى داخله ثم يعيده إلى زر الفتح، ويُبقي طبقة خلفية شفافة مع `transparentOverlay`، ويأخذ ترتيبًا أقل بواحد من `zIndexOverlay` (والقيمة الافتراضية 2000) فتظهر فوقه الطبقات المفتوحة منه، أو أعلى بواحد من طبقات Vuetify المفتوحة عند فتحه.
 - تلميحات PrimeVue، ومنها تلميح WButton، تفتح عند التركيز بلوحة المفاتيح وعند مرور المؤشر، وترتبط بعنصرها عبر `aria-describedby`.
 - تأخذ تلميحات WButton وWTooltipBtn وWTruncatedText وWAvatarStack على PrimeVue قيمة `zIndexOverlay` بدلًا من z-index تلميحات PrimeVue، وتحتفظ بنمط `pt.directives.tooltip.root` العام بدلًا من استبداله. وتبقى الأسبقية لـ`tooltipStyle`، ولا يُضاف شيء دون `zIndexOverlay`.

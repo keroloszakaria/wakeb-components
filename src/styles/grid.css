@@ -9,6 +9,7 @@
   margin: -12px;
 }
 .wakeb-grid-col {
+  box-sizing: border-box;
   width: 100%;
   padding: 12px;
 }
@@ -75,3 +76,20 @@
   .wakeb-grid-col--lg-11 { flex: 0 0 91.66666667%; max-width: 91.66666667%; }
   .wakeb-grid-col--lg-12 { flex: 0 0 100%; max-width: 100%; }
 }
+
+/* WRow modifiers: Vuetify-like dense (4px) and no-gutter spacing, cross-axis and main-axis alignment. */
+.wakeb-grid-row--dense { margin: -4px; }
+.wakeb-grid-row--dense > .wakeb-grid-col { padding: 4px; }
+.wakeb-grid-row--no-gutters { margin: 0; }
+.wakeb-grid-row--no-gutters > .wakeb-grid-col { padding: 0; }
+.wakeb-grid-row--align-start { align-items: flex-start; }
+.wakeb-grid-row--align-center { align-items: center; }
+.wakeb-grid-row--align-end { align-items: flex-end; }
+.wakeb-grid-row--align-baseline { align-items: baseline; }
+.wakeb-grid-row--align-stretch { align-items: stretch; }
+.wakeb-grid-row--justify-start { justify-content: flex-start; }
+.wakeb-grid-row--justify-center { justify-content: center; }
+.wakeb-grid-row--justify-end { justify-content: flex-end; }
+.wakeb-grid-row--justify-space-between { justify-content: space-between; }
+.wakeb-grid-row--justify-space-around { justify-content: space-around; }
+.wakeb-grid-row--justify-space-evenly { justify-content: space-evenly; }

@@ -1,12 +1,12 @@
 # Providers and setup
 
 ::: warning Framework alpha
-This page describes the unreleased provider abstraction (milestones M1 and M2, in progress). It is not part of
-0.7.x. Version 0.7.x stays Vuetify-only and needs no build integration.
+This page describes the local 0.8.0-alpha.0 candidate with 39 components on all three providers. It is not part of
+0.7.x. Version 0.7.x stays Vuetify-only and needs no build integration. Install the [candidate archive](./installation) before using this setup.
 :::
 
 Wakeb components keep one Vue API: the same imports, props, events, slots and `v-model`
-bindings. A provider (Vuetify or PrimeVue) renders them. You select the provider once, in
+bindings. A provider (Vuetify, PrimeVue or shadcn-vue) renders them. You select the provider once, in
 one file, and your bundle then contains only that provider's renderers.
 
 ## Setup
@@ -15,17 +15,17 @@ one file, and your bundle then contains only that provider's renderers.
 
 | Provider | Install |
 | --- | --- |
-| Vuetify | `npm install wakeb-components vuetify` |
-| PrimeVue | `npm install wakeb-components primevue @primeuix/themes` |
-| shadcn-vue (alpha) | `npm install wakeb-components reka-ui` |
+| Vuetify | `npm install ./wakeb-components-0.8.0-alpha.0.tgz vuetify@^3.13.2` |
+| PrimeVue | `npm install ./wakeb-components-0.8.0-alpha.0.tgz primevue@^4.5.5 @primeuix/themes@^2.0.3` |
+| shadcn-vue (alpha) | `npm install ./wakeb-components-0.8.0-alpha.0.tgz reka-ui@^2.10.5` |
 
 shadcn-vue needs no Tailwind CSS setup, no `components.json` and no shadcn-vue CLI. Wakeb ships
 its own adapted shadcn-vue components over `reka-ui`, with precompiled CSS in `style.css`.
 See [shadcn-vue](#shadcn-vue) below.
 
 The minimum and newest tested peer versions are listed in
-[Supported versions](./installation#supported-versions). PrimeVue 5 is not supported: it moved to
-a commercial license that requires a license key.
+[Supported versions](./installation#supported-versions). PrimeVue 5 is outside this
+candidate's advertised and tested peer range; use the documented PrimeVue 4 setup.
 
 2. Create `plugins/wakeb-components.js` next to `vite.config.js`:
 
@@ -187,6 +187,10 @@ always wins. Wakeb does not read the host app's i18n instance.
 `direction` is independent of `locale`. When you set it, Wakeb writes `dir` on its component
 roots and on teleported overlay content. When you leave it unset, components inherit the page
 direction.
+
+With an explicit direction, Vuetify components also receive a scoped RTL injection, so keyboard
+navigation, drawer placement and teleported overlays agree with the Wakeb option. This adds no DOM
+wrapper and does not change the host Vuetify locale or other components outside Wakeb.
 
 ### Theme tokens
 
@@ -457,6 +461,9 @@ attributes with the same name follow the rules below.
 | WDrawer | The element that carries `.wakeb-drawer`, the teleported `role="dialog"` element: on Vuetify the `VNavigationDrawer` root, a `<div>` that stays in the DOM under `inert` while closed; on PrimeVue and shadcn-vue present only while open. |
 | WExportDropdown | The teleported menu overlay on every provider, present only while open (baseline compatibility). On shadcn-vue it is a wrapper around the `role="menu"` element. |
 | WTree | The root `ul` (`role="tree"`). |
+| WTextField, WTextarea | Split like Vuetify VTextField and VTextarea on every provider: `class`, `style`, `id`, `inert`, `dir`, `data-*` and listeners reach the field root; other attributes reach the native input or textarea. |
+| WPopover | The provider component, not the teleported panel. Use `contentClass` and `contentStyle` for the panel and the activator slot props for the button. |
+| WSwitch, WCheckbox | Split like Vuetify selection controls on every provider: `class`, `style`, `id`, `inert`, `dir`, `data-*` and listeners reach the root; other attributes reach the control element. |
 | The other components | Their root element. WBadge sends `chipAttrs` to the chip; WBadgeStack sends `badgeAttrs` to each badge. |
 
 Wakeb-owned bindings win over attributes on WButton, WDropdown, WModal and WLoading: the
@@ -618,7 +625,11 @@ errors, and production builds drop them.
 | WExportDropdown, WBaseSidebar, WDrawer | Yes | Yes |
 | WAvatarStack, WBadgeStack, WAccordion | Yes | Yes |
 | WTruncatedText, WTooltipBtn, WBadge, WUserBadge | Yes | Yes |
-| shadcn-vue (alpha) | — | All 21 components. WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WBadge and WUserBadge use native Wakeb markup; WPageSkeleton uses shadcn-vue Skeleton bones on the Wakeb grid; WAccordion is a Wakeb disclosure with shadcn-vue Button indicators; the rest use shadcn-vue primitives on reka-ui |
+| WTextField, WPopover, WSwitch, WCheckbox | Yes | Yes |
+| WSkeleton, WProgressLinear, WTextarea, WButtonToggle | Yes | Yes |
+| WCard, WDivider, WAvatar, WCountBadge, WDataTable | Yes | Yes |
+| WRow, WCol, WList, WIcon, WImage | Yes | Yes (native Wakeb markup) |
+| shadcn-vue (alpha) | — | All 39 components. WTabs, WTree, WCarousel, WSegmentedProgress, WSemiCircleGauge, WVerticalSteps, WBadge, WUserBadge, WRow, WCol, WList, WIcon, WImage and WCountBadge use native Wakeb markup; WDataTable uses the shadcn-vue Table markup; WPageSkeleton uses shadcn-vue Skeleton bones on the Wakeb grid; WAccordion is a Wakeb disclosure with shadcn-vue Button indicators; the rest use shadcn-vue primitives on reka-ui |
 
 ## Limits of this alpha
 
@@ -692,7 +703,7 @@ errors, and production builds drop them.
   returns focus to the element that opened it. Escape and outside clicks emit only
   `update:modelValue`; `close` comes from the close button. `transparentOverlay` hides the mask
   color but keeps the mask, so the background stays inert. On PrimeVue the logical side follows
-  the Wakeb `direction` option. On Vuetify it follows the Vuetify locale, closed content stays in
+  the Wakeb `direction` option. On Vuetify an explicit Wakeb `direction` overrides the scoped locale direction; otherwise it follows the host locale. Closed content stays in
   the DOM under `inert`, and the native touch swipe and route watcher also close the drawer.
 - **WBaseSidebar skeleton.** On PrimeVue the loading skeleton accepts the portable skeleton
   names only (SPEC R16) and renders them with PrimeVue `Skeleton` bones. Vuetify-only names are
@@ -703,7 +714,7 @@ errors, and production builds drop them.
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning Alpha
-The shadcn-vue adapter renders all 21 components under `framework: 'shadcn'`.
+The shadcn-vue adapter renders all 39 components under `framework: 'shadcn'`.
 :::
 
 shadcn-vue is not an npm component library. Its components are source files that the

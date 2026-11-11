@@ -24,6 +24,24 @@ const views = {
   WButton: () => h(W.WButton, { title: 'Save', action: 'submit' }),
   WBadge: () => h(W.WBadge, { label: 'Approved', type: 'success', isDot: true }),
   WAccordion: () => h(W.WAccordion, { title: 'Details', modelValue: true }, () => h('input', { value: 'Draft' })),
+  WTextField: () => h(W.WTextField, { label: 'Packed field', modelValue: 'Ada' }),
+  WSwitch: () => h(W.WSwitch, { label: 'Packed switch', modelValue: true }),
+  WCheckbox: () => h(W.WCheckbox, { label: 'Packed checkbox', modelValue: true }),
+  WSkeleton: () => h(W.WSkeleton, { type: 'text', label: 'Packed skeleton' }),
+  WRow: () => h(W.WRow, { dense: true }, () => h(W.WCol, { md: 6 }, () => 'Packed grid')),
+  WCol: () => h(W.WCol, { cols: 12 }, () => 'Packed column'),
+  WProgressLinear: () => h(W.WProgressLinear, { modelValue: 40, label: 'Packed progress' }),
+  WTextarea: () => h(W.WTextarea, { label: 'Packed notes', modelValue: 'Draft' }),
+  WButtonToggle: () => h(W.WButtonToggle, { modelValue: 'top', ariaLabel: 'Legend', items: [{ label: 'Packed top', value: 'top' }, { label: 'Bottom', value: 'bottom' }] }),
+  WCard: () => h(W.WCard, { title: 'Packed card' }, () => 'Card body'),
+  WDivider: () => h(W.WDivider, { 'data-packed': 'divider' }),
+  WList: () => h(W.WList, { items: [{ title: 'Packed row' }] }),
+  WIcon: () => h(W.WIcon, { icon: '$close', label: 'Packed icon' }),
+  WImage: () => h(W.WImage, { src: '/packed.png', alt: 'Packed image', width: 40, height: 40 }),
+  WAvatar: () => h(W.WAvatar, { name: 'Packed Avatar' }),
+  WCountBadge: () => h(W.WCountBadge, { content: 120, label: 'Packed badge' }, () => 'Bell'),
+  WDataTable: () => h(W.WDataTable, { headers: [{ key: 'name', title: 'Packed column' }], items: [{ id: 1, name: 'Packed cell' }] }),
+  WPopover: () => h(W.WPopover, null, { activator: ({ props }) => h('button', { ...props, type: 'button' }, 'Packed filters') }),
 }
 /** Text each supported component must server-render. Closed overlays (WModal, WDrawer) only need to render without a host. */
 export const expected = {
@@ -32,6 +50,7 @@ export const expected = {
   WTruncatedText: ['aria-label="Public package consumer"'], WSegmentedProgress: ['role="progressbar"'], WSemiCircleGauge: ['aria-label="75%"'], WAvatarStack: ['Ada'],
   WLoading: ['Loading report'], WPageSkeleton: ['skeleton-block'], WVerticalSteps: ['Review'], WButton: ['Save'], WBadge: ['Approved'],
   WAccordion: ['wakeb-accordion-', 'Draft'],
+  WTextField: ['Packed field', 'wakeb-text-field'], WPopover: ['Packed filters', 'aria-haspopup="dialog"'], WSwitch: ['Packed switch', 'wakeb-switch'], WCheckbox: ['Packed checkbox', 'wakeb-checkbox'], WSkeleton: ['Packed skeleton', 'role="status"'], WRow: ['Packed grid', 'wakeb-grid-col--md-6'], WCol: ['Packed column', 'wakeb-grid-col--12'], WProgressLinear: ['Packed progress', 'role="progressbar"'], WTextarea: ['Packed notes', 'wakeb-textarea'], WButtonToggle: ['Packed top', 'aria-pressed="true"'], WCard: ['Packed card', 'wakeb-card'], WDivider: ['data-packed="divider"', 'wakeb-divider'], WList: ['Packed row', 'wakeb-list'], WIcon: ['Packed icon', 'role="img"'], WImage: ['Packed image', 'wakeb-image'], WAvatar: ['Packed Avatar', 'PA'], WCountBadge: ['Bell', '99+'], WDataTable: ['Packed cell', 'Packed column'],
 }
 export const rendered = (supported) => supported.filter((name) => name in views)
 export const render = (supported) => () => h('main', rendered(supported).map((name) => views[name]()))

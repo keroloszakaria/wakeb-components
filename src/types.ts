@@ -347,6 +347,8 @@ export interface ExportDropdownProps {
   title?: string;
   formats?: readonly ExportFormat[];
   menuStyle?: CSSProperties;
+  location?: WakebPopoverLocation;
+  offset?: number;
 }
 export interface SidebarItem { [field: string]: unknown; id?: NavigationKey; }
 export interface BaseSidebarProps {
@@ -378,6 +380,8 @@ export interface ModalProps {
   closeLabel?: string;
   loadingLabel?: string;
   ariaLabel?: string;
+  /** Renders only the default slot on an unstyled surface: no header, close button, padding or actions. */
+  bare?: boolean;
   providerProps?: WakebProviderProps;
 }
 export interface DrawerProps {
@@ -393,4 +397,184 @@ export interface DrawerProps {
   closeLabel?: string;
   loadingLabel?: string;
   ariaLabel?: string;
+}
+
+/** A field validation rule: `true` when valid, otherwise a message (or `false` for no message). */
+export type WakebFieldRule = (value: string | number | null | undefined) => string | boolean;
+export interface TextFieldProps {
+  modelValue?: string | number | null;
+  type?: "text" | "search" | "email" | "tel" | "url" | "password" | "number";
+  label?: string;
+  placeholder?: string;
+  variant?: "outline" | "filled";
+  disabled?: boolean;
+  readonly?: boolean;
+  required?: boolean;
+  rules?: readonly WakebFieldRule[];
+  hideDetails?: boolean | "auto";
+  density?: "default" | "comfortable" | "compact";
+  errorMessages?: string | readonly string[];
+}
+
+export interface TextareaProps {
+  modelValue?: string | null;
+  label?: string;
+  placeholder?: string;
+  variant?: "outline" | "filled";
+  disabled?: boolean;
+  readonly?: boolean;
+  required?: boolean;
+  rules?: readonly WakebFieldRule[];
+  hideDetails?: boolean | "auto";
+  density?: "default" | "comfortable" | "compact";
+  errorMessages?: string | readonly string[];
+  rows?: number | string;
+  autoGrow?: boolean;
+  noResize?: boolean;
+}
+
+export interface SwitchProps {
+  modelValue?: boolean;
+  label?: string;
+  disabled?: boolean;
+  color?: WakebColor;
+  density?: "default" | "comfortable" | "compact";
+  inset?: boolean;
+  loading?: boolean;
+}
+export interface CheckboxProps {
+  modelValue?: boolean | readonly unknown[];
+  value?: unknown;
+  label?: string;
+  disabled?: boolean;
+  color?: WakebColor;
+  density?: "default" | "comfortable" | "compact";
+}
+
+export interface SkeletonProps {
+  type?: string;
+  width?: string | number;
+  height?: string | number;
+  loading?: boolean;
+  label?: string;
+}
+export interface RowProps {
+  dense?: boolean;
+  noGutters?: boolean;
+  align?: "start" | "center" | "end" | "baseline" | "stretch";
+  justify?: "start" | "center" | "end" | "space-between" | "space-around" | "space-evenly";
+}
+export interface ColProps {
+  cols?: string | number | boolean;
+  sm?: string | number | boolean;
+  md?: string | number | boolean;
+  lg?: string | number | boolean;
+}
+export interface ProgressLinearProps {
+  modelValue?: number | string;
+  indeterminate?: boolean;
+  active?: boolean;
+  color?: WakebColor;
+  height?: number | string;
+  absolute?: boolean;
+  location?: "top" | "bottom";
+  label?: string;
+}
+export interface ButtonToggleItem { label: string; value: string | number; disabled?: boolean; }
+export interface ButtonToggleProps {
+  modelValue?: string | number | readonly (string | number)[] | null;
+  items?: readonly ButtonToggleItem[];
+  multiple?: boolean;
+  mandatory?: boolean;
+  color?: WakebColor;
+  density?: "default" | "comfortable" | "compact";
+  disabled?: boolean;
+  block?: boolean;
+  ariaLabel?: string;
+}
+export interface CardProps {
+  title?: string;
+  subtitle?: string;
+  variant?: "elevated" | "flat" | "outlined";
+  padded?: boolean;
+}
+export interface DividerProps { vertical?: boolean; thickness?: number | string; color?: WakebColor; }
+export interface ListItem { title: string; subtitle?: string; value?: string | number; icon?: SharedIcon; disabled?: boolean; }
+export interface ListProps {
+  items?: readonly ListItem[];
+  density?: "default" | "comfortable" | "compact";
+  interactive?: boolean;
+  ariaLabel?: string;
+}
+export interface IconProps { icon: SharedIcon; size?: number | string; color?: WakebColor; label?: string; }
+export interface ImageProps {
+  src?: string;
+  alt?: string;
+  width?: number | string;
+  height?: number | string;
+  aspectRatio?: number | string;
+  cover?: boolean;
+  lazy?: boolean;
+}
+export interface AvatarProps {
+  image?: string;
+  name?: string;
+  size?: number | string;
+  color?: WakebColor;
+  rounded?: boolean;
+}
+export type CountBadgeLocation = "top end" | "top start" | "bottom end" | "bottom start";
+export interface CountBadgeProps {
+  content?: number | string;
+  max?: number;
+  dot?: boolean;
+  color?: WakebColor;
+  visible?: boolean;
+  label?: string;
+  location?: CountBadgeLocation;
+}
+export interface DataTableHeader {
+  /** Item field shown in the column; dot paths such as `owner.name` read nested values. */
+  key: string;
+  title: string;
+  align?: "start" | "center" | "end";
+  /** Columns are sortable unless this is `false`. */
+  sortable?: boolean;
+  width?: number | string;
+}
+export interface DataTableSortItem {
+  key: string;
+  order: "asc" | "desc";
+}
+export interface DataTableOptions {
+  page: number;
+  itemsPerPage: number;
+  sortBy: DataTableSortItem[];
+}
+export type DataTableItem = Record<string, unknown>;
+export interface DataTableProps {
+  headers?: readonly DataTableHeader[];
+  items?: readonly DataTableItem[];
+  itemValue?: string;
+  modelValue?: readonly (string | number)[];
+  selectable?: boolean;
+  loading?: boolean;
+  sortBy?: readonly DataTableSortItem[];
+  page?: number;
+  itemsPerPage?: number;
+  noDataText?: string;
+  selectAllLabel?: string;
+  selectRowLabel?: string;
+  ariaLabel?: string;
+}
+export type WakebPopoverLocation = "bottom" | "bottom start" | "bottom end" | "top" | "top start" | "top end";
+export interface PopoverProps {
+  modelValue?: boolean;
+  location?: WakebPopoverLocation;
+  offset?: number;
+  disabled?: boolean;
+  closeOnContentClick?: boolean;
+  ariaLabel?: string;
+  contentClass?: ComponentClass;
+  contentStyle?: CSSProperties;
 }

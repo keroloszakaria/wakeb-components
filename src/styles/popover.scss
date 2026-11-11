@@ -1,0 +1,28 @@
+/* The WPopover panel, the same on every provider. Teleported content: namespaced global rules (SPEC R11). */
+.wakeb-popover.wakeb-popover {
+  box-sizing: border-box;
+  width: auto;
+  min-width: 0;
+  max-width: calc(100vw - 24px);
+  padding: 0;
+  overflow: auto;
+  border: var(--wakeb-popover-border, 0);
+  border-radius: var(--wakeb-popover-radius, 4px);
+  background: var(--wakeb-popover-background, var(--wakeb-ui-surface, rgb(var(--v-theme-surface, 255, 255, 255))));
+  color: var(--wakeb-ui-on-surface, inherit);
+  box-shadow: var(
+    --wakeb-popover-shadow,
+    0 5px 5px -3px rgb(0 0 0 / 0.2),
+    0 8px 10px 1px rgb(0 0 0 / 0.14),
+    0 3px 14px 2px rgb(0 0 0 / 0.12)
+  );
+  font-family: var(--wakeb-ui-font-family, inherit);
+  outline: none;
+}
+.wakeb-popover.wakeb-popover::before,
+.wakeb-popover.wakeb-popover::after {
+  display: none;
+}
+.wakeb-popover .wakeb-popover__body {
+  padding: 0;
+}

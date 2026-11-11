@@ -1,9 +1,27 @@
 # Installation
 
+## Try the three-provider candidate
+
+This site documents the local **0.8.0-alpha.0** candidate with 39 components. Download
+<a href="/downloads/wakeb-components-0.8.0-alpha.0.tgz" download>the library archive</a>, copy it into your
+Vue/Vite project and install it with exactly one provider's peers:
+
+```sh
+npm install ./wakeb-components-0.8.0-alpha.0.tgz vuetify@^3.13.2
+```
+
+For PrimeVue or shadcn-vue, use the matching command in [Providers and setup](./providers).
+That guide includes the required static provider file, Vite plugin, runtime plugin
+and stylesheet. See [agent tools](./agents) for the skill and MCP downloads.
+The candidate is not published to npm; installing `wakeb-components@0.7.0` below
+does not install this three-provider API.
+
+## Published 0.7 installation (Vuetify only)
+
 ::: tip Provider abstraction: 0.8.0-alpha.0 (not yet published)
 The 0.8.0-alpha.0 prerelease adds Vuetify, PrimeVue and shadcn-vue providers behind one API. It
 needs a plugin file and a one-time Vite integration. See [Providers and setup](./providers) and
-[Migration from 0.7](./migration). Until it is published, this page installs the 0.7.0 release.
+[Migration from 0.7](./migration). The following legacy instructions install the 0.7.0 release.
 :::
 
 Install the public npm package in a Vue 3.5 + Vuetify 3.13.2+ project:
@@ -66,13 +84,13 @@ fails when the table, the fixtures or the `package.json` ranges disagree.
 
 | Provider | Fixture | Vue | Vite | Vuetify | PrimeVue | `@primeuix/themes` | `reka-ui` | Result |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| — | Advertised range | `^3.5.40` | `^6.0.0` | `^3.13.2` | `^4.5.5` | `^2.0.3` | `^2.10.5` | — |
+| — | Advertised range | `^3.5.40` | `^6.0.0 || ^8.1.4` | `^3.13.2` | `^4.5.5` | `^2.0.3` | `^2.10.5` | — |
 | Vuetify | minimum | 3.5.40 | 6.0.0 | 3.13.2 | — | — | — | pass |
-| Vuetify | newest in range | 3.5.44 | 6.4.5 | 3.13.7 | — | — | — | pass |
+| Vuetify | newest in range | 3.5.45 | 8.3.6 | 3.13.7 | — | — | — | pass |
 | PrimeVue | minimum | 3.5.40 | 6.0.0 | — | 4.5.5 | 2.0.3 | — | pass |
-| PrimeVue | newest in range | 3.5.44 | 6.4.5 | — | 4.5.5 | 2.0.3 | — | pass |
+| PrimeVue | newest in range | 3.5.45 | 8.3.6 | — | 4.5.5 | 2.0.3 | — | pass |
 | shadcn-vue | minimum | 3.5.40 | 6.0.0 | — | — | — | 2.10.5 | pass |
-| shadcn-vue | newest in range | 3.5.44 | 6.4.5 | — | — | — | 2.11.0 | pass |
+| shadcn-vue | newest in range | 3.5.45 | 8.3.6 | — | — | — | 2.11.0 | pass |
 
 <!-- peer-matrix:end -->
 
@@ -84,6 +102,11 @@ Vue 3.5.40 is the lowest supported Vue. The package's type declarations use the 
 parameter that Vue 3.5.40 added to `DefineComponent`. With Vue 3.5.0 to 3.5.39 the components
 still build and render, but `tsc --strict` rejects the declarations. Vite is now a required peer,
 because the provider is selected only by the `wakebComponents()` Vite plugin.
+
+Vite 6 and Vite 8.1.4 or newer within major 8 are supported; Vite 7 is not in the
+advertised range. The selector uses Vite 8's Oxc transform/parser when available and
+Vite 6's transform/parser otherwise. Every locked consumer checks both JavaScript
+and TypeScript plugin files, including `satisfies WakebFramework` in TypeScript.
 
 ## What switching providers does not cover
 

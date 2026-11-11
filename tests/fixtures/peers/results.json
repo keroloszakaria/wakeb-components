@@ -11,10 +11,10 @@
     },
     "vuetify-current": {
       "versions": {
-        "vue": "3.5.44",
-        "vite": "6.4.5",
+        "vue": "3.5.45",
+        "vite": "8.3.6",
         "vuetify": "3.13.7",
-        "@vue/server-renderer": "3.5.44"
+        "@vue/server-renderer": "3.5.45"
       },
       "result": "pass"
     },
@@ -30,11 +30,11 @@
     },
     "primevue-current": {
       "versions": {
-        "vue": "3.5.44",
-        "vite": "6.4.5",
+        "vue": "3.5.45",
+        "vite": "8.3.6",
         "primevue": "4.5.5",
         "@primeuix/themes": "2.0.3",
-        "@vue/server-renderer": "3.5.44"
+        "@vue/server-renderer": "3.5.45"
       },
       "result": "pass"
     },
@@ -49,10 +49,10 @@
     },
     "shadcn-current": {
       "versions": {
-        "vue": "3.5.44",
-        "vite": "6.4.5",
+        "vue": "3.5.45",
+        "vite": "8.3.6",
         "reka-ui": "2.11.0",
-        "@vue/server-renderer": "3.5.44"
+        "@vue/server-renderer": "3.5.45"
       },
       "result": "pass"
     }

@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WBadge
 
 Semantic chips with independent colors, dot styles and ordered icon/action slots.
+
+::: info 0.8.0-alpha.0 candidate
+This page describes the local, unreleased three-provider API. Install the [candidate archive](../guide/installation) and complete [provider setup](../guide/providers) first. The public 0.7 API differs.
+:::
+
+## Preview
+
+Live preview uses Vuetify. The same public API is checked separately on PrimeVue and shadcn-vue; see [verification](../guide/verification).
+
+<FoundationPlayground initial="badge" />
 
 ## Usage
 
@@ -9,8 +19,26 @@ Semantic chips with independent colors, dot styles and ordered icon/action slots
 <script setup lang="ts">
 import { WBadge } from 'wakeb-components'
 </script>
+
 <template>
   <WBadge label="Approved" type="success" is-dot />
+</template>
+```
+
+## Examples
+
+### Status variants
+
+Use portable intents and variants across providers.
+
+```vue
+<script setup lang="ts">
+import { WBadge } from 'wakeb-components'
+</script>
+
+<template>
+  <WBadge label="Needs review" type="warning" variant="outline" />
+  <WBadge label="Approved" type="success" variant="solid" />
 </template>
 ```
 
@@ -32,9 +60,21 @@ import { WBadge } from 'wakeb-components'
 | `iconPosition` | `"before" \| "after"` | `"before"` | Place icon and actions before or after the content. |
 | `chipAttrs` | `Record<string, unknown>` | `{}` | Explicit attrs for the chip element (VChip on Vuetify, the unstyled PrimeVue Tag on PrimeVue); normal attrs belong to the wrapper. |
 
+## Events
+
+No declared component events. DOM listeners follow the attribute target below.
+
+
+
 ## Slots
 
 `default`: replaces label. `icon`: `{ icon, size }`, with a provider icon fallback. `actions`: follows the icon. Before order: icon/actions/dot/content. After order: dot/content/icon/actions.
+
+```ts
+icon(props: { icon: SharedIcon; size: string | number }): unknown;
+actions(): unknown;
+default(): unknown;
+```
 
 ## CSS variables
 
@@ -76,10 +116,14 @@ import { WBadge } from 'wakeb-components'
 
 The root wrapper `div`. The chip inside receives only `chipAttrs`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
+## Keyboard interaction
+
+This component adds no Wakeb keyboard command. Native or slotted interactive content keeps its own keyboard behavior. See the exact focus, role and provider notes below.
+
 ## Accessibility and limits
 
 A badge is presentational unless explicit chipAttrs make it interactive. Supply visible status text; color and dot alone are not an accessible label. Native wrapper listeners receive bubbling DOM events; there are no custom emits. Chip styles preserve the extracted outline descendant backgrounds and specialized class hooks. Custom icons belong in the icon slot. Semantic variables customize colors without app tokens. Current-color variables are implementation details; use dotColor or documented semantic tokens. The compatibility-only --wakeb-badge-fallback switch stays undefined in normal use. Every renderer marks the chip with .wakeb-badge, its Wakeb type class and one of .wakeb-badge--soft, --solid, --outline or --ghost. Under PrimeVue: the chip is an unstyled PrimeVue Tag (a span) whose content sits in span.wakeb-badge__content; the same Wakeb stylesheet as on Vuetify paints types, the solid variant, radius, padding and the dot, and Wakeb CSS adds the VChip looks for soft (12% currentColor underlay) and outline (1px currentColor border). chipAttrs reach the Tag element as DOM attributes, so VChip props in it have no effect. Non-Wakeb types are not colors: primary is used with WAKEB_UNKNOWN_VALUE. Icons render through the Wakeb icon renderer; MDI names need an icons alias. providerProps is not accepted on either provider. Under shadcn-vue: the badge is Wakeb markup (a span with data-slot=badge) painted by the shared Wakeb badge CSS, as on PrimeVue; provider color names fall back to primary with WAKEB_UNKNOWN_VALUE.
 
-## Try it
+---
 
-<FoundationPlayground initial="badge" />
+Need this contract in your coding agent? Use the [skill and MCP](../guide/agents).

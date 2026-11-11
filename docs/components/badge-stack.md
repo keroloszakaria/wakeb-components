@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WBadgeStack
 
 Badges with per-item styling, image slots and an optional overflow menu.
+
+::: info 0.8.0-alpha.0 candidate
+This page describes the local, unreleased three-provider API. Install the [candidate archive](../guide/installation) and complete [provider setup](../guide/providers) first. The public 0.7 API differs.
+:::
+
+## Preview
+
+Live preview uses Vuetify. The same public API is checked separately on PrimeVue and shadcn-vue; see [verification](../guide/verification).
+
+<IdentityPlayground initial="badge-stack" />
 
 ## Usage
 
@@ -9,8 +19,25 @@ Badges with per-item styling, image slots and an optional overflow menu.
 <script setup lang="ts">
 import { WBadgeStack } from 'wakeb-components'
 </script>
+
 <template>
   <WBadgeStack :items="[{ id: 1, label: 'Administrator' }, { id: 2, label: 'Reviewer' }]" show-overflow-menu overflow-label="More roles" />
+</template>
+```
+
+## Examples
+
+### Visible limit
+
+Keep overflow as a count without opening a menu.
+
+```vue
+<script setup lang="ts">
+import { WBadgeStack } from 'wakeb-components'
+</script>
+
+<template>
+  <WBadgeStack :items="[{ label: 'Admin' }, { label: 'Reviewer' }]" :max="1" />
 </template>
 ```
 
@@ -44,9 +71,17 @@ import { WBadgeStack } from 'wakeb-components'
 
 No custom events. Native wrapper listeners bubble normally; menu state belongs to the provider overlay (Vuetify menu or PrimeVue Popover).
 
+
+
 ## Slots
 
 `icon`: `{ item, index, overflow, variant, style }`, replacing the complete image wrapper. `badgeIcon`: `{ item, icon, size }` for glyph-only rows. `label`: `{ item, text, overflow }`. Index is local to the visible/overflow slice.
+
+```ts
+icon?(props: BadgeStackIconSlotProps): unknown;
+badgeIcon?(props: { item: BadgeStackItem; icon: SharedIcon | undefined; size: string | number }): unknown;
+label?(props: { item: BadgeStackItem; text: string; overflow: boolean }): unknown;
+```
 
 ## CSS variables
 
@@ -63,10 +98,17 @@ No custom events. Native wrapper listeners bubble normally; menu state belongs t
 
 The root flex `div.badge-stack`. Each badge receives `badgeAttrs`; the teleported overflow menu receives neither. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
+## Keyboard interaction
+
+| Key | Behavior |
+| --- | --- |
+| `Tab / Enter / Space` | Focus and activate a native overflow button when the menu is enabled. The legacy div overflow is not a native keyboard control. |
+| `Escape` | Dismiss the open overflow panel or tooltip. |
+
 ## Accessibility and limits
 
 Ordinary attrs target the flex wrapper. No business/theme/icon registry is imported. WBadge variables also apply. Set menu colors through menuStyle and badgeAttrs styles/classes because Vuetify teleports the list outside the stack; the menu carries only the plugin theme scope and zIndexOverlay, and menuStyle wins over it. Image URLs render as decorative img elements; no fetch proxy or detection tint is built in. Nullish per-item overrides preserve false/empty values. max keeps Array.slice and count arithmetic for compatibility; negative, fractional or nonfinite values are unsupported configurations. Visible labels use Wakeb Utils UTF-16 truncation; the menu shows full labels. Only the menu overflow uses customOverflowBorderRadius; the static +N uses customBorderRadius. The circle icon variant also applies to the teleported overflow list. The overflow activator is not announced as a menu because the list is informational. The inherited 58px overflow selector and the legacy circle sizing rules are retained; replace through CSS as needed. Native menu button supports focus, Enter/Space and Escape via Vuetify. The legacy div tag does not provide a native tab stop. PrimeVue: the overflow list opens in a Popover with the same opening rules (hover; click toggles the button; the legacy div opens on hover only). Escape and outside clicks close it; it takes the theme scope and zIndexOverlay, and menuStyle on the list wins. Badges are the PrimeVue WBadge: type and variant classes and the --wakeb-badge-* variables match, but the DOM is a PrimeVue Tag, not a VChip, and a non-Wakeb badge type falls back to primary with WAKEB_UNKNOWN_VALUE. Badge glyphs resolve through the Wakeb icon resolver. Under shadcn-vue: the overflow list renders in reka-ui Popover: hover opens it, the button toggles it on click, the legacy div opens on hover only, and Escape or an outside press closes it. It never takes focus, has aria-modal=false and an aria-label, and the activator's aria-controls points to the list. The popover root carries the theme scope and zIndexOverlay; without the direction option reka-ui writes dir=ltr on it.
 
-## Try it
+---
 
-<IdentityPlayground initial="badge-stack" />
+Need this contract in your coding agent? Use the [skill and MCP](../guide/agents).

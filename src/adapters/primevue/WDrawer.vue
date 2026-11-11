@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, ref, watch } from "vue";
+import { computed, nextTick, ref } from "vue";
 import Drawer from "primevue/drawer";
 import WButton from "./WButton.vue";
 import WLoading from "./WLoading.vue";
-import { drawerDefaults, hasOverlayAbove, useDrawer, useDrawerEscape } from "../../composables/drawer";
+import { drawerDefaults, useDrawer } from "../../composables/drawer";
+import { usePrimeOverlayEscape } from "./overlay";
 import { useWakebContext } from "../../core/runtime";
 import type { DrawerProps } from "../../types";
 defineOptions({ name: "WDrawer", inheritAttrs: false });
@@ -41,27 +42,10 @@ const panel = ref<HTMLElement>();
 let opener: HTMLElement | null = null;
 /*
  * PrimeVue's Drawer and Dialog both close on any document Escape, so one key press would close a
- * drawer together with a dialog opened from it. Wakeb owns the drawer's Escape instead (SPEC R18),
- * like the Vuetify and shadcn-vue renderers. PrimeVue appends a mask each time a dialog opens, so an
- * open mask after the drawer's belongs to a dialog opened from it and keeps Escape. A mask whose
- * dialog is leaving belongs to an overlay that already closed: PrimeVue marks the mask only in styled
- * mode, while Vue's `-leave-active` transition class on its dialog is set in both modes. Menus and
- * popovers close on Escape only while focus is inside them, so they keep the key only then.
+ * drawer together with a dialog opened from it. Wakeb owns the drawer's Escape instead and leaves
+ * it to a newer PrimeVue mask or menu (SPEC R18), like the Vuetify and shadcn-vue renderers.
  */
-const MENU = ".p-menu-overlay, .p-popover, .p-tieredmenu-overlay";
-const leaving = (mask: Element) =>
-  mask.classList.contains("p-overlay-mask-leave-active") || [...mask.children].some((child) => /-leave-active\b/.test(child.getAttribute("class") ?? ""));
-const escape = useDrawerEscape(dialog, () => props.persistent, (event) => {
-  if (event.target instanceof Element && event.target.closest(MENU)) return true;
-  const mask = panel.value?.closest<HTMLElement>(".p-overlay-mask") ?? panel.value?.closest<HTMLElement>('[role="dialog"]');
-  return !!mask && hasOverlayAbove(mask, ".p-overlay-mask", (other) => !leaving(other));
-});
-watch(
-  () => dialog.value,
-  (open) => (open ? escape.listen() : escape.stop()),
-  { immediate: typeof document !== "undefined" },
-);
-onBeforeUnmount(escape.stop);
+usePrimeOverlayEscape(dialog, () => props.persistent, () => panel.value);
 /*
  * PrimeVue focuses [autofocus] or its own close button, and the container slot has neither. Like
  * WModal, move focus to the drawer unless content already took it; PrimeVue's focus trap then

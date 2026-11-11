@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, mergeProps, ref, useId } from "vue";
+import { computed, mergeProps, ref, useId, watchEffect } from "vue";
 import { DropdownMenuRoot } from "reka-ui";
 import DropdownMenuContent from "./ui/DropdownMenuContent.vue";
 import DropdownMenuItem from "./ui/DropdownMenuItem.vue";
@@ -47,6 +47,8 @@ const native = useProviderProps(context, () => props.providerProps, {
   label: "DropdownMenuContent",
   owned: ["forceMount", "as", "asChild", "reference", "portal", "onEscapeKeyDown", "onCloseAutoFocus"],
 });
+// Validate native escape hatches even before the menu's first mount.
+watchEffect(() => { void native.value; });
 const menuId = `wakeb-dropdown-${useId()}`;
 const isActive = ref(false);
 /* The element that opened the menu: the popper anchor and the focus-return target. */
@@ -96,7 +98,9 @@ const menuBindings = computed(() =>
     </div>
     <!-- reka-ui owns positioning, roving focus, typeahead, arrow keys and Escape; non-modal like the other providers. -->
     <DropdownMenuRoot v-model:open="isActive" :modal="false" :dir="context.direction === 'rtl' ? 'rtl' : undefined">
+      <!-- Mount with a concrete reference: reka's nested prop forwarders otherwise miss an initially undefined anchor. Keep it mounted thereafter for close/focus handling. -->
       <DropdownMenuContent
+        v-if="activator"
         v-bind="menuBindings"
         :id="menuId"
         class="wakeb-sc-dropdown"

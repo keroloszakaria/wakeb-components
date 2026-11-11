@@ -90,7 +90,7 @@ const tooltipBindings = computed(() =>
 .wakeb-sc-wbutton {
   position: relative;
   margin: 0;
-  font: inherit;
+  font-family: inherit;
   cursor: pointer;
   user-select: none;
   appearance: none;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, mergeProps, useAttrs } from "vue";
+import { computed, mergeProps, ref, useAttrs, watch } from "vue";
 import { VDialog } from "vuetify/components/VDialog";
-import { VCard, VCardTitle } from "vuetify/components/VCard";
+import { VCard, VCardActions, VCardTitle } from "vuetify/components/VCard";
 import { VIcon } from "vuetify/components/VIcon";
 import { useVuetifyIcon } from "../core/icons";
 import WButton from "./WButton.vue";
@@ -19,6 +19,20 @@ const emit = defineEmits<{
 const context = useWakebContext("WModal");
 const attrs = useAttrs();
 const { model: dialog, close } = useDisclosure(props, emit);
+const card = ref<InstanceType<typeof VCard>>();
+let opener: Element | null = null;
+watch(dialog, (open) => {
+  if (open && typeof document !== "undefined") opener = document.activeElement;
+}, { immediate: true, flush: "sync" });
+// VDialog only restores its own activator. Model-controlled dialogs can have an external opener.
+const afterLeave = () => {
+  const target = opener;
+  opener = null;
+  if (target instanceof HTMLElement && target.isConnected &&
+      (document.activeElement === document.body || card.value?.$el?.contains(document.activeElement)))
+    target.focus({ preventScroll: true });
+  emit("afterLeave");
+};
 /*
  * The model, dismissal policy, width, stacking, focus containment and afterLeave stay Wakeb-owned
  * (SPEC R12, R18). contentProps could carry roles and ARIA past the attribute policy.
@@ -63,13 +77,16 @@ const toIcon = useVuetifyIcon();
     :max-width="maxWidth"
     :z-index="context.zIndexOverlay"
     :aria-label="title || ariaLabel"
+    :class="{ 'wakeb-modal--bare': bare }"
     class="wakeb-modal"
-    @after-leave="emit('afterLeave')"
+    @after-leave="afterLeave"
   >
     <template v-if="$slots.activator" #activator="slotProps"
       ><slot name="activator" v-bind="slotProps"
     /></template>
-    <VCard class="wakeb-modal__card" :aria-busy="loading || !dataLoaded">
+    <VCard ref="card" class="wakeb-modal__card" :aria-busy="loading || !dataLoaded">
+      <slot v-if="bare" />
+      <template v-else>
       <slot name="header" :close="close">
         <div
           v-if="
@@ -96,7 +113,7 @@ const toIcon = useVuetifyIcon();
             /></slot>
           </div>
           <slot name="title"
-            ><VCardTitle v-if="title" :class="titleClass">{{
+            ><VCardTitle v-if="title" :class="['wakeb-modal__title', titleClass]">{{
               title
             }}</VCardTitle></slot
           >
@@ -128,12 +145,15 @@ const toIcon = useVuetifyIcon();
         /></slot>
         <slot v-else name="content"><slot /></slot>
       </div>
-      <template v-if="showActions" #actions><slot name="actions" /></template>
       <slot v-if="loading" name="loading-overlay" :label="loadingLabel">
         <div class="wakeb-modal__loading-overlay">
           <WLoading :label="loadingLabel" />
         </div>
       </slot>
+      <VCardActions v-if="showActions" class="wakeb-modal__actions"
+        ><slot name="actions"
+      /></VCardActions>
+      </template>
     </VCard>
   </VDialog>
 </template>
@@ -230,5 +250,12 @@ const toIcon = useVuetifyIcon();
   inset: 0;
   z-index: 2;
   background: var(--wakeb-modal-loading-bg, rgba(var(--v-theme-surface), 0.72));
+}
+
+.wakeb-modal--bare :deep(.wakeb-modal__card) {
+  margin: 0;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
 }
 </style>

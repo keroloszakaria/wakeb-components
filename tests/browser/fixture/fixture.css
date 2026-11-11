@@ -1,0 +1,10 @@
+body { margin: 0; font-family: Arial, sans-serif; }
+.fixture { padding: 20px; color: #101828; background: #fff; min-height: 100vh; }
+.fixture[data-mode="dark"] { background: #101828; color: #f2f4f7; }
+.fixture section { margin-block: 18px; max-width: 680px; }
+.fixture h2 { font-size: 18px; margin-block: 8px; }
+.fixture .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.fixture .progress-case { width: 300px; max-width: 100%; margin-block: 8px; }
+.fixture .overlay-body { display: grid; gap: 12px; padding: 16px; }
+.fixture .spacer { height: 400px; }
+.fixture .carousel-slide { padding: 24px; min-height: 100px; }

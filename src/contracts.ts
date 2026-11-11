@@ -5,16 +5,21 @@
  * tests/types/conformance.ts checks each renderer against them with vue-tsc. No provider type may
  * appear in this file.
  */
-import type { ComponentOptionsMixin, ComponentProvideOptions, DefineComponent, EmitsToProps, PublicProps } from "vue";
+import type { ComponentOptionsMixin, ComponentProvideOptions, DefineComponent, EmitsToProps, HTMLAttributes, PublicProps } from "vue";
 import type { WakebComponentName, WakebComponentProps } from "./core/options";
 import type {
   BadgeStackIconSlotProps,
   BadgeStackItem,
   BadgeUser,
   ButtonProps,
+  ButtonToggleItem,
+  DataTableItem,
+  DataTableOptions,
+  DataTableSortItem,
   DropdownItem,
   ExportFormat,
   IconSlotProps,
+  ListItem,
   NavigationKey,
   SharedIcon,
   SidebarItem,
@@ -26,13 +31,15 @@ import type {
 
 /** Maps event names to payload tuples, as in `defineEmits<{ click: [event: MouseEvent] }>()`. */
 type EmitsOptionsOf<E> = { [K in keyof E]: (...args: Extract<E[K], unknown[]>) => any };
+/** Ordinary DOM/ARIA attrs are forwarded by the facade; declared props and events keep their precise types. */
+type FacadeAttributes<P, E> = Omit<HTMLAttributes, keyof P | keyof EmitsToProps<EmitsOptionsOf<E>>>;
 
 /**
  * Public component type for a facade: props, `on*` handlers derived from the event map (event name to
  * payload tuple) and typed slots. It has the same shape vue-tsc gives a `<script setup>` component, so
  * `$props`, emitted handler types and template slot inference work in `.vue` and `.ts` consumers alike.
  */
-export type WakebFacade<P extends object, E, S> = DefineComponent<
+export type WakebRendererContract<P extends object, E, S> = DefineComponent<
   P,
   {},
   {},
@@ -55,6 +62,9 @@ export type WakebFacade<P extends object, E, S> = DefineComponent<
   any
 > & { new (): { $slots: S } };
 
+/** Consumer facade adds forwarded DOM attrs without treating them as renderer-declared props. */
+export type WakebFacade<P extends object, E, S> = WakebRendererContract<P & FacadeAttributes<P, E>, E, S>;
+
 /* Events. Components without events use an empty map. */
 export interface AccordionEmits { "update:modelValue": [value: boolean]; }
 export interface ButtonEmits { click: [event: MouseEvent]; }
@@ -66,6 +76,14 @@ export interface ExportDropdownEmits { select: [value: string]; }
 export interface BaseSidebarEmits { search: [payload: unknown]; filterClick: []; filterCancel: []; }
 export interface ModalEmits { "update:modelValue": [value: boolean]; afterLeave: []; }
 export interface DrawerEmits { "update:modelValue": [value: boolean]; close: []; }
+export interface TextFieldEmits { "update:modelValue": [value: string]; }
+export interface PopoverEmits { "update:modelValue": [value: boolean]; }
+export interface SwitchEmits { "update:modelValue": [value: boolean]; }
+export interface CheckboxEmits { "update:modelValue": [value: boolean | unknown[]]; }
+export interface TextareaEmits { "update:modelValue": [value: string]; }
+export interface ButtonToggleEmits { "update:modelValue": [value: string | number | (string | number)[] | null]; }
+export interface ListEmits { select: [item: ListItem]; }
+export interface DataTableEmits { "update:modelValue": [value: (string | number)[]]; "update:sortBy": [value: DataTableSortItem[]]; "update:options": [value: DataTableOptions]; "click:row": [item: DataTableItem, event: MouseEvent]; }
 type NoEvents = {};
 
 /* Slots. A slot without a payload is declared with no parameter. */
@@ -182,6 +200,30 @@ export interface DrawerSlots {
   loading(props: { label: string }): unknown;
   "loading-overlay"(props: { label: string }): unknown;
 }
+export interface TextFieldSlots {
+  start?(): unknown;
+  end?(): unknown;
+}
+export interface PopoverSlots {
+  activator?(props: { props: Record<string, unknown>; isActive: boolean }): unknown;
+  default?(props: { close: () => void }): unknown;
+}
+export interface SwitchSlots { label?(): unknown; }
+export interface CheckboxSlots { label?(): unknown; }
+export interface SkeletonSlots { default?(): unknown; }
+export interface RowSlots { default?(): unknown; }
+export interface ColSlots { default?(): unknown; }
+export type ProgressLinearSlots = {};
+export type TextareaSlots = {};
+export interface ButtonToggleSlots { item?(props: { item: ButtonToggleItem; selected: boolean }): unknown; }
+export interface CardSlots { default?(): unknown; title?(): unknown; actions?(): unknown; }
+export type DividerSlots = {};
+export interface ListSlots { item?(props: { item: ListItem; index: number }): unknown; prepend?(props: { item: ListItem; index: number }): unknown; }
+export type IconSlots = {};
+export interface ImageSlots { placeholder?(): unknown; }
+export interface AvatarSlots { default?(): unknown; }
+export interface CountBadgeSlots { default?(): unknown; }
+export interface DataTableSlots { [key: `item.${string}`]: ((props: { item: DataTableItem; value: unknown; index: number }) => unknown) | undefined; loading?(): unknown; "no-data"?(): unknown; }
 
 /** Event payload tuples of each component, keyed by its exported name. */
 export interface WakebComponentEmits {
@@ -206,6 +248,24 @@ export interface WakebComponentEmits {
   WBaseSidebar: BaseSidebarEmits;
   WModal: ModalEmits;
   WDrawer: DrawerEmits;
+  WTextField: TextFieldEmits;
+  WPopover: PopoverEmits;
+  WSwitch: SwitchEmits;
+  WCheckbox: CheckboxEmits;
+  WSkeleton: NoEvents;
+  WRow: NoEvents;
+  WCol: NoEvents;
+  WProgressLinear: NoEvents;
+  WTextarea: TextareaEmits;
+  WButtonToggle: ButtonToggleEmits;
+  WCard: NoEvents;
+  WDivider: NoEvents;
+  WList: ListEmits;
+  WIcon: NoEvents;
+  WImage: NoEvents;
+  WAvatar: NoEvents;
+  WCountBadge: NoEvents;
+  WDataTable: DataTableEmits;
 }
 
 /** Slot payloads of each component, keyed by its exported name. */
@@ -231,6 +291,24 @@ export interface WakebComponentSlots {
   WBaseSidebar: BaseSidebarSlots;
   WModal: ModalSlots;
   WDrawer: DrawerSlots;
+  WTextField: TextFieldSlots;
+  WPopover: PopoverSlots;
+  WSwitch: SwitchSlots;
+  WCheckbox: CheckboxSlots;
+  WSkeleton: SkeletonSlots;
+  WRow: RowSlots;
+  WCol: ColSlots;
+  WProgressLinear: ProgressLinearSlots;
+  WTextarea: TextareaSlots;
+  WButtonToggle: ButtonToggleSlots;
+  WCard: CardSlots;
+  WDivider: DividerSlots;
+  WList: ListSlots;
+  WIcon: IconSlots;
+  WImage: ImageSlots;
+  WAvatar: AvatarSlots;
+  WCountBadge: CountBadgeSlots;
+  WDataTable: DataTableSlots;
 }
 
 /** The public type of the named facade. */

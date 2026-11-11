@@ -25,3 +25,23 @@ setup. This defers overlay mounting until hydration and keeps initial HTML align
 import { createVuetify } from 'vuetify'
 const vuetify = createVuetify({ ssr: true })
 ```
+
+## Provider alpha: browser hydration verification
+
+For `0.8.0-alpha.0`, use the same `createWakebComponents` options on server and client and the
+`wakebComponents()` Vite integration described in [Providers and setup](./providers). It adds the
+selected provider's SSR bundling configuration. When Wakeb installs Vuetify it enables `ssr: true`;
+when reusing your own Vuetify plugin, enable that option yourself on both sides.
+
+Create a fresh Vue application and Wakeb plugin per SSR request. Keep the initial props, locale,
+direction and theme identical during hydration. When rendering more than one Vue root in the same
+document, give each application a distinct `app.config.idPrefix`, using the same prefix on its server
+and client instances. For example, use `'dashboard-'` for the first root and `'settings-'` for the second.
+Preserve the SSR context's Teleport output in the matching overlay hosts when composing the HTML.
+
+`npm run test:browser` executes Chromium hydration against the actual tarball with Vuetify, PrimeVue
+and shadcn-vue independently. It checks repeated component ID references, concurrent requests, two
+roots with independent settings, initially open/closed modal and drawer states, focus after hydration
+and cleanup on unmount. Vue development warnings and browser errors fail the suite; mismatches are
+not suppressed. See [Verification and contribution](./contributing) for commands and artifact paths.
+This verifies the provided Vue + Vite consumers in Chromium; it does not claim Nuxt or other browser integrations.

@@ -27,6 +27,12 @@ const readJson = (path) => JSON.parse(readFileSync(path, "utf8"));
 
 /** Lowest version of a simple advertised range (`^x.y.z`, `~x.y.z`, `>=x.y.z`). */
 export function minVersion(range) {
+  if (range.includes("||")) {
+    return range.split("||").map(minVersion).sort((a, b) => {
+      const left = a.split(".").map(Number), right = b.split(".").map(Number);
+      return left[0] - right[0] || left[1] - right[1] || left[2] - right[2];
+    })[0];
+  }
   const match = /^(?:\^|~|>=)?(\d+\.\d+\.\d+)$/.exec(range.trim());
   assert(match, `Unsupported peer range ${range}; use ^x.y.z`);
   return match[1];

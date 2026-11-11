@@ -41,6 +41,24 @@ export interface WakebComponentProps {
   WBaseSidebar: Props.BaseSidebarProps;
   WModal: Props.ModalProps;
   WDrawer: Props.DrawerProps;
+  WTextField: Props.TextFieldProps;
+  WPopover: Props.PopoverProps;
+  WSwitch: Props.SwitchProps;
+  WCheckbox: Props.CheckboxProps;
+  WSkeleton: Props.SkeletonProps;
+  WRow: Props.RowProps;
+  WCol: Props.ColProps;
+  WProgressLinear: Props.ProgressLinearProps;
+  WTextarea: Props.TextareaProps;
+  WButtonToggle: Props.ButtonToggleProps;
+  WCard: Props.CardProps;
+  WDivider: Props.DividerProps;
+  WList: Props.ListProps;
+  WIcon: Props.IconProps;
+  WImage: Props.ImageProps;
+  WAvatar: Props.AvatarProps;
+  WCountBadge: Props.CountBadgeProps;
+  WDataTable: Props.DataTableProps;
 }
 export type WakebComponentName = keyof WakebComponentProps;
 
@@ -127,6 +145,8 @@ export interface WakebPlugin {
 export interface WakebProviderServices {
   readonly framework: WakebFramework | null;
   readonly components: readonly string[];
+  /** Bridge an explicitly configured Wakeb direction into a provider's injection context, without mutating the host. */
+  withDirection?(node: import("vue").VNode, direction: "ltr" | "rtl"): import("vue").VNode;
   installProvider(
     app: import("vue").App,
     options: { mode: WakebProviderMode; options?: Readonly<Record<string, unknown>> },

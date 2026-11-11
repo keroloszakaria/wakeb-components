@@ -75,7 +75,7 @@ const tooltipAttrs = computed(() => (tooltip.describedBy.value ? { "aria-describ
 /* Native button reset that VBtn provides in the Vuetify renderer. */
 .wakeb-pv-button {
   position: relative;
-  font: inherit;
+  font-family: inherit;
   cursor: pointer;
   user-select: none;
   appearance: none;

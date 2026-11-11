@@ -1,12 +1,12 @@
 # مزودات الواجهة والإعداد
 
 ::: warning إصدار تجريبي للإطار
-تشرح هذه الصفحة طبقة المزودات غير المنشورة بعد (المرحلتان M1 وM2، والعمل جارٍ)، وهي ليست جزءًا من 0.7.x.
+تشرح الصفحة النسخة المحلية 0.8.0-alpha.0 غير المنشورة مع 39 مكونًا على المزودات الثلاثة؛ وليست جزءًا من 0.7.x. ثبّت [الأرشيف التجريبي](./installation) أولًا.
 يبقى الإصدار 0.7.x خاصًا بـVuetify ولا يحتاج أي تكامل في البناء.
 :::
 
 لمكونات Wakeb واجهة Vue واحدة: نفس الاستيراد والـprops والأحداث والـslots وروابط `v-model`.
-المزود (Vuetify أو PrimeVue) هو الذي يرسم المكونات. تختار المزود مرة واحدة في ملف واحد، ولا
+المزود (Vuetify أو PrimeVue أو shadcn-vue) هو الذي يرسم المكونات. تختار المزود مرة واحدة في ملف واحد، ولا
 يحتوي ملف البناء إلا على renderers هذا المزود.
 
 ## الإعداد
@@ -15,16 +15,16 @@
 
 | المزود | التثبيت |
 | --- | --- |
-| Vuetify | `npm install wakeb-components vuetify` |
-| PrimeVue | `npm install wakeb-components primevue @primeuix/themes` |
-| shadcn-vue (تجريبي) | `npm install wakeb-components reka-ui` |
+| Vuetify | `npm install ./wakeb-components-0.8.0-alpha.0.tgz vuetify@^3.13.2` |
+| PrimeVue | `npm install ./wakeb-components-0.8.0-alpha.0.tgz primevue@^4.5.5 @primeuix/themes@^2.0.3` |
+| shadcn-vue (تجريبي) | `npm install ./wakeb-components-0.8.0-alpha.0.tgz reka-ui@^2.10.5` |
 
 لا يحتاج shadcn-vue إلى إعداد Tailwind CSS ولا إلى ملف `components.json` ولا إلى أداة shadcn-vue
 CLI. يوفّر Wakeb نسخه المعدّلة من مكونات shadcn-vue فوق `reka-ui`، مع أنماط CSS مُعدّة مسبقًا داخل
 `style.css`. راجع قسم [shadcn-vue](#shadcn-vue) أدناه.
 
 أقل إصدارات الـpeers المختبرة وأحدثها مذكورة في [الإصدارات المدعومة](./installation#الإصدارات-المدعومة).
-PrimeVue 5 غير مدعوم لأن رخصته أصبحت تجارية وتتطلب مفتاح ترخيص.
+PrimeVue 5 خارج نطاق peers المعلن والمختبر لهذه النسخة؛ استخدم إعداد PrimeVue 4 الموثق.
 
 2. أنشئ الملف `plugins/wakeb-components.js` بجوار `vite.config.js`:
 
@@ -180,6 +180,10 @@ Wakeb داخل مكوّن آخر، مثل زر الإغلاق في WModal، فت
 
 الخيار `direction` مستقل عن `locale`. عند ضبطه يكتب Wakeb السمة `dir` على جذور مكوناته وعلى
 محتوى الطبقات المنقولة (teleported). وعند تركه دون ضبط ترث المكونات اتجاه الصفحة.
+
+عند ضبط الاتجاه صراحةً، تتلقى مكونات Vuetify أيضًا سياق RTL محليًا، فيتوافق تنقل الكيبورد وموضع
+Drawer والطبقات المنقولة مع خيار Wakeb. لا يضيف ذلك عنصر DOM حاضنًا، ولا يغيّر لغة Vuetify
+أو المكونات الأخرى خارج نطاق Wakeb في التطبيق.
 
 ### متغيرات الـtheme
 
@@ -452,6 +456,9 @@ Skeleton في Wakeb.
 | WDrawer | العنصر الذي يحمل `.wakeb-drawer`، وهو العنصر المنقول الذي يحمل `role="dialog"`: على Vuetify جذر `VNavigationDrawer`، وهو عنصر `<div>` يبقى في DOM تحت `inert` أثناء الإغلاق؛ وعلى PrimeVue وshadcn-vue لا يوجد إلا أثناء فتح اللوحة. |
 | WExportDropdown | طبقة القائمة المنقولة على كل المزودين، ولا توجد إلا أثناء فتح القائمة (للتوافق مع الإصدار الأساسي). وعلى shadcn-vue هي عنصر يغلّف العنصر ذا `role="menu"`. |
 | WTree | عنصر `ul` الجذري (`role="tree"`). |
+| WTextField وWTextarea | تُقسَّم مثل VTextField وVTextarea في Vuetify على كل المزودات: `class` و`style` و`id` و`inert` و`dir` و`data-*` والمستمعات تصل إلى جذر الحقل، وباقي السمات تصل إلى الإدخال أو textarea الأصلي. |
+| WPopover | مكوّن المزود، لا اللوحة المنقولة. استخدم `contentClass` و`contentStyle` للوحة، وخصائص slot الـactivator للزر. |
+| WSwitch وWCheckbox | تُقسَّم مثل عناصر الاختيار في Vuetify على كل المزودات: `class` و`style` و`id` و`inert` و`dir` و`data-*` والمستمعات تصل إلى الجذر، وباقي السمات تصل إلى عنصر التحكم. |
 | بقية المكونات | العنصر الجذري. يرسل WBadge القيمة `chipAttrs` إلى الـchip، ويرسل WBadgeStack القيمة `badgeAttrs` إلى كل شارة. |
 
 في WButton وWDropdown وWModal وWLoading تغلب الروابط التي يملكها Wakeb على السمات: قيمة
@@ -609,9 +616,13 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 | WSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWPageSkeleton | مدعوم | مدعوم |
 | WTabs وWTree وWCarousel | مدعوم | مدعوم (markup أصلي من Wakeb) |
 | WExportDropdown وWBaseSidebar وWDrawer | مدعوم | مدعوم |
+| WTextField وWPopover وWSwitch وWCheckbox | مدعوم | مدعوم |
+| WSkeleton وWProgressLinear وWTextarea وWButtonToggle | مدعوم | مدعوم |
+| WCard وWDivider وWAvatar وWCountBadge وWDataTable | مدعوم | مدعوم |
+| WRow وWCol وWList وWIcon وWImage | مدعوم | مدعوم (markup أصلي من Wakeb) |
 | WAvatarStack وWBadgeStack وWAccordion | مدعوم | مدعوم |
 | WTruncatedText وWTooltipBtn وWBadge وWUserBadge | مدعوم | مدعوم |
-| shadcn-vue (تجريبي) | — | المكونات الـ21 كلها. تستخدم WTabs وWTree وWCarousel وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWBadge وWUserBadge markup أصليًا من Wakeb؛ ويستخدم WPageSkeleton عظام Skeleton من shadcn-vue على شبكة Wakeb؛ وWAccordion إفصاح من Wakeb بمؤشرات زر shadcn-vue؛ وتستخدم البقية primitives من shadcn-vue فوق reka-ui |
+| shadcn-vue (تجريبي) | — | المكونات الـ39 كلها. تستخدم WTabs وWTree وWCarousel وWSegmentedProgress وWSemiCircleGauge وWVerticalSteps وWBadge وWUserBadge وWRow وWCol وWList وWIcon وWImage وWCountBadge markup أصليًا من Wakeb؛ ويستخدم WDataTable بنية Table من shadcn-vue؛ ويستخدم WPageSkeleton عظام Skeleton من shadcn-vue على شبكة Wakeb؛ وWAccordion إفصاح من Wakeb بمؤشرات زر shadcn-vue؛ وتستخدم البقية primitives من shadcn-vue فوق reka-ui |
 
 ## حدود الإصدار التجريبي
 
@@ -679,7 +690,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
   وبالنقر خارجها ما لم تكن `persistent`، وتمنع تمرير الصفحة، وتعيد التركيز إلى العنصر الذي
   فتحها. يرسل Escape والنقر الخارجي `update:modelValue` فقط، أما `close` فيأتي من زر الإغلاق.
   يخفي `transparentOverlay` لون الخلفية لكنه يبقيها، فتظل الصفحة خلفها غير قابلة للتفاعل. على
-  PrimeVue يتبع الجانب المنطقي خيار `direction` في Wakeb. أما على Vuetify فيتبع لغة Vuetify،
+  PrimeVue يتبع الجانب المنطقي خيار `direction` في Wakeb. وعلى Vuetify تتقدم قيمة `direction` الصريحة في نطاق المكوّن، وإلا يتبع لغة التطبيق،
   ويبقى المحتوى المغلق في DOM تحت `inert`، ويغلق السحب باللمس ومراقبة المسار الأصليان اللوحة
   أيضًا.
 - **هيكل التحميل في WBaseSidebar.** على PrimeVue يقبل هيكل التحميل أسماء الهياكل المحمولة فقط
@@ -692,7 +703,7 @@ type Selected = WakebComponentEmits['WDropdown']['selectedItem'] // [item: Dropd
 ## shadcn-vue {#shadcn-vue}
 
 ::: warning تجريبي
-يرسم محوّل shadcn-vue المكونات الـ21 كلها مع `framework: 'shadcn'`.
+يرسم محوّل shadcn-vue المكونات الـ39 كلها مع `framework: 'shadcn'`.
 :::
 
 shadcn-vue ليس مكتبة مكونات تُثبَّت من npm، بل ملفات مصدرية تنسخها أداة shadcn-vue CLI إلى

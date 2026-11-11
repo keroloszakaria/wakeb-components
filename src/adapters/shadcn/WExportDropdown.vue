@@ -6,6 +6,7 @@ import DropdownMenuItem from "./ui/DropdownMenuItem.vue";
 import WButton from "./WButton.vue";
 import WakebIcon from "../../icons/WakebIcon";
 import { exportDropdownDefaults, useExportDropdown, EXPORT_ICON_PATH, FORMAT_ICON_PATH } from "../../composables/export-dropdown";
+import { popoverPlacement } from "../../composables/popover";
 import { useWakebContext } from "../../core/runtime";
 import type { ExportDropdownProps, ExportFormat, ButtonProps } from "../../types";
 /* Baseline attribute target: the teleported menu overlay, while open (attrs bind to the overlay wrapper). */
@@ -41,6 +42,7 @@ watch(isActive, (open) => {
 });
 /* Same activator contract as WDropdown: Wakeb opens the menu instead of reka-ui's trigger. */
 const activatorProps = computed(() => ({
+  ...context.scope,
   "aria-haspopup": "menu",
   "aria-expanded": String(isActive.value),
   "aria-controls": isActive.value ? menuId : undefined,
@@ -70,6 +72,8 @@ const onSelect = (event: Event, format: ExportFormat) => {
   select(format);
 };
 /* zIndexOverlay on the menu (reka-ui copies it to its popper wrapper); menuStyle comes last and wins. */
+/* Unset location keeps reka-ui's placement; start and end are logical and follow the direction. */
+const placement = computed(() => (props.location ? popoverPlacement(props.location) : undefined));
 const menuStyle = computed(() => [context.zIndexOverlay === undefined ? undefined : { zIndex: context.zIndexOverlay }, props.menuStyle]);
 </script>
 <template>
@@ -92,6 +96,9 @@ const menuStyle = computed(() => [context.zIndexOverlay === undefined ? undefine
           :style="menuStyle"
           :aria-label="title || undefined"
           :reference="activator"
+          :side="placement?.side"
+          :align="placement?.align"
+          :side-offset="offset"
           @interact-outside="onInteractOutside"
           @close-auto-focus="onCloseAutoFocus"
         >

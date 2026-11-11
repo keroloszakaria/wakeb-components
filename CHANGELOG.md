@@ -2,6 +2,23 @@
 
 ## 0.8.0-alpha.0 (unreleased framework prerelease)
 
+- Fix circular local-tarball self-dependency, PrimeVue popover attribute routing and shadcn-vue popover focus return.
+- Accept forwarded DOM/ARIA attributes and native listeners in strict consumer templates while retaining exact declared event/slot contracts. Handle nested RTL language selectors from Vite 8 in the package CSS isolation verifier.
+- Expand browser fixtures to all 39 components with form, popover, table and list interaction contracts across all 24 visual contexts.
+- Add two complete typed Vue examples per component, bilingual keyboard/API signatures, compatibility coverage and agent setup. Generate a portable skill and independent read-only MCP package from the same reference data and public contracts, verified with a real stdio client. Local archives do not imply npm publication.
+
+- Add 14 components on all three providers: WSkeleton, WRow and WCol, WProgressLinear, WTextarea, WButtonToggle, WCard, WDivider, WList, WIcon, WImage, WAvatar, WCountBadge and WDataTable (server-driven: rows as given, single-column sort, row selection, `click:row`, loading and no-data views, `update:options` on mount). Each has an English and Arabic reference page and runs one contract suite per provider.
+- Add WModal `bare`, which renders only the default slot on an unstyled surface while keeping the model, accessible name, focus trap, Escape and `persistent` behavior.
+- Fix WButton's portable loading accessibility: every provider now exposes `aria-busy="true"`, including PrimeVue and shadcn-vue, while retaining the accessible title and suppressing activation. A conflicting caller value cannot hide the active loading state.
+- Fix shadcn-vue WDropdown content mounting before its activator reference was available, leaving the menu offscreen. The menu now positions correctly on scrolled pages and supports mouse selection as well as keyboard selection.
+
+- Add real Chromium browser and SSR hydration verification from isolated packed consumers on all three providers, across light/dark, LTR/RTL and small/wide viewports. Browser diagnostics, screenshots, traces and archive/peer evidence are recorded under `.audit/browser`; `npm run check` now includes the suite.
+- Fix loading buttons losing their accessible title, Vuetify model-controlled modals failing to return focus to an external opener, and explicit Wakeb direction failing to reach Vuetify's scoped RTL context. Host locale remains unchanged.
+- Fix PrimeVue modal Escape dismissal after `persistent` changes while open; dialog and drawer Escape handling now shares top-overlay and lifecycle guards.
+- Fix Wakeb skeleton columns overflowing their 12-column widths on hosts without a global `border-box` reset, including shadcn-only consumers.
+- Fix unreadable dark-mode tree/tab and outline/icon button text and sidebar/accordion surfaces by using scoped Wakeb surface tokens as fallbacks, while retaining component-specific CSS overrides. WExportDropdown now carries the plugin scope to its activator as well as its menu.
+- Fix button SVGs stretching under PrimeVue/shadcn and browser paragraph margins/font resets overriding Wakeb button sizing; custom SVG sizes remain caller-owned.
+
 - Breaking: root imports need a plugin file and `wakebComponents()` from `wakeb-components/vite`.
 - Add `createWakebComponents`, static provider selection, host provider reuse modes, `WakebError` codes and a PrimeVue 4 alpha adapter for WButton, WDropdown, WModal and WLoading.
 - Add plugin `defaults`, Arabic built-in labels, `direction`, and `theme` mode and `--wakeb-ui-*` tokens scoped per app and overlay.
@@ -18,6 +35,10 @@
 - PrimeVue renderers for all 21 components. WTabs, WTree and WCarousel use Wakeb-owned markup; the others use PrimeVue primitives. Shared behavior lives in provider-neutral composables, and one contract and SSR suite runs on every provider.
 - PrimeVue WDrawer needs no layout host: it traps focus, closes on Escape and outside click unless `persistent`, locks scrolling, returns focus to its opener and takes `zIndexOverlay`.
 - Fix: on every provider, Escape inside a dialog or menu opened from WDrawer closes only that overlay; the next Escape closes the drawer. PrimeVue's Drawer closed both on one key press, and the Vuetify drawer did too when focus had fallen back to the body.
+- WModal renders the same styling classes on every provider: Vuetify now adds `.wakeb-modal__title` to the default title and `.wakeb-modal__actions` to the footer, as PrimeVue and shadcn-vue already did. Style the dialog through `.wakeb-modal__*` classes instead of `.v-card`, `.v-card-title` or `.v-card-actions`.
+- Add WTextField, a labelled text input with portable `rules`, `errorMessages`, `density`, `hideDetails` and `start`/`end` slots (Vuetify VTextField, PrimeVue InputText, shadcn-vue Input), and WPopover, a non-modal panel with an `activator {props,isActive}` slot and a `default {close}` slot (Vuetify VMenu, PrimeVue Popover, reka-ui Popover).
+- Add WSwitch, an on/off switch with `inset` and `loading` (Vuetify VSwitch, PrimeVue ToggleSwitch, shadcn-vue Switch), and WCheckbox, a checkbox with a boolean or array model (Vuetify VCheckbox, PrimeVue Checkbox, shadcn-vue Checkbox). Both share `label`, `disabled`, `color`, `density` and a `label` slot.
+- Add WExportDropdown `location` and `offset` (the WPopover location grammar) for the menu placement on Vuetify and shadcn-vue; unset keeps each provider's placement, and PrimeVue Menu keeps its own.
 - Breaking: Vuetify WDrawer needs no `VApp` or `VLayout`; it renders a Wakeb-owned `VLayout` host teleported to Vuetify's overlay container and never shifts the app layout. It is now a modal `<div role="dialog" aria-modal="true">` (was `<nav>`) that closes on Escape unless `persistent`, locks body scrolling, moves focus in and back to its opener, keeps a transparent scrim for `transparentOverlay` and stacks just below `zIndexOverlay` (default 2000) so overlays opened from it stack above, or just above the Vuetify overlays already open when it opens.
 - PrimeVue tooltips, including WButton's, open on keyboard focus as well as hover and are linked through `aria-describedby`.
 - The PrimeVue tooltips of WButton, WTooltipBtn, WTruncatedText and WAvatarStack take `zIndexOverlay` in place of PrimeVue's tooltip z-index, and keep a global `pt.directives.tooltip.root` style instead of replacing it. `tooltipStyle` still wins; without `zIndexOverlay` nothing is added.

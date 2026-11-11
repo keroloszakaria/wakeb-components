@@ -1,6 +1,6 @@
 # M5 architecture decision: shadcn-vue adapter foundation
 
-Status: accepted for the framework alpha branch. The first slice (`ddceaec`, based on `2e5dc33`) delivered the adapter foundation and four renderers. Updated at `f6602ba`: all 21 components are supported (`SUPPORTED.shadcn` is `COMPONENTS` in `src/adapters/manifest.ts`). **M5 is not exited.** shadcn-vue stays advertised as alpha and incomplete until real-browser evidence exists for all 21 rows (IMPLEMENTATION.md M5 exit rule). This record does not authorize npm publication.
+Status: accepted for the framework alpha branch. The first slice (`ddceaec`, based on `2e5dc33`) delivered the adapter foundation and four renderers. Updated at `f6602ba`: all 21 components are supported (`SUPPORTED.shadcn` is `COMPONENTS` in `src/adapters/manifest.ts`). The 2026-11-05 browser/hydration update is recorded in [BROWSER-VERIFICATION.md](./BROWSER-VERIFICATION.md), including its final run status and limits. shadcn-vue stays alpha while the remaining acceptance gates are open; adding browser automation is not a stable-release decision. This record does not authorize npm publication.
 
 ## Coverage (at `92f4657`)
 
@@ -31,7 +31,7 @@ Status: accepted for the framework alpha branch. The first slice (`ddceaec`, bas
 
 The upstream files used now also include `sheet/SheetContent.vue` and `skeleton` from the same shadcn-vue 2.9.0 commit (see the headers in `src/adapters/shadcn/ui/`). The license list under "License handling" names only the first five directories.
 
-Evidence for the 21 rows: the `shadcn` Vitest project in `vitest.config.ts` runs the shared suites (`contract`, `defaults`, `colors`, `plugin`, `icons`, `provider-props`, `contract-display`, `navigation-contract`, `navigation-ssr`, `compositions-contract`, `badge-tooltip-contract`, `badge-tooltip-ssr`, `stacks-contract`, `stacks-ssr`) plus `tests/shadcn-adapter.test.ts`, `tests/accordion-shadcn.test.ts` and `tests/accordion-shadcn-ssr.test.ts`. All of these run in jsdom. No real-browser run has been recorded for keyboard, focus, positioning or visual parity.
+Evidence for the 21 rows: the `shadcn` Vitest project in `vitest.config.ts` runs the shared suites (`contract`, `defaults`, `colors`, `plugin`, `icons`, `provider-props`, `contract-display`, `navigation-contract`, `navigation-ssr`, `compositions-contract`, `badge-tooltip-contract`, `badge-tooltip-ssr`, `stacks-contract`, `stacks-ssr`) plus `tests/shadcn-adapter.test.ts`, `tests/accordion-shadcn.test.ts` and `tests/accordion-shadcn-ssr.test.ts`. These suites run in jsdom. They are now supplemented by the versioned packed-consumer Chromium matrix in `tests/browser/contracts.spec.ts`; see BROWSER-VERIFICATION.md for keyboard/focus, geometry, screenshots and actual hydration coverage. Screenshots do not claim pixel-identical provider rendering.
 
 ## Decision
 
@@ -104,12 +104,12 @@ In the WButton-only shadcn graph, reka Dialog and DropdownMenu content are tree-
 ## Deviations and open risks
 
 - **`dir` on overlays.** reka-ui's PopperContent and Dialog write `dir` from its ConfigProvider, defaulting to `ltr`. Without Wakeb's `direction`, overlay content gets `dir="ltr"` instead of inheriting it. The shared defaults test expects `ltr` for shadcn.
-- **Tooltip trigger.** The tooltip opens on focus and hover, as on Vuetify. PrimeVue opens on hover only.
+- **Tooltip trigger.** The tooltip opens on focus and hover, as on Vuetify. PrimeVue also opens on focus and hover; the shared browser suite verifies the accessible description and painted-bubble position.
 - **Theme bridge.** The bridge only works with Tailwind v4 (complete-color) themes. A v3 HSL-channel theme needs Wakeb tokens.
 - **`style.css`.** It still contains every renderer's CSS. Splitting it per provider is planned.
-- **jsdom limits.** floating-ui positioning and pointer events are not fully modeled in jsdom. Side and outside-press tests check props and use `MouseEvent("pointerdown")`. Real-browser visual and positioning checks are still pending.
+- **jsdom limits.** floating-ui positioning and pointer events are not fully modeled in jsdom. Side and outside-press tests check props and use `MouseEvent("pointerdown")`. The packed Chromium matrix now adds actual geometry, focus and positioning checks; see BROWSER-VERIFICATION.md for the remaining limits.
 - **Remaining work for the M5 exit (at `92f4657`).**
-  - Six components are on the parallel track (see "Coverage"). Until they land they fail with `WAKEB_COMPONENT_UNSUPPORTED`.
-  - Still outstanding: SSR hydration-mismatch tests in a real browser, and real-browser keyboard, focus and visual contract tests.
-  - The module counts above need re-recording for the full 21-component graph.
+  - The earlier six-component gap is closed; all 21 components are implemented and mount/hydrate in the browser gallery.
+  - Automated browser hydration/keyboard/focus/geometry coverage is now recorded in BROWSER-VERIFICATION.md. Manual accessibility review and exhaustive browser style-value checks remain in ACCEPTANCE.md.
+  - Current full 21-component graph/module counts are now recorded in BROWSER-VERIFICATION.md; the table above remains the historical four-component measurement.
 - **WDrawer across providers.** Owner decision: parity. All three providers close the drawer on Escape unless `persistent` and need no app layout host; the Vuetify drawer uses a Wakeb-owned layout host. See RELEASE-NOTES-DRAFT.md.

@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WAccordion
 
 Disclosure panels with preserved content, scoped headers and keyboard-ready default triggers.
+
+::: info 0.8.0-alpha.0 candidate
+This page describes the local, unreleased three-provider API. Install the [candidate archive](../guide/installation) and complete [provider setup](../guide/providers) first. The public 0.7 API differs.
+:::
+
+## Preview
+
+Live preview uses Vuetify. The same public API is checked separately on PrimeVue and shadcn-vue; see [verification](../guide/verification).
+
+<FoundationPlayground initial="accordion" />
 
 ## Usage
 
@@ -9,8 +19,29 @@ Disclosure panels with preserved content, scoped headers and keyboard-ready defa
 <script setup lang="ts">
 import { WAccordion } from 'wakeb-components'
 </script>
+
 <template>
   <WAccordion title="Details" after-icon :model-value="true"><p>Persistent panel content</p></WAccordion>
+</template>
+```
+
+## Examples
+
+### Controlled disclosure
+
+The model receives local toggles. Closing retains the input value.
+
+```vue
+<script setup lang="ts">
+import { WAccordion } from 'wakeb-components'
+import { ref } from 'vue'
+const expanded = ref(false)
+const address = ref('Cairo')
+</script>
+
+<template>
+  <WAccordion v-model="expanded" title="Shipping"><input v-model="address" aria-label="Address" /></WAccordion>
+  <p>Open: {{ expanded }}; address: {{ address }}</p>
 </template>
 ```
 
@@ -39,9 +70,20 @@ import { WAccordion } from 'wakeb-components'
 
 `update:modelValue(value: boolean)` — emitted only by local toggle actions.
 
+```ts
+"update:modelValue": [value: boolean];
+```
+
 ## Slots
 
 `header`: `{ open, toggle, triggerProps }`; bind triggerProps to a native button for keyboard/ARIA behavior. `actions`: `{ open, toggle }`, isolated from header clicks. `default`: `{ open }`, retained with v-show. `toggleIcon`: `{ icon, size, color, maxWidth }`. Indicators inherit the documented WButton CSS variables.
+
+```ts
+header(props: { open: boolean; toggle: () => void; triggerProps: AccordionTriggerProps }): unknown;
+actions(props: { open: boolean; toggle: () => void }): unknown;
+default(props: { open: boolean }): unknown;
+toggleIcon(props: IconSlotProps): unknown;
+```
 
 ## CSS variables
 
@@ -60,10 +102,17 @@ import { WAccordion } from 'wakeb-components'
 
 The root `div.accordion`. The toggle button keeps Wakeb's aria-expanded and aria-controls. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
+## Keyboard interaction
+
+| Key | Behavior |
+| --- | --- |
+| `Tab` | Focus the trigger. |
+| `Enter / Space` | Toggle the panel. |
+
 ## Accessibility and limits
 
-The default title is a native button with aria-expanded/aria-controls; pointer clicks elsewhere on the header also toggle. Icon toggles stop propagation so one activation emits one update. Actions never toggle the panel. Custom headers must supply their own accessible control via triggerProps; stop unrelated interactive header controls from bubbling. The body uses v-show, retaining nested form state. Parent modelValue changes synchronize local state without echoing an update event; local clicks also work when a parent supplies a constant value. Vue useId is stable per application/SSR request; use unique app.config.idPrefix values for multiple independent Vue apps. Motion respects reduced-motion preferences. Indicator rotation preserves 180deg when closed and 0deg when open. The compatibility --wakeb-accordion-fallback switch is reserved for adapters. When a title is set, the panel is a region named by it. PrimeVue renders the same Wakeb disclosure markup and uses the PrimeVue WButton for the icon toggles; it does not use PrimeVue's Accordion component, so there is no PrimeVue panel model or header DOM. Under shadcn-vue the same Wakeb disclosure renders; the indicators are WButton (the shadcn-vue Button, data-slot="button") and the closed panel stays mounted with v-show. reka-ui Collapsible is not used because it unmounts a closed panel.
+The default title is a native button with aria-expanded/aria-controls; pointer clicks elsewhere on the header also toggle. Icon toggles stop propagation so one activation emits one update. Actions never toggle the panel. Custom headers must supply their own accessible control via triggerProps; stop unrelated interactive header controls from bubbling. The body uses v-show, retaining nested form state. Parent modelValue changes synchronize local state without echoing an update event; local clicks also work when a parent supplies a constant value. Vue useId is stable per application/SSR request; use unique app.config.idPrefix values for multiple independent Vue apps. Motion respects reduced-motion preferences. Indicator rotation preserves 180deg when closed and 0deg when open. The compatibility --wakeb-accordion-fallback switch is reserved for adapters. When a title is set, the panel is a region named by it. PrimeVue renders the same Wakeb disclosure markup and uses the PrimeVue WButton for the icon toggles; it does not use PrimeVue's Accordion component, so there is no PrimeVue panel model or header DOM. Under shadcn-vue the same Wakeb disclosure renders; the indicators are WButton (the shadcn-vue Button, data-slot="button") and the closed panel stays mounted with v-show. reka-ui Collapsible is not used because it unmounts a closed panel. Default surfaces and text use the scoped Wakeb surface/on-surface tokens, including dark mode; component-specific CSS variables still win.
 
-## Try it
+---
 
-<FoundationPlayground initial="accordion" />
+Need this contract in your coding agent? Use the [skill and MCP](../guide/agents).

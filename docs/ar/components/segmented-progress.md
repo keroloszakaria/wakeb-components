@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WSegmentedProgress
 
 شريط تقدم مخطط بقيمة وحدود واضحة لقارئات الشاشة.
+
+::: info نسخة تجريبية 0.8.0-alpha.0
+تصف الصفحة الواجهة المحلية غير المنشورة للمزودات الثلاثة. ثبّت [الأرشيف التجريبي](../guide/installation) وأكمل [إعداد المزود](../guide/providers) أولًا؛ واجهة 0.7 العامة مختلفة.
+:::
+
+## معاينة
+
+تستخدم المعاينة Vuetify. تُفحص الواجهة العامة نفسها بصورة مستقلة على PrimeVue وshadcn-vue؛ راجع [التحقق](../guide/verification).
+
+<ComponentPlayground initial="segmented-progress" />
 
 ## الاستخدام
 
@@ -9,23 +19,50 @@
 <script setup lang="ts">
 import { WSegmentedProgress } from 'wakeb-components'
 </script>
+
 <template>
   <WSegmentedProgress :value="65" label="65%" color="#0050ff" />
 </template>
 ```
 
-## المدخلات
+## أمثلة
 
-| المعامل | النوع | الافتراضي | الوصف |
+### تقدم فارغ
+
+الصفر يعرض المسار بقيمة صفر لقارئ الشاشة.
+
+```vue
+<script setup lang="ts">
+import { WSegmentedProgress } from 'wakeb-components'
+</script>
+
+<template>
+  <WSegmentedProgress :value="0" aria-label="Upload progress" />
+</template>
+```
+
+## الخصائص
+
+| الخاصية | النوع | الافتراضي | الوصف |
 | --- | --- | --- | --- |
 | `value` | `number` | `0` | النسبة؛ تُحصر بين 0 و100 وتصبح NaN صفرًا. |
 | `label` | `string` | `""` | النص الظاهر داخل الجزء الممتلئ. |
 | `color` | `WakebColor` | `var(--wakeb-progress-color, #12b76a)` | intent من Wakeb (primary وsecondary وsuccess وwarning وdanger وinfo وneutral) أو لون CSS. القيم الأخرى ترجع إلى القيمة الافتراضية. |
 | `ariaLabel` | `string` | `""` | اسم لقارئ الشاشة؛ الافتراضي label ثم النسبة. |
 
+## الأحداث
+
+لا توجد أحداث مخصصة معلنة. تتبع أحداث DOM وجهة السمات أدناه.
+
+
+
 ## Slots
 
 `default`: يستقبل `{ value, label }` داخل الجزء الممتلئ.
+
+```ts
+default?(props: { value: number; label: string }): unknown;
+```
 
 ## متغيرات CSS
 
@@ -41,10 +78,14 @@ import { WSegmentedProgress } from 'wakeb-components'
 
 العنصر الجذري `div.segmented-progress` الذي يحمل `role="progressbar"` على كل المزودين. قيمتا `role` و`aria-value*` ملك لـWakeb وتغلبان على سمات المستخدم؛ وقيمة `aria-label` من المستخدم هي الخاصية المكتوبة `ariaLabel`. مستمعو أحداث Wakeb المعلنة يمرون عبر emits في Vue مرة واحدة؛ أما بقية المستمعين فهم مستمعو DOM على هذا العنصر.
 
+## التفاعل بالكيبورد
+
+لا يضيف المكون أمر كيبورد خاصًا بـWakeb. تحتفظ العناصر التفاعلية الأصلية أو المضافة عبر slots بسلوكها. راجع تفاصيل التركيز والأدوار واختلافات المزودات أدناه.
+
 ## الوصول وحدود السلوك
 
 يستخدم role=progressbar وحدود وقيمة ARIA. عند صفر لا يظهر جزء ممتلئ أو label مرئي، ويظل الاسم متاحًا لقارئ الشاشة. عند 100 يختفي الجزء الفارغ. الأجزاء تبدأ من flex basis صفر، فالجزء الممتلئ يساوي value% من عرض الشريط بعد خصم مسافة 2px مهما كان طول النص. الاتجاه موروث، والحركة تحترم reduced motion. لا توجد طلبات شبكة أو حالة مخزنة داخله. يرسم PrimeVue الـmarkup والـCSS نفسيهما من Wakeb كما في Vuetify (دون ProgressBar من PrimeVue)، فيتطابق الـDOM وبيانات الـslot والـtokens على المزودين. في shadcn-vue يُرسم الـmarkup وأنماط CSS نفسها من Wakeb (لا يملك Progress في shadcn-vue مسارًا مقسّمًا ولا slot للنص)، فالـDOM وقيم الـslot والـtokens متطابقة.
 
-## جرّب بنفسك
+---
 
-<ComponentPlayground initial="segmented-progress" />
+لاستخدام هذا العقد مع agent يكتب الكود، راجع [الـskill وMCP](../guide/agents).

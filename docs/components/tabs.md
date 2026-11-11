@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WTabs
 
 Styled tab rails and lazily mounted panels with explicit selection events.
+
+::: info 0.8.0-alpha.0 candidate
+This page describes the local, unreleased three-provider API. Install the [candidate archive](../guide/installation) and complete [provider setup](../guide/providers) first. The public 0.7 API differs.
+:::
+
+## Preview
+
+Live preview uses Vuetify. The same public API is checked separately on PrimeVue and shadcn-vue; see [verification](../guide/verification).
+
+<NavigationPlayground initial="tabs" />
 
 ## Usage
 
@@ -9,8 +19,29 @@ Styled tab rails and lazily mounted panels with explicit selection events.
 <script setup lang="ts">
 import { WTabs } from 'wakeb-components'
 </script>
+
 <template>
   <WTabs :tabs="[{ slot: 'overview', label: 'Overview' }, { slot: 'details', label: 'Details' }]"><template #overview>Overview panel</template><template #details>Details panel</template></WTabs>
+</template>
+```
+
+## Examples
+
+### Observe selection
+
+Use updateTab; WTabs does not expose v-model.
+
+```vue
+<script setup lang="ts">
+import { WTabs } from 'wakeb-components'
+import { ref } from 'vue'
+import type { NavigationKey } from 'wakeb-components'
+const selected = ref<NavigationKey | undefined>()
+</script>
+
+<template>
+  <WTabs :tabs="[{ slot: 'summary', label: 'Summary' }, { slot: 'history', label: 'History' }]" @update-tab="selected = $event"><template #summary>Summary</template><template #history>History</template></WTabs>
+  <p>Selected: {{ selected }}</p>
 </template>
 ```
 
@@ -35,9 +66,19 @@ import { WTabs } from 'wakeb-components'
 
 `updateTab(value: NavigationKey | undefined)` for accepted local changes only; no mount or parent-sync echo.
 
+```ts
+updateTab: [value: NavigationKey | undefined];
+```
+
 ## Slots
 
 `header`, `actions`; `tab-label`: `{ tabItem, index }` replaces the default label/HTML; `tab-icon`: `{ tabItem, index, size }`; content slots use each record valueKey. Header/actions/tab-label/tab-icon are reserved names.
+
+```ts
+[name: string]: (props: any) => unknown;
+"tab-label"(props: { tabItem: TabItem; index: number }): unknown;
+"tab-icon"(props: { tabItem: TabItem; index: number; size: string | number }): unknown;
+```
 
 ## CSS variables
 
@@ -71,10 +112,17 @@ import { WTabs } from 'wakeb-components'
 
 The root layout `div.wakeb-tabs`. Tabs and panels keep Wakeb's ids, roles and aria-controls/labelledby links. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
+## Keyboard interaction
+
+| Key | Behavior |
+| --- | --- |
+| `Tab` | Enter the active tab. |
+| `Arrow keys / Home / End` | Move focus and activate a tab; horizontal arrows follow direction. |
+
 ## Accessibility and limits
 
-Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation. Each tab has an id unique within the app; the selected tab references its rendered role=tabpanel wrapper (div.wakeb-tabs__panel) through aria-controls, and the panel is labelled by its tab; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content. A vertical rail sets aria-orientation=vertical on the tablist. PrimeVue: Wakeb renders the tablist itself (a div with role=tablist and button role=tab items) because PrimeVue Tabs generates its own ids and mounts all panels or unmounts hidden ones. Selection, ids and events come from the same shared code as Vuetify. Keys follow the Vuetify slide group: manual activation with click, Enter or Space; arrows move focus along the orientation, wrap, and reverse horizontally when the tablist is RTL; Home/End jump to the ends; the selected tab, or the first tab when none is selected, is the single tab stop. Panels mount on first selection and stay mounted, switching without a transition. Icons render through the Wakeb icon resolver. The tab look comes from the same --wakeb-tabs-* variables on Wakeb markup, not from PrimeVue styles. shadcn-vue: the same Wakeb markup, CSS, keys and lazy panels as PrimeVue, because the shadcn-vue Tabs (reka-ui) selects on arrow focus by default. The tabs carry no data-slot or wakeb-sc-* classes; providerProps is dropped with WAKEB_PROVIDER_PROP_IGNORED.
+Ordinary attrs target the layout root. Vue/Vuetify are peers; no Tailwind is needed. Numeric height/gap props append px; do not pass CSS units. Section labels and headers remain inside the rail. VTabs provides tablist roles, focus and arrow navigation. Each tab has an id unique within the app; the selected tab references its rendered role=tabpanel wrapper (div.wakeb-tabs__panel) through aria-controls, and the panel is labelled by its tab; panels are lazily mounted by VTabsWindow, retaining mounted Vue state. Empty selectedTab in switcher mode deliberately clears highlight. selectedTab/isSwitcherOnly are synchronized; the items array itself does not reset selection in application code, leaving group changes to Vuetify. Zero notification/content uses the original truthy check. customHTML is inserted verbatim with v-html and must be trusted or sanitized by the host; function context is {value,isSelected}. Prefer tab-label for untrusted data. Icons use VIcon or tab-icon slots and currentColor; no shadow DOM icon patch runs in the package. Icon-only tabs use the record label as aria-label. Supply a meaningful label, including when replacing label content. A vertical rail sets aria-orientation=vertical on the tablist. PrimeVue: Wakeb renders the tablist itself (a div with role=tablist and button role=tab items) because PrimeVue Tabs generates its own ids and mounts all panels or unmounts hidden ones. Selection, ids and events come from the same shared code as Vuetify. Keys follow the Vuetify slide group: manual activation with click, Enter or Space; arrows move focus along the orientation, wrap, and reverse horizontally when the tablist is RTL; Home/End jump to the ends; the selected tab, or the first tab when none is selected, is the single tab stop. Panels mount on first selection and stay mounted, switching without a transition. Icons render through the Wakeb icon resolver. The tab look comes from the same --wakeb-tabs-* variables on Wakeb markup, not from PrimeVue styles. shadcn-vue: the same Wakeb markup, CSS, keys and lazy panels as PrimeVue, because the shadcn-vue Tabs (reka-ui) selects on arrow focus by default. The tabs carry no data-slot or wakeb-sc-* classes; providerProps is dropped with WAKEB_PROVIDER_PROP_IGNORED. Unselected tab labels use --wakeb-ui-on-surface when configured, including the dark-mode default; --wakeb-tabs-item-color still wins.
 
-## Try it
+---
 
-<NavigationPlayground initial="tabs" />
+Need this contract in your coding agent? Use the [skill and MCP](../guide/agents).

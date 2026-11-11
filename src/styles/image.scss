@@ -1,0 +1,26 @@
+/* Shared WImage markup for renderers without an image primitive (PrimeVue and shadcn-vue). */
+.wakeb-image-native {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  max-width: 100%;
+
+  .wakeb-image__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &.wakeb-image--cover .wakeb-image__img {
+    object-fit: cover;
+  }
+
+  .wakeb-image__placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

@@ -198,6 +198,7 @@ describe(`providerProps (${framework})`, () => {
 
   it.each(Object.keys(native) as (keyof typeof native)[])("%s passes declared native props to the provider primitive", async (name) => {
     const w = render(components[name], { props: { ...props[name], providerProps: native[name] } });
+    if (name === "WDropdown") await w.get("button").trigger("click");
     await settle();
     const target = w.findComponent(primitive[name] as never);
     expect(target.exists()).toBe(true);

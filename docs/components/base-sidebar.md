@@ -1,7 +1,17 @@
-<!-- Generated from docs/reference-data.mjs -->
+<!-- Generated from docs/reference-data.mjs, docs/recipes.mjs and src/contracts.ts -->
 # WBaseSidebar
 
 A gradient sidebar shell with search/content slots, filter actions and loading/empty/list states.
+
+::: info 0.8.0-alpha.0 candidate
+This page describes the local, unreleased three-provider API. Install the [candidate archive](../guide/installation) and complete [provider setup](../guide/providers) first. The public 0.7 API differs.
+:::
+
+## Preview
+
+Live preview uses Vuetify. The same public API is checked separately on PrimeVue and shadcn-vue; see [verification](../guide/verification).
+
+<CompositionPlayground initial="base-sidebar" />
 
 ## Usage
 
@@ -9,8 +19,25 @@ A gradient sidebar shell with search/content slots, filter actions and loading/e
 <script setup lang="ts">
 import { WBaseSidebar } from 'wakeb-components'
 </script>
+
 <template>
   <WBaseSidebar title="People" :items="[{id:1,name:'Ada'}]" :has-filter="false"><template #item="{item}">{{item.name}}</template></WBaseSidebar>
+</template>
+```
+
+## Examples
+
+### Empty state
+
+Supply the empty slot for a useful empty view.
+
+```vue
+<script setup lang="ts">
+import { WBaseSidebar } from 'wakeb-components'
+</script>
+
+<template>
+  <WBaseSidebar title="People" :items="[]" :has-filter="false"><template #empty>No people yet.</template></WBaseSidebar>
 </template>
 ```
 
@@ -34,9 +61,25 @@ import { WBaseSidebar } from 'wakeb-components'
 
 `search(payload: unknown)` only when a search/content slot calls its search callback; `filterClick()` and `filterCancel()` for controls. No records or schemas are mutated.
 
+```ts
+search: [payload: unknown];
+filterClick: [];
+filterCancel: [];
+```
+
 ## Slots
 
 `header-actions`: `{isFiltered,filterClick,filterCancel}`; `content` / `search`: `{search(payload)}`; `item`: `{item,index}`; `loading`: `{type,width}`; `empty`: `{label}`; `filter-modal`: no props. The content slot replaces search and the list entirely.
+
+```ts
+"header-actions"?(props: { isFiltered: boolean; filterClick: () => void; filterCancel: () => void }): unknown;
+content?(props: { search: (payload: unknown) => void }): unknown;
+search?(props: { search: (payload: unknown) => void }): unknown;
+item?(props: { item: SidebarItem; index: number }): unknown;
+loading?(props: { type: string; width: string | number }): unknown;
+empty?(props: { label: string }): unknown;
+"filter-modal"(): unknown;
+```
 
 ## CSS variables
 
@@ -54,10 +97,14 @@ import { WBaseSidebar } from 'wakeb-components'
 
 The root `div.wakeb-base-sidebar`. Listeners for declared Wakeb events go through Vue emits, once; other listeners are DOM listeners on this element.
 
+## Keyboard interaction
+
+This component adds no Wakeb keyboard command. Native or slotted interactive content keeps its own keyboard behavior. See the exact focus, role and provider notes below.
+
 ## Accessibility and limits
 
-Attrs target the outer div. The package owns no form/schema, store, translations or filter modal. Supply a native input or your form library through search and call search(payload). Aware retains GenericForm and updateSchema in its adapter. Without a search slot, the public component renders no search control. The header remains while content is replaced. Loading wins over empty/list. The default list keeps min-height 400px and max-height 60dvh, with a 340px minimum shell width; override root min-width for narrower responsive layouts. The bottom 72px fade is decorative and does not intercept pointers. Use namespaced CSS variables for gradients/body/title colors and loading/empty slots for custom states. Legacy global card-gradient/sidebar rules remain in Aware only; package styles are scoped. List item identity uses a direct field or index, and slots own item interactions. PrimeVue: the same markup, slots and variables; the filter buttons are the PrimeVue WButton. The loading skeleton renders the portable skeleton names with PrimeVue Skeleton bones inside one polite role=alert region named "Loading..." (Arabic: "جارٍ التحميل..."), matching the Vuetify loader semantics. Vuetify-only skeleton names are skipped there with WAKEB_UNKNOWN_VALUE; the loading slot receives the normalized sequence on both providers. shadcn-vue: the same markup, slots and variables; the filter buttons are the shadcn-vue WButton, and the loading skeleton uses shadcn-vue Skeleton bones in the same named role=alert region, with Vuetify-only names skipped the same way.
+Attrs target the outer div. The package owns no form/schema, store, translations or filter modal. Supply a native input or your form library through search and call search(payload). Aware retains GenericForm and updateSchema in its adapter. Without a search slot, the public component renders no search control. The header remains while content is replaced. Loading wins over empty/list. The default list keeps min-height 400px and max-height 60dvh, with a 340px minimum shell width; override root min-width for narrower responsive layouts. The bottom 72px fade is decorative and does not intercept pointers. Use namespaced CSS variables for gradients/body/title colors and loading/empty slots for custom states. Legacy global card-gradient/sidebar rules remain in Aware only; package styles are scoped. List item identity uses a direct field or index, and slots own item interactions. PrimeVue: the same markup, slots and variables; the filter buttons are the PrimeVue WButton. The loading skeleton renders the portable skeleton names with PrimeVue Skeleton bones inside one polite role=alert region named "Loading..." (Arabic: "جارٍ التحميل..."), matching the Vuetify loader semantics. Vuetify-only skeleton names are skipped there with WAKEB_UNKNOWN_VALUE; the loading slot receives the normalized sequence on both providers. shadcn-vue: the same markup, slots and variables; the filter buttons are the shadcn-vue WButton, and the loading skeleton uses shadcn-vue Skeleton bones in the same named role=alert region, with Vuetify-only names skipped the same way. The body surface and foreground use the scoped Wakeb surface/on-surface tokens when present, including dark mode; --wakeb-sidebar-body still wins.
 
-## Try it
+---
 
-<CompositionPlayground initial="base-sidebar" />
+Need this contract in your coding agent? Use the [skill and MCP](../guide/agents).
